@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>war</packaging>
+
+    <name>${webapp-name}</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jdk.version>1.7</jdk.version>
+        <tomcat.version>7.0.42</tomcat.version>
+
+        <!-- Core -->
+        <spring.version>3.2.5.RELEASE</spring.version>
+        <log4j.version>1.2.17</log4j.version>
+        <jackson.version>1.9.13</jackson.version>
+
+        <!-- Persistence -->
+        <hibernate.version>4.2.7.Final</hibernate.version>
+        <c3p0.version>0.9.2.1</c3p0.version>
+        <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
+        <h2.version>1.3.174</h2.version>
+
+        <!-- Testing -->
+        <junit.version>4.11</junit.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <mockito.version>1.9.5</mockito.version>
+        <jsonpath.version>0.9.1</jsonpath.version>
+
+        <!-- Apache Commons -->
+        <commons-io.version>2.4</commons-io.version>
+        <commons-beanutils.version>1.8.3</commons-beanutils.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-dbutils.version>1.5</commons-dbutils.version>
+
+        <!-- Joda Time -->
+        <joda-time.version>2.3</joda-time.version>
+        <jadira-usertype-jodatime.version>2.0.1</jadira-usertype-jodatime.version>
+
+        <!-- Maven Plugins -->
+        <!-- <maven-remote-resources-plugin.version>1.5</maven-remote-resources-plugin.version> -->
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>false</downloadJavadocs>
+    </properties>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>${maven-eclipse-plugin.version}</version>
+                <configuration>
+                    <wtpversion>2.0</wtpversion>
+                    <wtpmanifest>true</wtpmanifest>
+                    <!-- If useProjectReferences is true, it is very likely 
+                        that you get problems when using a webapplication server like tomcat in Eclipse, 
+                        because the WTP mechanism does not work as expected in some points. For example 
+                        the resources in src/test/resources would also be scanned, e.g. for spring-context 
+                        configurations, although these resources should be independent from the tested 
+                        sources. -->
+                    <useProjectReferences>false</useProjectReferences>
+                    <downloadSources>${downloadSources}</downloadSources>
+                    <downloadJavadocs>${downloadJavadocs}</downloadJavadocs>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>de.terrestris</groupId>
+            <artifactId>shogun2-init</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.terrestris</groupId>
+            <artifactId>shogun2-web</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

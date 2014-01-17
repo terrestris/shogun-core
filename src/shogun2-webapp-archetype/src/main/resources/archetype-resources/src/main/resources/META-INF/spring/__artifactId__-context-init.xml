@@ -1,0 +1,30 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set(
+$symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-3.2.xsd
+	http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-3.2.xsd">
+
+    <!-- Flags enabling/disabling some initialization on startup -->
+    <bean id="shogunInitEnabled" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.shogunInitEnabled}"></constructor-arg>
+    </bean>
+    <bean id="projectInitEnabled" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.projectInitEnabled}"></constructor-arg>
+    </bean>
+
+    <!-- Number of dummy-entries to create if projectInitEnabled = true -->
+    <bean id="numberOfProjectDummies" class="java.lang.Integer">
+        <constructor-arg value="${symbol_dollar}{init.numberOfProjectDummies}"></constructor-arg>
+    </bean>
+
+    <!-- This bean initializes needed database objects or similar -->
+    <bean id="contentInitializer" class="${package}.init.ProjectContentInitializer"
+        init-method="initializeDatabaseContent" />
+
+</beans>
