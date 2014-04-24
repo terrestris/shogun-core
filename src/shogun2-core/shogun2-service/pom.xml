@@ -17,9 +17,16 @@
 
     <dependencies>
 
+        <!--  SHOGun2 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>shogun2-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shogun2-security</artifactId>
             <version>${project.version}</version>
         </dependency>
 
