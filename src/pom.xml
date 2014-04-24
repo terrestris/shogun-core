@@ -32,6 +32,7 @@
         <module>shogun2-core</module>
         <module>shogun2-init</module>
         <module>shogun2-web</module>
+        <module>shogun2-security</module>
         <module>shogun2-webapp-archetype</module>
     </modules>
 
@@ -43,6 +44,7 @@
 
         <!-- Core -->
         <spring.version>3.2.5.RELEASE</spring.version>
+        <spring-security.version>3.2.3.RELEASE</spring-security.version>
         <log4j.version>1.2.17</log4j.version>
         <jackson.version>1.9.13</jackson.version>
 
@@ -220,6 +222,25 @@
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- Spring Security -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${spring-security.version}</version>
             </dependency>
 
             <!-- Hamcrest -->
