@@ -165,6 +165,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                 </configuration>
