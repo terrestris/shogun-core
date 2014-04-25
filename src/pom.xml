@@ -27,6 +27,8 @@
 
     <developers>
         <developer>
+            <!-- the developers github username -->
+            <id>buehner</id>
             <name>Nils Bühner</name>
             <email>buehner@terrestris.de</email>
             <organization>terrestris GmbH &#038; Co. KG</organization>
@@ -38,6 +40,8 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
+            <!-- the developers github username -->
+            <id>marcjansen</id>
             <name>Marc Jansen</name>
             <email>jansen@terrestris.de</email>
             <organization>terrestris GmbH &#038; Co. KG</organization>
