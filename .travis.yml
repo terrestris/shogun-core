@@ -1,0 +1,20 @@
+language: java
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+  - openjdk7
+
+before_script:
+  - cd src/ && mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+
+script:
+  - mvn clean test
+
+after_script:
+  - cd ..
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
