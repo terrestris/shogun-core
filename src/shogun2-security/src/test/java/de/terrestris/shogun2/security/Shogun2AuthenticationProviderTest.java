@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author Nils Buehner
@@ -45,6 +46,10 @@ public class Shogun2AuthenticationProviderTest {
 		assertThat(authResult,
 				instanceOf(UsernamePasswordAuthenticationToken.class));
 		assertTrue(authResult.isAuthenticated());
+
+		assertThat(authResult.getPrincipal(), instanceOf(UserDetails.class));
+		assertEquals(shogun2UserName, ((UserDetails) authResult.getPrincipal()).getUsername());
+		assertEquals(shogun2UserPass, authResult.getCredentials());
 
 		// thx to http://stackoverflow.com/a/12167781
 		assertThat(authResult.getAuthorities(),
