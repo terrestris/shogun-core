@@ -26,6 +26,17 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <name>Marc Jansen</name>
+            <email>jansen@terrestris.de</email>
+            <organization>terrestris GmbH &#038; Co. KG</organization>
+            <organizationUrl>http://www.terrestris.de/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <modules>
