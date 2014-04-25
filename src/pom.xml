@@ -20,6 +20,11 @@
         <url>https://github.com/terrestris/shogun2.git</url>
     </scm>
 
+    <ciManagement>
+        <system>travis</system>
+        <url>https://travis-ci.org/terrestris/shogun2</url>
+    </ciManagement>
+
     <developers>
         <developer>
             <name>Nils Bühner</name>
