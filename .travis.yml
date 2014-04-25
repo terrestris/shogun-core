@@ -6,13 +6,15 @@ jdk:
   - openjdk7
 
 before_script:
-  - cd src/ && mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+  - cd src/
+  - mvn --version
+  - mvn --batch-mode --threads 2.0C -DskipTests=true -Dmaven.javadoc.skip=true install
 
 script:
-  - mvn clean test
+  - mvn --batch-mode --threads 2.0C clean test
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:cobertura
+  - mvn --batch-mode --threads 2.0C clean cobertura:cobertura coveralls:cobertura
 
 after_script:
   - cd ..
