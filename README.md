@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/terrestris/shogun2.png)](https://travis-ci.org/terrestris/shogun2)
 
-[![Coverage Status](https://coveralls.io/repos/terrestris/shogun2/badge.png)](https://coveralls.io/r/terrestris/shogun2)
+[![Coverage Status](https://coveralls.io/repos/terrestris/shogun2/badge.png?branch=master)](https://coveralls.io/r/terrestris/shogun2?branch=master)
 
 SHOGun2 is a Java based WebGIS framework, based on several high-quality Open Source frameworks.
 
