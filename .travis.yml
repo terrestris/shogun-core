@@ -11,6 +11,9 @@ before_script:
 script:
   - mvn clean test
 
+after_success:
+  - mvn clean cobertura:cobertura coveralls:cobertura
+
 after_script:
   - cd ..
 
