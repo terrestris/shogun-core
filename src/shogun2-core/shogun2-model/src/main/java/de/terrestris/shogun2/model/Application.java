@@ -14,9 +14,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * This class represents a (GIS-)application, which can be opened in a browser.
  * It mainly provides the initial configuration of the map.
- * 
- * @author Nils Buehner
- * 
+ *
+ * @author Nils Bühner
+ *
  */
 @Entity
 @Table

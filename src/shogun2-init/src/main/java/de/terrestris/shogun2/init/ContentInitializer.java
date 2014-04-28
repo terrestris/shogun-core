@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import de.terrestris.shogun2.service.ApplicationService;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  *         Class to initialize some kind of content
  *

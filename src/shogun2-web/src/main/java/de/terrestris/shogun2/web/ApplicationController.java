@@ -14,7 +14,7 @@ import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.service.ApplicationService;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 @Controller
