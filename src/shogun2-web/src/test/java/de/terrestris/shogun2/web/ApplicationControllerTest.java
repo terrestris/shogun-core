@@ -20,7 +20,7 @@ import de.terrestris.shogun2.service.ApplicationService;
 import de.terrestris.shogun2.web.ApplicationController;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 public class ApplicationControllerTest {

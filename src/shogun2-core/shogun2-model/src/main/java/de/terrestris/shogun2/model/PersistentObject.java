@@ -29,7 +29,7 @@ import org.joda.time.ReadableDateTime;
  * Subclasses of this class can further be inherited and there should be no
  * problems with hibernate mappings/database interactions.
  *
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 @MappedSuperclass

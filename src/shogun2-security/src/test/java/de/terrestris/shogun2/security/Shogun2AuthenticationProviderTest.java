@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 public class Shogun2AuthenticationProviderTest {
