@@ -12,8 +12,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
+ * This class represents a (GIS-)application, which can be opened in a browser.
+ * It mainly provides the initial configuration of the map.
+ * 
  * @author Nils Buehner
- *
+ * 
  */
 @Entity
 @Table
@@ -21,15 +24,75 @@ public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = -8121493601745944561L;
 
-	@Column
+	/**
+	 * The name of the application.
+	 */
+	@Column(nullable = false)
 	private String name;
 
+	/**
+	 * The description of the application
+	 */
 	@Column
 	private String description;
 
+	/**
+	 * The language of the application.
+	 */
 	@Column
 	private Locale language;
 
+	/**
+	 * Whether this application is open, meaning it is accessible to the general
+	 * non-authenticated public.
+	 */
+	@Column
+	private Boolean open = true;
+
+	/**
+	 * Whether this application is currently accessible at all. Applications can
+	 * be disabled/enabled by setting this flag.
+	 */
+	@Column
+	private Boolean active = true;
+
+	/**
+	 * The URL under which the application is accessible.
+	 */
+	@Column
+	private String url;
+
+	/**
+	 * The initial center of the map.
+	 */
+	@Column
+	private String initialCenter;
+
+	/**
+	 * The initial zoom level of the map.
+	 */
+	@Column
+	private String initialZoom;
+
+	/**
+	 * The initial resolution of the map.
+	 */
+	@Column
+	private String initialResolution;
+
+	/**
+	 * The initial bbox of the application. It is not guaranteed that the bbox
+	 * is fully contained in the initial map-view, as we usually use the above
+	 * properties {@link #initialZoom} and {@link #initialCenter} to layout the
+	 * map.
+	 */
+	@Column
+	private String initialBbox;
+
+	/**
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
+	 */
 	public Application() {
 	}
 
@@ -62,29 +125,83 @@ public class Application extends PersistentObject {
 		this.language = language;
 	}
 
+	public Boolean getOpen() {
+		return open;
+	}
+
+	public void setOpen(Boolean open) {
+		this.open = open;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getInitialCenter() {
+		return initialCenter;
+	}
+
+	public void setInitialCenter(String initialCenter) {
+		this.initialCenter = initialCenter;
+	}
+
+	public String getInitialZoom() {
+		return initialZoom;
+	}
+
+	public void setInitialZoom(String initialZoom) {
+		this.initialZoom = initialZoom;
+	}
+
+	public String getInitialResolution() {
+		return initialResolution;
+	}
+
+	public void setInitialResolution(String initialResolution) {
+		this.initialResolution = initialResolution;
+	}
+
+	public String getInitialBbox() {
+		return initialBbox;
+	}
+
+	public void setInitialBbox(String initialBbox) {
+		this.initialBbox = initialBbox;
+	}
+
 	/**
 	 * @see java.lang.Object#hashCode()
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
 	 */
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(29, 11).appendSuper(super.hashCode())
-				.append(getName()).append(getDescription())
-				.append(getLanguage()).toHashCode();
+				.append(getName()).append(getLanguage()).append(getOpen())
+				.append(getActive()).append(getInitialCenter())
+				.append(getInitialZoom()).append(getInitialResolution())
+				.append(getInitialBbox()).append(getUrl()).toHashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -94,18 +211,30 @@ public class Application extends PersistentObject {
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
 				.append(getName(), other.getName())
-				.append(getDescription(), other.getDescription())
-				.append(getLanguage(), other.getLanguage()).isEquals();
+				.append(getLanguage(), other.getLanguage())
+				.append(getOpen(), other.getOpen())
+				.append(getActive(), other.getActive())
+				.append(getInitialCenter(), other.getInitialCenter())
+				.append(getInitialZoom(), other.getInitialZoom())
+				.append(getInitialResolution(), other.getInitialResolution())
+				.append(getInitialBbox(), other.getInitialBbox()).isEquals();
 	}
 
 	/**
-	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      Using Apache Commons String Builder.
 	 */
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 				.appendSuper(super.toString()).append("name", getName())
 				.append("description", getDescription())
-				.append("language", getLanguage()).toString();
+				.append("language", getLanguage()).append("open", getOpen())
+				.append("active", getActive()).append("url", getUrl())
+				.append("initalCenter", getInitialCenter())
+				.append("initialZoom", getInitialZoom())
+				.append("initialResolution", getInitialResolution())
+				.append("initialBbox", getInitialBbox()).toString();
 	}
 
 }
