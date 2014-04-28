@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.ReadableDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,110 +132,6 @@ public class ApplicationDaoTest {
 		assertEquals(id, app.getId());
 		assertEquals(changedNameOfApp, app.getName());
 		assertEquals(changedDescOfApp, app.getDescription());
-	}
-
-	/**
-	 * Tests whether the automatic setting of field modified happens when
-	 * creating.
-	 */
-	@Test
-	public void saveOrUpdate_shouldSetModified() {
-		// first create an application and save it.
-		Application app = getRandomUnsavedMockApp();
-
-		// Model tests should ensure that the constructor populates modified
-		ReadableDateTime before = app.getModified();
-
-		try {
-			// ... wait ...
-			Thread.sleep(50);
-
-			// ... then save
-			applicationDao.saveOrUpdate(app);
-
-			ReadableDateTime after = app.getModified();
-
-			// They should be different
-			assertNotEquals(before, after);
-			assertFalse(before.equals(after));
-			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
-		} catch (InterruptedException e) {
-			fail("Caught exception while attempting to wait");
-			return;
-		}
-
-	}
-
-	/**
-	 * Tests whether saveOrUpdate cannot be tricked by explicitly setting field
-	 * modified.
-	 */
-	@Test
-	public void saveOrUpdate_shouldAlwaysSetModified() {
-		// first create an application and save it.
-		Application app = getRandomUnsavedMockApp();
-
-		try {
-			// ... wait ...
-			Thread.sleep(50);
-
-			// ... then update the modified field
-			DateTime before = DateTime.now();
-			app.setModified(before);
-
-			// ... wait ...
-			Thread.sleep(50);
-
-			// ... and only then save, modified should differ now
-			applicationDao.saveOrUpdate(app);
-			ReadableDateTime after = app.getModified();
-
-			// They should be different
-			assertNotEquals(before, after);
-			assertFalse(before.equals(after));
-			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
-
-		} catch (InterruptedException e) {
-			fail("Caught exception while attempting to wait");
-			return;
-		}
-
-	}
-
-	/**
-	 * Tests whether an UPDATE results in updating the field modified.
-	 */
-	@Test
-	public void saveOrUpdate_shouldUpdateModified() {
-		// first create an application and save it.
-		Application app = getRandomUnsavedMockApp();
-		applicationDao.saveOrUpdate(app);
-
-		ReadableDateTime before = app.getModified();
-
-		try {
-			Thread.sleep(50);
-			// change the application
-			app.setName("Some other name");
-			app.setDescription("Changed description");
-			applicationDao.saveOrUpdate(app);
-			ReadableDateTime after = app.getModified();
-
-			// They should be different
-			assertNotEquals(before, after);
-			assertFalse(before.equals(after));
-			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
-		} catch (InterruptedException e) {
-			fail("Caught exception while attempting to wait");
-			return;
-		}
-
 	}
 
 	/**
