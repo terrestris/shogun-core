@@ -119,8 +119,8 @@ public class ApplicationDaoTest {
 		String changedNameOfApp = "Some other name";
 		String changedDescOfApp = "Changed description";
 
-		app.setName("Some other name");
-		app.setDescription("Changed description");
+		app.setName(changedNameOfApp);
+		app.setDescription(changedDescOfApp);
 
 		applicationDao.saveOrUpdate(app);
 
