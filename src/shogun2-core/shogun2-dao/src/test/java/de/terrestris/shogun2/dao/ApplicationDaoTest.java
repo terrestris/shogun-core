@@ -49,7 +49,7 @@ public class ApplicationDaoTest {
 	/**
 	 * Small helper for getting a new unsaved mock Application with a random
 	 * name.
-	 *
+	 * 
 	 * @return
 	 */
 	private Application getRandomUnsavedMockApp() {
@@ -58,9 +58,8 @@ public class ApplicationDaoTest {
 	}
 
 	/**
-	 * Small helper for getting a new saved mock Application with a random
-	 * name.
-	 *
+	 * Small helper for getting a new saved mock Application with a random name.
+	 * 
 	 * @return
 	 */
 	private Application getRandomSavedMockApp() {
@@ -70,7 +69,7 @@ public class ApplicationDaoTest {
 
 	/**
 	 * Small helper for getting a new unsaved mock Application.
-	 *
+	 * 
 	 * @return
 	 */
 	private Application getMockApp(String name) {
@@ -82,7 +81,7 @@ public class ApplicationDaoTest {
 
 	/**
 	 * Small helper for getting a new saved mock Application.
-	 *
+	 * 
 	 * @return
 	 */
 	private Application getSavedMockApp(String name) {
