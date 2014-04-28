@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Table
 public class WmsLayer extends Layer {
 
-	private static final long serialVersionUID = 5673099504395691524L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The (base) URL of the WMS Service. This field must not be null.

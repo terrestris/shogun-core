@@ -17,7 +17,7 @@ import javax.persistence.Entity;
 @Entity
 public abstract class Layer extends PersistentObject {
 
-	private static final long serialVersionUID = -7363857422959263258L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The name of the layer. This field must not be null.
