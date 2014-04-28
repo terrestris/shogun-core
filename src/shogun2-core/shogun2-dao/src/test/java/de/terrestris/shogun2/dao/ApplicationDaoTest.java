@@ -19,6 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 
+/**
+ * 
+ * @author Nils Bühner
+ * @author Marc Jansen
+ * 
+ *         This class will test the {@link ApplicationDao}.
+ * 
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context-dao.xml" })
 @Transactional
