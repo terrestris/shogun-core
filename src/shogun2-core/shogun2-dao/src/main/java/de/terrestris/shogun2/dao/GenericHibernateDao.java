@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  * 
  */
 public abstract class GenericHibernateDao<E extends PersistentObject, ID extends Serializable> {

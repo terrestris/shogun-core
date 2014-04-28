@@ -14,7 +14,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 @Entity

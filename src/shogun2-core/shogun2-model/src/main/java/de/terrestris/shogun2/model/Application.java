@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 @Entity

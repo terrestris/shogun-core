@@ -13,7 +13,7 @@ import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 @Service("applicationService")

@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  *
  */
 public class Shogun2AuthenticationProvider implements AuthenticationProvider {

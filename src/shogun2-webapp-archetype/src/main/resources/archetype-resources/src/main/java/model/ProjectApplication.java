@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import de.terrestris.shogun2.model.Application;
 
 /**
- * @author Nils Buehner
+ * @author Nils Bühner
  * 
  */
 @Entity
