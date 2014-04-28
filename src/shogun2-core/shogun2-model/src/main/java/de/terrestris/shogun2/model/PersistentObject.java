@@ -36,7 +36,7 @@ import org.joda.time.ReadableDateTime;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class PersistentObject implements Serializable {
 
-	private static final long serialVersionUID = 8299954175165022499L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)

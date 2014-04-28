@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.Application;
 @Table
 public class ProjectApplication extends Application {
 
-	private static final long serialVersionUID = -4035430327848743034L;
+	private static final long serialVersionUID = 1L;
 
 	@Column
 	private String projectSpecificString;

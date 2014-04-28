@@ -21,7 +21,7 @@ import org.joda.time.LocalDate;
 @Table
 public class Person extends PersistentObject {
 
-	private static final long serialVersionUID = 7056396802609951521L;
+	private static final long serialVersionUID = 1L;
 
 	@Column
 	private String firstName;
