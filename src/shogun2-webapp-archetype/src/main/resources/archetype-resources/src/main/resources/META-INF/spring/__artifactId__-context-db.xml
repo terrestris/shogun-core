@@ -41,6 +41,7 @@
 			<props>
 				<prop key="hibernate.dialect">${symbol_dollar}{hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${symbol_dollar}{hibernate.show_sql}</prop>
+				<prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
 				<prop key="hibernate.hbm2ddl.auto">${symbol_dollar}{hibernate.hbm2ddl.auto}</prop>
 			</props>
 		</property>
