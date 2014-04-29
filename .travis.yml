@@ -10,7 +10,7 @@ before_script:
   - mvn --batch-mode --threads 2.0C -DskipTests=true -Dmaven.javadoc.skip=true install
 
 script:
-  - mvn --batch-mode --threads 2.0C clean test
+  - mvn --batch-mode --threads 2.0C --show-version clean test
 
 after_success:
   - mvn --batch-mode --threads 2.0C clean cobertura:cobertura coveralls:cobertura
