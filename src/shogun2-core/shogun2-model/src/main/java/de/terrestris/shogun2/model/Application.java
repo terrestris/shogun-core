@@ -22,7 +22,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 @Table
 public class Application extends PersistentObject {
 
-	private static final long serialVersionUID = -8121493601745944561L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The name of the application.

@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 @Table
 public class User extends Person {
 
-	private static final long serialVersionUID = -4655851586457507906L;
+	private static final long serialVersionUID = 1L;
 
 	@Column
 	private String accountName;
