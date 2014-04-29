@@ -39,16 +39,10 @@
 		<property name="packagesToScan" value="${model_packages_to_scan}" />
 		<property name="hibernateProperties">
 			<props>
-				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop> -->
 				<prop key="hibernate.dialect">${symbol_dollar}{hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${symbol_dollar}{hibernate.show_sql}</prop>
+				<prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
 				<prop key="hibernate.hbm2ddl.auto">${symbol_dollar}{hibernate.hbm2ddl.auto}</prop>
-				<!-- caching -->
-				<!-- <prop key="hibernate.cache.use_query_cache">${symbol_dollar}{hibernate.cache.use_query_cache}</prop> 
-					<prop key="hibernate.max_fetch_depth">${symbol_dollar}{hibernate.max_fetch_depth}</prop> 
-					<prop key="hibernate.cache.use_second_level_cache">${symbol_dollar}{hibernate.cache.use_second_level_cache}</prop> 
-					<prop key="hibernate.cache.use_query_cache">${symbol_dollar}{hibernate.cache.use_query_cache}</prop> 
-					<prop key="hibernate.cache.region.factory_class">${symbol_dollar}{hibernate.cache.region.factory_class}</prop> -->
 			</props>
 		</property>
 	</bean>
