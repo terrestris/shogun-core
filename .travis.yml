@@ -7,7 +7,6 @@ jdk:
 
 before_script:
   - cd src/
-  - mvn --version
   - mvn --batch-mode --threads 2.0C -DskipTests=true -Dmaven.javadoc.skip=true install
 
 script:
