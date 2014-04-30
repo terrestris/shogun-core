@@ -21,7 +21,7 @@ public class ProjectContentInitializer extends ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static Logger LOG = Logger.getLogger(ProjectContentInitializer.class);
+	private static final Logger LOG = Logger.getLogger(ProjectContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if something should be initialized on startup

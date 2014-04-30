@@ -19,7 +19,7 @@ public class ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static Logger LOG = Logger.getLogger(ContentInitializer.class);
+	private static final Logger LOG = Logger.getLogger(ContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if content initialization should be active on startup

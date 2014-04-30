@@ -26,7 +26,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	/**
 	 * The Logger
 	 */
-	private static Logger LOG = Logger
+	private static final Logger LOG = Logger
 			.getLogger(Shogun2AuthenticationProvider.class);
 
 	/**
