@@ -21,7 +21,7 @@ public class ProjectContentInitializer extends ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static Logger log = Logger.getLogger(ProjectContentInitializer.class);
+	private static Logger LOG = Logger.getLogger(ProjectContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if something should be initialized on startup
@@ -46,7 +46,7 @@ public class ProjectContentInitializer extends ContentInitializer {
 		super.initializeDatabaseContent();
 
 		if (this.projectInitEnabled.equals(true)) {
-			log.info("Initializing " + numberOfProjectDummies
+			LOG.info("Initializing " + numberOfProjectDummies
 					+ " project application dummies.");
 
 			Set<ProjectApplication> createdApps = new HashSet<ProjectApplication>();
@@ -67,14 +67,14 @@ public class ProjectContentInitializer extends ContentInitializer {
 				createdApps.add(application);
 			}
 
-			log.info("Created " + createdApps.size() + " applications for the project.");
+			LOG.info("Created " + createdApps.size() + " applications for the project.");
 		} else {
-			log.info("Not initializing anything for Project. Searching for existing apps now.");
+			LOG.info("Not initializing anything for Project. Searching for existing apps now.");
 
 			List<ProjectApplication> existingApps = projectApplicationService
 					.findAllProjectApplications();
 
-			log.info("Found " + existingApps.size()
+			LOG.info("Found " + existingApps.size()
 					+ " existing applications.");
 		}
 

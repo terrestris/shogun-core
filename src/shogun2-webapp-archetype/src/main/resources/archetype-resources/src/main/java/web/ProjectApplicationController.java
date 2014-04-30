@@ -22,7 +22,7 @@ import de.terrestris.shogun2.web.ApplicationController;
 @RequestMapping("/projectApplication")
 public class ProjectApplicationController {
 
-	private static final Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(ProjectApplicationController.class);
 
 	@Autowired
@@ -31,7 +31,7 @@ public class ProjectApplicationController {
 	@RequestMapping(value = "/create.action", method = RequestMethod.GET)
 	public @ResponseBody
 	Application createApplication(String specificString, Integer specificInteger) {
-		log.info("Trying to create a ProjectApplication now.");
+		LOG.info("Trying to create a ProjectApplication now.");
 
 		ProjectApplication application = new ProjectApplication();
 		application.setName("Project App");
@@ -47,7 +47,7 @@ public class ProjectApplicationController {
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
 	public @ResponseBody
 	List<ProjectApplication> findAllApplications() {
-		log.info("Trying to find all ProjectApplications.");
+		LOG.info("Trying to find all ProjectApplications.");
 
 		return projectApplicationService.findAllProjectApplications();
 	}

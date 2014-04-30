@@ -19,7 +19,7 @@ public class ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static Logger log = Logger.getLogger(ContentInitializer.class);
+	private static Logger LOG = Logger.getLogger(ContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if content initialization should be active on startup
@@ -37,9 +37,9 @@ public class ContentInitializer {
 	public void initializeDatabaseContent() {
 
 		if (this.shogunInitEnabled.equals(true)) {
-			log.info("Initializing some SHOGun content!");
+			LOG.info("Initializing some SHOGun content!");
 		} else {
-			log.info("Not initializing anything for SHOGun.");
+			LOG.info("Not initializing anything for SHOGun.");
 		}
 	}
 }
