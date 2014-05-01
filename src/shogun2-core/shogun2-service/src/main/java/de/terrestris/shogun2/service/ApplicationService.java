@@ -20,7 +20,7 @@ import de.terrestris.shogun2.model.Application;
 @Transactional(readOnly = true)
 public class ApplicationService {
 
-	private static final Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(ApplicationService.class);
 
 	@Autowired
@@ -31,7 +31,7 @@ public class ApplicationService {
 
 		applicationDao.saveOrUpdate(application);
 
-		log.info("Saved Application: " + application);
+		LOG.info("Saved Application: " + application);
 
 		return application;
 	}

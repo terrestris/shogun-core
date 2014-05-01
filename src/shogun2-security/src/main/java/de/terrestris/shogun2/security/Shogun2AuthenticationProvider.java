@@ -26,7 +26,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	/**
 	 * The Logger
 	 */
-	private static Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(Shogun2AuthenticationProvider.class);
 
 	/**
@@ -38,7 +38,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 
-		log.info("Authenticating a SHOGun2-User");
+		LOG.info("Authenticating a SHOGun2-User");
 
 		// get username/password
 		String userName = authentication.getName();
@@ -60,7 +60,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 				userInformation, authentication.getCredentials(),
 				grantedAuthorities);
 
-		log.info("Finished authentication of the SHOGun2-User");
+		LOG.info("Finished authentication of the SHOGun2-User");
 
 		return authenticationToken;
 	}

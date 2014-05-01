@@ -17,7 +17,7 @@ import ${package}.model.ProjectApplication;
 @Transactional(readOnly = true)
 public class ProjectApplicationService {
 
-	private static final Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(ProjectApplicationService.class);
 
 	@Autowired
@@ -29,13 +29,13 @@ public class ProjectApplicationService {
 
 		projectApplicationDao.saveOrUpdate(application);
 
-		log.info("Saved ProjectApplication: " + application);
+		LOG.info("Saved ProjectApplication: " + application);
 
 		return application;
 	}
 
 	public List<ProjectApplication> findAllProjectApplications() {
-		log.info("finding all project apps");
+		LOG.info("finding all project apps");
 		return projectApplicationDao.findAll();
 	}
 
