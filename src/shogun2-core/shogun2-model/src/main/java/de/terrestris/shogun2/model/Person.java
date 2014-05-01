@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -19,6 +21,7 @@ import org.joda.time.LocalDate;
  */
 @Entity
 @Table
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Person extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
