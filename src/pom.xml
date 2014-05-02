@@ -130,6 +130,13 @@
                     <maxmem>256m</maxmem>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
+                    <instrumentation>
+                        <!-- exclude all model-classes because
+                             they will not be covered by a test -->
+                        <excludes>
+                            <exclude>de/terrestris/shogun2/model/*.class]</exclude>
+                        </excludes>
+                    </instrumentation>
                 </configuration>
             </plugin>
 
