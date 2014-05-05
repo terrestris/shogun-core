@@ -41,7 +41,7 @@ public class ProjectApplicationController {
 		application.setProjectSpecificString(specificString);
 		application.setProjectSpecificInteger(specificInteger);
 
-		return projectApplicationService.createProjectApplication(application);
+		return projectApplicationService.saveOrUpdate(application);
 	}
 
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
@@ -49,7 +49,7 @@ public class ProjectApplicationController {
 	List<ProjectApplication> findAllApplications() {
 		LOG.info("Trying to find all ProjectApplications.");
 
-		return projectApplicationService.findAllProjectApplications();
+		return projectApplicationService.findAll();
 	}
 
 }
