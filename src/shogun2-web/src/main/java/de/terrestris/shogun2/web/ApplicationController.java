@@ -15,7 +15,7 @@ import de.terrestris.shogun2.service.ApplicationService;
 
 /**
  * @author Nils Bühner
- *
+ * 
  */
 @Controller
 @RequestMapping("/application")
@@ -37,7 +37,7 @@ public class ApplicationController {
 		application.setDescription(description);
 		application.setLanguage(Locale.getDefault());
 
-		return applicationService.createApplication(application);
+		return applicationService.saveOrUpdate(application);
 	}
 
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
@@ -45,6 +45,6 @@ public class ApplicationController {
 	List<Application> findAllApplications() {
 		LOG.info("Trying to find all Applications.");
 
-		return applicationService.findAllApplications();
+		return applicationService.findAll();
 	}
 }
