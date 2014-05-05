@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ${package}.model.ProjectApplication;
 import ${package}.service.ProjectApplicationService;
 import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.web.ApplicationController;
 
 @Controller
 @RequestMapping("/projectApplication")
