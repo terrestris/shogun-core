@@ -14,7 +14,6 @@ import de.terrestris.shogun2.model.Application;
  * 
  */
 @Entity
-@Table
 public class ProjectApplication extends Application {
 
 	private static final long serialVersionUID = 1L;

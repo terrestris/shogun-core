@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ${package}.model.ProjectApplication;
 import ${package}.service.ProjectApplicationService;
 import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.web.ApplicationController;
 
 @Controller
 @RequestMapping("/projectApplication")
@@ -41,7 +40,7 @@ public class ProjectApplicationController {
 		application.setProjectSpecificString(specificString);
 		application.setProjectSpecificInteger(specificInteger);
 
-		return projectApplicationService.createProjectApplication(application);
+		return projectApplicationService.saveOrUpdate(application);
 	}
 
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
@@ -49,7 +48,7 @@ public class ProjectApplicationController {
 	List<ProjectApplication> findAllApplications() {
 		LOG.info("Trying to find all ProjectApplications.");
 
-		return projectApplicationService.findAllProjectApplications();
+		return projectApplicationService.findAll();
 	}
 
 }

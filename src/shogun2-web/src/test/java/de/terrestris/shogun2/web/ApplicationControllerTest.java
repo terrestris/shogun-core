@@ -57,7 +57,7 @@ public class ApplicationControllerTest {
 		Application first = new Application(firstAppName, firstAppDesc);
 		Application second = new Application(secondAppName, secondAppDesc);
 
-		when(applicationServiceMock.findAllApplications()).thenReturn(
+		when(applicationServiceMock.findAll()).thenReturn(
 				Arrays.asList(first, second));
 
 		// Perform and test the GET-Request
@@ -71,7 +71,7 @@ public class ApplicationControllerTest {
 				.andExpect(jsonPath("$[1].name", is(secondAppName)))
 				.andExpect(jsonPath("$[1].description", is(secondAppDesc)));
 
-		verify(applicationServiceMock, times(1)).findAllApplications();
+		verify(applicationServiceMock, times(1)).findAll();
 		verifyNoMoreInteractions(applicationServiceMock);
 	}
 }

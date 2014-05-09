@@ -62,7 +62,7 @@ public class ProjectContentInitializer extends ContentInitializer {
 				application.setProjectSpecificInteger(17);
 				application.setProjectSpecificString("seventeen");
 
-				application = projectApplicationService.createProjectApplication(application);
+				application = projectApplicationService.saveOrUpdate(application);
 
 				createdApps.add(application);
 			}
@@ -71,8 +71,7 @@ public class ProjectContentInitializer extends ContentInitializer {
 		} else {
 			LOG.info("Not initializing anything for Project. Searching for existing apps now.");
 
-			List<ProjectApplication> existingApps = projectApplicationService
-					.findAllProjectApplications();
+			List<ProjectApplication> existingApps = projectApplicationService.findAll();
 
 			LOG.info("Found " + existingApps.size()
 					+ " existing applications.");
