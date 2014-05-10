@@ -73,7 +73,9 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	public List<E> findByCriteria(Criterion... criterion) {
 		Criteria criteria = getSession().createCriteria(clazz);
 		for (Criterion c : criterion) {
-			criteria.add(c);
+			if (c != null) {
+				criteria.add(c);
+			}
 		}
 		return criteria.list();
 	}
