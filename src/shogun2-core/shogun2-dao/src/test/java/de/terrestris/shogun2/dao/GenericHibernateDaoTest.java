@@ -43,11 +43,11 @@ class ConcreteDao extends GenericHibernateDao<Application, Integer> {
 }
 
 /**
- * This class will test the {@link GenericHibernateDao}. As {@link
- * GenericHibernateDao} is an abstract class, we cannot instantiate it. Instead
- * we will use the {@link ConcreteDao} (as the most basic extension of {@link
- * GenericHibernateDao}) to test the logic contained in {@link
- * GenericHibernateDao}.
+ * This class will test the {@link GenericHibernateDao}. As
+ * {@link GenericHibernateDao} is an abstract class, we cannot instantiate it.
+ * Instead we will use the {@link ConcreteDao} (as the most basic extension of
+ * {@link GenericHibernateDao}) to test the logic contained in
+ * {@link GenericHibernateDao}.
  *
  * @author Marc Jansen
  * @author Nils Bühner
@@ -57,7 +57,6 @@ class ConcreteDao extends GenericHibernateDao<Application, Integer> {
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
 public class GenericHibernateDaoTest {
-
 
 	/**
 	 * We use the {@link ConcreteDao} to test the behaviour of the
@@ -229,8 +228,7 @@ public class GenericHibernateDaoTest {
 			assertNotEquals(before, after);
 
 			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
+			assertTrue(after.isAfter(before));
 		} catch (InterruptedException e) {
 			fail("Caught exception while attempting to wait");
 			return;
@@ -352,8 +350,7 @@ public class GenericHibernateDaoTest {
 	public void findAll_shouldReturnEmptyListWhenNothingPersisted() {
 		List<Application> all = this.dao.findAll();
 
-		assertTrue("findAll() returns list with correct size",
-				all.size() == 0);
+		assertTrue("findAll() returns list with correct size", all.size() == 0);
 	}
 
 	/**
@@ -367,8 +364,7 @@ public class GenericHibernateDaoTest {
 
 		List<Application> all = this.dao.findAll();
 
-		assertTrue("findAll() returns list with correct size",
-				all.size() == 2);
+		assertTrue("findAll() returns list with correct size", all.size() == 2);
 
 		assertTrue("First app is contained when all requested",
 				all.contains(app1));
@@ -377,7 +373,7 @@ public class GenericHibernateDaoTest {
 	}
 
 	/**
-	 *Tests whether findByCriteria() can deal with strange arguments.
+	 * Tests whether findByCriteria() can deal with strange arguments.
 	 */
 	@Test
 	public void findByCriteria_dealsAsExpectedWithVariousArguments() {
@@ -386,20 +382,16 @@ public class GenericHibernateDaoTest {
 		Criterion c = Restrictions.eq("id", 1);
 
 		got = dao.findByCriteria();
-		assertTrue("findByCriteria() doesn't throw when no argument",
-				true);
+		assertTrue("findByCriteria() doesn't throw when no argument", true);
 
 		got = dao.findByCriteria((Criterion) null);
-		assertTrue("findByCriteria() doesn't throw when null argument",
-				true);
+		assertTrue("findByCriteria() doesn't throw when null argument", true);
 
 		got = dao.findByCriteria(c);
-		assertTrue("findByCriteria() doesn't throw when sane argument",
-				true);
+		assertTrue("findByCriteria() doesn't throw when sane argument", true);
 
 		got = dao.findByCriteria(c, (Criterion) null);
-		assertTrue("findByCriteria() doesn't throw when arguments mixed",
-				true);
+		assertTrue("findByCriteria() doesn't throw when arguments mixed", true);
 	}
 
 	/**
@@ -428,9 +420,21 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findByCriteria_canHandleComplexCriteria() {
-		Application app1 = getRandomSavedMockApp(); // should be returned
-		Application app2 = getRandomSavedMockApp(); // should not be returned
-		Application app3 = getRandomSavedMockApp(); // should be returned
+
+		Application app1;
+		Application app2;
+		Application app3;
+
+		try {
+			app1 = getRandomSavedMockApp(); // should be returned
+			Thread.sleep(1);
+			app2 = getRandomSavedMockApp(); // should not be returned
+			Thread.sleep(1);
+			app3 = getRandomSavedMockApp(); // should be returned
+		} catch (InterruptedException e) {
+			fail("Caught exception while attempting to wait");
+			return;
+		}
 
 		Criterion c1 = Restrictions.eq("name", app1.getName());
 		Criterion c3 = Restrictions.eq("modified", app3.getModified());
@@ -457,8 +461,17 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findByCriteria_canHandleManyCriterias() {
-		Application app1 = getRandomSavedMockApp(); // should be returned
-		Application app2 = getRandomSavedMockApp(); // should not be returned
+		Application app1;
+		Application app2;
+
+		try {
+			app1 = getRandomSavedMockApp(); // should be returned
+			Thread.sleep(1);
+			app2 = getRandomSavedMockApp(); // should not be returned
+		} catch (InterruptedException e) {
+			fail("Caught exception while attempting to wait");
+			return;
+		}
 
 		Criterion c1name = Restrictions.eq("name", app1.getName());
 		Criterion c1modified = Restrictions.eq("modified", app1.getModified());
