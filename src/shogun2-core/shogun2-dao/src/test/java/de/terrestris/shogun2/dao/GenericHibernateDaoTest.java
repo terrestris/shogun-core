@@ -420,9 +420,21 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findByCriteria_canHandleComplexCriteria() {
-		Application app1 = getRandomSavedMockApp(); // should be returned
-		Application app2 = getRandomSavedMockApp(); // should not be returned
-		Application app3 = getRandomSavedMockApp(); // should be returned
+
+		Application app1;
+		Application app2;
+		Application app3;
+
+		try {
+			app1 = getRandomSavedMockApp(); // should be returned
+			Thread.sleep(1);
+			app2 = getRandomSavedMockApp(); // should not be returned
+			Thread.sleep(1);
+			app3 = getRandomSavedMockApp(); // should be returned
+		} catch (InterruptedException e) {
+			fail("Caught exception while attempting to wait");
+			return;
+		}
 
 		Criterion c1 = Restrictions.eq("name", app1.getName());
 		Criterion c3 = Restrictions.eq("modified", app3.getModified());
@@ -449,8 +461,17 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findByCriteria_canHandleManyCriterias() {
-		Application app1 = getRandomSavedMockApp(); // should be returned
-		Application app2 = getRandomSavedMockApp(); // should not be returned
+		Application app1;
+		Application app2;
+
+		try {
+			app1 = getRandomSavedMockApp(); // should be returned
+			Thread.sleep(1);
+			app2 = getRandomSavedMockApp(); // should not be returned
+		} catch (InterruptedException e) {
+			fail("Caught exception while attempting to wait");
+			return;
+		}
 
 		Criterion c1name = Restrictions.eq("name", app1.getName());
 		Criterion c1modified = Restrictions.eq("modified", app1.getModified());
