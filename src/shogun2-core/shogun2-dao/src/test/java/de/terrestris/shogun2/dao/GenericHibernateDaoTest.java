@@ -229,8 +229,7 @@ public class GenericHibernateDaoTest {
 			assertNotEquals(before, after);
 
 			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
+			assertTrue(after.isAfter(before));
 		} catch (InterruptedException e) {
 			fail("Caught exception while attempting to wait");
 			return;
