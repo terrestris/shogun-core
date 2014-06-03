@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table
-public class WmsLayer extends Layer {
+public class OpenLayers2WmsLayer extends OpenLayers2Layer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -70,7 +70,7 @@ public class WmsLayer extends Layer {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public WmsLayer() {
+	public OpenLayers2WmsLayer() {
 	}
 
 	/**
