@@ -7,9 +7,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 /**
- * This class represents a basic (map-)layer. The model is mainly based on the
- * OpenLayers.Layer-model:
- * http://dev.openlayers.org/docs/files/OpenLayers/Layer-js.html
+ * This class represents a basic (map-)layer.
  * 
  * We annotate this abstract class with {@link Entity}. This way we can use
  * {@link Layer} as type of Sets when using "to-many"-relations.
@@ -25,17 +23,13 @@ public abstract class Layer extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The name of the layer. This field must not be null.
+	 * The name of the layer. This field is mandatory.
 	 */
 	@Column(nullable = false)
 	private String name;
 
 	/**
-	 * The projection of the Layer, e.g. "EPSG:3857". If specifying projection,
-	 * also set {@link #maxExtent}, {@link #maxResolution} or
-	 * {@link #resolutions} as appropriate. When using vector layers with
-	 * strategies, layer projection should be set to the projection of the
-	 * source data if that is different from the map default. Defaults to null.
+	 * The projection of the Layer.
 	 */
 	@Column
 	private String projection = null;
