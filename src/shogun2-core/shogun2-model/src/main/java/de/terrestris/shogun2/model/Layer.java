@@ -2,6 +2,9 @@ package de.terrestris.shogun2.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 /**
  * This class represents a basic (map-)layer. The model is mainly based on the
@@ -15,6 +18,8 @@ import javax.persistence.Entity;
  * 
  */
 @Entity
+@Table
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Layer extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
