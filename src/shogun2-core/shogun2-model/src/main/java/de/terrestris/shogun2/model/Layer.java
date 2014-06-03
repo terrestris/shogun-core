@@ -160,13 +160,6 @@ public abstract class Layer extends PersistentObject {
 	private Boolean isBaseLayer = false;
 
 	/**
-	 * Whether or not the layer's images have an alpha channel. Defaults to
-	 * false.
-	 */
-	@Column
-	private Boolean alpha = false;
-
-	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
@@ -473,18 +466,4 @@ public abstract class Layer extends PersistentObject {
 		this.isBaseLayer = isBaseLayer;
 	}
 
-	/**
-	 * @return the alpha
-	 */
-	public Boolean getAlpha() {
-		return alpha;
-	}
-
-	/**
-	 * @param alpha
-	 *            the alpha to set
-	 */
-	public void setAlpha(Boolean alpha) {
-		this.alpha = alpha;
-	}
 }
