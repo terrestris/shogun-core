@@ -49,6 +49,7 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * 
 	 * @param e
 	 */
+	@Transactional(readOnly = false)
 	public void delete(E e) {
 		dao.delete(e);
 	}
