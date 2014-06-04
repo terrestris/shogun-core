@@ -5,7 +5,8 @@ package ${package}.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+
+import ch.rasc.extclassgenerator.Model;
 
 import de.terrestris.shogun2.model.Application;
 
@@ -14,6 +15,11 @@ import de.terrestris.shogun2.model.Application;
  * 
  */
 @Entity
+@Model(value = "${artifactId}.model.ProjectApplication",
+	readMethod = "projectApplicationService.findAll",
+	createMethod = "projectApplicationService.saveOrUpdate",
+	updateMethod = "projectApplicationService.saveOrUpdate",
+	destroyMethod = "projectApplicationService.delete")
 public class ProjectApplication extends Application {
 
 	private static final long serialVersionUID = 1L;
