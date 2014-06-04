@@ -108,6 +108,10 @@
         <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
 
+        <!-- Other -->
+        <ext-direct-spring.version>1.4.1</ext-direct-spring.version>
+        <ext-class-generator.version>1.0.2</ext-class-generator.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -278,6 +282,19 @@
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- ExtDirectSpring -->
+            <dependency>
+                <groupId>ch.ralscha</groupId>
+                <artifactId>extdirectspring</artifactId>
+                <version>${ext-direct-spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.rasc</groupId>
+                <artifactId>extclassgenerator</artifactId>
+                <version>${ext-class-generator.version}</version>
             </dependency>
 
             <!-- Spring Security -->

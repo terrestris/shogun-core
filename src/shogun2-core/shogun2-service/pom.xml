@@ -42,6 +42,12 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
 
+        <!-- ExtDirectSpring -->
+        <dependency>
+            <groupId>ch.ralscha</groupId>
+            <artifactId>extdirectspring</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

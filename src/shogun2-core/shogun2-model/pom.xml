@@ -35,6 +35,11 @@
             <groupId>org.jadira.usertype</groupId>
             <artifactId>usertype.jodatime</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>ch.rasc</groupId>
+            <artifactId>extclassgenerator</artifactId>
+         </dependency>
     </dependencies>
 
 </project>
