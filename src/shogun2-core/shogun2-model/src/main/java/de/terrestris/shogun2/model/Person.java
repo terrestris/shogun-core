@@ -15,6 +15,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
+import ch.rasc.extclassgenerator.Model;
+
 /**
  * @author Nils Bühner
  *
@@ -22,6 +24,11 @@ import org.joda.time.LocalDate;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
+@Model(value = "shogun2.model.Person",
+	readMethod = "personService.findAll",
+	createMethod = "personService.saveOrUpdate",
+	updateMethod = "personService.saveOrUpdate",
+	destroyMethod = "personService.delete")
 public class Person extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
