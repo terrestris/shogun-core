@@ -4,11 +4,11 @@
 package ${package}.service;
 
 import org.springframework.stereotype.Service;
-import de.terrestris.shogun2.service.AbstractCrudService;
+import de.terrestris.shogun2.service.AbstractExtDirectCrudService;
 
 import ${package}.model.ProjectApplication;
 
 @Service("projectApplicationService")
 public class ProjectApplicationService extends
-		AbstractCrudService<ProjectApplication> {
+	AbstractExtDirectCrudService<ProjectApplication> {
 }
