@@ -96,7 +96,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public PagingResult<E> findByCriteriaWithPaging(Integer firstResult,
+	public PagingResult<E> findByCriteriaWithSortingAndPaging(Integer firstResult,
 			Integer maxResults, List<Order> sorters, Criterion... criterion) {
 		Criteria criteria = getSession().createCriteria(clazz);
 

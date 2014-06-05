@@ -101,7 +101,7 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 
 		List<Order> hibernateSorters = buildHibernateSorters(sorters);
 
-		PagingResult<E> pagingResult = dao.findByCriteriaWithPaging(
+		PagingResult<E> pagingResult = dao.findByCriteriaWithSortingAndPaging(
 				firstResult, maxResults, hibernateSorters);
 
 		ExtDirectStoreResult<E> extResult = new ExtDirectStoreResult<E>(
