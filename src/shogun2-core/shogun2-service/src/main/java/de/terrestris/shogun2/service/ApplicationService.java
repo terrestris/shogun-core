@@ -12,6 +12,6 @@ import de.terrestris.shogun2.model.Application;
  * 
  */
 @Service("applicationService")
-public class ApplicationService extends AbstractCrudService<Application> {
+public class ApplicationService extends AbstractExtDirectCrudService<Application> {
 
 }

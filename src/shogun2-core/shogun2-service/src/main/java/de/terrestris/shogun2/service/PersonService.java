@@ -12,6 +12,6 @@ import de.terrestris.shogun2.model.Person;
  * 
  */
 @Service("personService")
-public class PersonService extends AbstractCrudService<Person> {
+public class PersonService extends AbstractExtDirectCrudService<Person> {
 
 }

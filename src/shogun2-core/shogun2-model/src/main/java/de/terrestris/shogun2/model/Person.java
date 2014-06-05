@@ -26,9 +26,9 @@ import ch.rasc.extclassgenerator.Model;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Model(value = "shogun2.model.Person",
 	readMethod = "personService.findAll",
-	createMethod = "personService.saveOrUpdate",
-	updateMethod = "personService.saveOrUpdate",
-	destroyMethod = "personService.delete")
+	createMethod = "personService.saveOrUpdateCollection",
+	updateMethod = "personService.saveOrUpdateCollection",
+	destroyMethod = "personService.deleteCollection")
 public class Person extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;

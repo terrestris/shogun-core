@@ -19,9 +19,9 @@ import ch.rasc.extclassgenerator.Model;
 @Table
 @Model(value = "shogun2.model.User",
 	readMethod = "userService.findAll",
-	createMethod = "userService.saveOrUpdate",
-	updateMethod = "userService.saveOrUpdate",
-	destroyMethod = "userService.delete")
+	createMethod = "userService.saveOrUpdateCollection",
+	updateMethod = "userService.saveOrUpdateCollection",
+	destroyMethod = "userService.deleteCollection")
 public class User extends Person {
 
 	private static final long serialVersionUID = 1L;

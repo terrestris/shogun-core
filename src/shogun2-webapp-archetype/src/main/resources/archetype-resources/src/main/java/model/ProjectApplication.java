@@ -17,9 +17,9 @@ import de.terrestris.shogun2.model.Application;
 @Entity
 @Model(value = "${artifactId}.model.ProjectApplication",
 	readMethod = "projectApplicationService.findAll",
-	createMethod = "projectApplicationService.saveOrUpdate",
-	updateMethod = "projectApplicationService.saveOrUpdate",
-	destroyMethod = "projectApplicationService.delete")
+	createMethod = "projectApplicationService.saveOrUpdateCollection",
+	updateMethod = "projectApplicationService.saveOrUpdateCollection",
+	destroyMethod = "projectApplicationService.deleteCollection")
 public class ProjectApplication extends Application {
 
 	private static final long serialVersionUID = 1L;

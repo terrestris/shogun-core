@@ -27,9 +27,9 @@ import ch.rasc.extclassgenerator.Model;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Model(value = "shogun2.model.Application",
 	readMethod = "applicationService.findAll",
-	createMethod = "applicationService.saveOrUpdate",
-	updateMethod = "applicationService.saveOrUpdate",
-	destroyMethod = "applicationService.delete")
+	createMethod = "applicationService.saveOrUpdateCollection",
+	updateMethod = "applicationService.saveOrUpdateCollection",
+	destroyMethod = "applicationService.deleteCollection")
 public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
