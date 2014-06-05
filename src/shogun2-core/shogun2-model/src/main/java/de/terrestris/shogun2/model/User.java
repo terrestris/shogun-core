@@ -18,7 +18,7 @@ import ch.rasc.extclassgenerator.Model;
 @Entity
 @Table
 @Model(value = "shogun2.model.User",
-	readMethod = "userService.findAll",
+	readMethod = "userService.findWithSortingAndPagingExtDirect",
 	createMethod = "userService.saveOrUpdateCollection",
 	updateMethod = "userService.saveOrUpdateCollection",
 	destroyMethod = "userService.deleteCollection")

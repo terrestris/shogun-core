@@ -26,7 +26,7 @@ import ch.rasc.extclassgenerator.Model;
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Model(value = "shogun2.model.Application",
-	readMethod = "applicationService.findAll",
+	readMethod = "applicationService.findWithSortingAndPagingExtDirect",
 	createMethod = "applicationService.saveOrUpdateCollection",
 	updateMethod = "applicationService.saveOrUpdateCollection",
 	destroyMethod = "applicationService.deleteCollection")
