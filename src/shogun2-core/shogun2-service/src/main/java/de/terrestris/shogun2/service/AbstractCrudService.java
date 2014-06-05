@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -23,9 +22,7 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	@ExtDirectMethod
 	public E saveOrUpdate(E e) {
-
 		dao.saveOrUpdate(e);
 		return e;
 	}
@@ -35,7 +32,6 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * @param id
 	 * @return
 	 */
-	@ExtDirectMethod
 	public E findById(Integer id) {
 		return dao.findById(id);
 	}
@@ -44,7 +40,6 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * 
 	 * @return
 	 */
-	@ExtDirectMethod
 	public List<E> findAll() {
 		return dao.findAll();
 	}
@@ -54,8 +49,8 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * @param e
 	 */
 	@Transactional(readOnly = false)
-	@ExtDirectMethod
 	public void delete(E e) {
 		dao.delete(e);
 	}
+
 }
