@@ -23,7 +23,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="${web_packages_to_scan}"
+	<context:component-scan base-package="${web_packages_to_scan}, ch.ralscha.extdirectspring"
 		use-default-filters="false">
 		<context:include-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />

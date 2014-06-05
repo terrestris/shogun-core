@@ -43,6 +43,25 @@
         <url-pattern>*.action</url-pattern>
     </servlet-mapping>
 
+    <!-- Needed for the Ext Direct api.js.
+         See https://github.com/ralscha/extdirectspring/wiki/Api -->
+    <servlet-mapping>
+        <servlet-name>${artifactId}</servlet-name>
+        <url-pattern>/action/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- See de.terrestris.shogun2.web.ExtModelController -->
+    <servlet-mapping>
+        <servlet-name>${artifactId}</servlet-name>
+        <url-pattern>/shogun2/model/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- See de.terrestris.shogun2.web.ExtModelController -->
+    <servlet-mapping>
+        <servlet-name>${artifactId}</servlet-name>
+        <url-pattern>/${artifactId}/model/*</url-pattern>
+    </servlet-mapping>
+
     <!-- Misc -->
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>

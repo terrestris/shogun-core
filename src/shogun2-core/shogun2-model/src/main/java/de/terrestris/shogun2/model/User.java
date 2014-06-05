@@ -9,12 +9,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import ch.rasc.extclassgenerator.Model;
+
 /**
  * @author Nils Bühner
  *
  */
 @Entity
 @Table
+@Model(value = "shogun2.model.User",
+	readMethod = "userService.findAll",
+	createMethod = "userService.saveOrUpdate",
+	updateMethod = "userService.saveOrUpdate",
+	destroyMethod = "userService.delete")
 public class User extends Person {
 
 	private static final long serialVersionUID = 1L;

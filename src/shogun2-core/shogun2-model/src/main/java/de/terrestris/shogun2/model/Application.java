@@ -13,6 +13,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import ch.rasc.extclassgenerator.Model;
+
 /**
  * This class represents a (GIS-)application, which can be opened in a browser.
  * It mainly provides the initial configuration of the map.
@@ -23,6 +25,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Model(value = "shogun2.model.Application",
+	readMethod = "applicationService.findAll",
+	createMethod = "applicationService.saveOrUpdate",
+	updateMethod = "applicationService.saveOrUpdate",
+	destroyMethod = "applicationService.delete")
 public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
