@@ -502,7 +502,6 @@ public class AbstractExtDirectCrudServiceTest {
 		PersistentObject obj = new PersistentObject() {
 		};
 		setIdOnPersistentObject(obj, i);
-		System.out.println("+++ set " + i);
 		return obj;
 	}
 
