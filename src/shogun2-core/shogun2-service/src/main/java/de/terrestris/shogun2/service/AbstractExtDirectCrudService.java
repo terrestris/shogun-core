@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.bean.SortInfo;
 import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.paging.PagingResult;
 
 /**
  * This class provides methods, that can be used in the client with the
@@ -55,7 +60,7 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	 * 
 	 * @return
 	 */
-	@ExtDirectMethod(ExtDirectMethodType.STORE_READ)
+	@ExtDirectMethod
 	@Override
 	public List<E> findAll() {
 		return super.findAll();
@@ -76,6 +81,34 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	@Override
 	public void delete(E e) {
 		super.delete(e);
+	}
+
+	/**
+	 * Read method supporting sorting and paging. Used by ext direct proxies in
+	 * the client.
+	 * 
+	 * @param request
+	 *            Ext direct request sent by the client.
+	 * @return
+	 */
+	@ExtDirectMethod(ExtDirectMethodType.STORE_READ)
+	public ExtDirectStoreResult<E> findWithSortingAndPagingExtDirect(
+			ExtDirectStoreReadRequest request) {
+
+		Integer firstResult = request.getStart();
+		Integer maxResults = request.getLimit();
+		List<SortInfo> sorters = request.getSorters();
+
+		List<Order> hibernateSorters = buildHibernateSorters(sorters);
+
+		PagingResult<E> pagingResult = dao.findByCriteriaWithSortingAndPaging(
+				firstResult, maxResults, hibernateSorters);
+
+		ExtDirectStoreResult<E> extResult = new ExtDirectStoreResult<E>(
+				pagingResult.getTotalCount().intValue(),
+				pagingResult.getResultList());
+
+		return extResult;
 	}
 
 	/**
@@ -129,5 +162,38 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 			super.delete(e);
 		}
 
+	}
+
+	/**
+	 * Helper method to convert sort infos from the extdirectspring framework to
+	 * Hibernate Order objects.
+	 * 
+	 * @param sorters
+	 * @return
+	 */
+	private List<Order> buildHibernateSorters(List<SortInfo> sorters) {
+		List<Order> hibernateSorters = new ArrayList<Order>();
+		for (SortInfo sortInfo : sorters) {
+
+			String sortProperty = sortInfo.getProperty();
+			Order sortInfoToAdd = null;
+
+			switch (sortInfo.getDirection()) {
+				case ASCENDING:
+					sortInfoToAdd = Order.asc(sortProperty);
+					break;
+				case DESCENDING:
+					sortInfoToAdd = Order.desc(sortProperty);
+					break;
+				default:
+				break;
+			}
+
+			if (sortInfoToAdd != null) {
+				hibernateSorters.add(sortInfoToAdd);
+			}
+
+		}
+		return hibernateSorters;
 	}
 }

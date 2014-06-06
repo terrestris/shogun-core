@@ -139,6 +139,7 @@
                              they will not be covered by a test -->
                         <excludes>
                             <exclude>de/terrestris/shogun2/model/*.class</exclude>
+                            <exclude>de/terrestris/shogun2/paging/PagingResult.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>

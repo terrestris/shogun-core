@@ -7,10 +7,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.paging.PagingResult;
 
 /**
  * @author Nils Bühner
@@ -80,4 +83,53 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 		return criteria.list();
 	}
 
+	/**
+	 * Gets the results, that match a variable number of passed criterions,
+	 * considering the paging- and sort-info at the same time.
+	 * 
+	 * @param firstResult
+	 *            Starting index for the paging request.
+	 * @param maxResults
+	 *            Max number of result size.
+	 * @param criterion
+	 *            A variable number of hibernate criterions
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public PagingResult<E> findByCriteriaWithSortingAndPaging(Integer firstResult,
+			Integer maxResults, List<Order> sorters, Criterion... criterion) {
+		Criteria criteria = getSession().createCriteria(clazz);
+
+		// add paging info
+		if (maxResults != null && firstResult != null) {
+			criteria.setMaxResults(maxResults);
+			criteria.setFirstResult(firstResult);
+		}
+
+		// add sort info
+		if (sorters != null) {
+			for (Order sortInfo : sorters) {
+				criteria.addOrder(sortInfo);
+			}
+		}
+
+		for (Criterion c : criterion) {
+			if (c != null) {
+				criteria.add(c);
+			}
+		}
+
+		return new PagingResult<E>(criteria.list(), getTotalCount());
+	}
+
+	/**
+	 * Returns the total count of db entries for the current type.
+	 * 
+	 * @return
+	 */
+	private Number getTotalCount() {
+		Criteria criteria = getSession().createCriteria(clazz);
+		criteria.setProjection(Projections.rowCount());
+		return (Long) criteria.uniqueResult();
+	}
 }

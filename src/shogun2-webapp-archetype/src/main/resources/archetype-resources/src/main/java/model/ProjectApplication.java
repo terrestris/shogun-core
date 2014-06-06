@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.Application;
  */
 @Entity
 @Model(value = "${artifactId}.model.ProjectApplication",
-	readMethod = "projectApplicationService.findAll",
+	readMethod = "projectApplicationService.findWithSortingAndPagingExtDirect",
 	createMethod = "projectApplicationService.saveOrUpdateCollection",
 	updateMethod = "projectApplicationService.saveOrUpdateCollection",
 	destroyMethod = "projectApplicationService.deleteCollection")
