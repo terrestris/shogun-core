@@ -1,6 +1,6 @@
 -- taken from http://docs.spring.io/spring-security/site/docs/4.0.x/reference/htmlsingle/#dbschema-acl
 
-CREATE TABLE acl_sid (
+CREATE TABLE IF NOT EXISTS acl_sid (
     id NUMBER(38) NOT NULL PRIMARY KEY,
     principal NUMBER(1) NOT NULL CHECK (principal in (0, 1)),
     sid NVARCHAR2(100) NOT NULL,
@@ -14,7 +14,7 @@ BEGIN
     SELECT acl_sid_sequence.nextval INTO :new.id FROM dual;
 END;
 
-CREATE TABLE acl_class (
+CREATE TABLE IF NOT EXISTS acl_class (
     id NUMBER(38) NOT NULL PRIMARY KEY,
     class NVARCHAR2(100) NOT NULL,
     CONSTRAINT uk_acl_class UNIQUE (class)
@@ -27,7 +27,7 @@ BEGIN
     SELECT acl_class_sequence.nextval INTO :new.id FROM dual;
 END;
 
-CREATE TABLE acl_object_identity (
+CREATE TABLE IF NOT EXISTS acl_object_identity (
     id NUMBER(38) NOT NULL PRIMARY KEY,
     object_id_class NUMBER(38) NOT NULL,
     object_id_identity NUMBER(38) NOT NULL,
@@ -47,7 +47,7 @@ BEGIN
     SELECT acl_object_identity_sequence.nextval INTO :new.id FROM dual;
 END;
 
-CREATE TABLE acl_entry (
+CREATE TABLE IF NOT EXISTS acl_entry (
     id NUMBER(38) NOT NULL PRIMARY KEY,
     acl_object_identity NUMBER(38) NOT NULL,
     ace_order INTEGER NOT NULL,
