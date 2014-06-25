@@ -42,35 +42,35 @@ $symbol_escape = '\' )
 
     <!-- Declare an acl service -->
     <bean class="org.springframework.security.acls.jdbc.JdbcMutableAclService" id="aclService">
-        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="aclDataSource"/>
         <constructor-arg ref="lookupStrategy"/>
         <constructor-arg ref="aclCache"/>
     </bean>
 
     <!-- Declare a lookup strategy-->
     <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
-        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="aclDataSource"/>
         <constructor-arg ref="aclCache"/>
         <constructor-arg ref="aclAuthorizationStrategy"/>
         <constructor-arg ref="auditLogger"/>
     </bean>
 
     <!-- Declare an ACL datasource -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${symbol_dollar}{jdbc.acl.driverClassName}" />
-        <property name="jdbcUrl" value="${symbol_dollar}{jdbc.acl.url}" />
-        <property name="user" value="${symbol_dollar}{jdbc.acl.username}" />
-        <property name="password" value="${symbol_dollar}{jdbc.acl.password}" />
+    <bean id="aclDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${symbol_dollar}{acl.jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${symbol_dollar}{acl.jdbc.url}" />
+        <property name="user" value="${symbol_dollar}{acl.jdbc.username}" />
+        <property name="password" value="${symbol_dollar}{acl.jdbc.password}" />
 
         <!-- Configuration of the c3p0 Connection Pool -->
-        <property name="initialPoolSize" value="${symbol_dollar}{c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${symbol_dollar}{c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${symbol_dollar}{c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${symbol_dollar}{c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${symbol_dollar}{c3p0.maxIdleTime}" />
-        <property name="acquireRetryAttempts" value="${symbol_dollar}{c3p0.acquireRetryAttempts}" />
-        <property name="acquireRetryDelay" value="${symbol_dollar}{c3p0.acquireRetryDelay}" />
-        <property name="checkoutTimeout" value="${symbol_dollar}{c3p0.checkoutTimeout}" />
+        <property name="initialPoolSize" value="${symbol_dollar}{acl.c3p0.initialPoolSize}" />
+        <property name="minPoolSize" value="${symbol_dollar}{acl.c3p0.minPoolSize}" />
+        <property name="maxPoolSize" value="${symbol_dollar}{acl.c3p0.maxPoolSize}" />
+        <property name="acquireIncrement" value="${symbol_dollar}{acl.c3p0.acquireIncrement}" />
+        <property name="maxIdleTime" value="${symbol_dollar}{acl.c3p0.maxIdleTime}" />
+        <property name="acquireRetryAttempts" value="${symbol_dollar}{acl.c3p0.acquireRetryAttempts}" />
+        <property name="acquireRetryDelay" value="${symbol_dollar}{acl.c3p0.acquireRetryDelay}" />
+        <property name="checkoutTimeout" value="${symbol_dollar}{acl.c3p0.checkoutTimeout}" />
     </bean>
 
     <!-- Declare an acl cache-->

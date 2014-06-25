@@ -5,7 +5,14 @@ $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd">
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/jdbc classpath:/org/springframework/jdbc/config/spring-jdbc-4.0.xsd">
+
+    <!-- Initialize the ACL database schema on startup -->
+    <jdbc:initialize-database data-source="aclDataSource">
+        <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
+    </jdbc:initialize-database>
 
     <!-- Flags enabling/disabling some initialization on startup -->
     <bean id="shogunInitEnabled" class="java.lang.Boolean">
