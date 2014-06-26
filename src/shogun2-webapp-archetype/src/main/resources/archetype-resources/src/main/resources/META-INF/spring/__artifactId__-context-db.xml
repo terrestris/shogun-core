@@ -14,7 +14,7 @@
                         http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-4.0.xsd">
 
 	<!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html${symbol_pound}jdbc-datasource -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+	<bean id="shogun2DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		<property name="driverClass" value="${symbol_dollar}{jdbc.driverClassName}" />
 		<property name="jdbcUrl" value="${symbol_dollar}{jdbc.url}" />
@@ -34,7 +34,7 @@
 
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="shogun2DataSource" />
 		<property name="packagesToScan" value="${model_packages_to_scan}" />
 		<property name="hibernateProperties">
 			<props>

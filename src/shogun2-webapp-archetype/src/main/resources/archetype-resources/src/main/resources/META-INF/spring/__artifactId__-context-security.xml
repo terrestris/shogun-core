@@ -23,7 +23,7 @@ $symbol_escape = '\' )
     </security:authentication-manager>
 
     <security:http auto-config="true" use-expressions="true">
-        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/**" access="isAuthenticated()" />
         <security:logout logout-url="/logout" />
     </security:http>
 
@@ -71,6 +71,11 @@ $symbol_escape = '\' )
         <property name="acquireRetryAttempts" value="${symbol_dollar}{acl.c3p0.acquireRetryAttempts}" />
         <property name="acquireRetryDelay" value="${symbol_dollar}{acl.c3p0.acquireRetryDelay}" />
         <property name="checkoutTimeout" value="${symbol_dollar}{acl.c3p0.checkoutTimeout}" />
+    </bean>
+
+    <!-- We need a transaction manager for the jdbcDataSource (ACL) -->
+    <bean id="aclTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="aclDataSource" />
     </bean>
 
     <!-- Declare an acl cache-->
