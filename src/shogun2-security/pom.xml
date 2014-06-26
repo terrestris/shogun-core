@@ -17,6 +17,13 @@
 
     <dependencies>
 
+        <!-- SHOGun -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shogun2-dao</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
            <groupId>org.springframework</groupId>
