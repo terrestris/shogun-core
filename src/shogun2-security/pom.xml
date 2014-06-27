@@ -28,13 +28,17 @@
         <dependency>
            <groupId>org.springframework</groupId>
            <artifactId>spring-context-support</artifactId>
-           <version>${spring.version}</version>
         </dependency>
 
         <dependency>
            <groupId>org.springframework</groupId>
            <artifactId>spring-jdbc</artifactId>
         </dependency>
+
+         <dependency>
+             <groupId>org.springframework</groupId>
+             <artifactId>spring-aop</artifactId>
+         </dependency>
 
         <!-- Spring Security -->
         <dependency>
@@ -55,6 +59,17 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-acl</artifactId>
+        </dependency>
+
+        <!-- AspectJ -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
         </dependency>
 
         <!-- ehcache -->
