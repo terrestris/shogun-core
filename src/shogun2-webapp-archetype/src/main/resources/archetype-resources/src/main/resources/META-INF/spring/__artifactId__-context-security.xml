@@ -27,6 +27,9 @@ $symbol_escape = '\' )
         <security:logout logout-url="/logout" />
     </security:http>
 
+    <!-- ACL Management Aspect -->
+    <bean id="aclManagementAspect" class="de.terrestris.shogun2.security.aspect.AclManagement" />
+
     <!-- See http://goo.gl/o42k1S -->
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
     <!-- To use hasPermission() in expressions, configure a PermissionEvaluator -->
