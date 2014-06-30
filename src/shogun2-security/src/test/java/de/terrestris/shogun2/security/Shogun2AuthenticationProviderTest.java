@@ -57,6 +57,7 @@ public class Shogun2AuthenticationProviderTest {
 		// 1. Mock an authentication request object
 		final String shogun2UserName = "user";
 		final String shogun2UserPass = "user";
+		final User userToAuth = new User("firstName", "lastName", shogun2UserName, shogun2UserPass);
 
 		Authentication authRequest = mock(Authentication.class);
 		when(authRequest.getName()).thenReturn(shogun2UserName);
@@ -69,9 +70,7 @@ public class Shogun2AuthenticationProviderTest {
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException {
 
-				User u = new User("firstName", "lastName", shogun2UserName, shogun2UserPass);
-
-				return Collections.singletonList(u);
+				return Collections.singletonList(userToAuth);
 			}
 		}).when(userDao).findByCriteria(any(SimpleExpression.class));
 
@@ -90,8 +89,8 @@ public class Shogun2AuthenticationProviderTest {
 				instanceOf(UsernamePasswordAuthenticationToken.class));
 		assertTrue(authResult.isAuthenticated());
 
-		assertThat(authResult.getPrincipal(), instanceOf(String.class));
-		assertEquals(shogun2UserName, authResult.getPrincipal());
+		assertThat(authResult.getPrincipal(), instanceOf(User.class));
+		assertEquals(userToAuth, authResult.getPrincipal());
 		assertEquals(shogun2UserPass, authResult.getCredentials());
 
 		// thx to http://stackoverflow.com/a/12167781
