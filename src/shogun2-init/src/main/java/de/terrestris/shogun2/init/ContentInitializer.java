@@ -1,8 +1,6 @@
 package de.terrestris.shogun2.init;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
 
 import javax.sql.DataSource;
 
@@ -13,9 +11,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
@@ -80,6 +78,14 @@ public class ContentInitializer {
 	protected AclSecurityUtil aclSecurityUtil;
 
 	/**
+	 * We use the authenticationProvider to login with the admin user, that will
+	 * be created in this initializer.
+	 */
+	@Autowired
+	@Qualifier("shogun2AuthenticationProvider")
+	protected AuthenticationProvider authenticationProvider;
+
+	/**
 	 * The method called on initialization
 	 */
 	public void initializeDatabaseContent() {
@@ -110,7 +116,7 @@ public class ContentInitializer {
 
 			// MANAGE SECURITY/ACL
 
-			giveAdminRoleToSystem();
+			logInUser(admin);
 
 			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
 			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
@@ -118,24 +124,31 @@ public class ContentInitializer {
 
 			LOG.info("Managed security/ACL");
 
-			SecurityContextHolder.getContext().setAuthentication(null);
+			logoutUser();
 		} else {
 			LOG.info("Not initializing anything for SHOGun2.");
 		}
 	}
 
 	/**
-	 * This method assigns the ROLE_ADMIN to the system, which is needed to use
-	 * the ACL service successfully.
+	 * This method logs in the passed user. (The ACL system needs a user with
+	 * ROLE_ADMIN to write ACL entries to the database).
+	 * 
+	 * @param user
 	 */
-	private void giveAdminRoleToSystem() {
-		// Give ROLE_ADMIN to the system.
-		Collection<SimpleGrantedAuthority> authorities = Collections
-				.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+	private void logInUser(User user) {
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(
+				user.getAccountName(), user.getPassword());
 
-		Authentication initAuth = new UsernamePasswordAuthenticationToken(
-				"system", null, authorities);
-		SecurityContextHolder.getContext().setAuthentication(initAuth);
+		Authentication authResult = authenticationProvider.authenticate(authRequest);
+		SecurityContextHolder.getContext().setAuthentication(authResult);
+	}
+
+	/**
+	 * Logs out the current user
+	 */
+	private void logoutUser() {
+		SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	/**
