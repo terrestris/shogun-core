@@ -13,7 +13,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.security.acl.AclSecurityUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
@@ -66,9 +66,18 @@ public class ContentInitializer {
 	@Autowired
 	protected InitializationService initService;
 
+	/**
+	 * The aclDataSource, which is needed to clean up the ACL data.
+	 */
 	@Autowired
 	@Qualifier("aclDataSource")
 	protected DataSource aclDataSource;
+
+	/**
+	 * The AclSecurityUtil to add/delete permissions.
+	 */
+	@Autowired
+	protected AclSecurityUtil aclSecurityUtil;
 
 	/**
 	 * The method called on initialization
@@ -103,12 +112,9 @@ public class ContentInitializer {
 
 			giveAdminRoleToSystem();
 
-			initService.addPermission(adminApp, new PrincipalSid("admin"),
-					BasePermission.READ);
-			initService.addPermission(userApp, new PrincipalSid("admin"),
-					BasePermission.READ);
-			initService.addPermission(userApp, new PrincipalSid("user"),
-					BasePermission.READ);
+			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
+			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
+			aclSecurityUtil.addPermission(userApp, user, BasePermission.READ);
 
 			LOG.info("Managed security/ACL");
 
