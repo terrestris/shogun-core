@@ -22,7 +22,7 @@ import de.terrestris.shogun2.model.User;
 
 /**
  * @author Nils Bühner
- *
+ * 
  */
 public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
@@ -36,7 +36,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	private UserDao userDao;
 
 	/**
-	 *
+	 * 
 	 * @see org.springframework.security.authentication.AuthenticationProvider#
 	 *      authenticate(org.springframework.security.core.Authentication)
 	 */
@@ -45,56 +45,66 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 
-		LOG.info("Authenticating a SHOGun2-User");
-
 		// get username/password
-		String userName = authentication.getName();
+		String accountName = authentication.getName();
 		String password = (String) authentication.getCredentials();
+
+		LOG.debug("Trying to authenticate SHOGun2-User '" + accountName + "'");
 
 		// the account name is unique, so we can find at most one user
 		SimpleExpression eqAccountName = Restrictions.eq("accountName",
-				userName);
+				accountName);
 
 		List<User> userList = userDao.findByCriteria(eqAccountName);
 		User shogun2User = null;
 
 		// prepare authorities
-		GrantedAuthority userAuthority = new SimpleGrantedAuthority(
-				"ROLE_USER");
+		GrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_USER");
 		GrantedAuthority adminAuthority = new SimpleGrantedAuthority(
 				"ROLE_ADMIN");
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
 
 		if (userList == null || userList.size() == 0) {
-			throw new AuthenticationCredentialsNotFoundException("Could not find user " + userName);
+			throw new AuthenticationCredentialsNotFoundException(
+					"Could not find user " + accountName);
 		} else {
 			shogun2User = userList.get(0);
 
 			// TODO check password
 			// TODO get authority from user object, i.e. db
 
-			if(userName.equals("admin")){
+			if (accountName.equals("admin")) {
 				grantedAuthorities.add(adminAuthority);
-			} else if (userName.equals("user")){
+			} else if (accountName.equals("user")) {
 				grantedAuthorities.add(userAuthority);
-			} else {
-				throw new AuthenticationCredentialsNotFoundException("Could not detect authority for user " + userName);
 			}
 		}
 
-		// create corresponding token to forward in Spring Security's filter
-		// chain
-		Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
-				shogun2User.getAccountName(), shogun2User.getPassword(),
-				grantedAuthorities);
+		// Create corresponding token to forward in Spring Security's filter
+		// chain. We will use the SHOGun2 user as the principal.
+		Authentication authResult = null;
+		if (grantedAuthorities.isEmpty()) {
+			// if the user has no authorities, we will build the
+			// UsernamePasswordAuthenticationToken without authorities, which
+			// leads to an unauthenticated user, i.e. isAuthenticated() of
+			// authenticationToken will return false afterwards.
+			authResult = new UsernamePasswordAuthenticationToken(shogun2User,
+					shogun2User.getPassword());
+		} else {
+			// if we pass some grantedAuthorities, isAuthenticated() of
+			// authenticationToken will return true afterwards
+			authResult = new UsernamePasswordAuthenticationToken(shogun2User,
+					shogun2User.getPassword(), grantedAuthorities);
+		}
 
-		LOG.info("Finished authentication of the SHOGun2-User");
+		LOG.debug("SHOGun2-User '" + accountName + "' is authenticated: "
+				+ authResult.isAuthenticated());
 
-		return authenticationToken;
+		return authResult;
 	}
 
 	/**
-	 *
+	 * 
 	 * @see org.springframework.security.authentication.AuthenticationProvider#supports
 	 *      (java.lang.Class)
 	 */
