@@ -50,8 +50,9 @@ $symbol_escape = '\' )
          <constructor-arg ref="roleHierarchy" />
      </bean>
 
-    <!-- Declare an acl service -->
-    <bean class="org.springframework.security.acls.jdbc.JdbcMutableAclService" id="aclService">
+    <!-- Declare the ACL service. We use our customized service as it takes care if the
+         principal of the authentication object is a SHOGun2 user object. -->
+    <bean class="de.terrestris.shogun2.security.acl.Shogun2JdbcMutableAclService" id="aclService">
         <constructor-arg ref="aclDataSource"/>
         <constructor-arg ref="lookupStrategy"/>
         <constructor-arg ref="aclCache"/>
