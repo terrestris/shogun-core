@@ -7,26 +7,23 @@
   #set ( $web_packages_to_scan = "${shogun2-parent-package}.*.web, ${package}.web" )
 #end
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans:beans xmlns="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-						http://www.springframework.org/schema/beans/spring-beans.xsd
-						http://www.springframework.org/schema/mvc
-						http://www.springframework.org/schema/mvc/spring-mvc.xsd
-						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/mvc classpath:/org/springframework/web/servlet/config/spring-mvc-4.0.xsd
+						http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-4.0.xsd">
 
 	<!-- This tag registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
 		beans that are required for Spring MVC -->
 	<mvc:annotation-driven />
 
-	<context:annotation-config />
+	<annotation-config />
 
-	<context:component-scan base-package="${web_packages_to_scan}, ch.ralscha.extdirectspring"
+	<component-scan base-package="${web_packages_to_scan}, ch.ralscha.extdirectspring"
 		use-default-filters="false">
-		<context:include-filter expression="org.springframework.stereotype.Controller"
+		<include-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
-	</context:component-scan>
+	</component-scan>
 
-</beans>
+</beans:beans>

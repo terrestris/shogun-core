@@ -4,23 +4,35 @@
 $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-3.2.xsd
-	http://www.springframework.org/schema/tx classpath:/org/springframework/transaction/config/spring-tx-3.2.xsd
-	http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-3.2.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/jdbc classpath:/org/springframework/jdbc/config/spring-jdbc-4.0.xsd">
 
-    <!-- Flags enabling/disabling some initialization on startup -->
+    <!-- Initialize the ACL database schema on startup -->
+    <jdbc:initialize-database data-source="aclDataSource">
+        <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
+    </jdbc:initialize-database>
+
+    <!-- Flag enabling/disabling SHOGun2 initialization on startup -->
     <bean id="shogunInitEnabled" class="java.lang.Boolean">
         <constructor-arg value="${symbol_dollar}{init.shogunInitEnabled}"></constructor-arg>
     </bean>
-    <bean id="projectInitEnabled" class="java.lang.Boolean">
-        <constructor-arg value="${symbol_dollar}{init.projectInitEnabled}"></constructor-arg>
+
+    <!-- Flag enabling/disabling the deletion of existing ACL data.
+         This will only happen if shogunInitEnabled is set to true. -->
+    <bean id="deleteAclData" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.deleteAclData}"></constructor-arg>
     </bean>
 
-    <!-- Number of dummy-entries to create if projectInitEnabled = true -->
-    <bean id="numberOfProjectDummies" class="java.lang.Integer">
-        <constructor-arg value="${symbol_dollar}{init.numberOfProjectDummies}"></constructor-arg>
+    <!-- The path to the ACL cleanup script which deletes existing ACL entries. -->
+    <bean id="aclCleanupScriptPath" class="java.lang.String">
+        <constructor-arg value="${symbol_dollar}{init.aclCleanupScriptPath}"></constructor-arg>
+    </bean>
+
+    <!-- Flag enabling/disabling project-specific initialization on startup -->
+    <bean id="projectInitEnabled" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.projectInitEnabled}"></constructor-arg>
     </bean>
 
     <!-- This bean initializes needed database objects or similar -->
