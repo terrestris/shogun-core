@@ -29,7 +29,7 @@ public class ProjectApplicationController {
 
 	@RequestMapping(value = "/create.action", method = RequestMethod.GET)
 	public @ResponseBody
-	Application createApplication(String specificString, Integer specificInteger) {
+	ProjectApplication createApplication(String specificString, Integer specificInteger) {
 		LOG.info("Trying to create a ProjectApplication now.");
 
 		ProjectApplication application = new ProjectApplication();
@@ -41,6 +41,16 @@ public class ProjectApplicationController {
 		application.setProjectSpecificInteger(specificInteger);
 
 		return projectApplicationService.saveOrUpdate(application);
+	}
+
+	@RequestMapping(value = "/delete.action", method = RequestMethod.GET)
+	public void deleteApplication(Integer id) {
+		LOG.info("Trying to delete ProjectApplication " + id + " now.");
+
+		ProjectApplication app = projectApplicationService.findById(id);
+		projectApplicationService.delete(app);
+
+		LOG.info("Deleted project app " + id);
 	}
 
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)

@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.security.acl.AclSecurityUtil;
+import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
@@ -75,7 +75,7 @@ public class ContentInitializer {
 	 * The AclSecurityUtil to add/delete permissions.
 	 */
 	@Autowired
-	protected AclSecurityUtil aclSecurityUtil;
+	protected AclUtil aclSecurityUtil;
 
 	/**
 	 * We use the authenticationProvider to login with the admin user, that will
