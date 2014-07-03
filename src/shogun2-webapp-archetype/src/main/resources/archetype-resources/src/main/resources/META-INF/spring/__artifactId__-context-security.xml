@@ -28,7 +28,14 @@ $symbol_escape = '\' )
     </security:http>
 
     <!-- ACL Management Aspect -->
-    <bean id="aclManagementAspect" class="de.terrestris.shogun2.security.aspect.AclManagement" />
+    <bean id="aclManagementAspect" class="de.terrestris.shogun2.security.aspect.AclManagement">
+        <property name="aclHandlerFactory" ref="aclHandlerFactory" />
+    </bean>
+
+    <!-- The ACL handler factory that should be used by the AclManagement aspect.
+         You can write your own implementation and define it here, if you need that for
+         projects specifics. -->
+    <bean id="aclHandlerFactory" class="de.terrestris.shogun2.security.acl.handle.impl.Shogun2AclHandlerFactory" />
 
     <!-- See http://goo.gl/o42k1S -->
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
