@@ -27,106 +27,12 @@ $symbol_escape = '\' )
         <security:logout logout-url="/logout" />
     </security:http>
 
-    <!-- ACL Management Aspect -->
-    <bean id="aclManagementAspect" class="de.terrestris.shogun2.security.aspect.AclManagement">
-        <property name="aclHandlerFactory" ref="aclHandlerFactory" />
-    </bean>
-
-    <!-- The ACL handler factory that should be used by the AclManagement aspect.
-         You can write your own implementation and define it here, if you need that for
-         projects specifics. -->
-    <bean id="aclHandlerFactory" class="de.terrestris.shogun2.security.acl.handle.impl.Shogun2AclHandlerFactory" />
-
     <!-- See http://goo.gl/o42k1S -->
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
     <!-- To use hasPermission() in expressions, configure a PermissionEvaluator -->
          <property name="permissionEvaluator" ref="permissionEvaluator" />
          <property name = "roleHierarchy" ref="roleHierarchy"/>
     </bean>
-
-    <!-- Declare a custom PermissionEvaluator
-      We'll rely on the standard AclPermissionEvaluator implementation -->
-     <bean class="org.springframework.security.acls.AclPermissionEvaluator" id="permissionEvaluator">
-         <constructor-arg ref="aclService"/>
-         <property name="sidRetrievalStrategy" ref="sidRetrievalStrategy" />
-     </bean>
-
-     <!-- Use a custom SidRetrievalStrategy, which takes care if the principal
-          of the current authentication object is a SHOGun2 user object -->
-     <bean class="de.terrestris.shogun2.security.acl.Shogun2SidRetrievalStrategyImpl" id="sidRetrievalStrategy" >
-         <constructor-arg ref="roleHierarchy" />
-     </bean>
-
-    <!-- Declare the ACL service. We use our customized service as it takes care if the
-         principal of the authentication object is a SHOGun2 user object. -->
-    <bean class="de.terrestris.shogun2.security.acl.Shogun2JdbcMutableAclService" id="aclService">
-        <constructor-arg ref="aclDataSource"/>
-        <constructor-arg ref="lookupStrategy"/>
-        <constructor-arg ref="aclCache"/>
-    </bean>
-
-    <!-- Declare a lookup strategy-->
-    <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
-        <constructor-arg ref="aclDataSource"/>
-        <constructor-arg ref="aclCache"/>
-        <constructor-arg ref="aclAuthorizationStrategy"/>
-        <constructor-arg ref="auditLogger"/>
-    </bean>
-
-    <!-- Declare an ACL datasource -->
-    <bean id="aclDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="${symbol_dollar}{acl.jdbc.driverClassName}" />
-        <property name="jdbcUrl" value="${symbol_dollar}{acl.jdbc.url}" />
-        <property name="user" value="${symbol_dollar}{acl.jdbc.username}" />
-        <property name="password" value="${symbol_dollar}{acl.jdbc.password}" />
-
-        <!-- Configuration of the c3p0 Connection Pool -->
-        <property name="initialPoolSize" value="${symbol_dollar}{acl.c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${symbol_dollar}{acl.c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${symbol_dollar}{acl.c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${symbol_dollar}{acl.c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${symbol_dollar}{acl.c3p0.maxIdleTime}" />
-        <property name="acquireRetryAttempts" value="${symbol_dollar}{acl.c3p0.acquireRetryAttempts}" />
-        <property name="acquireRetryDelay" value="${symbol_dollar}{acl.c3p0.acquireRetryDelay}" />
-        <property name="checkoutTimeout" value="${symbol_dollar}{acl.c3p0.checkoutTimeout}" />
-    </bean>
-
-    <!-- We need a transaction manager for the jdbcDataSource (ACL) -->
-    <bean id="aclTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="aclDataSource" />
-    </bean>
-
-    <!-- Declare an acl cache-->
-    <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
-        <constructor-arg>
-            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-                <property name="cacheManager">
-                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
-                </property>
-                <property name="cacheName" value="aclCache"/>
-            </bean>
-        </constructor-arg>
-    </bean>
-
-    <!-- Declare an acl authorization strategy-->
-    <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
-        <constructor-arg>
-            <list>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
-                    <constructor-arg value="ROLE_ADMIN"/>
-                </bean>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
-                    <constructor-arg value="ROLE_ADMIN"/>
-                </bean>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
-                    <constructor-arg value="ROLE_ADMIN"/>
-                </bean>
-            </list>
-        </constructor-arg>
-   </bean>
-
-    <!-- Declare an audit logger-->
-    <bean id="auditLogger" class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
 
     <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/hierarchicalroles/RoleHierarchyImpl.html -->
     <bean id="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
