@@ -25,12 +25,12 @@ import de.terrestris.shogun2.model.User;
  */
 @Component
 @Transactional("aclTransactionManager")
-public class AclSecurityUtil {
+public class AclUtil {
 
 	/**
 	 * The Logger
 	 */
-	private static final Logger LOG = Logger.getLogger(AclSecurityUtil.class);
+	private static final Logger LOG = Logger.getLogger(AclUtil.class);
 
 	@Autowired
 	private MutableAclService aclService;
@@ -67,6 +67,51 @@ public class AclSecurityUtil {
 	}
 
 	/**
+	 * Updates an existing permission for a secured object.
+	 * 
+	 * @param securedObject
+	 *            The secured object.
+	 * @param user
+	 *            The user whose permission shall be updated.
+	 * @param oldPermission
+	 *            The old/existing permission.
+	 * @param newPermission
+	 *            The new value for that permission.
+	 */
+	public void updatePermission(PersistentObject securedObject, User user,
+			Permission oldPermission, Permission newPermission) {
+
+		Sid recipient = new PrincipalSid(user.getAccountName());
+		ObjectIdentity oid = new ObjectIdentityImpl(securedObject);
+
+		if (oldPermission.equals(newPermission)) {
+			LOG.debug("Not updating ACE for " + recipient
+					+ " because the oldPermission equals the newPermission.");
+			return;
+		}
+
+		// get the ACL for the object
+		MutableAcl acl = (MutableAcl) aclService.readAclById(oid);
+
+		// Find the ACE with the oldPermission and update it with the
+		// newPermission
+		List<AccessControlEntry> entries = acl.getEntries();
+		int i = 0;
+		for (AccessControlEntry entry : entries) {
+			if (entry.getSid().equals(recipient)
+					&& entry.getPermission().equals(oldPermission)) {
+				LOG.debug("Updating ACE: '" + oldPermission + "' for '"
+						+ recipient + "' on '" + oid
+						+ " will be replaced with " + newPermission);
+				acl.updateAce(i, newPermission);
+			}
+			i++;
+		}
+
+		acl = aclService.updateAcl(acl);
+	}
+
+	/**
 	 * Deletes a permission from the ACL database.
 	 * 
 	 * @param securedObject
@@ -83,11 +128,11 @@ public class AclSecurityUtil {
 
 		// Prepare basic information
 		Sid recipient = new PrincipalSid(user.getAccountName());
-		String type = securedObject.getClass().getCanonicalName();
-		Integer id = securedObject.getId();
+		// String type = securedObject.getClass().getCanonicalName();
+		// Integer id = securedObject.getId();
 
 		// Build ACL objects
-		ObjectIdentity oid = new ObjectIdentityImpl(type, id);
+		ObjectIdentity oid = new ObjectIdentityImpl(securedObject);
 		MutableAcl acl = (MutableAcl) aclService.readAclById(oid);
 
 		// Remove all permissions associated with this particular recipient
