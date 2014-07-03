@@ -377,7 +377,7 @@ public class AbstractExtDirectCrudServiceTest {
 		assertTrue(obj2.getId() > 0);
 
 		// be sure that dao method has been executed for each object
-		verify(dao, times(2)).saveOrUpdate(obj1);
+		verify(dao, times(2)).saveOrUpdate(any(PersistentObject.class));
 	}
 
 	/**
