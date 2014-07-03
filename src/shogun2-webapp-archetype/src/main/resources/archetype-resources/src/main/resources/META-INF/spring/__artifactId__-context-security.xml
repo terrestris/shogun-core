@@ -12,7 +12,7 @@ $symbol_escape = '\' )
     <!-- Enables Method Security and Expression-based access control -->
     <security:global-method-security pre-post-annotations="enabled">
         <!-- Enables custom expression handler -->
-        <security:expression-handler ref="expressionHandler" />
+        <security:expression-handler ref="methodExpressionHandler" />
     </security:global-method-security>
 
     <!-- Custom Authentication Provider -->
@@ -22,15 +22,29 @@ $symbol_escape = '\' )
         <security:authentication-provider ref="shogun2AuthenticationProvider" />
     </security:authentication-manager>
 
-    <security:http auto-config="true" use-expressions="true">
-        <security:intercept-url pattern="/**" access="isAuthenticated()" />
+    <!-- Web/URL security -->
+    <security:http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
         <security:logout logout-url="/logout" />
     </security:http>
 
+    <!-- This bean is referenced by the http security config to assure that the role hierarchy will be used -->
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="decisionVoters">
+            <bean id="webExpressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                <property name = "expressionHandler">
+                    <bean id="webExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+                        <property name = "roleHierarchy" ref="roleHierarchy" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
     <!-- See http://goo.gl/o42k1S -->
-    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+    <bean id="methodExpressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
     <!-- To use hasPermission() in expressions, configure a PermissionEvaluator -->
-         <property name="permissionEvaluator" ref="permissionEvaluator" />
+         <property name = "permissionEvaluator" ref="permissionEvaluator" />
          <property name = "roleHierarchy" ref="roleHierarchy"/>
     </bean>
 
