@@ -151,4 +151,18 @@ public class AclUtil {
 
 		acl = aclService.updateAcl(acl);
 	}
+
+	/**
+	 * @return the aclService
+	 */
+	public MutableAclService getAclService() {
+		return aclService;
+	}
+
+	/**
+	 * @param aclService the aclService to set
+	 */
+	public void setAclService(MutableAclService aclService) {
+		this.aclService = aclService;
+	}
 }
