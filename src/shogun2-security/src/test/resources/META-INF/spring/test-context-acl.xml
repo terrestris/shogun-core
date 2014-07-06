@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/jdbc
+                        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+    <!-- Initialize the ACL database schema on startup -->
+    <jdbc:initialize-database data-source="aclDataSource">
+        <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
+    </jdbc:initialize-database>
+
+    <context:component-scan base-package="de.terrestris.shogun2.security.acl" />
+
+    <context:property-placeholder location="classpath*:META-INF/*.properties" />
+
+    <!-- Declare the ACL service. We use our customized service as it takes care if the
+         principal of the authentication object is a SHOGun2 user object. -->
+    <bean class="de.terrestris.shogun2.security.acl.Shogun2JdbcMutableAclService" id="aclService">
+        <constructor-arg ref="aclDataSource"/>
+        <constructor-arg ref="lookupStrategy"/>
+        <constructor-arg ref="aclCache"/>
+    </bean>
+
+    <!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html#jdbc-datasource -->
+    <bean id="aclDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        destroy-method="close">
+        <property name="driverClass" value="${acl.jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${acl.jdbc.url}" />
+        <property name="user" value="${acl.jdbc.username}" />
+        <property name="password" value="${acl.jdbc.password}" />
+
+        <!-- Configuration of the c3p0 Connection Pool -->
+        <property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+        <property name="minPoolSize" value="${c3p0.minPoolSize}" />
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+        <property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}" />
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+    </bean>
+
+    <!-- Declare a lookup strategy-->
+    <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+        <constructor-arg ref="aclDataSource"/>
+        <constructor-arg ref="aclCache"/>
+        <constructor-arg ref="aclAuthorizationStrategy"/>
+        <constructor-arg ref="auditLogger"/>
+    </bean>
+
+    <!-- Declare an acl cache-->
+    <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+        <constructor-arg>
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <property name="cacheManager">
+                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+                </property>
+                <property name="cacheName" value="aclCache"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!-- Declare an acl authorization strategy-->
+    <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                    <constructor-arg value="ROLE_ADMIN"/>
+                </bean>
+                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                    <constructor-arg value="ROLE_ADMIN"/>
+                </bean>
+                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                    <constructor-arg value="ROLE_ADMIN"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+     <!-- Declare an audit logger-->
+    <bean id="auditLogger" class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+
+    <!-- We need a transaction manager for the jdbcDataSource (ACL) -->
+    <bean id="aclTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="aclDataSource" />
+    </bean>
+
+</beans>
