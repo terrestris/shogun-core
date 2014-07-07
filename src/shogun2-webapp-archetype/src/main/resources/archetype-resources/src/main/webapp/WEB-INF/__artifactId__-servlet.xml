@@ -16,9 +16,21 @@
 
 	<!-- This tag registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
 		beans that are required for Spring MVC -->
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+		<!-- Use customized Jackson/JSON Object Mapper, e.g. for a nicer joda date 
+			serialization -->
+		<mvc:message-converters>
+			<beans:bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<beans:property name="objectMapper" ref="jacksonObjectMapper" />
+			</beans:bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
 	<annotation-config />
+
+	<beans:bean id="jacksonObjectMapper"
+		class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
 
 	<component-scan base-package="${web_packages_to_scan}, ch.ralscha.extdirectspring"
 		use-default-filters="false">
