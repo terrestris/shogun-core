@@ -1,11 +1,14 @@
 package de.terrestris.shogun2.model;
 
 import java.util.Locale;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -100,6 +103,12 @@ public class Application extends PersistentObject {
 	private String initialBbox;
 
 	/**
+	 * The modules of the application
+	 */
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Module> modules;
+
+	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
@@ -189,6 +198,21 @@ public class Application extends PersistentObject {
 
 	public void setInitialBbox(String initialBbox) {
 		this.initialBbox = initialBbox;
+	}
+
+	/**
+	 * @return the modules
+	 */
+	public Set<Module> getModules() {
+		return modules;
+	}
+
+	/**
+	 * @param modules
+	 *            the modules to set
+	 */
+	public void setModules(Set<Module> modules) {
+		this.modules = modules;
 	}
 
 	/**
