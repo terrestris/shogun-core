@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -106,7 +107,7 @@ public class Application extends PersistentObject {
 	 * The modules of the application
 	 */
 	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Module> modules;
+	private Set<Module> modules = new HashSet<Module>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for

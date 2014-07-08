@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -60,7 +61,7 @@ public class LayerTreeNode extends PersistentObject {
 	 */
 	@OneToMany
 	@OrderColumn
-	private List<LayerTreeNode> children;
+	private List<LayerTreeNode> children = new ArrayList<LayerTreeNode>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for

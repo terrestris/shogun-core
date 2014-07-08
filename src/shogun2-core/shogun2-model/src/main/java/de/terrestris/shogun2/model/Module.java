@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -38,7 +39,7 @@ public class Module extends PersistentObject {
 	 * 
 	 */
 	@OneToMany
-	private Set<Module> subModules;
+	private Set<Module> subModules = new HashSet<Module>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for

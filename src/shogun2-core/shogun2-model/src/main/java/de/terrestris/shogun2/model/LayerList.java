@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class LayerList extends Module {
 	 */
 	@OneToMany
 	@OrderColumn
-	private List<Layer> layers;
+	private List<Layer> layers = new ArrayList<Layer>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
