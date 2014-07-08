@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  *
@@ -166,4 +168,19 @@ public class LayerTreeNode extends PersistentObject {
 				.append(getThemeOverride(), other.getThemeOverride())
 				.append(isLeaf(), other.isLeaf()).isEquals();
 	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      Using Apache Commons String Builder.
+	 */
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString())
+				.append("displayText", getDisplayText())
+				.append("layer", getLayer())
+				.append("themeOverride", getThemeOverride())
+				.append("isLeaf", isLeaf()).toString();
+	}
+
 }

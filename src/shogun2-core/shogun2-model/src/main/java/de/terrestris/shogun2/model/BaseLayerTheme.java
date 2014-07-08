@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * 
@@ -119,6 +121,18 @@ public class BaseLayerTheme extends PersistentObject {
 				.append(getHue(), other.getHue())
 				.append(getOpacity(), other.getOpacity())
 				.append(isVisible(), other.isVisible()).isEquals();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      Using Apache Commons String Builder.
+	 */
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString()).append("hue", getHue())
+				.append("opacity", getOpacity())
+				.append("isVisible", isVisible()).toString();
 	}
 
 }

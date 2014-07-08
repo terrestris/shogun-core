@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * 
@@ -74,6 +76,17 @@ public class LayerDataSource extends PersistentObject {
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
 				.append(getName(), other.getName()).isEquals();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      Using Apache Commons String Builder.
+	 */
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString()).append("name", getName())
+				.toString();
 	}
 
 }
