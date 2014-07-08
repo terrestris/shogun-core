@@ -6,6 +6,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * 
  */
@@ -84,6 +86,20 @@ public class BaseLayerTheme extends PersistentObject {
 	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(13, 37).appendSuper(super.hashCode())
+				.append(getHue()).append(getOpacity()).append(isVisible())
+				.toHashCode();
 	}
 
 }

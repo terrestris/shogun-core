@@ -9,6 +9,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * 
  */
@@ -66,6 +68,19 @@ public class Module extends PersistentObject {
 	 */
 	public void setSubModules(Set<Module> subModules) {
 		this.subModules = subModules;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(31, 19).appendSuper(super.hashCode())
+				.append(getName()).toHashCode();
 	}
 
 }

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  *
  */
@@ -67,6 +69,20 @@ public class Map extends Module {
 	 */
 	public void setBbox(List<Double> bbox) {
 		this.bbox = bbox;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(13, 41).appendSuper(super.hashCode())
+				.append(getName()).append(getBbox()).append(getCenter())
+				.toHashCode();
 	}
 
 }

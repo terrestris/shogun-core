@@ -7,6 +7,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * 
  */
@@ -40,6 +42,19 @@ public class LayerList extends Module {
 	 */
 	public void setLayers(List<Layer> layers) {
 		this.layers = layers;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(19, 7).appendSuper(super.hashCode())
+				.toHashCode();
 	}
 
 }

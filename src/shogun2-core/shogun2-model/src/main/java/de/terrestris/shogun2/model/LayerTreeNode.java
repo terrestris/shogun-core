@@ -9,6 +9,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  *
  */
@@ -129,6 +131,20 @@ public class LayerTreeNode extends PersistentObject {
 	 */
 	public void setChildren(List<LayerTreeNode> children) {
 		this.children = children;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(13, 41).appendSuper(super.hashCode())
+				.append(getDisplayText()).append(getLayer())
+				.append(getThemeOverride()).toHashCode();
 	}
 
 }

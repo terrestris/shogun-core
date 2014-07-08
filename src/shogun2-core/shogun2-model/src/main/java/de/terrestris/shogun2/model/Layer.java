@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * 
  */
@@ -82,6 +84,20 @@ public class Layer extends PersistentObject {
 	 */
 	public void setDefaultTheme(BaseLayerTheme defaultTheme) {
 		this.defaultTheme = defaultTheme;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(17, 29).appendSuper(super.hashCode())
+				.append(getName()).append(getDataSource())
+				.append(getDefaultTheme()).toHashCode();
 	}
 
 }
