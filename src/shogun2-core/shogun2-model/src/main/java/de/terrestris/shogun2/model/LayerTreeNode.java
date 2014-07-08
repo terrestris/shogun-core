@@ -9,6 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -147,4 +148,22 @@ public class LayerTreeNode extends PersistentObject {
 				.append(getThemeOverride()).append(isLeaf()).toHashCode();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof LayerTreeNode))
+			return false;
+		LayerTreeNode other = (LayerTreeNode) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getDisplayText(), other.getDisplayText())
+				.append(getLayer(), other.getLayer())
+				.append(getThemeOverride(), other.getThemeOverride())
+				.append(isLeaf(), other.isLeaf()).isEquals();
+	}
 }

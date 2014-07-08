@@ -6,6 +6,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -57,6 +58,22 @@ public class LayerDataSource extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(11, 23).appendSuper(super.hashCode())
 				.append(getName()).toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof LayerDataSource))
+			return false;
+		LayerDataSource other = (LayerDataSource) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getName(), other.getName()).isEquals();
 	}
 
 }

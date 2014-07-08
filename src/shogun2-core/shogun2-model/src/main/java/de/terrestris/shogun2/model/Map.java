@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -83,6 +84,23 @@ public class Map extends Module {
 		return new HashCodeBuilder(13, 41).appendSuper(super.hashCode())
 				.append(getName()).append(getBbox()).append(getCenter())
 				.toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Map))
+			return false;
+		Map other = (Map) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getBbox(), other.getBbox())
+				.append(getCenter(), other.getCenter()).isEquals();
 	}
 
 }

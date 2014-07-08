@@ -9,6 +9,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -83,4 +84,19 @@ public class Module extends PersistentObject {
 				.append(getName()).toHashCode();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Module))
+			return false;
+		Module other = (Module) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getName(), other.getName()).isEquals();
+	}
 }

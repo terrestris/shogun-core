@@ -7,6 +7,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -55,6 +56,21 @@ public class LayerList extends Module {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(19, 7).appendSuper(super.hashCode())
 				.toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof LayerList))
+			return false;
+		LayerList other = (LayerList) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}
 
 }

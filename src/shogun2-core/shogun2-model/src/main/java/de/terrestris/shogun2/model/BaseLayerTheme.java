@@ -6,6 +6,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -100,6 +101,24 @@ public class BaseLayerTheme extends PersistentObject {
 		return new HashCodeBuilder(13, 37).appendSuper(super.hashCode())
 				.append(getHue()).append(getOpacity()).append(isVisible())
 				.toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof BaseLayerTheme))
+			return false;
+		BaseLayerTheme other = (BaseLayerTheme) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getHue(), other.getHue())
+				.append(getOpacity(), other.getOpacity())
+				.append(isVisible(), other.isVisible()).isEquals();
 	}
 
 }

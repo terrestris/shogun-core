@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -53,6 +54,22 @@ public class LayerTree extends Module {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(37, 17).appendSuper(super.hashCode())
 				.append(getRootNode()).toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 *      According to http://stackoverflow.com/q/27581 it is recommended to
+	 *      use only getter-methods when using ORM like Hibernate
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof LayerTree))
+			return false;
+		LayerTree other = (LayerTree) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getRootNode(), other.getRootNode()).isEquals();
 	}
 
 }
