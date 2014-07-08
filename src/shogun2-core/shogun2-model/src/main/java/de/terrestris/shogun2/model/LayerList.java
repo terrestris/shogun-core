@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * 
+ * A module, providing a simple list of {@link Layer}s.
  */
 @Entity
 @Table
@@ -21,6 +21,9 @@ public class LayerList extends Module {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 */
 	@OneToMany
 	@OrderColumn
 	private List<Layer> layers;

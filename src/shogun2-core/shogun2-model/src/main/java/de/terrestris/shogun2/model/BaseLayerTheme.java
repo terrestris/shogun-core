@@ -12,6 +12,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
+ * This class represents a basic layout/theme for a {@link Layer} or
+ * {@link LayerTreeNode}.
  * 
  */
 @Entity

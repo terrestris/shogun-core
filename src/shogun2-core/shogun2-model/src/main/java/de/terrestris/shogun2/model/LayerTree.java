@@ -10,7 +10,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * 
+ * This class represents a tree hierarchy (of layers) by simply defining a
+ * rootNode of type {@link LayerTreeNode}.
  */
 @Entity
 @Table

@@ -12,7 +12,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * 
+ * This class represents a data source for a {@link Layer}. As this class only
+ * provides basic information, a {@link Layer} would usually use a more concrete
+ * version of a {@link LayerDataSource} (i.e. a subclass of this class).
  */
 @Entity
 @Table

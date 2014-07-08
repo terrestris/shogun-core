@@ -15,7 +15,15 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- *
+ * A {@link LayerTreeNode} can either be a folder (isLeaf = false) with a list
+ * of children (also of type {@link LayerTreeNode}) or a leaf-node (isLeaf =
+ * true) referencing a {@link Layer}.
+ * 
+ * In case of leaf-nodes a themeOverride can be assigned to define a custom
+ * {@link BaseLayerTheme} that should be used for the {@link Layer} that is
+ * connected with the node. If such a {@link BaseLayerTheme} should NOT be
+ * defined, one could still fall back to the defaultTheme, that is provided by
+ * the connected {@link Layer}.
  */
 @Entity
 @Table

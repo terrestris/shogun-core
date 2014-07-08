@@ -15,7 +15,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
+ * This class represents a module, which will usually result in a visual
+ * component in a GUI. Possible modules could be a {@link Map} or a
+ * {@link LayerTree}.
  * 
+ * A module can include a set of further modules (i.e. subModules).
  */
 @Entity
 @Table

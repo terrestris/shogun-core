@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- *
+ * Class providing basic information to represent a map.
  */
 @Entity
 @Table

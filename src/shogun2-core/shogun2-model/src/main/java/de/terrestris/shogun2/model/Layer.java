@@ -11,7 +11,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * 
+ * The central class representing a layer that can be used in a GIS client. A
+ * layer has a {@link LayerDataSource} and a (default) {@link BaseLayerTheme}.
+ * These properties should not be null, i.e. they are mandatory.
  */
 @Entity
 @Table
