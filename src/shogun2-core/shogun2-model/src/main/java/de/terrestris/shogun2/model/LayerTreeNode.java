@@ -144,7 +144,7 @@ public class LayerTreeNode extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(13, 41).appendSuper(super.hashCode())
 				.append(getDisplayText()).append(getLayer())
-				.append(getThemeOverride()).toHashCode();
+				.append(getThemeOverride()).append(isLeaf()).toHashCode();
 	}
 
 }
