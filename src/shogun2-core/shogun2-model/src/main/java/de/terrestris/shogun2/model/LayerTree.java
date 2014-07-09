@@ -32,6 +32,13 @@ public class LayerTree extends Module {
 	}
 
 	/**
+	 * The rootNode is mandatory.
+	 */
+	public LayerTree(LayerTreeNode rootNode) {
+		this.rootNode = rootNode;
+	}
+
+	/**
 	 * @return the rootNode
 	 */
 	public LayerTreeNode getRootNode() {
