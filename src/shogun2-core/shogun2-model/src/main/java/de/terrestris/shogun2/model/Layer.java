@@ -47,6 +47,14 @@ public class Layer extends PersistentObject {
 	}
 
 	/**
+	 * A {@link LayerDataSource} and a {@link BaseLayerTheme} are mandatory.
+	 */
+	public Layer(LayerDataSource dataSource, BaseLayerTheme defaultTheme) {
+		this.dataSource = dataSource;
+		this.defaultTheme = defaultTheme;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
