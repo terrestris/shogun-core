@@ -24,10 +24,16 @@ public class LayerDataSource extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
 	@Column
 	private String name;
+
+	/**
+	 *
+	 */
+	@Column
+	private String attribution;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -52,8 +58,23 @@ public class LayerDataSource extends PersistentObject {
 	}
 
 	/**
+	 * @return the attribution
+	 */
+	public String getAttribution() {
+		return attribution;
+	}
+
+	/**
+	 * @param attribution
+	 *            the attribution to set
+	 */
+	public void setAttribution(String attribution) {
+		this.attribution = attribution;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -61,12 +82,12 @@ public class LayerDataSource extends PersistentObject {
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(11, 23).appendSuper(super.hashCode())
-				.append(getName()).toHashCode();
+				.append(getName()).append(getAttribution()).toHashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -77,12 +98,13 @@ public class LayerDataSource extends PersistentObject {
 		LayerDataSource other = (LayerDataSource) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName()).isEquals();
+				.append(getName(), other.getName())
+				.append(getAttribution(), other.getAttribution()).isEquals();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      Using Apache Commons String Builder.
 	 */
 	public String toString() {
