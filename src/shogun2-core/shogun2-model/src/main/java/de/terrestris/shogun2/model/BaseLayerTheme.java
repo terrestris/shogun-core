@@ -14,7 +14,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * This class represents a basic layout/theme for a {@link Layer} or
  * {@link LayerTreeNode}.
- * 
+ *
  */
 @Entity
 @Table
@@ -33,13 +33,13 @@ public class BaseLayerTheme extends PersistentObject {
 	 *
 	 */
 	@Column
-	private double hue;
+	private boolean visible;
 
 	/**
 	 *
 	 */
 	@Column
-	private boolean visible;
+	private String attribution;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -64,21 +64,6 @@ public class BaseLayerTheme extends PersistentObject {
 	}
 
 	/**
-	 * @return the hue
-	 */
-	public double getHue() {
-		return hue;
-	}
-
-	/**
-	 * @param hue
-	 *            the hue to set
-	 */
-	public void setHue(double hue) {
-		this.hue = hue;
-	}
-
-	/**
 	 * @return the visible
 	 */
 	public boolean isVisible() {
@@ -94,8 +79,23 @@ public class BaseLayerTheme extends PersistentObject {
 	}
 
 	/**
+	 * @return the attribution
+	 */
+	public String getAttribution() {
+		return attribution;
+	}
+
+	/**
+	 * @param attribution
+	 *            the attribution to set
+	 */
+	public void setAttribution(String attribution) {
+		this.attribution = attribution;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -103,13 +103,13 @@ public class BaseLayerTheme extends PersistentObject {
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(13, 37).appendSuper(super.hashCode())
-				.append(getHue()).append(getOpacity()).append(isVisible())
-				.toHashCode();
+				.append(getOpacity()).append(isVisible())
+				.append(getAttribution()).toHashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -120,21 +120,21 @@ public class BaseLayerTheme extends PersistentObject {
 		BaseLayerTheme other = (BaseLayerTheme) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getHue(), other.getHue())
 				.append(getOpacity(), other.getOpacity())
-				.append(isVisible(), other.isVisible()).isEquals();
+				.append(isVisible(), other.isVisible())
+				.append(getAttribution(), other.getAttribution()).isEquals();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      Using Apache Commons String Builder.
 	 */
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString()).append("hue", getHue())
-				.append("opacity", getOpacity())
-				.append("isVisible", isVisible()).toString();
+				.appendSuper(super.toString()).append("opacity", getOpacity())
+				.append("isVisible", isVisible())
+				.append("attribution", getAttribution()).toString();
 	}
 
 }
