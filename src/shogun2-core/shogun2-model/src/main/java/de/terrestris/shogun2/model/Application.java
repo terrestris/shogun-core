@@ -77,33 +77,6 @@ public class Application extends PersistentObject {
 	private String url;
 
 	/**
-	 * The initial center of the map.
-	 */
-	@Column
-	private String initialCenter;
-
-	/**
-	 * The initial zoom level of the map.
-	 */
-	@Column
-	private String initialZoom;
-
-	/**
-	 * The initial resolution of the map.
-	 */
-	@Column
-	private String initialResolution;
-
-	/**
-	 * The initial bbox of the application. It is not guaranteed that the bbox
-	 * is fully contained in the initial map-view, as we usually use the above
-	 * properties {@link #initialZoom} and {@link #initialCenter} to layout the
-	 * map.
-	 */
-	@Column
-	private String initialBbox;
-
-	/**
 	 * The modules of the application
 	 */
 	@OneToMany(fetch = FetchType.EAGER)
@@ -169,38 +142,6 @@ public class Application extends PersistentObject {
 		this.url = url;
 	}
 
-	public String getInitialCenter() {
-		return initialCenter;
-	}
-
-	public void setInitialCenter(String initialCenter) {
-		this.initialCenter = initialCenter;
-	}
-
-	public String getInitialZoom() {
-		return initialZoom;
-	}
-
-	public void setInitialZoom(String initialZoom) {
-		this.initialZoom = initialZoom;
-	}
-
-	public String getInitialResolution() {
-		return initialResolution;
-	}
-
-	public void setInitialResolution(String initialResolution) {
-		this.initialResolution = initialResolution;
-	}
-
-	public String getInitialBbox() {
-		return initialBbox;
-	}
-
-	public void setInitialBbox(String initialBbox) {
-		this.initialBbox = initialBbox;
-	}
-
 	/**
 	 * @return the modules
 	 */
@@ -227,9 +168,7 @@ public class Application extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(29, 11).appendSuper(super.hashCode())
 				.append(getName()).append(getLanguage()).append(getOpen())
-				.append(getActive()).append(getInitialCenter())
-				.append(getInitialZoom()).append(getInitialResolution())
-				.append(getInitialBbox()).append(getUrl()).toHashCode();
+				.append(getActive()).append(getUrl()).toHashCode();
 	}
 
 	/**
@@ -249,10 +188,7 @@ public class Application extends PersistentObject {
 				.append(getLanguage(), other.getLanguage())
 				.append(getOpen(), other.getOpen())
 				.append(getActive(), other.getActive())
-				.append(getInitialCenter(), other.getInitialCenter())
-				.append(getInitialZoom(), other.getInitialZoom())
-				.append(getInitialResolution(), other.getInitialResolution())
-				.append(getInitialBbox(), other.getInitialBbox()).isEquals();
+				.isEquals();
 	}
 
 	/**
@@ -266,10 +202,7 @@ public class Application extends PersistentObject {
 				.append("description", getDescription())
 				.append("language", getLanguage()).append("open", getOpen())
 				.append("active", getActive()).append("url", getUrl())
-				.append("initalCenter", getInitialCenter())
-				.append("initialZoom", getInitialZoom())
-				.append("initialResolution", getInitialResolution())
-				.append("initialBbox", getInitialBbox()).toString();
+				.toString();
 	}
 
 }
