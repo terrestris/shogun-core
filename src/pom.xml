@@ -52,6 +52,19 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <!-- the developers github username -->
+            <id>dnlkoch</id>
+            <name>Daniel Koch</name>
+            <email>koch@terrestris.de</email>
+            <organization>terrestris GmbH &#038; Co. KG</organization>
+            <organizationUrl>http://www.terrestris.de/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <modules>
