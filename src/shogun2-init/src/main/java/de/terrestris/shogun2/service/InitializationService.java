@@ -20,7 +20,7 @@ import de.terrestris.shogun2.model.User;
  * 
  */
 @Service("initializationService")
-@Transactional
+@Transactional(value="transactionManager")
 public class InitializationService {
 
 	/**

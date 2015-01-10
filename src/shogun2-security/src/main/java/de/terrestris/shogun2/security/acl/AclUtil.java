@@ -24,7 +24,7 @@ import de.terrestris.shogun2.model.User;
  * 
  */
 @Component
-@Transactional("aclTransactionManager")
+@Transactional(value="aclTransactionManager")
 public class AclUtil {
 
 	/**

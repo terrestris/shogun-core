@@ -13,7 +13,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  * @author Nils Bühner
  * 
  */
-@Transactional(readOnly = true)
+@Transactional(value="transactionManager")
 public abstract class AbstractDaoService<T extends PersistentObject> {
 
 	@Autowired
