@@ -458,13 +458,6 @@
                 <version>${hibernate.version}</version>
             </dependency>
 
-            <!-- PostgreSQL -->
-            <dependency>
-                <groupId>postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>${postgresql.version}</version>
-            </dependency>
-
             <!-- H2 Database -->
             <dependency>
                 <groupId>com.h2database</groupId>
