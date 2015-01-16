@@ -24,7 +24,6 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * @param e
 	 * @return
 	 */
-	@Transactional(readOnly = false)
 	@PreAuthorize("isAuthenticated()")
 	public E saveOrUpdate(E e) {
 		dao.saveOrUpdate(e);
@@ -55,7 +54,6 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	 * @param e
 	 */
 	@PreAuthorize("hasPermission(#e, 'DELETE')")
-	@Transactional(readOnly = false)
 	public void delete(E e) {
 		dao.delete(e);
 	}

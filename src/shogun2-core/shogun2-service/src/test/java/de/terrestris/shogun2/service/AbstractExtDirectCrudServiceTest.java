@@ -7,21 +7,30 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.hibernate.criterion.Order;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -44,60 +53,85 @@ import de.terrestris.shogun2.paging.PagingResult;
  * @author Nils Bühner
  * 
  */
-public class AbstractExtDirectCrudServiceTest {
+public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObject> {
+
+	/**
+	 * Static object that holds concrete implementations of
+	 * {@link PersistentObject} for the tests.
+	 */
+	protected static PersistentObject implToTest = null;
 
 	@Mock
-	private GenericHibernateDao<PersistentObject, Integer> dao;
+	private GenericHibernateDao<E, Integer> dao;
 
 	@InjectMocks
-	private TestableExtDirectCrudService extDirectCrudService;
+	private AbstractExtDirectCrudService<E> crudService;
 
 	@Before
 	public void setUp() {
+		this.crudService = getCrudService();
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
+	}
+
+	/**
+	 * This method has to be implemented by subclasses.
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public abstract void setUpImplToTest() throws Exception;
+
+	/**
+	 * This method has to be implemented by subclasses to return a concrete
+	 * implementation of the tested service.
+	 * 
+	 * @return
+	 */
+	protected abstract AbstractExtDirectCrudService<E> getCrudService();
+
+	@After
+	public void tearDownAfterEachTest() throws Exception {
+		implToTest = null;
 	}
 
 	/**
 	 * Test whether the saveOrUpdate method <i>saves</i> a
 	 * {@link PersistentObject}, which initially has no id value.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void saveOrUpdate_shouldSave() {
 
-		@SuppressWarnings("serial")
-		PersistentObject persistentObject = new PersistentObject() {
-		};
-
-		doAnswer(new Answer<PersistentObject>() {
-			public PersistentObject answer(InvocationOnMock invocation)
+		doAnswer(new Answer<E>() {
+			public E answer(InvocationOnMock invocation)
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException {
-				PersistentObject po = (PersistentObject) invocation
-						.getArguments()[0];
+				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
 				setIdOnPersistentObject(po, 1);
 
 				return po;
 			}
-		}).when(dao).saveOrUpdate(persistentObject);
+		}).when(dao).saveOrUpdate((E) implToTest);
 
 		// id has to be NULL before the service method is called
-		assertNull(persistentObject.getId());
+		assertNull(implToTest.getId());
 
-		persistentObject = extDirectCrudService.saveOrUpdate(persistentObject);
+		implToTest = crudService.saveOrUpdate((E) implToTest);
 
 		// id must not be NULL after the service method is called
-		assertNotNull(persistentObject.getId());
-		assertTrue(persistentObject.getId() > 0);
+		assertNotNull(implToTest.getId());
+		assertTrue(implToTest.getId() > 0);
 
 		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).saveOrUpdate(persistentObject);
+		verify(dao, times(1)).saveOrUpdate((E) implToTest);
 	}
 
 	/**
-	 * Test whether {@link AbstractCrudService#saveOrUpdate(PersistentObject)}
+	 * Test whether
+	 * {@link ExtDirectAbstractCrudService#saveOrUpdate(PersistentObject)}
 	 * <i>updates</i> the modified value of a {@link PersistentObject}.
 	 * 
 	 * 
@@ -107,28 +141,24 @@ public class AbstractExtDirectCrudServiceTest {
 	 * @throws IllegalAccessException
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void saveOrUpdate_shouldUpdate() throws NoSuchFieldException,
 			SecurityException, IllegalArgumentException,
 			IllegalAccessException, InterruptedException {
 
-		@SuppressWarnings("serial")
-		PersistentObject persistentObject = new PersistentObject() {
-		};
-
 		Integer id = 42;
-		ReadableDateTime created = persistentObject.getCreated();
-		ReadableDateTime modified = persistentObject.getModified();
+		ReadableDateTime created = implToTest.getCreated();
+		ReadableDateTime modified = implToTest.getModified();
 
-		setIdOnPersistentObject(persistentObject, id);
+		setIdOnPersistentObject(implToTest, id);
 
-		doAnswer(new Answer<PersistentObject>() {
-			public PersistentObject answer(InvocationOnMock invocation)
+		doAnswer(new Answer<E>() {
+			public E answer(InvocationOnMock invocation)
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException,
 					InterruptedException {
-				PersistentObject po = (PersistentObject) invocation
-						.getArguments()[0];
+				E po = (E) invocation.getArguments()[0];
 
 				// wait and can change the modified value
 				Thread.sleep(1);
@@ -136,20 +166,20 @@ public class AbstractExtDirectCrudServiceTest {
 
 				return po;
 			}
-		}).when(dao).saveOrUpdate(persistentObject);
+		}).when(dao).saveOrUpdate((E) implToTest);
 
 		// now call the method to test
-		persistentObject = extDirectCrudService.saveOrUpdate(persistentObject);
+		implToTest = crudService.saveOrUpdate((E) implToTest);
 
 		// id and created should not have changed
-		assertEquals(id, persistentObject.getId());
-		assertEquals(created, persistentObject.getCreated());
+		assertEquals(id, implToTest.getId());
+		assertEquals(created, implToTest.getCreated());
 
 		// modified should have changed
-		assertTrue(persistentObject.getModified().isAfter(modified));
+		assertTrue(implToTest.getModified().isAfter(modified));
 
 		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).saveOrUpdate(persistentObject);
+		verify(dao, times(1)).saveOrUpdate((E) implToTest);
 	}
 
 	/**
@@ -163,17 +193,13 @@ public class AbstractExtDirectCrudServiceTest {
 
 		Integer existingId = 17;
 
-		@SuppressWarnings("serial")
-		PersistentObject objectToFind = new PersistentObject() {
-		};
-
-		setIdOnPersistentObject(objectToFind, existingId);
+		setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
-		doReturn(objectToFind).when(dao).findById(existingId);
+		doReturn(implToTest).when(dao).findById(existingId);
 
 		// actually test
-		PersistentObject result = extDirectCrudService.findById(existingId);
+		E result = crudService.findById(existingId);
 
 		assertNotNull(result);
 		assertEquals(existingId, result.getId());
@@ -194,7 +220,7 @@ public class AbstractExtDirectCrudServiceTest {
 		doReturn(null).when(dao).findById(nonExistingId);
 
 		// actually test
-		PersistentObject result = extDirectCrudService.findById(nonExistingId);
+		E result = crudService.findById(nonExistingId);
 
 		assertNull(result);
 
@@ -205,43 +231,44 @@ public class AbstractExtDirectCrudServiceTest {
 	/**
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws InstantiationException
 	 * 
 	 */
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings({ "unchecked" })
 	@Test
 	public void findAll_shouldFindAll() throws NoSuchFieldException,
-			IllegalAccessException {
+			IllegalAccessException, InstantiationException,
+			InvocationTargetException, NoSuchMethodException {
 
 		final Integer id1 = 17;
 		final Integer id2 = 42;
-		List<PersistentObject> persistedObjectList = new ArrayList<PersistentObject>();
+		List<E> persistedObjectList = new ArrayList<E>();
 
-		PersistentObject obj1 = new PersistentObject() {
-		};
-		PersistentObject obj2 = new PersistentObject() {
-		};
+		E obj1 = (E) implToTest;
+		E obj2 = (E) BeanUtils.cloneBean(obj1);
 
 		setIdOnPersistentObject(obj1, id1);
 		setIdOnPersistentObject(obj2, id2);
 
-		persistedObjectList.add(obj1);
-		persistedObjectList.add(obj2);
+		persistedObjectList.add((E) obj1);
+		persistedObjectList.add((E) obj2);
 
 		// mock dao behaviour
 		doReturn(persistedObjectList).when(dao).findAll();
 
 		// actually test
-		List<PersistentObject> resultList = extDirectCrudService.findAll();
+		List<E> resultList = crudService.findAll();
 
 		assertNotNull(resultList);
 		assertEquals(2, resultList.size());
 
-		Matcher<PersistentObject> m1 = hasProperty("id", is(id1));
-		Matcher<PersistentObject> m2 = hasProperty("id", is(id2));
+		Matcher<E> m1 = hasProperty("id", is(id1));
+		Matcher<E> m2 = hasProperty("id", is(id2));
 
 		assertThat(resultList,
-				IsIterableContainingInAnyOrder
-						.<PersistentObject> containsInAnyOrder(m1, m2));
+				IsIterableContainingInAnyOrder.<E> containsInAnyOrder(m1, m2));
 
 		// be sure that dao method has been executed exactly once
 		verify(dao, times(1)).findAll();
@@ -252,24 +279,21 @@ public class AbstractExtDirectCrudServiceTest {
 	 * @throws NoSuchFieldException
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void delete_shouldDelete() throws NoSuchFieldException,
 			IllegalAccessException {
 
-		@SuppressWarnings("serial")
-		PersistentObject objectToDelete = new PersistentObject() {
-		};
+		Set<E> persistedObjects = new HashSet<E>();
+		persistedObjects.add((E) implToTest);
 
-		Set<PersistentObject> persistedObjects = new HashSet<PersistentObject>();
-		persistedObjects.add(objectToDelete);
-
-		doNothing().when(dao).delete(objectToDelete);
+		doNothing().when(dao).delete((E) implToTest);
 
 		// actually test
-		extDirectCrudService.delete(objectToDelete);
+		crudService.delete((E) implToTest);
 
 		// be sure that dao.delete() has been executed exactly once
-		verify(dao, times(1)).delete(objectToDelete);
+		verify(dao, times(1)).delete((E) implToTest);
 
 		// maybe this test can be enhanced...
 	}
@@ -285,17 +309,13 @@ public class AbstractExtDirectCrudServiceTest {
 
 		Integer existingId = 17;
 
-		@SuppressWarnings("serial")
-		PersistentObject objectToLoad = new PersistentObject() {
-		};
-
-		setIdOnPersistentObject(objectToLoad, existingId);
+		setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
-		doReturn(objectToLoad).when(dao).findById(existingId);
+		doReturn(implToTest).when(dao).findById(existingId);
 
 		// actually test
-		PersistentObject result = extDirectCrudService.formLoadById(existingId);
+		E result = crudService.formLoadById(existingId);
 
 		assertNotNull(result);
 		assertEquals(existingId, result.getId());
@@ -319,8 +339,7 @@ public class AbstractExtDirectCrudServiceTest {
 		doReturn(null).when(dao).findById(nonExistingId);
 
 		// actually test
-		PersistentObject result = extDirectCrudService
-				.formLoadById(nonExistingId);
+		E result = crudService.formLoadById(nonExistingId);
 
 		assertNull(result);
 
@@ -329,25 +348,28 @@ public class AbstractExtDirectCrudServiceTest {
 	}
 
 	/**
-	 *
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * 
 	 */
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "unchecked" })
 	@Test
-	public void saveOrUpdateCollection_shouldSaveCollection() {
+	public void saveOrUpdateCollection_shouldSaveCollection()
+			throws IllegalAccessException, InstantiationException,
+			InvocationTargetException, NoSuchMethodException {
 
-		PersistentObject obj1 = new PersistentObject() {
-		};
-		PersistentObject obj2 = new PersistentObject() {
-		};
+		E obj1 = (E) implToTest;
+		E obj2 = (E) BeanUtils.cloneBean(obj1);
 
-		doAnswer(new Answer<PersistentObject>() {
+		doAnswer(new Answer<E>() {
 			int nextId = 1;
 
-			public PersistentObject answer(InvocationOnMock invocation)
+			public E answer(InvocationOnMock invocation)
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException {
-				PersistentObject po = (PersistentObject) invocation
-						.getArguments()[0];
+				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
 				setIdOnPersistentObject(po, nextId);
@@ -355,18 +377,18 @@ public class AbstractExtDirectCrudServiceTest {
 
 				return po;
 			}
-		}).when(dao).saveOrUpdate(any(PersistentObject.class));
+		}).when(dao).saveOrUpdate((E) any(PersistentObject.class));
 
 		// id has to be NULL before the service method is called
 		assertNull(obj1.getId());
 		assertNull(obj2.getId());
 
-		List<PersistentObject> listToSave = new ArrayList<PersistentObject>();
+		List<E> listToSave = new ArrayList<E>();
 		listToSave.add(obj1);
 		listToSave.add(obj2);
 
 		// actually test
-		Collection<PersistentObject> resultCollection = extDirectCrudService
+		Collection<E> resultCollection = crudService
 				.saveOrUpdateCollection(listToSave);
 
 		// id must not be NULL after the service method is called
@@ -377,7 +399,7 @@ public class AbstractExtDirectCrudServiceTest {
 		assertTrue(obj2.getId() > 0);
 
 		// be sure that dao method has been executed for each object
-		verify(dao, times(2)).saveOrUpdate(any(PersistentObject.class));
+		verify(dao, times(2)).saveOrUpdate((E) any(PersistentObject.class));
 	}
 
 	/**
@@ -390,17 +412,18 @@ public class AbstractExtDirectCrudServiceTest {
 		final Integer totalAvailableRecords = 100;
 
 		// mock dao behavior
-		doAnswer(new Answer<PagingResult<PersistentObject>>() {
-			public PagingResult<PersistentObject> answer(
-					InvocationOnMock invocation) throws NoSuchFieldException,
-					SecurityException, IllegalArgumentException,
-					IllegalAccessException {
+		doAnswer(new Answer<PagingResult<E>>() {
+			public PagingResult<E> answer(InvocationOnMock invocation)
+					throws NoSuchFieldException, SecurityException,
+					IllegalArgumentException, IllegalAccessException,
+					InstantiationException, InvocationTargetException,
+					NoSuchMethodException {
 				Integer firstResult = (Integer) invocation.getArguments()[0];
 				Integer maxResults = (Integer) invocation.getArguments()[1];
 				List<Order> hibernateSorters = (List<Order>) invocation
 						.getArguments()[2];
 
-				List<PersistentObject> records = new ArrayList<PersistentObject>();
+				List<E> records = new ArrayList<E>();
 
 				// build some objects
 
@@ -408,18 +431,18 @@ public class AbstractExtDirectCrudServiceTest {
 				Order hibernateSorter = hibernateSorters.get(0);
 				if (hibernateSorter.isAscending()) {
 					for (int i = firstResult; i < firstResult + maxResults; i++) {
-						PersistentObject obj = createPersistentObject(i);
+						E obj = (E) createPersistentObject(i);
 						records.add(obj);
 					}
 				} else {
 					for (int i = firstResult + maxResults; i > firstResult; i--) {
-						PersistentObject obj = createPersistentObject(i);
+						E obj = (E) createPersistentObject(i);
 						records.add(obj);
 					}
 				}
 
-				PagingResult<PersistentObject> pagingResult = new PagingResult<PersistentObject>(
-						records, totalAvailableRecords);
+				PagingResult<E> pagingResult = new PagingResult<E>(records,
+						totalAvailableRecords);
 				return pagingResult;
 			}
 
@@ -441,13 +464,12 @@ public class AbstractExtDirectCrudServiceTest {
 		request.setSorters(sorters);
 
 		// actually make a first test
-		ExtDirectStoreResult<PersistentObject> extResult = extDirectCrudService
+		ExtDirectStoreResult<E> extResult = crudService
 				.findWithSortingAndPagingExtDirect(request);
 
 		assertNotNull(extResult);
 
-		List<PersistentObject> extResultRecords = (List<PersistentObject>) extResult
-				.getRecords();
+		List<E> extResultRecords = (List<E>) extResult.getRecords();
 		assertNotNull(extResultRecords);
 		assertEquals(maxResults.intValue(), extResultRecords.size());
 
@@ -466,12 +488,11 @@ public class AbstractExtDirectCrudServiceTest {
 		sorters.clear();
 		sorters.add(descSorter);
 
-		extResult = extDirectCrudService
-				.findWithSortingAndPagingExtDirect(request);
+		extResult = crudService.findWithSortingAndPagingExtDirect(request);
 
 		assertNotNull(extResult);
 
-		extResultRecords = (List<PersistentObject>) extResult.getRecords();
+		extResultRecords = (List<E>) extResult.getRecords();
 		assertNotNull(extResultRecords);
 		assertEquals(maxResults.intValue(), extResultRecords.size());
 
@@ -491,17 +512,21 @@ public class AbstractExtDirectCrudServiceTest {
 	}
 
 	/**
-	 * @param i
+	 * @param id
+	 *            the ID to set on the {@link PersistentObject}
 	 * @return
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException
+	 * @throws InvocationTargetException
+	 * @throws InstantiationException
 	 */
-	@SuppressWarnings("serial")
-	private PersistentObject createPersistentObject(int i)
-			throws NoSuchFieldException, IllegalAccessException {
-		PersistentObject obj = new PersistentObject() {
-		};
-		setIdOnPersistentObject(obj, i);
+	private E createPersistentObject(int id) throws NoSuchFieldException,
+			IllegalAccessException, InstantiationException,
+			InvocationTargetException, NoSuchMethodException {
+		@SuppressWarnings("unchecked")
+		E obj = (E) BeanUtils.cloneBean(implToTest);
+		setIdOnPersistentObject(obj, id);
 		return obj;
 	}
 

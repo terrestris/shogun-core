@@ -41,7 +41,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	 *      authenticate(org.springframework.security.core.Authentication)
 	 */
 	@Override
-	@Transactional
+	@Transactional(value="transactionManager")
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 

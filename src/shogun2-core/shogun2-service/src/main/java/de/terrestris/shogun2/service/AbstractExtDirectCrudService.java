@@ -34,7 +34,6 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	 * overriding the method from the parent class (which actually has this
 	 * annotation, too).
 	 */
-	@Transactional(readOnly = false)
 	@ExtDirectMethod
 	@Override
 	public E saveOrUpdate(E e) {
@@ -76,7 +75,6 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	 * 
 	 * @param e
 	 */
-	@Transactional(readOnly = false)
 	@ExtDirectMethod
 	@Override
 	public void delete(E e) {
@@ -133,7 +131,6 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	 * @param e
 	 * @return
 	 */
-	@Transactional(readOnly = false)
 	@ExtDirectMethod(ExtDirectMethodType.STORE_MODIFY)
 	public Collection<E> saveOrUpdateCollection(Collection<E> c) {
 
@@ -154,7 +151,6 @@ public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
 	 * @param e
 	 * @return
 	 */
-	@Transactional(readOnly = false)
 	@ExtDirectMethod(ExtDirectMethodType.STORE_MODIFY)
 	public void deleteCollection(Collection<E> c) {
 

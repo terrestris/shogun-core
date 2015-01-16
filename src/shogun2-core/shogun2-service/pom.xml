@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!--  SHOGun2 -->
+        <!-- SHOGun2 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>shogun2-dao</artifactId>
@@ -52,6 +52,12 @@
         <dependency>
             <groupId>ch.ralscha</groupId>
             <artifactId>extdirectspring</artifactId>
+        </dependency>
+
+        <!-- BeanUtils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
         </dependency>
 
     </dependencies>
