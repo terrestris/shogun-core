@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
