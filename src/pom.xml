@@ -135,6 +135,19 @@
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
 
+    <!-- Make things work in Java 1.7 and 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
+    <profiles>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
 
@@ -188,7 +201,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <additionalparam>${javadoc.opts}</additionalparam>
                         </configuration>
                     </execution>
                 </executions>
