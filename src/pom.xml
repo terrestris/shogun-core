@@ -79,21 +79,21 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <jdk.version>1.7</jdk.version>
-        <tomcat.version>7.0.57</tomcat.version>
+        <jdk.version>1.8</jdk.version>
+        <tomcat.version>8.0.23</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.1.4.RELEASE</spring.version>
-        <spring-security.version>3.2.5.RELEASE</spring-security.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring-security.version>3.2.7.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
-        <jackson.version>2.5.0</jackson.version>
-        <ehcache.version>2.9.0</ehcache.version>
+        <jackson.version>2.5.4</jackson.version>
+        <ehcache.version>2.10.0</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>4.3.7.Final</hibernate.version>
-        <c3p0.version>0.9.5</c3p0.version>
-        <h2.version>1.4.184</h2.version>
+        <hibernate.version>4.3.10.Final</hibernate.version>
+        <c3p0.version>0.9.5.1</c3p0.version>
+        <h2.version>1.4.187</h2.version>
 
         <!-- Testing -->
         <junit.version>4.12</junit.version>
@@ -122,13 +122,13 @@
         <!-- Maven Plugins -->
         <!-- <maven-remote-resources-plugin.version>1.5</maven-remote-resources-plugin.version> -->
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>2.10.1</maven-javadoc-plugin.version>
-        <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
-        <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 
         <!-- Other -->
-        <ext-direct-spring.version>1.5.0</ext-direct-spring.version>
+        <ext-direct-spring.version>1.5.1</ext-direct-spring.version>
         <ext-class-generator.version>1.0.5</ext-class-generator.version>
 
         <downloadSources>true</downloadSources>
