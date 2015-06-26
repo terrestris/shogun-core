@@ -6,8 +6,10 @@ $symbol_escape = '\' )
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:security="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
-                           http://www.springframework.org/schema/security classpath:/org/springframework/security/config/spring-security-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
 
     <!-- Enables Method Security and Expression-based access control -->
     <security:global-method-security pre-post-annotations="enabled">

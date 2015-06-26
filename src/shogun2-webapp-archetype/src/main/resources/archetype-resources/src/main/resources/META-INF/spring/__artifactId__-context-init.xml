@@ -6,8 +6,10 @@ $symbol_escape = '\' )
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
-                           http://www.springframework.org/schema/jdbc classpath:/org/springframework/jdbc/config/spring-jdbc-4.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/jdbc
+                           http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
     <!-- Initialize the ACL database schema on startup -->
     <jdbc:initialize-database data-source="aclDataSource">

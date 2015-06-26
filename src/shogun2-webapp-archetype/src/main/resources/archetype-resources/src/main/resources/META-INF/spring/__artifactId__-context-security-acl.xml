@@ -5,7 +5,8 @@ $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- ACL Management Aspect -->
     <bean id="aclManagementAspect" class="de.terrestris.shogun2.security.aspect.AclManagement">
@@ -79,19 +80,25 @@ $symbol_escape = '\' )
                 <property name="cacheName" value="aclCache"/>
             </bean>
         </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy">
+                <constructor-arg ref="auditLogger" />
+            </bean>
+        </constructor-arg>
+        <constructor-arg ref="aclAuthorizationStrategy" />
     </bean>
 
     <!-- Declare an acl authorization strategy-->
     <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
         <constructor-arg>
             <list>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+                <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>
             </list>
