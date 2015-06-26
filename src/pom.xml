@@ -79,7 +79,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <jdk.version>1.8</jdk.version>
         <tomcat.version>8.0.23</tomcat.version>
 
         <!-- Core -->
@@ -120,7 +119,6 @@
         <jadira-usertype-jodatime.version>2.0.1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
-        <!-- <maven-remote-resources-plugin.version>1.5</maven-remote-resources-plugin.version> -->
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -135,14 +133,27 @@
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
 
-    <!-- Make things work in Java 1.7 and 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
     <profiles>
+        <!-- A profile for JDK 1.7 -->
         <profile>
-            <id>doclint-java8-disable</id>
+            <id>jdk7</id>
+            <activation>
+                <jdk>1.7</jdk>
+            </activation>
+            <properties>
+                <jdk.version>1.7</jdk.version>
+            </properties>
+        </profile>
+
+        <!-- A profile for JDK 1.8 (and later) -->
+        <profile>
+            <id>jdk8</id>
             <activation>
                 <jdk>[1.8,)</jdk>
             </activation>
             <properties>
+                <jdk.version>1.8</jdk.version>
+                <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
         </profile>

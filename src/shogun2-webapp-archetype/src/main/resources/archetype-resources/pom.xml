@@ -13,8 +13,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <jdk.version>1.8</jdk.version>
-
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
@@ -22,6 +20,32 @@
         <downloadSources>true</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
     </properties>
+
+    <profiles>
+        <!-- A profile for JDK 1.7 -->
+        <profile>
+            <id>jdk7</id>
+            <activation>
+                <jdk>1.7</jdk>
+            </activation>
+            <properties>
+                <jdk.version>1.7</jdk.version>
+            </properties>
+        </profile>
+
+        <!-- A profile for JDK 1.8 (and later) -->
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <jdk.version>1.8</jdk.version>
+                <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -65,9 +89,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    <configuration>
-                        <additionalparam>-Xdoclint:none</additionalparam>
-                    </configuration>
+                        <configuration>
+                            <additionalparam>${javadoc.opts}</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
