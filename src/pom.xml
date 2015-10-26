@@ -90,7 +90,7 @@
         <ehcache.version>2.10.1</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>4.3.10.Final</hibernate.version>
+        <hibernate.version>5.0.2.Final</hibernate.version>
         <c3p0.version>0.9.5.1</c3p0.version>
         <h2.version>1.4.190</h2.version>
 
