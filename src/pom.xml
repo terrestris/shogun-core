@@ -79,20 +79,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <tomcat.version>8.0.23</tomcat.version>
+        <tomcat.version>8.0.28</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.1.6.RELEASE</spring.version>
-        <spring-security.version>4.0.1.RELEASE</spring-security.version>
+        <spring.version>4.2.2.RELEASE</spring.version>
+        <spring-security.version>4.0.2.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
-        <jackson.version>2.5.4</jackson.version>
-        <ehcache.version>2.10.0</ehcache.version>
+        <jackson.version>2.6.3</jackson.version>
+        <ehcache.version>2.10.1</ehcache.version>
 
         <!-- Persistence -->
         <hibernate.version>4.3.10.Final</hibernate.version>
         <c3p0.version>0.9.5.1</c3p0.version>
-        <h2.version>1.4.187</h2.version>
+        <h2.version>1.4.190</h2.version>
 
         <!-- Testing -->
         <junit.version>4.12</junit.version>
@@ -101,7 +101,7 @@
         <jsonpath.version>1.2.0</jsonpath.version>
 
         <!-- AOP -->
-        <aspectj.version>1.8.4</aspectj.version>
+        <aspectj.version>1.8.7</aspectj.version>
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>3.0.1</coveralls-maven-plugin.version>
