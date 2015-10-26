@@ -110,7 +110,7 @@
         <!-- Apache Commons -->
         <commons-io.version>2.4</commons-io.version>
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
-        <commons-lang.version>2.6</commons-lang.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
         <commons-dbutils.version>1.6</commons-dbutils.version>
 
         <!-- Joda Time -->
@@ -552,9 +552,9 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <dependency>
