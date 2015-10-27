@@ -110,10 +110,10 @@
                     <!-- The type of connection to use (connection or developerConnection) -->
                     <connectionType>developerConnection</connectionType>
                     <!-- The base repository -->
-                    <connectionUrl>scm:git:git://github.com/terrestris/shogun2-client.git</connectionUrl>
+                    <connectionUrl>scm:git:https://github.com/terrestris/shogun2-client.git</connectionUrl>
                     <!-- IMPORTANT: Set your git username here! (Assuming you have
                                     fork already) -->
-                    <developerConnectionUrl>scm:git:git://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
+                    <developerConnectionUrl>scm:git:https://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
                 </configuration>
            </plugin>
 
