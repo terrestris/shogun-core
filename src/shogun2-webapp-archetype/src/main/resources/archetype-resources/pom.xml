@@ -16,6 +16,7 @@
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
+        <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
@@ -95,6 +96,26 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Checkout/clone the shogun2 client to this application.
+                 For checkout just run mvn scm:checkout in your app directory -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>${maven-scm-plugin.version}</version>
+                <configuration>
+                    <!-- The directory to checkout the sources to for the bootstrap 
+                         and checkout goals -->
+                    <checkoutDirectory>${project.basedir}/src/main/webapp/client</checkoutDirectory>
+                    <!-- The type of connection to use (connection or developerConnection) -->
+                    <connectionType>developerConnection</connectionType>
+                    <!-- The base repository -->
+                    <connectionUrl>scm:git:git://github.com/terrestris/shogun2-client.git</connectionUrl>
+                    <!-- IMPORTANT: Set your git username here! (Assuming you have
+                                    fork already) -->
+                    <developerConnectionUrl>scm:git:git://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
+                </configuration>
+           </plugin>
 
         </plugins>
     </build>
