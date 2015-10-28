@@ -1,22 +1,25 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
-#set( $symbol_escape = '\' )
+#set(
+$symbol_escape = '\' )
 #if( ${package} == ${shogun2-parent-package} )
-  #set( $web_packages_to_scan = "${shogun2-parent-package}.*.web" )
+#set( $web_packages_to_scan = "${shogun2-parent-package}.*.web" )
 #else
-  #set ( $web_packages_to_scan = "${shogun2-parent-package}.*.web, ${package}.web" )
+#set ( $web_packages_to_scan = "${shogun2-parent-package}.*.web,
+${package}.web" )
 #end
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:/org/springframework/beans/factory/xml/spring-beans-4.0.xsd
-						http://www.springframework.org/schema/mvc classpath:/org/springframework/web/servlet/config/spring-mvc-4.0.xsd
-						http://www.springframework.org/schema/context classpath:/org/springframework/context/config/spring-context-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- This tag registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
 		beans that are required for Spring MVC -->
-	<mvc:annotation-driven>
+	<mvc:annotation-driven
+		content-negotiation-manager="contentNegotiationManager">
 		<!-- Use customized Jackson/JSON Object Mapper, e.g. for a nicer joda date 
 			serialization -->
 		<mvc:message-converters>
@@ -26,6 +29,18 @@
 			</beans:bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+
+	<!-- Use this bean (referenced above) to map our .action extension to the 
+		application/json mime type. This is necessary since Spring 4.2.2 See: https://pivotal.io/security/cve-2015-5211 
+		TODO: We should discuss, if this is really what we want. -->
+	<beans:bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<beans:property name="mediaTypes">
+			<beans:value>
+				action=application/json
+			</beans:value>
+		</beans:property>
+	</beans:bean>
 
 	<annotation-config />
 

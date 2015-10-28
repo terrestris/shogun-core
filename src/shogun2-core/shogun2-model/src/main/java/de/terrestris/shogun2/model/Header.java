@@ -12,15 +12,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * This class represents the header area in a GUI.
  * 
  * @author Nils Bühner
  *
  */
-@Entity
 @Table
-public class LayerTree extends Module {
+@Entity
+public class Header extends CompositeModule {
 
 	/**
 	 * 
@@ -31,7 +30,7 @@ public class LayerTree extends Module {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public LayerTree() {
+	public Header() {
 	}
 
 	/**
@@ -44,7 +43,7 @@ public class LayerTree extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(41, 5).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(23, 3).appendSuper(super.hashCode()).toHashCode();
 	}
 
 	/**
@@ -56,9 +55,9 @@ public class LayerTree extends Module {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof LayerTree))
+		if (!(obj instanceof Header))
 			return false;
-		LayerTree other = (LayerTree) obj;
+		Header other = (Header) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}

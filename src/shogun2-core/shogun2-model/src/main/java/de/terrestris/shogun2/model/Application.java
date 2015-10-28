@@ -1,15 +1,14 @@
 package de.terrestris.shogun2.model;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,11 +28,7 @@ import ch.rasc.extclassgenerator.Model;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Model(value = "shogun2.model.Application",
-	readMethod = "applicationService.findWithSortingAndPagingExtDirect",
-	createMethod = "applicationService.saveOrUpdateCollection",
-	updateMethod = "applicationService.saveOrUpdateCollection",
-	destroyMethod = "applicationService.deleteCollection")
+@Model(value = "shogun2.model.Application", readMethod = "applicationService.findWithSortingAndPagingExtDirect", createMethod = "applicationService.saveOrUpdateCollection", updateMethod = "applicationService.saveOrUpdateCollection", destroyMethod = "applicationService.deleteCollection")
 public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
@@ -77,10 +72,10 @@ public class Application extends PersistentObject {
 	private String url;
 
 	/**
-	 * The modules of the application
+	 * 
 	 */
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Module> modules = new HashSet<Module>();
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Viewport viewport;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -143,18 +138,18 @@ public class Application extends PersistentObject {
 	}
 
 	/**
-	 * @return the modules
+	 * @return the viewport
 	 */
-	public Set<Module> getModules() {
-		return modules;
+	public Viewport getViewport() {
+		return viewport;
 	}
 
 	/**
-	 * @param modules
-	 *            the modules to set
+	 * @param viewport
+	 *            the viewport to set
 	 */
-	public void setModules(Set<Module> modules) {
-		this.modules = modules;
+	public void setViewport(Viewport viewport) {
+		this.viewport = viewport;
 	}
 
 	/**
@@ -166,9 +161,8 @@ public class Application extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(29, 11).appendSuper(super.hashCode())
-				.append(getName()).append(getLanguage()).append(getOpen())
-				.append(getActive()).append(getUrl()).toHashCode();
+		return new HashCodeBuilder(29, 11).appendSuper(super.hashCode()).append(getName()).append(getLanguage())
+				.append(getOpen()).append(getActive()).append(getUrl()).toHashCode();
 	}
 
 	/**
@@ -183,12 +177,9 @@ public class Application extends PersistentObject {
 			return false;
 		Application other = (Application) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName())
-				.append(getLanguage(), other.getLanguage())
-				.append(getOpen(), other.getOpen())
-				.append(getActive(), other.getActive())
-				.isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(other)).append(getName(), other.getName())
+				.append(getLanguage(), other.getLanguage()).append(getOpen(), other.getOpen())
+				.append(getActive(), other.getActive()).isEquals();
 	}
 
 	/**
@@ -197,12 +188,9 @@ public class Application extends PersistentObject {
 	 *      Using Apache Commons String Builder.
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString()).append("name", getName())
-				.append("description", getDescription())
-				.append("language", getLanguage()).append("open", getOpen())
-				.append("active", getActive()).append("url", getUrl())
-				.toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
+				.append("name", getName()).append("description", getDescription()).append("language", getLanguage())
+				.append("open", getOpen()).append("active", getActive()).append("url", getUrl()).toString();
 	}
 
 }

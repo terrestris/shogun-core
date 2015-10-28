@@ -40,7 +40,6 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 		return sessionFactory.getCurrentSession();
 	}
 
-	@SuppressWarnings("unchecked")
 	public E findById(ID id) {
 		return (E) getSession().get(clazz, id);
 	}
@@ -75,6 +74,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	@SuppressWarnings("unchecked")
 	public List<E> findByCriteria(Criterion... criterion) {
 		Criteria criteria = getSession().createCriteria(clazz);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		for (Criterion c : criterion) {
 			if (c != null) {
 				criteria.add(c);

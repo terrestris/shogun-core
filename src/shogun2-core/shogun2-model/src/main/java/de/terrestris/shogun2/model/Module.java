@@ -1,14 +1,22 @@
+/**
+ * 
+ */
 package de.terrestris.shogun2.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,30 +24,45 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * This class represents a module, which will usually result in a visual
- * component in a GUI. Possible modules could be a {@link Map} or a
- * {@link LayerTree}.
+ * A module is the visual representation of a component in the GUI. A module can
+ * be connected to a {@link Layout} and it stores basic properties (like
+ * <i>border</i>, <i>height</i> , <i>width</i>, ...).
  * 
- * A module can include a set of further modules (i.e. subModules).
+ * This class is the abstract superclass of either simple (e.g.
+ * {@link LayerTree}) or complex ({@link CompositeModule}) subclasses and can
+ * thereby considered as a node in a tree structure of (sub-)modules.
+ * 
+ * @author Nils Bühner
+ *
  */
 @Entity
-@Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Module extends PersistentObject {
+public abstract class Module extends PersistentObject {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
-	@Column
 	private String name;
 
 	/**
 	 * 
 	 */
-	@OneToMany
-	private Set<Module> subModules = new HashSet<Module>();
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Layout layout;
+
+	/**
+	 * 
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@MapKeyColumn(name = "PROPERTY")
+	@Column(name = "VALUE")
+	@CollectionTable(name = "MODULE_PROPERTIES", joinColumns = @JoinColumn(name = "MODULE_ID") )
+	private Map<String, String> properties = new HashMap<String, String>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -64,58 +87,73 @@ public class Module extends PersistentObject {
 	}
 
 	/**
-	 * @return the subModules
+	 * 
+	 * @return
 	 */
-	public Set<Module> getSubModules() {
-		return subModules;
+	public Layout getLayout() {
+		return layout;
 	}
 
 	/**
-	 * @param subModules
-	 *            the subModules to set
+	 * 
+	 * @param layout
 	 */
-	public void setSubModules(Set<Module> subModules) {
-		this.subModules = subModules;
+	public void setLayout(Layout layout) {
+		this.layout = layout;
+	}
+
+	/**
+	 * @return the properties
+	 */
+	public Map<String, String> getProperties() {
+		return properties;
+	}
+
+	/**
+	 * @param properties
+	 *            the properties to set
+	 */
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
 	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
-	 * 
-	 *      According to http://stackoverflow.com/q/27581 it is recommended to
-	 *      use only getter-methods when using ORM like Hibernate
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
 	 */
-	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(31, 19).appendSuper(super.hashCode())
-				.append(getName()).toHashCode();
+		return new HashCodeBuilder(5, 7).appendSuper(super.hashCode()).append(getName()).append(getLayout())
+				.append(getProperties()).toHashCode();
 	}
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
-	 *      According to http://stackoverflow.com/q/27581 it is recommended to
-	 *      use only getter-methods when using ORM like Hibernate
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
 	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Module))
 			return false;
 		Module other = (Module) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName()).isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(other)).append(getName(), other.getName())
+				.append(getLayout(), other.getLayout()).append(getProperties(), other.getProperties()).isEquals();
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
-	 *      Using Apache Commons String Builder.
+	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString()).append("name", getName())
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
+				.append("name", getName()).append("layout", getLayout()).append("properties", getProperties())
 				.toString();
 	}
-
 }

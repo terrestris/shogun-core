@@ -12,15 +12,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * The viewport is the main container representing the viewable application area
+ * (i.e. the browser viewport). It is thereby used in an {@link Application}.
  * 
  * @author Nils Bühner
  *
  */
-@Entity
 @Table
-public class LayerTree extends Module {
+@Entity
+public class Viewport extends CompositeModule {
 
 	/**
 	 * 
@@ -31,7 +31,7 @@ public class LayerTree extends Module {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public LayerTree() {
+	public Viewport() {
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class LayerTree extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(41, 5).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(7, 19).appendSuper(super.hashCode()).toHashCode();
 	}
 
 	/**
@@ -56,9 +56,9 @@ public class LayerTree extends Module {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof LayerTree))
+		if (!(obj instanceof Viewport))
 			return false;
-		LayerTree other = (LayerTree) obj;
+		Viewport other = (Viewport) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}
