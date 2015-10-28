@@ -1,6 +1,10 @@
 package de.terrestris.shogun2.init;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -17,14 +21,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.model.BorderLayout;
+import de.terrestris.shogun2.model.Header;
+import de.terrestris.shogun2.model.LayerTree;
+import de.terrestris.shogun2.model.Layout;
+import de.terrestris.shogun2.model.Module;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.Viewport;
 import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
- * @author Nils Bühner
+ * Class to initialize some kind of content.
  * 
- *         Class to initialize some kind of content
+ * <b>ATTENTION:</b> This class is currently used to provide some demo content.
+ * In future, certain entities (like some default {@link Layout}s or
+ * {@link Module} s should be created on the base of (configurable) bean
+ * definitions.
+ * 
+ * @author Nils Bühner
  * 
  */
 public class ContentInitializer {
@@ -32,8 +47,7 @@ public class ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static final Logger LOG = Logger
-			.getLogger(ContentInitializer.class);
+	private static final Logger LOG = Logger.getLogger(ContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if content initialization should be active on startup
@@ -87,11 +101,13 @@ public class ContentInitializer {
 
 	/**
 	 * The method called on initialization
+	 * 
+	 * THIS WILL CURRENTLY PRODUCE SOME DEMO CONTENT
 	 */
 	public void initializeDatabaseContent() {
 
 		if (this.shogunInitEnabled.equals(true)) {
-			LOG.info("Initializing some SHOGun content!");
+			LOG.info("Initializing some SHOGun demo content!");
 
 			LOG.info("Cleaning up ACL tables...");
 			cleanupAclTables();
@@ -109,12 +125,35 @@ public class ContentInitializer {
 			Application adminApp = new Application("AdminApp", null);
 			Application userApp = new Application("UserApp", null);
 
-			adminApp = initService.createApplication(adminApp);
-			userApp = initService.createApplication(userApp);
-
 			LOG.info("Created an admin app and a user app.");
 
+			// CREATE AND ADD A VIEWPORT MODULE WITH A BORDER LAYOUT
+			BorderLayout borderLayout = new BorderLayout();
+			borderLayout.setRegions(Arrays.asList("north", "west"));
+			borderLayout.setPropertyHints(new HashSet<String>(Arrays.asList("height", "border")));
+			borderLayout.setPropertyMusts(new HashSet<String>(Arrays.asList("width")));
+
+			Map<String, String> properties = new HashMap<String, String>();
+			properties.put("width", "200");
+			properties.put("border", "2");
+
+			Viewport vp = new Viewport();
+
+			vp.setLayout(borderLayout);
+			vp.setProperties(properties);
+
+			Header headerModule = new Header();
+			vp.addModule(headerModule);
+
+			LayerTree layerTreeModule = new LayerTree();
+			vp.addModule(layerTreeModule);
+
+			adminApp.setViewport(vp);
+
 			// MANAGE SECURITY/ACL
+
+			adminApp = initService.createApplication(adminApp);
+			userApp = initService.createApplication(userApp);
 
 			logInUser(admin);
 
@@ -137,8 +176,7 @@ public class ContentInitializer {
 	 * @param user
 	 */
 	private void logInUser(User user) {
-		Authentication authRequest = new UsernamePasswordAuthenticationToken(
-				user.getAccountName(), user.getPassword());
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getAccountName(), user.getPassword());
 
 		Authentication authResult = authenticationProvider.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(authResult);
