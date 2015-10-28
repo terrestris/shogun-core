@@ -159,7 +159,7 @@ public class WfsSearch extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(13, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(37, 3).appendSuper(super.hashCode()).toHashCode();
 	}
 
 	/**
