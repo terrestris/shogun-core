@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @Entity
 @Table
-public class NominatimSearch extends Module {
+public class OverpassSearch extends Module {
 
 	/**
 	 * 
@@ -42,22 +42,22 @@ public class NominatimSearch extends Module {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public NominatimSearch() {
+	public OverpassSearch() {
 	}
 	
 	/**
 	 * 
 	 * A enum type for the allowed response format.
 	 */
-	public enum nominatimFormatType {
-		html,xml,json,jsonv2;
+	public enum overpassFormatType {
+		xml,json,csv,custom,popup;
 	}
 	
 	/**
 	 * The response format.
 	 */
 	@Enumerated(EnumType.STRING)
-	private nominatimFormatType format;
+	private overpassFormatType format;
 	
 	/**
 	 * Limits the response.
@@ -76,14 +76,14 @@ public class NominatimSearch extends Module {
 	/**
 	 * @return the format
 	 */
-	public nominatimFormatType getFormat() {
+	public overpassFormatType getFormat() {
 		return format;
 	}
 
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(nominatimFormatType format) {
+	public void setFormat(overpassFormatType format) {
 		this.format = format;
 	}
 
@@ -183,7 +183,7 @@ public class NominatimSearch extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(29, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(31, 3).appendSuper(super.hashCode()).toHashCode();
 	}
 
 	/**
@@ -195,9 +195,9 @@ public class NominatimSearch extends Module {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof NominatimSearch))
+		if (!(obj instanceof OverpassSearch))
 			return false;
-		NominatimSearch other = (NominatimSearch) obj;
+		OverpassSearch other = (OverpassSearch) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}
