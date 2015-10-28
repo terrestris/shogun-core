@@ -1,9 +1,8 @@
 /**
  * 
  */
-package de.terrestris.shogun2.model;
+package de.terrestris.shogun2.model.layout;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +20,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.terrestris.shogun2.model.module.CompositeModule;
+
 /**
- * This class is the representation of an absolute layout, where components are
- * anchored in absolute positions, which are stored in the {@link #coords}
+ * This class is the representation of an border layout, where components are
+ * anchored in (predefined) regions, which are stored in the {@link #regions}
  * property.
  * 
- * The order of the {@link #coords} should match the order of the corresponding
+ * The order of the {@link #regions} should match the order of the corresponding
  * {@link CompositeModule#getSubModules()}.
  * 
  * @author Nils Bühner
@@ -34,7 +35,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @Table
 @Entity
-public class AbsoluteLayout extends Layout {
+public class BorderLayout extends Layout {
 
 	/**
 	 * 
@@ -45,32 +46,32 @@ public class AbsoluteLayout extends Layout {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public AbsoluteLayout() {
-		this.setType("absolute");
+	public BorderLayout() {
+		this.setType("border");
 	}
 
 	/**
 	 * 
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "ABSOLUTELAYOUT_COORDS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
-	@Column(name = "COORD")
+	@CollectionTable(name = "BORDERLAYOUT_REGIONS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
+	@Column(name = "REGION")
 	@OrderColumn(name = "INDEX")
-	private List<Point> coords = new ArrayList<Point>();
+	private List<String> regions = new ArrayList<String>();
 
 	/**
-	 * @return the coords
+	 * @return the regions
 	 */
-	public List<Point> getCoords() {
-		return coords;
+	public List<String> getRegions() {
+		return regions;
 	}
 
 	/**
-	 * @param coords
-	 *            the coords to set
+	 * @param regions
+	 *            the regions to set
 	 */
-	public void setCoords(List<Point> coords) {
-		this.coords = coords;
+	public void setRegions(List<String> regions) {
+		this.regions = regions;
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class AbsoluteLayout extends Layout {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(getCoords()).toHashCode();
+		return new HashCodeBuilder(53, 23).appendSuper(super.hashCode()).append(getRegions()).toHashCode();
 	}
 
 	/**
@@ -95,11 +96,11 @@ public class AbsoluteLayout extends Layout {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof AbsoluteLayout))
+		if (!(obj instanceof BorderLayout))
 			return false;
-		AbsoluteLayout other = (AbsoluteLayout) obj;
+		BorderLayout other = (BorderLayout) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getCoords(), other.getCoords()).isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(other)).append(getRegions(), other.getRegions()).isEquals();
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class AbsoluteLayout extends Layout {
 	 */
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
-				.append("coords", getCoords()).toString();
+				.append("regions", getRegions()).toString();
 	}
 
 }

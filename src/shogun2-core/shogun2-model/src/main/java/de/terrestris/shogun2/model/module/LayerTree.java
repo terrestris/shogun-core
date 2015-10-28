@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.terrestris.shogun2.model;
+package de.terrestris.shogun2.model.module;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

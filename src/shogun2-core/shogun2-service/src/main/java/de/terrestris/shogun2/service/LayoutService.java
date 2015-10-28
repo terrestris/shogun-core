@@ -2,7 +2,7 @@ package de.terrestris.shogun2.service;
 
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.model.Layout;
+import de.terrestris.shogun2.model.layout.Layout;
 
 /**
  * Service class for the {@link Layout} model.

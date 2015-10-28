@@ -17,6 +17,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ch.rasc.extclassgenerator.Model;
+import de.terrestris.shogun2.model.module.Viewport;
 
 /**
  * This class represents a (GIS-)application, which can be opened in a browser.

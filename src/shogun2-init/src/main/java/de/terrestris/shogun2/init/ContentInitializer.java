@@ -21,13 +21,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.model.BorderLayout;
-import de.terrestris.shogun2.model.Header;
-import de.terrestris.shogun2.model.LayerTree;
-import de.terrestris.shogun2.model.Layout;
-import de.terrestris.shogun2.model.Module;
 import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.Viewport;
+import de.terrestris.shogun2.model.layout.BorderLayout;
+import de.terrestris.shogun2.model.layout.Layout;
+import de.terrestris.shogun2.model.module.Header;
+import de.terrestris.shogun2.model.module.LayerTree;
+import de.terrestris.shogun2.model.module.Module;
+import de.terrestris.shogun2.model.module.Viewport;
 import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 

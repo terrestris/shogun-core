@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.terrestris.shogun2.model;
+package de.terrestris.shogun2.model.module;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,15 +12,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The viewport is the main container representing the viewable application area
- * (i.e. the browser viewport). It is thereby used in an {@link Application}.
+ * This class represents the header area in a GUI.
  * 
  * @author Nils Bühner
  *
  */
 @Table
 @Entity
-public class Viewport extends CompositeModule {
+public class Header extends CompositeModule {
 
 	/**
 	 * 
@@ -31,7 +30,7 @@ public class Viewport extends CompositeModule {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public Viewport() {
+	public Header() {
 	}
 
 	/**
@@ -44,7 +43,7 @@ public class Viewport extends CompositeModule {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(7, 19).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(23, 3).appendSuper(super.hashCode()).toHashCode();
 	}
 
 	/**
@@ -56,9 +55,9 @@ public class Viewport extends CompositeModule {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Viewport))
+		if (!(obj instanceof Header))
 			return false;
-		Viewport other = (Viewport) obj;
+		Header other = (Header) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}
