@@ -41,6 +41,7 @@ public class AbsoluteLayout extends Layout {
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
 	public AbsoluteLayout() {
+		this.setType("absolute");
 	}
 
 	/**
