@@ -18,6 +18,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * A module is the visual representation of a component in the GUI. A module can
  * be connected to a {@link Layout} and it stores basic properties (like
@@ -110,5 +115,45 @@ public abstract class Module extends PersistentObject {
 	 */
 	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
+	 */
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(5, 7).appendSuper(super.hashCode()).append(getName()).append(getLayout())
+				.append(getProperties()).toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Module))
+			return false;
+		Module other = (Module) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other)).append(getName(), other.getName())
+				.append(getLayout(), other.getLayout()).append(getProperties(), other.getProperties()).isEquals();
+	}
+
+	/**
+	 *
+	 */
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
+				.append("name", getName()).append("layout", getLayout()).append("properties", getProperties())
+				.toString();
 	}
 }

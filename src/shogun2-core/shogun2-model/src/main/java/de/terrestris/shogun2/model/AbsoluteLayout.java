@@ -16,6 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * This class is the representation of an absolute layout, where components are
  * anchored in absolute positions, which are stored in the {@link #coords}
@@ -66,6 +71,43 @@ public class AbsoluteLayout extends Layout {
 	 */
 	public void setCoords(List<Point> coords) {
 		this.coords = coords;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
+	 */
+	public int hashCode() {
+		// two randomly chosen prime numbers
+		return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(getCoords()).toHashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 *
+	 *      According to
+	 *      http://stackoverflow.com/questions/27581/overriding-equals
+	 *      -and-hashcode-in-java it is recommended only to use getter-methods
+	 *      when using ORM like Hibernate
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AbsoluteLayout))
+			return false;
+		AbsoluteLayout other = (AbsoluteLayout) obj;
+
+		return new EqualsBuilder().appendSuper(super.equals(other)).append(getCoords(), other.getCoords()).isEquals();
+	}
+
+	/**
+	 *
+	 */
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
+				.append("coords", getCoords()).toString();
 	}
 
 }
