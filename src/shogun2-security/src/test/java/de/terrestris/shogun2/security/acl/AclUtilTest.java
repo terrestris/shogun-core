@@ -30,9 +30,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.model.Application;
@@ -45,7 +45,7 @@ import de.terrestris.shogun2.model.User;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional(value = "aclTransactionManager")
-@TransactionConfiguration(defaultRollback = true)
+@Rollback(true)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context-acl.xml" })
 public class AclUtilTest {
 
