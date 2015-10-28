@@ -74,6 +74,22 @@ public class NominatimSearch extends Module {
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
 
 	/**
+	 * Characters needed to send a request.
+	 */
+	private Integer minSearchTextChars;
+	
+	/**
+	 * The delay between hitting a key and sending the request in ms.
+	 */
+	private Integer typeDelay;
+	
+	/**
+	 * The template of the grouping Header.
+	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
+	 */
+	private String groupHeaderTpl;
+	
+	/**
 	 * @return the format
 	 */
 	public nominatimFormatType getFormat() {
@@ -157,21 +173,6 @@ public class NominatimSearch extends Module {
 		this.groupHeaderTpl = groupHeaderTpl;
 	}
 
-	/**
-	 * Characters needed to send a request.
-	 */
-	private Integer minSearchTextChars;
-	
-	/**
-	 * The delay between hitting a key and sending the request in ms.
-	 */
-	private Integer typeDelay;
-	
-	/**
-	 * The template of the grouping Header.
-	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
-	 */
-	private String groupHeaderTpl;
 	
 	/**
 	 * @see java.lang.Object#hashCode()
