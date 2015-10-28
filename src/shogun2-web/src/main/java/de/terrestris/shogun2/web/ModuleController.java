@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.model.Module;
+import de.terrestris.shogun2.model.module.Module;
 import de.terrestris.shogun2.service.ModuleService;
 
 /**

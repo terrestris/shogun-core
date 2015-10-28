@@ -2,7 +2,7 @@ package de.terrestris.shogun2.dao;
 
 import org.springframework.stereotype.Repository;
 
-import de.terrestris.shogun2.model.Layout;
+import de.terrestris.shogun2.model.layout.Layout;
 
 @Repository
 public class LayoutDao extends GenericHibernateDao<Layout, Integer> {
