@@ -61,7 +61,7 @@ public class NominatimSearch extends Module {
 	/**
 	 * Limits the response.
 	 */
-	private Integer limit;
+	private Integer resultLimit;
 	
 	/**
 	 * A list of EPSG-Codes the should be available in the module.
@@ -103,17 +103,17 @@ public class NominatimSearch extends Module {
 	}
 
 	/**
-	 * @return the limit
+	 * @return the resultLimit
 	 */
-	public Integer getLimit() {
-		return limit;
+	public Integer getResultLimit() {
+		return resultLimit;
 	}
 
 	/**
-	 * @param limit the limit to set
+	 * @param resultLimit the resultLimit to set
 	 */
-	public void setLimit(Integer limit) {
-		this.limit = limit;
+	public void setResultLimit(Integer resultLimit) {
+		this.resultLimit = resultLimit;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class NominatimSearch extends Module {
 		return new HashCodeBuilder(29, 3).
 				appendSuper(super.hashCode()).
 				append(getFormat()).
-				append(getLimit()).
+				append(getResultLimit()).
 				append(getViewboxlbrt()).
 				append(getMinSearchTextChars()).
 				append(getTypeDelay()).
@@ -210,7 +210,7 @@ public class NominatimSearch extends Module {
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
 				append(getFormat(), other.getFormat()).
-				append(getLimit(), other.getLimit()).
+				append(getResultLimit(), other.getResultLimit()).
 				append(getViewboxlbrt(), other.getViewboxlbrt()).
 				append(getMinSearchTextChars(), other.getMinSearchTextChars()).
 				append(getTypeDelay(), other.getTypeDelay()).
@@ -225,7 +225,7 @@ public class NominatimSearch extends Module {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
 				appendSuper(super.toString()).
 				append(getFormat()).
-				append(getLimit()).
+				append(getResultLimit()).
 				append(getViewboxlbrt()).
 				append(getMinSearchTextChars()).
 				append(getTypeDelay()).
