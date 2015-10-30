@@ -12,10 +12,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * The Image Module is the Ext JS representation of an HTML img element.
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -101,7 +100,12 @@ public class Image extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(7, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(7, 3).
+				appendSuper(super.hashCode()).
+				append(getSrc()).
+				append(getLink()).
+				append(getAltText()).
+				toHashCode();
 	}
 
 	/**
@@ -117,14 +121,24 @@ public class Image extends Module {
 			return false;
 		Image other = (Image) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getSrc(), other.getSrc()).
+				append(getLink(), other.getLink()).
+				append(getAltText(), other.getAltText()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getSrc()).
+				append(getLink()).
+				append(getAltText()).
+				toString();
 	}
 
 }

@@ -23,10 +23,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * A search module working with the OSM Overpass API.
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -183,7 +182,15 @@ public class OverpassSearch extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(31, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(31, 3).
+				appendSuper(super.hashCode()).
+				append(getFormat()).
+				append(getLimit()).
+				append(getViewboxlbrt()).
+				append(getMinSearchTextChars()).
+				append(getTypeDelay()).
+				append(getGroupHeaderTpl()).
+				toHashCode();
 	}
 
 	/**
@@ -199,14 +206,30 @@ public class OverpassSearch extends Module {
 			return false;
 		OverpassSearch other = (OverpassSearch) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getFormat(), other.getFormat()).
+				append(getLimit(), other.getLimit()).
+				append(getViewboxlbrt(), other.getViewboxlbrt()).
+				append(getMinSearchTextChars(), other.getMinSearchTextChars()).
+				append(getTypeDelay(), other.getTypeDelay()).
+				append(getGroupHeaderTpl(), other.getGroupHeaderTpl()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getFormat()).
+				append(getLimit()).
+				append(getViewboxlbrt()).
+				append(getMinSearchTextChars()).
+				append(getTypeDelay()).
+				append(getGroupHeaderTpl()).
+				toString();
 	}
 
 }

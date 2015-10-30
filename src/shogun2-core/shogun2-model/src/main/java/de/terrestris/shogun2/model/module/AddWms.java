@@ -12,10 +12,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * The AddWms module allows the user to add an external WMS to the application. 
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -44,7 +43,9 @@ public class AddWms extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(17, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(17, 3).
+				appendSuper(super.hashCode()).
+				toHashCode();
 	}
 
 	/**
@@ -60,14 +61,18 @@ public class AddWms extends Module {
 			return false;
 		AddWms other = (AddWms) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				toString();
 	}
 
 }

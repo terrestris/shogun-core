@@ -21,10 +21,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * A module to search features of a WFS.
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -159,7 +158,14 @@ public class WfsSearch extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(37, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(37, 3).
+				appendSuper(super.hashCode()).
+				append(getWfsServerUrl()).
+				append(getMinSearchTextChars()).
+				append(getTypeDelay()).
+				append(getAllowedFeatureTypeDataTypes()).
+				append(getGroupHeaderTpl()).
+				toHashCode();
 	}
 
 	/**
@@ -175,14 +181,28 @@ public class WfsSearch extends Module {
 			return false;
 		WfsSearch other = (WfsSearch) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getWfsServerUrl(), other.getWfsServerUrl()).
+				append(getMinSearchTextChars(), other.getMinSearchTextChars()).
+				append(getTypeDelay(), other.getTypeDelay()).
+				append(getAllowedFeatureTypeDataTypes(), other.getAllowedFeatureTypeDataTypes()).
+				append(getGroupHeaderTpl(), other.getGroupHeaderTpl()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getWfsServerUrl()).
+				append(getMinSearchTextChars()).
+				append(getTypeDelay()).
+				append(getAllowedFeatureTypeDataTypes()).
+				append(getGroupHeaderTpl()).
+				toString();
 	}
 
 }

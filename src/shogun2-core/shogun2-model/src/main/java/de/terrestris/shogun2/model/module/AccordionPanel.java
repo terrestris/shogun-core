@@ -12,9 +12,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * This class represents the header area in a GUI.
+ * This class represents the an Panel with an accordion layout.
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Table
@@ -62,7 +62,10 @@ public class AccordionPanel extends CompositeModule {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(11, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(11, 3).
+				appendSuper(super.hashCode()).
+				append(getExpandedItem()).
+				toHashCode();
 	}
 
 	/**
@@ -78,14 +81,20 @@ public class AccordionPanel extends CompositeModule {
 			return false;
 		AccordionPanel other = (AccordionPanel) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getExpandedItem(), other.getExpandedItem()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getExpandedItem()).
+				toString();
 	}
 
 }

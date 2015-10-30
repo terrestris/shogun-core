@@ -12,10 +12,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * A module which contains a formular to print the map with the mapfish print v3.
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -63,7 +62,10 @@ public class Print extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(23, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(23, 3).
+				appendSuper(super.hashCode()).
+				append(getUrl()).
+				toHashCode();
 	}
 
 	/**
@@ -79,14 +81,20 @@ public class Print extends Module {
 			return false;
 		Print other = (Print) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getUrl(), other.getUrl()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getUrl()).
+				toString();
 	}
 
 }

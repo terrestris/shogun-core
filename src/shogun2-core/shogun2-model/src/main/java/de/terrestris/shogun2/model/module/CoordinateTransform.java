@@ -3,19 +3,15 @@
  */
 package de.terrestris.shogun2.model.module;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
@@ -25,10 +21,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A LayerTree is a simple module, where layers (of a map) are organized in a
- * flexible tree structure.
+ * The CoordinateTransform module allows the user to transform map coordinates into
+ * different projections. 
  * 
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
 @Entity
@@ -55,6 +51,11 @@ public class CoordinateTransform extends Module {
 	@Column(name = "EPSG")
 	@OrderColumn(name = "INDEX")
 	private List<String> epsgCodes = new ArrayList<String>();
+
+	/**
+	 * Should the form be filled on instantiation.
+	 */
+	private Boolean transformCenterOnRender;
 	
 	/**
 	 * @return the epsgCodes
@@ -84,10 +85,6 @@ public class CoordinateTransform extends Module {
 		this.transformCenterOnRender = transformCenterOnRender;
 	}
 
-	/**
-	 * Should the form be filled on instantiation.
-	 */
-	private Boolean transformCenterOnRender;
 	
 	/**
 	 * @see java.lang.Object#hashCode()
@@ -99,7 +96,11 @@ public class CoordinateTransform extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(19, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(19, 3).
+				appendSuper(super.hashCode()).
+				append(getEpsgCodes()).
+				append(getTransformCenterOnRender()).
+				toHashCode();
 	}
 
 	/**
@@ -115,14 +116,22 @@ public class CoordinateTransform extends Module {
 			return false;
 		CoordinateTransform other = (CoordinateTransform) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getEpsgCodes(), other.getEpsgCodes()).
+				append(getTransformCenterOnRender(), other.getTransformCenterOnRender()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getEpsgCodes()).
+				append(getTransformCenterOnRender()).
+				toString();
 	}
 
 }
