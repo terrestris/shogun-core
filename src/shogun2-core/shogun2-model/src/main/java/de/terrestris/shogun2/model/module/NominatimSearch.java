@@ -48,15 +48,51 @@ public class NominatimSearch extends Module {
 	 * 
 	 * A enum type for the allowed response format.
 	 */
-	public enum nominatimFormatType {
-		html,xml,json,jsonv2;
+	public static enum NominatimFormatType {
+		HTML("html"),
+		XML("xml"),
+		JSON("json"),
+		JSONV2("jsonv2");
+
+		private final String value;
+
+		/**
+		 * Enum constructor
+		 * 
+		 * @param value
+		 */
+		private NominatimFormatType(String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Static method to get an enum based on a string value.
+		 * 
+		 * @param inputValue
+		 * @return
+		 */
+		public static NominatimFormatType fromString(String inputValue) {
+			if (inputValue != null) {
+				for (NominatimFormatType type : NominatimFormatType.values()) {
+					if (inputValue.equalsIgnoreCase(type.value)) {
+						return type;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return value;
+		}
 	}
 	
 	/**
 	 * The response format.
 	 */
 	@Enumerated(EnumType.STRING)
-	private nominatimFormatType format;
+	private NominatimFormatType format;
 	
 	/**
 	 * Limits the response.
@@ -91,14 +127,14 @@ public class NominatimSearch extends Module {
 	/**
 	 * @return the format
 	 */
-	public nominatimFormatType getFormat() {
+	public NominatimFormatType getFormat() {
 		return format;
 	}
 
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(nominatimFormatType format) {
+	public void setFormat(NominatimFormatType format) {
 		this.format = format;
 	}
 
