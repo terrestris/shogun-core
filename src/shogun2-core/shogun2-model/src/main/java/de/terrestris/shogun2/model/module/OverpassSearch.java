@@ -48,15 +48,52 @@ public class OverpassSearch extends Module {
 	 * 
 	 * A enum type for the allowed response format.
 	 */
-	public enum overpassFormatType {
-		xml,json,csv,custom,popup;
+	public enum OverpassFormatType {
+		XML("xml"),
+		JSON("json"),
+		CSV("csv"),
+		CUSTOM("custom"),
+		POPUP("popup");
+
+		private final String value;
+
+		/**
+		 * Enum constructor
+		 * 
+		 * @param value
+		 */
+		private OverpassFormatType(String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Static method to get an enum based on a string value.
+		 * 
+		 * @param inputValue
+		 * @return
+		 */
+		public static OverpassFormatType fromString(String inputValue) {
+			if (inputValue != null) {
+				for (OverpassFormatType type : OverpassFormatType.values()) {
+					if (inputValue.equalsIgnoreCase(type.value)) {
+						return type;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return value;
+		}
 	}
 	
 	/**
 	 * The response format.
 	 */
 	@Enumerated(EnumType.STRING)
-	private overpassFormatType format;
+	private OverpassFormatType format;
 	
 	/**
 	 * Limits the response.
@@ -98,14 +135,14 @@ public class OverpassSearch extends Module {
 	/**
 	 * @return the format
 	 */
-	public overpassFormatType getFormat() {
+	public OverpassFormatType getFormat() {
 		return format;
 	}
 
 	/**
 	 * @param format the format to set
 	 */
-	public void setFormat(overpassFormatType format) {
+	public void setFormat(OverpassFormatType format) {
 		this.format = format;
 	}
 
