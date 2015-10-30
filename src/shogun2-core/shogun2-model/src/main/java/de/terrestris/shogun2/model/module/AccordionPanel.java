@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * This class represents the an Panel with an accordion layout.
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -22,9 +22,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class AccordionPanel extends CompositeModule {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Defines which of the contained Modules is initally expanded.
+	 */
+	private Module expandedItem;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -32,11 +37,6 @@ public class AccordionPanel extends CompositeModule {
 	 */
 	public AccordionPanel() {
 	}
-	
-	/**
-	 * Defines which of the contained Modules is initaly expanded.
-	 */
-	private Module expandedItem;
 
 	/**
 	 * @return the expandedItem

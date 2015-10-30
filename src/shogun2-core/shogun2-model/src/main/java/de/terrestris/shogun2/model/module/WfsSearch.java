@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A module to search features of a WFS.
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -31,16 +31,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class WfsSearch extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public WfsSearch() {
-	}
 
 //	/**
 //	 * A list of EPSG-Codes the should be available in the module.
@@ -50,34 +43,41 @@ public class WfsSearch extends Module {
 //	@Column(name = "Layer")
 //	@OrderColumn(name = "INDEX")
 //	private List<Layer> layers = new ArrayList<Layer>();
-	
+
 	private String wfsServerUrl;
-	
+
 	/*
 	 * Characters needed to send a request.
 	 */
 	private Integer minSearchTextChars;
-	
+
 	/**
 	 * The delay between hitting a key and sending the request in ms.
 	 */
 	private Integer typeDelay;
-	
+
 	/**
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "WfsSearch_FeatureDataTypes", joinColumns = @JoinColumn(name = "WfsSearch_ID") )
-	@Column(name = "FeatureDataTypes")
+	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
+	@Column(name = "FEATUREDATATYPES")
 	@OrderColumn(name = "INDEX")
 	private List<String> allowedFeatureTypeDataTypes = new ArrayList<String>();
-	
+
 	/**
 	 * The template of the grouping Header.
 	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
 	 */
 	private String groupHeaderTpl;
-	
+
+	/**
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
+	 */
+	public WfsSearch() {
+	}
+
 	/**
 	 * @return the wfsServerUrl
 	 */

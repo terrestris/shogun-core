@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A module which contains a formular to print the map with the mapfish print v3.
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -22,9 +22,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Print extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The mapfish-print url.
+	 */
+	private String url;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -32,11 +37,6 @@ public class Print extends Module {
 	 */
 	public Print() {
 	}
-	
-	/**
-	 * The mapfish-print url.
-	 */
-	private String url;
 
 	/**
 	 * @return the url

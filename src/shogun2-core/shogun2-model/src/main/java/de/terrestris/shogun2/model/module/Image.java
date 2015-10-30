@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The Image Module is the Ext JS representation of an HTML img element.
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -22,9 +22,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Image extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The path to the image;
+	 */
+	private String src;
+
+	/**
+	 * An optional link, if the image is clickable.
+	 */
+	private String link;
+
+	/**
+	 * The alternative Text for the Image.
+	 */
+	private String altText;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -32,21 +47,6 @@ public class Image extends Module {
 	 */
 	public Image() {
 	}
-	
-	/**
-	 * The path to the image;
-	 */
-	private String src;
-	
-	/**
-	 * An optional link, if the image is clickable.
-	 */
-	private String link;
-	
-	/**
-	 * The alternative Text for the Image.
-	 */
-	private String altText;
 
 	/**
 	 * @return the src

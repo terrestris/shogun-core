@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * A simple Permalink module createing a link which contains information
  * about the map state (layer, center, zoom).
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Permalink extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

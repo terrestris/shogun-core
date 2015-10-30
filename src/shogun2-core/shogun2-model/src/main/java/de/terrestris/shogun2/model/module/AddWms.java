@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -12,8 +12,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The AddWms module allows the user to add an external WMS to the application. 
- * 
+ * The AddWms module allows the user to add an external WMS to the application.
+ *
  * @author Kai Volland
  *
  */
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class AddWms extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

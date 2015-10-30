@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -22,8 +22,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The CoordinateTransform module allows the user to transform map coordinates into
- * different projections. 
- * 
+ * different projections.
+ *
  * @author Kai Volland
  *
  */
@@ -32,9 +32,23 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class CoordinateTransform extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * A list of EPSG-Codes that should be available in the module.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "COORDINATETRANSFORM_EPSG", joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
+	@Column(name = "EPSG")
+	@OrderColumn(name = "INDEX")
+	private List<String> epsgCodes = new ArrayList<String>();
+
+	/**
+	 * Whether the form should be filled on instantiation or not.
+	 */
+	private Boolean transformCenterOnRender;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -42,21 +56,7 @@ public class CoordinateTransform extends Module {
 	 */
 	public CoordinateTransform() {
 	}
-	
-	/**
-	 * A list of EPSG-Codes the should be available in the module.
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "CoordinateTransform_EPSG", joinColumns = @JoinColumn(name = "CoordTrans_ID") )
-	@Column(name = "EPSG")
-	@OrderColumn(name = "INDEX")
-	private List<String> epsgCodes = new ArrayList<String>();
 
-	/**
-	 * Should the form be filled on instantiation.
-	 */
-	private Boolean transformCenterOnRender;
-	
 	/**
 	 * @return the epsgCodes
 	 */
@@ -85,7 +85,7 @@ public class CoordinateTransform extends Module {
 		this.transformCenterOnRender = transformCenterOnRender;
 	}
 
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *

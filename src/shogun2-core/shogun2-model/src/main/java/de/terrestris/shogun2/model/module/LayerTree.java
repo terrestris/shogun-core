@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * A LayerTree is a simple module, where layers (of a map) are organized in a
  * flexible tree structure.
- * 
+ *
  * @author Nils Bühner
  *
  */
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class LayerTree extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

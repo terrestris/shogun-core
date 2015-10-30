@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * A search module working with the OSM Overpass API.
- * 
+ *
  * @author Kai Volland
  *
  */
@@ -36,19 +36,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public class OverpassSearch extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public OverpassSearch() {
-	}
-	
-	/**
-	 * 
+	 *
 	 * A enum type for the allowed response format.
 	 */
 	public enum OverpassFormatType {
@@ -62,7 +55,7 @@ public class OverpassSearch extends Module {
 
 		/**
 		 * Enum constructor
-		 * 
+		 *
 		 * @param value
 		 */
 		private OverpassFormatType(String value) {
@@ -75,7 +68,7 @@ public class OverpassSearch extends Module {
 		 * which allows the client to send case insensitive string
 		 * values (like "jSon"), which will be converted to the
 		 * correct enum value.
-		 * 
+		 *
 		 * @param inputValue
 		 * @return
 		 */
@@ -102,18 +95,18 @@ public class OverpassSearch extends Module {
 			return value;
 		}
 	}
-	
+
 	/**
 	 * The response format.
 	 */
 	@Enumerated(EnumType.STRING)
 	private OverpassFormatType format;
-	
+
 	/**
 	 * Limits the response.
 	 */
 	private Integer resultLimit;
-	
+
 	/**
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
@@ -122,6 +115,13 @@ public class OverpassSearch extends Module {
 	@Column(name = "VIEWBOXINTEGER")
 	@OrderColumn(name = "INDEX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
+
+	/**
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
+	 */
+	public OverpassSearch() {
+	}
 
 	/**
 	 * @param groupHeaderTpl the groupHeaderTpl to set
@@ -134,18 +134,18 @@ public class OverpassSearch extends Module {
 	 * Characters needed to send a request.
 	 */
 	private Integer minSearchTextChars;
-	
+
 	/**
 	 * The delay between hitting a key and sending the request in ms.
 	 */
 	private Integer typeDelay;
-	
+
 	/**
 	 * The template of the grouping Header.
 	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
 	 */
 	private String groupHeaderTpl;
-	
+
 	/**
 	 * @return the format
 	 */
@@ -222,7 +222,7 @@ public class OverpassSearch extends Module {
 	public String getGroupHeaderTpl() {
 		return groupHeaderTpl;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *

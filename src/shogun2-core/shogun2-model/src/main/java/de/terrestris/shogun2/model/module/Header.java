@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * This class represents the header area in a GUI.
- * 
+ *
  * @author Nils Bühner
  *
  */
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Header extends CompositeModule {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
