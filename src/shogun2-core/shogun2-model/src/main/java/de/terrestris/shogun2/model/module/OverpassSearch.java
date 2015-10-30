@@ -22,6 +22,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * A search module working with the OSM Overpass API.
  * 
@@ -68,10 +71,15 @@ public class OverpassSearch extends Module {
 
 		/**
 		 * Static method to get an enum based on a string value.
+		 * This method is annotated with {@link JsonCreator},
+		 * which allows the client to send case insensitive string
+		 * values (like "jSon"), which will be converted to the
+		 * correct enum value.
 		 * 
 		 * @param inputValue
 		 * @return
 		 */
+		@JsonCreator
 		public static OverpassFormatType fromString(String inputValue) {
 			if (inputValue != null) {
 				for (OverpassFormatType type : OverpassFormatType.values()) {
@@ -83,7 +91,13 @@ public class OverpassSearch extends Module {
 			return null;
 		}
 
+		/**
+		 * This method is annotated with {@link JsonValue},
+		 * so that jackson will serialize the enum value to
+		 * the (lowercase) {@link #value}.
+		 */
 		@Override
+		@JsonValue
 		public String toString() {
 			return value;
 		}
