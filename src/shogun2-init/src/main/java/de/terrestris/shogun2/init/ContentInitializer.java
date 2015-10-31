@@ -1,11 +1,9 @@
 package de.terrestris.shogun2.init;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -14,24 +12,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.layout.BorderLayout;
 import de.terrestris.shogun2.model.layout.Layout;
-import de.terrestris.shogun2.model.module.Header;
-import de.terrestris.shogun2.model.module.LayerTree;
 import de.terrestris.shogun2.model.module.Module;
-import de.terrestris.shogun2.model.module.NominatimSearch;
-import de.terrestris.shogun2.model.module.NominatimSearch.NominatimFormatType;
-import de.terrestris.shogun2.model.module.OverpassSearch;
-import de.terrestris.shogun2.model.module.OverpassSearch.OverpassFormatType;
-import de.terrestris.shogun2.model.module.Viewport;
 import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
@@ -65,15 +53,23 @@ public class ContentInitializer {
 	 * will only happen if {@link #shogunInitEnabled} is true.
 	 */
 	@Autowired
-	@Qualifier("deleteAclData")
-	private Boolean deleteAclData;
+	@Qualifier("cleanupAclTables")
+	private Boolean cleanupAclTables;
 
 	/**
 	 * The path to the acl cleanup script.
 	 */
 	@Autowired
-	@Qualifier("aclCleanupScriptPath")
-	private String aclCleanupScriptPath;
+	@Qualifier("cleanupAclTablesScriptPath")
+	private String cleanupAclTablesScriptPath;
+
+	/**
+	 * Flag symbolizing if a set of default users should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultUsers")
+	private Boolean createDefaultUsers;
 
 	/**
 	 * Initialization Service to init shogun content like users or default
@@ -104,83 +100,63 @@ public class ContentInitializer {
 	protected AuthenticationProvider authenticationProvider;
 
 	/**
+	 * A set of default users that will be created
+	 * if {@link #createDefaultUsers} is true.
+	 *
+	 * Using the {@link Resource} annotation as
+	 * recommended on http://stackoverflow.com/a/22463219
+	 */
+	@Resource(name = "defaultUsers")
+	private Set<User> defaultUsers;
+
+	/**
 	 * The method called on initialization
 	 *
 	 * THIS WILL CURRENTLY PRODUCE SOME DEMO CONTENT
 	 */
 	public void initializeDatabaseContent() {
 
-		if (this.shogunInitEnabled.equals(true)) {
-			LOG.info("Initializing some SHOGun demo content!");
+		if (this.shogunInitEnabled) {
 
-			LOG.info("Cleaning up ACL tables...");
-			cleanupAclTables();
+			LOG.info("Initializing some SHOGun2 demo content!");
 
-			// CREATE USERS
-			User admin = new User("System", "Admin", "admin", "admin", true);
-			User user = new User("System", "User", "user", "user", true);
+			if(this.cleanupAclTables) {
+				cleanupAclTables();
+			}
 
-			initService.createUser(admin);
-			initService.createUser(user);
+			if(this.createDefaultUsers) {
+				createDefaultUsers();
+			}
 
-			LOG.info("Created an admin and a default user.");
+//			// MANAGE SECURITY/ACL
+//
+//			logInUser(admin);
+//
+//			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
+//			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
+//			aclSecurityUtil.addPermission(userApp, user, BasePermission.READ);
+//
+//			LOG.info("Managed security/ACL");
+//
+//			logoutUser();
 
-			// CREATE APPS
-			Application adminApp = new Application("AdminApp", null);
-			Application userApp = new Application("UserApp", null);
 
-			LOG.info("Created an admin app and a user app.");
-
-			// CREATE AND ADD A VIEWPORT MODULE WITH A BORDER LAYOUT
-			BorderLayout borderLayout = new BorderLayout();
-			borderLayout.setRegions(Arrays.asList("north", "west"));
-			borderLayout.setPropertyHints(new HashSet<String>(Arrays.asList("height", "border")));
-			borderLayout.setPropertyMusts(new HashSet<String>(Arrays.asList("width")));
-
-			Map<String, String> properties = new HashMap<String, String>();
-			properties.put("width", "200");
-			properties.put("border", "2");
-
-			Viewport vp = new Viewport();
-
-			vp.setLayout(borderLayout);
-			vp.setProperties(properties);
-
-			Header headerModule = new Header();
-
-			NominatimSearch nominatimModule = new NominatimSearch();
-			nominatimModule.setFormat(NominatimFormatType.fromString("xml"));
-
-			OverpassSearch overpassModule = new OverpassSearch();
-			overpassModule.setFormat(OverpassFormatType.fromString("poPUp"));
-
-			headerModule.addModule(nominatimModule);
-			headerModule.addModule(overpassModule);
-
-			vp.addModule(headerModule);
-
-			LayerTree layerTreeModule = new LayerTree();
-			vp.addModule(layerTreeModule);
-
-			adminApp.setViewport(vp);
-
-			// MANAGE SECURITY/ACL
-
-			adminApp = initService.createApplication(adminApp);
-			userApp = initService.createApplication(userApp);
-
-			logInUser(admin);
-
-			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
-			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
-			aclSecurityUtil.addPermission(userApp, user, BasePermission.READ);
-
-			LOG.info("Managed security/ACL");
-
-			logoutUser();
 		} else {
 			LOG.info("Not initializing anything for SHOGun2.");
 		}
+	}
+
+	/**
+	 * Creates the users defined in {@link #defaultUsers}
+	 */
+	private void createDefaultUsers() {
+		LOG.info("Creating a set of default users.");
+
+		for (User user : defaultUsers) {
+			initService.createUser(user);
+		}
+
+		LOG.info("Created a total of " + defaultUsers.size() + " default users.");
 	}
 
 	/**
@@ -208,11 +184,13 @@ public class ContentInitializer {
 	 */
 	private void cleanupAclTables() {
 		final ResourceDatabasePopulator rdp = new ResourceDatabasePopulator(
-				new ClassPathResource(aclCleanupScriptPath));
+				new ClassPathResource(cleanupAclTablesScriptPath));
+
+		LOG.info("Trying to clean up ACL tables.");
 
 		try {
 			rdp.populate(aclDataSource.getConnection());
-			LOG.info("Cleaned up ACL tables...");
+			LOG.info("Cleaned up ACL tables.");
 		} catch (ScriptException | SQLException e) {
 			LOG.error("Could not clean up ACL tables: " + e.getMessage());
 		}
