@@ -31,7 +31,7 @@ import de.terrestris.shogun2.model.layer.util.Resolution;
  */
 @Table
 @Entity
-public class XYZLayerDataSource extends LayerDataSource {
+public class XyzLayerDataSource extends LayerDataSource {
 	
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class XYZLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	public XYZLayerDataSource() {
+	public XyzLayerDataSource() {
 		super();
 	}
 	
@@ -65,7 +65,7 @@ public class XYZLayerDataSource extends LayerDataSource {
 	 * @param resolutions
 	 * @param tileSize
 	 */
-	public XYZLayerDataSource(String name, String type, String url, Double center, Extent extent,
+	public XyzLayerDataSource(String name, String type, String url, Double center, Extent extent,
 			List<Resolution> resolutions, Integer tileSize) {
 		super(name, type, url);
 		this.center = center;
@@ -158,9 +158,9 @@ public class XYZLayerDataSource extends LayerDataSource {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof XYZLayerDataSource))
+		if (!(obj instanceof XyzLayerDataSource))
 			return false;
-		XYZLayerDataSource other = (XYZLayerDataSource) obj;
+		XyzLayerDataSource other = (XyzLayerDataSource) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).

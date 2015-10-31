@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @Entity
 @Table
-public class WMTSLayerDataSource extends LayerDataSource {
+public class WmtsLayerDataSource extends LayerDataSource {
 	
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class WMTSLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	public WMTSLayerDataSource() {
+	public WmtsLayerDataSource() {
 		super();
 	}
 	
@@ -54,9 +54,9 @@ public class WMTSLayerDataSource extends LayerDataSource {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof WMTSLayerDataSource))
+		if (!(obj instanceof WmtsLayerDataSource))
 			return false;
-		WMTSLayerDataSource other = (WMTSLayerDataSource) obj;
+		WmtsLayerDataSource other = (WmtsLayerDataSource) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}

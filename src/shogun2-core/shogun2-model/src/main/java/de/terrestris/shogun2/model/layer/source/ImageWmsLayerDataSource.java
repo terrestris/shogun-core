@@ -27,7 +27,7 @@ import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
  */
 @Entity
 @Table
-public class ImageWMSLayerDataSource extends LayerDataSource {
+public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public class ImageWMSLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	public ImageWMSLayerDataSource() {
+	public ImageWmsLayerDataSource() {
 		super();
 	}
 
@@ -64,7 +64,7 @@ public class ImageWMSLayerDataSource extends LayerDataSource {
 	 * @param layers List of layer names (instance if {@link GeoWebServiceLayerName}
 	 * @param styles List of layer styles (instance if {@link GeoWebServiceLayerStyle}
 	 */
-	public ImageWMSLayerDataSource(String name, String type, String url, int width, int height, String version,
+	public ImageWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
 			List<GeoWebServiceLayerName> layerNames,
 			List<GeoWebServiceLayerStyle> layerStyles) {
 		super(name, type, url);
@@ -174,9 +174,9 @@ public class ImageWMSLayerDataSource extends LayerDataSource {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof ImageWMSLayerDataSource))
+		if (!(obj instanceof ImageWmsLayerDataSource))
 			return false;
-		ImageWMSLayerDataSource other = (ImageWMSLayerDataSource) obj;
+		ImageWmsLayerDataSource other = (ImageWmsLayerDataSource) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).

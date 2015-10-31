@@ -26,7 +26,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Table
-public class WMSTileGrid extends PersistentObject {
+public class WmsTileGrid extends PersistentObject {
 
 	/**
 	 * 
@@ -56,7 +56,7 @@ public class WMSTileGrid extends PersistentObject {
 	/**
 	 * 
 	 */
-	public WMSTileGrid() {
+	public WmsTileGrid() {
 		super();
 		tileSize = new Integer(256);
 	}
@@ -66,7 +66,7 @@ public class WMSTileGrid extends PersistentObject {
 	 * @param tileGridExtent
 	 * @param tileSize
 	 */
-	public WMSTileGrid(Double tileGridOrigin, Extent tileGridExtent, Integer tileSize) {
+	public WmsTileGrid(Double tileGridOrigin, Extent tileGridExtent, Integer tileSize) {
 		super();
 		this.tileGridOrigin = tileGridOrigin;
 		this.tileGridExtent = tileGridExtent;
@@ -142,9 +142,9 @@ public class WMSTileGrid extends PersistentObject {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof WMSTileGrid))
+		if (!(obj instanceof WmsTileGrid))
 			return false;
-		WMSTileGrid other = (WMSTileGrid) obj;
+		WmsTileGrid other = (WmsTileGrid) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).

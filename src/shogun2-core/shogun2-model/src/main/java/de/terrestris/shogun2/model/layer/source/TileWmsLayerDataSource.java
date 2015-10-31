@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName;
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
-import de.terrestris.shogun2.model.layer.util.WMSTileGrid;
+import de.terrestris.shogun2.model.layer.util.WmsTileGrid;
 
 /**
  * Data source of layers for tile data from WMS servers.
@@ -28,7 +28,7 @@ import de.terrestris.shogun2.model.layer.util.WMSTileGrid;
  */
 @Table
 @Entity
-public class TileWMSLayerDataSource extends LayerDataSource {
+public class TileWmsLayerDataSource extends LayerDataSource {
 	
 	
 	/**
@@ -50,10 +50,10 @@ public class TileWMSLayerDataSource extends LayerDataSource {
 	private List<GeoWebServiceLayerStyle> layerStyles;
 	
 	@OneToOne
-	private WMSTileGrid tileGrid;
+	private WmsTileGrid tileGrid;
 	
 	
-	public TileWMSLayerDataSource(){
+	public TileWmsLayerDataSource(){
 		super();
 	}
 
@@ -68,9 +68,9 @@ public class TileWMSLayerDataSource extends LayerDataSource {
 	 * @param styles
 	 * @param tileGrid
 	 */
-	public TileWMSLayerDataSource(String name, String type, String url, int width, int height, String version,
+	public TileWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
 			List<GeoWebServiceLayerName> layers,
-			List<GeoWebServiceLayerStyle> styles, WMSTileGrid tileGrid) {
+			List<GeoWebServiceLayerStyle> styles, WmsTileGrid tileGrid) {
 		super(name, type, url);
 		this.width = width;
 		this.height = height;
@@ -161,14 +161,14 @@ public class TileWMSLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the tileGrid
 	 */
-	public WMSTileGrid getTileGrid() {
+	public WmsTileGrid getTileGrid() {
 		return tileGrid;
 	}
 
 	/**
 	 * @param tileGrid the tileGrid to set
 	 */
-	public void setTileGrid(WMSTileGrid tileGrid) {
+	public void setTileGrid(WmsTileGrid tileGrid) {
 		this.tileGrid = tileGrid;
 	}
 
@@ -202,9 +202,9 @@ public class TileWMSLayerDataSource extends LayerDataSource {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof TileWMSLayerDataSource))
+		if (!(obj instanceof TileWmsLayerDataSource))
 			return false;
-		TileWMSLayerDataSource other = (TileWMSLayerDataSource) obj;
+		TileWmsLayerDataSource other = (TileWmsLayerDataSource) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
