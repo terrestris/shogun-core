@@ -4,17 +4,12 @@
 package de.terrestris.shogun2.model.module;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The Image Module is the Ext JS representation of an HTML img element.
@@ -31,13 +26,6 @@ public class Button extends Module {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public Button() {
-	}
-	
 	/**
 	 * A text to display on the button.
 	 */
@@ -66,8 +54,13 @@ public class Button extends Module {
 	private String interaction;
 
 	/**
-	 * A enum type for possible buttonActions. They represent
-	 * the available buttons from BasiGX (https://github.com/terrestris/BasiGX).
+	 * The buttonAction describes the action/handler of the button.
+	 * 
+	 * The String can be any of the ButtonClasses available in the
+	 * BasiGX Package (https://github.com/terrestris/BasiGX).
+	 * e.g. "ToggleLegend"
+	 * Use "Measurearea" or "Measureline" to specify the type of the
+	 * BasiGX.view.button.Measure.
 	 * 
 	 * Additional there are two ActionTypes to be more flexible:
 	 * 
@@ -76,72 +69,14 @@ public class Button extends Module {
 	 * TOGGLEINTERACTION (this.interaction required)
 	 *    Toggles the functionality of an OpenLayers 3 interaction.
 	 */
-	public static enum ButtonActionType {
-		OPENMODULEWINDOW("openmodulewindow"),
-		TOGGLEINTERACTION("toggleinteraction"),
-		ADDWMS("addwms"),
-		COORDINATETRANSFORM("coordinatetransform"),
-		HELP("help"),
-		HSI("hsi"),
-		MEASURELINE("measureline"),
-		MEASUREARE("measurearea"),
-		PERMALINK("permalink"),
-		TOGGLELEGEND("togglelegend"),
-		ZOOMIN("zoomin"),
-		ZOOMOUT("zoomut"),
-		ZOOMTOEXTENT("zoomtoextent");
-
-		private final String value;
-
-		/**
-		 * Enum constructor
-		 *
-		 * @param value
-		 */
-		private ButtonActionType(String value) {
-			this.value = value;
-		}
-
-		/**
-		 * Static method to get an enum based on a string value.
-		 * This method is annotated with {@link JsonCreator},
-		 * which allows the client to send case insensitive string
-		 * values (like "jSon"), which will be converted to the
-		 * correct enum value.
-		 *
-		 * @param inputValue
-		 * @return
-		 */
-		@JsonCreator
-		public static ButtonActionType fromString(String inputValue) {
-			if (inputValue != null) {
-				for (ButtonActionType type : ButtonActionType.values()) {
-					if (inputValue.equalsIgnoreCase(type.value)) {
-						return type;
-					}
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * This method is annotated with {@link JsonValue},
-		 * so that jackson will serialize the enum value to
-		 * the (lowercase) {@link #value}.
-		 */
-		@Override
-		@JsonValue
-		public String toString() {
-			return value;
-		}
-	}
+	private String buttonAction;
 	
 	/**
-	 * The action gives informations about. A common action
-	 * would be to open the connectedModule in an Ext JS Window.
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	@Enumerated(EnumType.STRING)
-	private ButtonActionType buttonAction;
+	public Button() {
+	}
 	
 	/**
 	 * @return the text
@@ -216,14 +151,14 @@ public class Button extends Module {
 	/**
 	 * @return the buttonAction
 	 */
-	public ButtonActionType getButtonAction() {
+	public String getButtonAction() {
 		return buttonAction;
 	}
 
 	/**
 	 * @param buttonAction the buttonAction to set
 	 */
-	public void setButtonAction(ButtonActionType buttonAction) {
+	public void setButtonAction(String buttonAction) {
 		this.buttonAction = buttonAction;
 	}
 
