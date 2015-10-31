@@ -38,7 +38,7 @@ public class MapConfig extends PersistentObject{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String name;
-	private Point2D center;
+	private Point2D.Double center;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Extent extent;
