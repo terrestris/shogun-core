@@ -105,7 +105,7 @@
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>3.0.1</coveralls-maven-plugin.version>
-        <cobertura-maven-plugin.version>2.6</cobertura-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.7.5.201505241946</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-io.version>2.4</commons-io.version>
@@ -194,24 +194,31 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura-maven-plugin.version}</version>
-                <configuration>
-                    <format>xml</format>
-                    <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                    <instrumentation>
-                        <!-- exclude all model-classes because they will 
-                            not be covered by a test -->
-                        <excludes>
-                            <exclude>de/terrestris/shogun2/model/*.class</exclude>
-                            <exclude>de/terrestris/shogun2/paging/PagingResult.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                </configuration>
-            </plugin>
+			    <groupId>org.jacoco</groupId>
+			    <artifactId>jacoco-maven-plugin</artifactId>
+			    <version>${jacoco-maven-plugin.version}</version>
+			    <executions>
+			        <execution>
+			            <id>prepare-agent</id>
+			            <goals>
+			                <goal>prepare-agent</goal>
+			            </goals>
+			        </execution>
+			        <execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+			    </executions>
+			    <configuration>
+				    <excludes>
+				        <exclude>de/terrestris/shogun2/model/*.class</exclude>
+                        <exclude>de/terrestris/shogun2/paging/PagingResult.class</exclude>
+				    </excludes>
+				</configuration>
+			</plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
