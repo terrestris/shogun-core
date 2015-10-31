@@ -15,7 +15,7 @@ script:
   - mvn --batch-mode --threads 2.0C --show-version clean test
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean test jacoco:report coveralls:report
 
 after_script:
   - cd ..
