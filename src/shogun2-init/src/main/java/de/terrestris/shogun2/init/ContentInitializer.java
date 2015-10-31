@@ -27,20 +27,24 @@ import de.terrestris.shogun2.model.layout.Layout;
 import de.terrestris.shogun2.model.module.Header;
 import de.terrestris.shogun2.model.module.LayerTree;
 import de.terrestris.shogun2.model.module.Module;
+import de.terrestris.shogun2.model.module.NominatimSearch;
+import de.terrestris.shogun2.model.module.NominatimSearch.NominatimFormatType;
+import de.terrestris.shogun2.model.module.OverpassSearch;
+import de.terrestris.shogun2.model.module.OverpassSearch.OverpassFormatType;
 import de.terrestris.shogun2.model.module.Viewport;
 import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
  * Class to initialize some kind of content.
- * 
+ *
  * <b>ATTENTION:</b> This class is currently used to provide some demo content.
  * In future, certain entities (like some default {@link Layout}s or
  * {@link Module} s should be created on the base of (configurable) bean
  * definitions.
- * 
+ *
  * @author Nils Bühner
- * 
+ *
  */
 public class ContentInitializer {
 
@@ -101,7 +105,7 @@ public class ContentInitializer {
 
 	/**
 	 * The method called on initialization
-	 * 
+	 *
 	 * THIS WILL CURRENTLY PRODUCE SOME DEMO CONTENT
 	 */
 	public void initializeDatabaseContent() {
@@ -143,6 +147,16 @@ public class ContentInitializer {
 			vp.setProperties(properties);
 
 			Header headerModule = new Header();
+
+			NominatimSearch nominatimModule = new NominatimSearch();
+			nominatimModule.setFormat(NominatimFormatType.fromString("xml"));
+
+			OverpassSearch overpassModule = new OverpassSearch();
+			overpassModule.setFormat(OverpassFormatType.fromString("poPUp"));
+
+			headerModule.addModule(nominatimModule);
+			headerModule.addModule(overpassModule);
+
 			vp.addModule(headerModule);
 
 			LayerTree layerTreeModule = new LayerTree();
@@ -172,7 +186,7 @@ public class ContentInitializer {
 	/**
 	 * This method logs in the passed user. (The ACL system needs a user with
 	 * ROLE_ADMIN to write ACL entries to the database).
-	 * 
+	 *
 	 * @param user
 	 */
 	private void logInUser(User user) {

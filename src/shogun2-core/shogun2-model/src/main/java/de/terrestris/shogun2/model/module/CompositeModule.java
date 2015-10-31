@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * This (abstract) class represents a composite {@link Module}, i.e. a module
  * having children/submodules.
- * 
+ *
  * @author Nils Bühner
  *
  */
@@ -30,12 +30,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public abstract class CompositeModule extends Module {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "MODULE_SUBMODULE", joinColumns = { @JoinColumn(name = "MODULE_ID") }, inverseJoinColumns = {
@@ -51,7 +51,7 @@ public abstract class CompositeModule extends Module {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param module
 	 */
 	public void addModule(Module module) {
@@ -59,7 +59,7 @@ public abstract class CompositeModule extends Module {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param module
 	 */
 	public void remove(Module module) {

@@ -12,14 +12,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * This class represents the header area in a GUI.
+ * A module which contains a formular to print the map with the mapfish print v3.
  *
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
-@Table
 @Entity
-public class Header extends CompositeModule {
+@Table
+public class Print extends Module {
 
 	/**
 	 *
@@ -27,10 +27,29 @@ public class Header extends CompositeModule {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * The mapfish-print url.
+	 */
+	private String url;
+
+	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public Header() {
+	public Print() {
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	/**
@@ -43,7 +62,10 @@ public class Header extends CompositeModule {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(23, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(23, 3).
+				appendSuper(super.hashCode()).
+				append(getUrl()).
+				toHashCode();
 	}
 
 	/**
@@ -55,18 +77,24 @@ public class Header extends CompositeModule {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Header))
+		if (!(obj instanceof Print))
 			return false;
-		Header other = (Header) obj;
+		Print other = (Print) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getUrl(), other.getUrl()).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				append(getUrl()).
+				toString();
 	}
 
 }

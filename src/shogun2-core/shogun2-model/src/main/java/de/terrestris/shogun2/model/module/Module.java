@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -30,11 +30,11 @@ import de.terrestris.shogun2.model.layout.Layout;
  * A module is the visual representation of a component in the GUI. A module can
  * be connected to a {@link Layout} and it stores basic properties (like
  * <i>border</i>, <i>height</i> , <i>width</i>, ...).
- * 
+ *
  * This class is the abstract superclass of either simple (e.g.
  * {@link LayerTree}) or complex ({@link CompositeModule}) subclasses and can
  * thereby considered as a node in a tree structure of (sub-)modules.
- * 
+ *
  * @author Nils Bühner
  *
  */
@@ -43,23 +43,23 @@ import de.terrestris.shogun2.model.layout.Layout;
 public abstract class Module extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
 	private String name;
 
 	/**
-	 * 
+	 *
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Layout layout;
 
 	/**
-	 * 
+	 *
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "PROPERTY")
@@ -90,7 +90,7 @@ public abstract class Module extends PersistentObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Layout getLayout() {
@@ -98,7 +98,7 @@ public abstract class Module extends PersistentObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param layout
 	 */
 	public void setLayout(Layout layout) {

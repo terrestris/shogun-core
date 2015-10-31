@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.module;
 
@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.Application;
 /**
  * The viewport is the main container representing the viewable application area
  * (i.e. the browser viewport). It is thereby used in an {@link Application}.
- * 
+ *
  * @author Nils Bühner
  *
  */
@@ -25,7 +25,7 @@ import de.terrestris.shogun2.model.Application;
 public class Viewport extends CompositeModule {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

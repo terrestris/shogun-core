@@ -12,14 +12,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * This class represents the header area in a GUI.
+ * The AddWms module allows the user to add an external WMS to the application.
  *
- * @author Nils Bühner
+ * @author Kai Volland
  *
  */
-@Table
 @Entity
-public class Header extends CompositeModule {
+@Table
+public class AddWms extends Module {
 
 	/**
 	 *
@@ -30,7 +30,7 @@ public class Header extends CompositeModule {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public Header() {
+	public AddWms() {
 	}
 
 	/**
@@ -43,7 +43,9 @@ public class Header extends CompositeModule {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(23, 3).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(17, 3).
+				appendSuper(super.hashCode()).
+				toHashCode();
 	}
 
 	/**
@@ -55,18 +57,22 @@ public class Header extends CompositeModule {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Header))
+		if (!(obj instanceof AddWms))
 			return false;
-		Header other = (Header) obj;
+		AddWms other = (AddWms) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
+				appendSuper(super.toString()).
+				toString();
 	}
 
 }
