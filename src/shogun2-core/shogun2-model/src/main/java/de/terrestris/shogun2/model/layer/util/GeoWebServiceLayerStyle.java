@@ -22,7 +22,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  *
  */
 @Entity
-@Table(name = "GEOWEBSERVICELAYERSTYLE")
+@Table
 public class GeoWebServiceLayerStyle extends PersistentObject {
 	
 	/**
@@ -101,7 +101,7 @@ public class GeoWebServiceLayerStyle extends PersistentObject {
 	 */
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 	
