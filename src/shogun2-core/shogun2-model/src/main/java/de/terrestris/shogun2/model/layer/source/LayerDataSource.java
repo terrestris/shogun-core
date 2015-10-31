@@ -27,7 +27,7 @@ public abstract class LayerDataSource extends PersistentObject {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1605853646721292289L;
+	private static final long serialVersionUID = 1L;
 	
 	private String name;
 	private String type;

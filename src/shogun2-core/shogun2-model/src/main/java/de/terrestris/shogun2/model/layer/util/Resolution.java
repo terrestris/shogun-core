@@ -31,7 +31,6 @@ public class Resolution extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 	private Double resolution;
 	
-	
 	/**
 	 * 
 	 */

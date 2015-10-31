@@ -23,11 +23,11 @@ import de.terrestris.shogun2.model.layer.Layer;
 @Table
 public class LayerAppearance extends PersistentObject{
 	
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9007517607427444496L;
-	
+	private static final long serialVersionUID = 1L;
 	private String type;
 	private String attribution;
 	private String name;

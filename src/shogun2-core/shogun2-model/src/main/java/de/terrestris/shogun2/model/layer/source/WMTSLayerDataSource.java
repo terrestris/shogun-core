@@ -19,11 +19,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Entity
 @Table
 public class WMTSLayerDataSource extends LayerDataSource {
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8210486950377225083L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 

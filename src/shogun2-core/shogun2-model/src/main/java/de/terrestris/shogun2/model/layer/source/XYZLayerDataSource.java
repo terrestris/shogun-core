@@ -36,8 +36,8 @@ public class XYZLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3459782434381018910L;
-	
+	private static final long serialVersionUID = 1L;
+
 	private Point2D.Double center;
 		
 	@OneToOne

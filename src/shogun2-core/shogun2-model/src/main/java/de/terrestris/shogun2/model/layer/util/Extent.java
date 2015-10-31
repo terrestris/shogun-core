@@ -30,11 +30,11 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Table
 public class Extent extends PersistentObject {
 
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 60392184177460934L;
-	
+	private static final long serialVersionUID = 1L;
 	private Point2D.Double lowerLeft;
 	private Point2D.Double upperRight;
 

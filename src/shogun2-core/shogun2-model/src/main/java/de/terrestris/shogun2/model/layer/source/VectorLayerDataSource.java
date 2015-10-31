@@ -22,8 +22,7 @@ public class VectorLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3590256281452635350L;
-	
+	private static final long serialVersionUID = 1L;
 	private String format;
 
 	/**

@@ -31,7 +31,10 @@ public class Layer extends PersistentObject {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7658400534257889743L;
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private String name;
 	private String type;
 	

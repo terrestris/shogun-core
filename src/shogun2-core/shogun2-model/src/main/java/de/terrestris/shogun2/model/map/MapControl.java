@@ -26,9 +26,7 @@ public class MapControl extends PersistentObject {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4522306121111044249L;
-	
-	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * String which represents the OL3 class name of the interaction, e.g.
 	 * ol.control.Zoom

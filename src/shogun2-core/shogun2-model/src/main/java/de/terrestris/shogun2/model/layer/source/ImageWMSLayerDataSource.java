@@ -32,8 +32,7 @@ public class ImageWMSLayerDataSource extends LayerDataSource {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2009938565286377729L;
-	
+	private static final long serialVersionUID = 1L;
 	private int width;
 	private int height;
 	private String version;

@@ -30,10 +30,11 @@ import de.terrestris.shogun2.model.layer.util.WMSTileGrid;
 @Entity
 public class TileWMSLayerDataSource extends LayerDataSource {
 	
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6295615395104226044L;
+	private static final long serialVersionUID = 1L;
 	private int width;
 	private int height;
 	private String version;

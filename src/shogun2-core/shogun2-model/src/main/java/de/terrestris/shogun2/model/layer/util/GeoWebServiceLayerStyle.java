@@ -24,11 +24,11 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Table(name = "GEOWEBSERVICELAYERSTYLE")
 public class GeoWebServiceLayerStyle extends PersistentObject {
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5303577655049973888L;
+	private static final long serialVersionUID = 1L;
 	private String styleName;
 
 	/**

@@ -31,9 +31,8 @@ public class WMSTileGrid extends PersistentObject {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5650246058124687843L;
-	
-	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The tile grid origin, i.e. where the x and y axes meet ([z, 0, 0]).
 	 * Tile coordinates increase left to right and upwards.

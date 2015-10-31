@@ -35,7 +35,7 @@ public class MapConfig extends PersistentObject{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3270838867942886642L;
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private Point2D.Double center;
 	

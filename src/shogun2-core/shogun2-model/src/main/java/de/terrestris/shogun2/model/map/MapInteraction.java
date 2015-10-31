@@ -27,7 +27,7 @@ public class MapInteraction extends PersistentObject{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1943023918909033830L;
+	private static final long serialVersionUID = 1L;
 	/**
 	 * String which represents the OL3 class name of the interaction, e.g.
 	 * ol.interaction.DragRotate

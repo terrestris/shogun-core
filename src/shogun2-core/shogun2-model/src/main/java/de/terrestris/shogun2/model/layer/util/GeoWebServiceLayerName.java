@@ -28,7 +28,7 @@ public class GeoWebServiceLayerName extends PersistentObject {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2810431203413507098L;
+	private static final long serialVersionUID = 1L;
 	private String layerName;
 
 	/**
