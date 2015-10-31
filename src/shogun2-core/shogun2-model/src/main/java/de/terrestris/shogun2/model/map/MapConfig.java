@@ -1,7 +1,6 @@
 package de.terrestris.shogun2.model.map;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class MapConfig extends PersistentObject{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String name;
-	private Point2D.Double center;
+	private Point2D center;
 	
 	@OneToOne
 	private Extent extent;
@@ -74,7 +73,7 @@ public class MapConfig extends PersistentObject{
 	 * @param rotation
 	 * @param projection
 	 */
-	public MapConfig(String name, Double center, Extent extent, List<Resolution> resolutions, Integer zoom,
+	public MapConfig(String name, Point2D.Double center, Extent extent, List<Resolution> resolutions, Integer zoom,
 			Double maxResolution, Double minResolution, Double rotation, String projection) {
 		super();
 		this.name = name;
@@ -105,7 +104,7 @@ public class MapConfig extends PersistentObject{
 	/**
 	 * @return the center
 	 */
-	public Point2D.Double getCenter() {
+	public Point2D getCenter() {
 		return center;
 	}
 
