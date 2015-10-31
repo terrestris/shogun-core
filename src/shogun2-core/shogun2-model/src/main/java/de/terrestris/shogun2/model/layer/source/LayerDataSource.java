@@ -21,7 +21,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  *
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class LayerDataSource extends PersistentObject {
 	
 	/**
