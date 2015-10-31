@@ -21,4 +21,51 @@
         </bean>
     </util:set>
 
+    <!-- Define layouts -->
+    <bean id="borderLayout" class="de.terrestris.shogun2.model.layout.BorderLayout">
+        <property name="propertyHints">
+            <util:set id="propertyHints">
+                <value>title</value>
+                <value>collapsible</value>
+                <value>split</value>
+            </util:set>
+        </property>
+        <property name="propertyMusts">
+            <util:set id="propertyMusts">
+                <value>region</value>
+            </util:set>
+        </property>
+        <property name="regions">
+            <util:list>
+                <value>north</value>
+                <value>west</value>
+                <value>south</value>
+                <value>east</value>
+                <value>center</value>
+            </util:list>
+        </property>
+    </bean>
+
+    <!-- The Set<Layout> of defaultLayouts -->
+    <util:set id="defaultLayouts" value-type="de.terrestris.shogun2.model.layout.Layout">
+        <ref bean="borderLayout" />
+        <bean id="absoluteLayout" class="de.terrestris.shogun2.model.layout.AbsoluteLayout">
+            <property name="propertyMusts">
+                <util:set id="propertyMusts">
+                    <value>x</value>
+                    <value>y</value>
+                </util:set>
+            </property>
+            <!-- TODO coords property -->
+        </bean>
+    </util:set>
+
+    <!-- The Set<Module> of defaultModules -->
+    <util:set id="defaultModules" value-type="de.terrestris.shogun2.model.module.Module">
+        <bean id="viewportModule" class="de.terrestris.shogun2.model.module.Viewport">
+            <property name="name" value="Viewport with Border Layout" />
+            <property name="layout" ref="borderLayout" />
+        </bean>
+    </util:set>
+
 </beans>

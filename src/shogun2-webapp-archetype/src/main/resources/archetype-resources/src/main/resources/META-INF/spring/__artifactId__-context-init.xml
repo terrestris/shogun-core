@@ -45,4 +45,14 @@
         <constructor-arg value="${init.createDefaultUsers}"></constructor-arg>
     </bean>
 
+    <!-- Flag enabling/disabling the creation of default layouts on startup -->
+    <bean id="createDefaultLayouts" class="java.lang.Boolean">
+        <constructor-arg value="${init.createDefaultLayouts}"></constructor-arg>
+    </bean>
+
+    <!-- Flag enabling/disabling the creation of default modules on startup -->
+    <bean id="createDefaultModules" class="java.lang.Boolean">
+        <constructor-arg value="${init.createDefaultModules}"></constructor-arg>
+    </bean>
+
 </beans>

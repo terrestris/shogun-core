@@ -6,18 +6,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.ApplicationDao;
+import de.terrestris.shogun2.dao.LayoutDao;
+import de.terrestris.shogun2.dao.ModuleDao;
 import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.init.ContentInitializer;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.layout.Layout;
+import de.terrestris.shogun2.model.module.Module;
 
 /**
- * This service class will be used by the ContentInitializer to create content
+ * This service class will be used by the {@link ContentInitializer} to create content
  * on initialization. The methods of this service are not secured, which is
- * required, because otherwise the ACL mechanism would deny access to the
- * secured methods of the AbstractCrudService.
- * 
+ * required, because the ACL mechanism would deny access to the
+ * secured methods of the {@link AbstractCrudService}.
+ *
  * @author Nils Bühner
- * 
+ *
  */
 @Service("initializationService")
 @Transactional(value="transactionManager")
@@ -33,11 +38,17 @@ public class InitializationService {
 	private UserDao userDao;
 
 	@Autowired
+	private LayoutDao layoutDao;
+
+	@Autowired
+	private ModuleDao moduleDao;
+
+	@Autowired
 	private ApplicationDao applicationDao;
 
 	/**
 	 * Used to create a user.
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
@@ -48,8 +59,30 @@ public class InitializationService {
 	}
 
 	/**
+	 * Used to create a layout.
+	 *
+	 * @param layout
+	 */
+	public Layout createLayout(Layout layout) {
+		layoutDao.saveOrUpdate(layout);
+		LOG.debug("Created the layout " + layout);
+		return layout;
+	}
+
+	/**
+	 * Used to create a module.
+	 *
+	 * @param module
+	 */
+	public Module createModule(Module module) {
+		moduleDao.saveOrUpdate(module);
+		LOG.debug("Created the module " + module);
+		return module;
+	}
+
+	/**
 	 * Used to create an application.
-	 * 
+	 *
 	 * @param application
 	 * @return
 	 */
