@@ -44,7 +44,6 @@ public class WmsTileGrid extends PersistentObject {
 	 * Extent for the tile grid. No tiles outside this extent will be requested
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
-     * origin
 	 */
 	private Extent tileGridExtent;
 
