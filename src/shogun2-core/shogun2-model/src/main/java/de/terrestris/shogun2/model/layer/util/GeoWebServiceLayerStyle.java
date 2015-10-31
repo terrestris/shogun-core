@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layer.util;
 
@@ -14,25 +14,25 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  * Class representing the layer style
- * 
+ *
  * @author Andre Henn
- * @author terrestris GmbH & Co. KG
+ * @author terrestris GmbH &s Co. KG
  *
  */
 @Entity
 @Table
 public class GeoWebServiceLayerStyle extends PersistentObject {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String styleName;
 
 	/**
-	 * 
+	 *
 	 */
 	public GeoWebServiceLayerStyle() {
 		super();
@@ -59,8 +59,8 @@ public class GeoWebServiceLayerStyle extends PersistentObject {
 	public void setStyleName(String styleName) {
 		this.styleName = styleName;
 	}
-	
-	
+
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -95,7 +95,7 @@ public class GeoWebServiceLayerStyle extends PersistentObject {
 				append(getStyleName(), other.getStyleName()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -104,5 +104,5 @@ public class GeoWebServiceLayerStyle extends PersistentObject {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
-	
+
 }

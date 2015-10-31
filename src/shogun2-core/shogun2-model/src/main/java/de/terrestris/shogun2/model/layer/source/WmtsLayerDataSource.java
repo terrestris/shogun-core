@@ -9,9 +9,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 
+ *
  * Class representing a layer source for tile data from WMTS servers.
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -19,19 +19,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Entity
 @Table
 public class WmtsLayerDataSource extends LayerDataSource {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
 	public WmtsLayerDataSource() {
 		super();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -44,7 +44,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(11, 19).appendSuper(super.hashCode()).toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -60,7 +60,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

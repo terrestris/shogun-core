@@ -11,11 +11,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
- * This class represents an 
+ *
+ * This class represents an
  * <a href="http://openlayers.org/en/master/apidoc/ol.interaction">OpenLayers 3 interaction</a>
  * which can be included in a map.
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -23,9 +23,9 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Table
 public class MapInteraction extends PersistentObject{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -43,14 +43,14 @@ public class MapInteraction extends PersistentObject{
 	private String interactionClassName;
 
 	/**
-	 * 
+	 *
 	 */
 	public MapInteraction() {
 		super();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param name_
 	 */
 	public MapInteraction(String name_) {
@@ -87,7 +87,7 @@ public class MapInteraction extends PersistentObject{
 				append(getInteractionClassName()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -106,7 +106,7 @@ public class MapInteraction extends PersistentObject{
 				appendSuper(super.equals(other)).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

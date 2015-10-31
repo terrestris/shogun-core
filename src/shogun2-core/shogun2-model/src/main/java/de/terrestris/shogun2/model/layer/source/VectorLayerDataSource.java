@@ -9,10 +9,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 
  * Data source of <a href= "http://openlayers.org/en/master/apidoc/ol.layer.Vector.html">OpenLayers 3 vector layer</a>
- * 
+ *
  * @author Andre Henn
+ * @author terrestris GmbH & Co. KG
  *
  */
 @Entity
@@ -20,13 +20,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class VectorLayerDataSource extends LayerDataSource {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String format;
 
 	/**
-	 * 
+	 *
 	 */
 	public VectorLayerDataSource() {
 		super();
@@ -56,7 +56,7 @@ public class VectorLayerDataSource extends LayerDataSource {
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *

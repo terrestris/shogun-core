@@ -21,10 +21,10 @@ import de.terrestris.shogun2.model.layer.util.Extent;
 import de.terrestris.shogun2.model.layer.util.Resolution;
 
 /**
- * 
- * Class representing a layer source for tile data with 
+ *
+ * Class representing a layer source for tile data with
  * URLs in a set XYZ format that are defined in a URL template
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -32,30 +32,30 @@ import de.terrestris.shogun2.model.layer.util.Resolution;
 @Table
 @Entity
 public class XyzLayerDataSource extends LayerDataSource {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private Point2D.Double center;
-		
+
 	@OneToOne
 	private Extent extent;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "LAYERDATASOURCE_RESOLUTIONS")
 	private List<Resolution> resolutions = new ArrayList<Resolution>();
-	
+
 	private Integer tileSize;
 
 	/**
-	 * 
+	 *
 	 */
 	public XyzLayerDataSource() {
 		super();
 	}
-	
+
 	/**
 	 * @param name
 	 * @param type
@@ -129,7 +129,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	public void setTileSize(Integer tileSize) {
 		this.tileSize = tileSize;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -148,7 +148,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 				append(getTileSize()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -170,7 +170,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 				append(getTileSize(), other.getTileSize()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

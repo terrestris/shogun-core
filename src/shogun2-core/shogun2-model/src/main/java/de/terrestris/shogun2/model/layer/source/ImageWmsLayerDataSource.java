@@ -1,8 +1,7 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -19,7 +18,7 @@ import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName;
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
 
 /**
- * Class representing a layer data source for WMS servers providing single, 
+ * Class representing a layer data source for WMS servers providing single,
  * untiled images.
  *
  * @author Andre Henn
@@ -30,25 +29,25 @@ import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
 public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int width;
 	private int height;
 	private String version;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "LAYERDATASOURCE_LAYERNAME", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "LAYERNAME_ID") })
-	private List<GeoWebServiceLayerName> layerNames;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<GeoWebServiceLayerName> layerNames;
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "LAYERDATASOURCE_STYLE", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "STYLE_ID") })
-	private List<GeoWebServiceLayerStyle> layerStyles;
-	
+	private Set<GeoWebServiceLayerStyle> layerStyles;
+
 	/**
-	 * 
+	 *
 	 */
 	public ImageWmsLayerDataSource() {
 		super();
@@ -65,8 +64,8 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	 * @param styles List of layer styles (instance if {@link GeoWebServiceLayerStyle}
 	 */
 	public ImageWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
-			List<GeoWebServiceLayerName> layerNames,
-			List<GeoWebServiceLayerStyle> layerStyles) {
+			Set<GeoWebServiceLayerName> layerNames,
+			Set<GeoWebServiceLayerStyle> layerStyles) {
 		super(name, type, url);
 		this.width = width;
 		this.height = height;
@@ -120,31 +119,31 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the layers
 	 */
-	public List<GeoWebServiceLayerName> getLayers() {
+	public Set<GeoWebServiceLayerName> getLayers() {
 		return layerNames;
 	}
 
 	/**
 	 * @param layers the layers to set
 	 */
-	public void setLayers(List<GeoWebServiceLayerName> layers) {
+	public void setLayers(Set<GeoWebServiceLayerName> layers) {
 		this.layerNames = layers;
 	}
 
 	/**
 	 * @return the styles
 	 */
-	public List<GeoWebServiceLayerStyle> getStyles() {
+	public Set<GeoWebServiceLayerStyle> getStyles() {
 		return layerStyles;
 	}
 
 	/**
 	 * @param styles the styles to set
 	 */
-	public void setStyles(List<GeoWebServiceLayerStyle> styles) {
+	public void setStyles(Set<GeoWebServiceLayerStyle> styles) {
 		this.layerStyles = styles;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -164,7 +163,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 				append(getStyles()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -187,7 +186,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 				append(getStyles(), other.getStyles()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -195,5 +194,5 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

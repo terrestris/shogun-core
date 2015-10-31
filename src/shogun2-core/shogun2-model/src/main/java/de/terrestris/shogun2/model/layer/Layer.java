@@ -1,6 +1,5 @@
 package de.terrestris.shogun2.model.layer;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -16,10 +15,10 @@ import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
 import de.terrestris.shogun2.model.layer.source.LayerDataSource;
 
 /**
- * 
+ *
  * Representation of a layer which consists a corresponding data source
  * and an appearance
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -27,25 +26,25 @@ import de.terrestris.shogun2.model.layer.source.LayerDataSource;
 @Entity
 @Table
 public class Layer extends PersistentObject {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 
+	 *
 	 */
 	private String name;
 	private String type;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	private LayerDataSource source;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	private LayerAppearance appearance;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Layer() {
 		super();
@@ -120,7 +119,7 @@ public class Layer extends PersistentObject {
 	public void setAppearance(LayerAppearance appearance) {
 		this.appearance = appearance;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -139,7 +138,7 @@ public class Layer extends PersistentObject {
 				append(getAppearance().hashCode()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -161,7 +160,7 @@ public class Layer extends PersistentObject {
 				append(getAppearance(), other.getAppearance()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

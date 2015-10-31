@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layer.util;
 
@@ -14,9 +14,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
- * Class representing the layer name 
- * 
+ *
+ * Class representing the layer name
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -24,15 +24,15 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Table
 public class GeoWebServiceLayerName extends PersistentObject {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String layerName;
 
 	/**
-	 * 
+	 *
 	 */
 	public GeoWebServiceLayerName() {
 		super();
@@ -94,7 +94,7 @@ public class GeoWebServiceLayerName extends PersistentObject {
 				append(getLayerName(), other.getLayerName()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -102,5 +102,5 @@ public class GeoWebServiceLayerName extends PersistentObject {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

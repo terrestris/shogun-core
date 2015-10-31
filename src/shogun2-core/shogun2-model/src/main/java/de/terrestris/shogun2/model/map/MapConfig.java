@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
@@ -25,6 +26,7 @@ import de.terrestris.shogun2.model.layer.util.Resolution;
  * <a href="http://openlayers.org/en/master/apidoc/ol.View.html"> OpenLayers 3 View</a>
  * 
  * @author Andre Henn
+ * @author terrestris GmbH & Co. KG
  *
  */
 @Entity
@@ -32,15 +34,15 @@ import de.terrestris.shogun2.model.layer.util.Resolution;
 public class MapConfig extends PersistentObject{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private Point2D center;
-	
-	@OneToOne
+
+	@OneToOne(cascade = CascadeType.ALL)
 	private Extent extent;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "MAPCONFIG_RESOLUTIONS")
 	private List<Resolution> resolutions = new ArrayList<Resolution>();
@@ -50,18 +52,18 @@ public class MapConfig extends PersistentObject{
 	private Double minResolution;
 	private Double rotation;
 	/*
-	 * use String as datatype since classical EPSG code 
+	 * use String as datatype since classical EPSG code
 	 * as well as OGC URN (urn:x-ogc:def:crs:EPSG:XXXX) should be covered.
 	 */
 	private String projection;
-	
+
 	/**
 	 * default constructor
 	 */
 	public MapConfig() {
 		super();
 	}
-	
+
 	/**
 	 * @param name
 	 * @param center
@@ -114,7 +116,7 @@ public class MapConfig extends PersistentObject{
 	public void setCenter(Point2D.Double center) {
 		this.center = center;
 	}
-	
+
 	/**
 	 * @return the extent
 	 */
@@ -236,7 +238,7 @@ public class MapConfig extends PersistentObject{
 				append(getProjection()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -259,7 +261,7 @@ public class MapConfig extends PersistentObject{
 				append(getMaxResolution(), other.getMaxResolution()).
 				append(getMinResolution(), other.getMinResolution()).
 				append(getRotation(), other.getRotation()).
-				append(getProjection(), other.getProjection()).			
+				append(getProjection(), other.getProjection()).
 				isEquals();
 	}
 
@@ -270,5 +272,5 @@ public class MapConfig extends PersistentObject{
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layer.util;
 
@@ -17,11 +17,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  * Util class representing the extent of a layer or a map.
- * The extent is modelled by the lower left and the upper 
+ * The extent is modellesd by the lower left and the upper
  * right point of the bounding rectangle
- * 
+ *
+ * |--------o
+ * |        |
+ * o--------|
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -30,16 +34,16 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Table
 public class Extent extends PersistentObject {
 
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private Point2D.Double lowerLeft;
 	private Point2D.Double upperRight;
 
 	/**
-	 * 
+	 *
 	 */
 	public Extent() {
 		super();
@@ -99,7 +103,7 @@ public class Extent extends PersistentObject {
 				append(getUpperRight()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -115,7 +119,7 @@ public class Extent extends PersistentObject {
 
 		return new EqualsBuilder().
 				append(getLowerLeft(), other.getLowerLeft()).
-				append(getUpperRight(), other.getUpperRight()).			
+				append(getUpperRight(), other.getUpperRight()).
 				isEquals();
 	}
 
@@ -126,6 +130,6 @@ public class Extent extends PersistentObject {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
-	
+
+
 }

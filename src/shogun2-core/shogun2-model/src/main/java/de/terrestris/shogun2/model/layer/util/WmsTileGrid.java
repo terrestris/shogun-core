@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layer.util;
 
@@ -17,9 +17,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  * Class representing a WMS tile grid
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -29,7 +29,7 @@ import de.terrestris.shogun2.model.PersistentObject;
 public class WmsTileGrid extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -39,22 +39,22 @@ public class WmsTileGrid extends PersistentObject {
 	 * If not specified, extent or origins must be provided.
 	 */
 	private Point2D.Double tileGridOrigin;
-	
+
 	/**
-	 * Extent for the tile grid. No tiles outside this extent will be requested 
+	 * Extent for the tile grid. No tiles outside this extent will be requested
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
      * origin
 	 */
 	private Extent tileGridExtent;
-		
+
 	/**
 	 * default value: 256
 	 */
 	private Integer tileSize;
 
 	/**
-	 * 
+	 *
 	 */
 	public WmsTileGrid() {
 		super();
@@ -132,7 +132,7 @@ public class WmsTileGrid extends PersistentObject {
 				append(getTileGridExtent()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -153,7 +153,7 @@ public class WmsTileGrid extends PersistentObject {
 				append(getTileSize(), other.getTileSize()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -161,5 +161,5 @@ public class WmsTileGrid extends PersistentObject {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

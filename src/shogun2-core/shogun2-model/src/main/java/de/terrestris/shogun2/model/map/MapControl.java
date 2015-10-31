@@ -11,10 +11,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * This class represents an 
+ * This class represents an
  * <a href="http://openlayers.org/en/master/apidoc/ol.control.Control.html">OpenLayers 3 control</a>
  * which can be included in a map.
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -22,9 +22,9 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Table
 public class MapControl extends PersistentObject {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
@@ -35,14 +35,14 @@ public class MapControl extends PersistentObject {
 	 * ...
 	 */
 	private String mapControlName;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public MapControl() {
 		super();
 	}
-	
+
 	public MapControl(String name_){
 		super();
 		this.mapControlName = name_;
@@ -77,7 +77,7 @@ public class MapControl extends PersistentObject {
 				append(mapControlName).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -95,7 +95,7 @@ public class MapControl extends PersistentObject {
 				append(getMapControlName(), other.getMapControlName()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

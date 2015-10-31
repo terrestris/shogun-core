@@ -1,8 +1,7 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -22,37 +21,39 @@ import de.terrestris.shogun2.model.layer.util.WmsTileGrid;
 
 /**
  * Data source of layers for tile data from WMS servers.
- * 
+ *
  * @author Andre Henn
+ * @author terrestris GmbH & Co. KG
  *
  */
 @Table
 @Entity
 public class TileWmsLayerDataSource extends LayerDataSource {
-	
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private int width;
 	private int height;
 	private String version;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "LAYERDATASOURCE_LAYERNAME", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "LAYERNAME_ID") })
-	private List<GeoWebServiceLayerName> layerNames;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<GeoWebServiceLayerName> layerNames;
+
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "LAYERDATASOURCE_STYLE", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "STYLE_ID") })
-	private List<GeoWebServiceLayerStyle> layerStyles;
-	
+	private Set<GeoWebServiceLayerStyle> layerStyles;
+
 	@OneToOne
 	private WmsTileGrid tileGrid;
-	
-	
+
+	/**
+	 * default constructor
+	 */
 	public TileWmsLayerDataSource(){
 		super();
 	}
@@ -69,8 +70,8 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	 * @param tileGrid
 	 */
 	public TileWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
-			List<GeoWebServiceLayerName> layers,
-			List<GeoWebServiceLayerStyle> styles, WmsTileGrid tileGrid) {
+			Set<GeoWebServiceLayerName> layers,
+			Set<GeoWebServiceLayerStyle> styles, WmsTileGrid tileGrid) {
 		super(name, type, url);
 		this.width = width;
 		this.height = height;
@@ -131,7 +132,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the layers
 	 */
-	public List<GeoWebServiceLayerName> getLayers() {
+	public Set<GeoWebServiceLayerName> getLayers() {
 		return layerNames;
 	}
 
@@ -139,7 +140,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @param layers the layers to set
 	 */
-	public void setLayers(List<GeoWebServiceLayerName> layers) {
+	public void setLayers(Set<GeoWebServiceLayerName> layers) {
 		this.layerNames = layers;
 	}
 
@@ -147,17 +148,17 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the styles
 	 */
-	public List<GeoWebServiceLayerStyle> getStyles() {
+	public Set<GeoWebServiceLayerStyle> getStyles() {
 		return layerStyles;
 	}
 
 	/**
 	 * @param styles the styles to set
 	 */
-	public void setStyles(List<GeoWebServiceLayerStyle> styles) {
+	public void setStyles(Set<GeoWebServiceLayerStyle> styles) {
 		this.layerStyles = styles;
 	}
-	
+
 	/**
 	 * @return the tileGrid
 	 */
@@ -216,7 +217,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 				append(getTileGrid(), other.getTileGrid()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -224,5 +225,5 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

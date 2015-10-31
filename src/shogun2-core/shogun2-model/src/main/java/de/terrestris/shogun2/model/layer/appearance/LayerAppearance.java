@@ -12,9 +12,9 @@ import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.Layer;
 
 /**
- * 
- * This class holds the appearance properties of a layer {@link Layer} Object 
- * 
+ *
+ * This class holds the appearance properties of a layer {@link Layer} Object
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -22,10 +22,9 @@ import de.terrestris.shogun2.model.layer.Layer;
 @Entity
 @Table
 public class LayerAppearance extends PersistentObject{
-	
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private String type;
@@ -35,14 +34,14 @@ public class LayerAppearance extends PersistentObject{
 	private Double minScale;
 	private Double opacity;
 	private Boolean visible;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public LayerAppearance() {
 		super();
 	}
-	
+
 	/**
 	 * @param type
 	 * @param attribution
@@ -183,7 +182,7 @@ public class LayerAppearance extends PersistentObject{
 				append(getVisible()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -208,7 +207,7 @@ public class LayerAppearance extends PersistentObject{
 				append(getVisible(), other.getVisible()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

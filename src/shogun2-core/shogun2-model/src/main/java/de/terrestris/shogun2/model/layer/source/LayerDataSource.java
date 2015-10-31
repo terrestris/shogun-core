@@ -13,9 +13,9 @@ import javax.persistence.Entity;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  * Base class for all layer datasources
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -23,23 +23,23 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class LayerDataSource extends PersistentObject {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 	private String type;
 	private String url;
-	
+
 	/**
 	 * default constructor
 	 */
 	public LayerDataSource(){
 		super();
 	}
-	
+
 	/**
 	 * @param name
 	 * @param type
@@ -88,7 +88,7 @@ public abstract class LayerDataSource extends PersistentObject {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
@@ -106,7 +106,7 @@ public abstract class LayerDataSource extends PersistentObject {
 				append(getUrl()).
 				toHashCode();
 	}
-	
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 *
@@ -127,7 +127,7 @@ public abstract class LayerDataSource extends PersistentObject {
 				append(getUrl(), other.getUrl()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -135,5 +135,5 @@ public abstract class LayerDataSource extends PersistentObject {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
-	
+
 }

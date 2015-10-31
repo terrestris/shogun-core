@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layer.util;
 
@@ -14,9 +14,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  * Class representing scale / resolution
- * 
+ *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
@@ -26,20 +26,20 @@ import de.terrestris.shogun2.model.PersistentObject;
 public class Resolution extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	private Double resolution;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public Resolution() {
 		super();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param res
 	 */
 	public Resolution(Double res) {
@@ -95,7 +95,7 @@ public class Resolution extends PersistentObject {
 				append(getResolution(), other.getResolution()).
 				isEquals();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
