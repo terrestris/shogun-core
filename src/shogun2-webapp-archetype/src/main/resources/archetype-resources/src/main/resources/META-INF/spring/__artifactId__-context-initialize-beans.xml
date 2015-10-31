@@ -1,0 +1,24 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- The Set<User> of defaultUsers -->
+    <util:set id="defaultUsers" value-type="de.terrestris.shogun2.model.User">
+        <bean id="adminUser" class="de.terrestris.shogun2.model.User">
+            <property name="firstName" value="First Name"/>
+            <property name="lastName" value="Last Name"/>
+            <property name="accountName" value="admin"/>
+            <property name="password" value="password"/>
+            <property name="active" value="true"/>
+        </bean>
+    </util:set>
+
+</beans>
