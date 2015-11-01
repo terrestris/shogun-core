@@ -1,7 +1,6 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
-#set(
-$symbol_escape = '\' )
+#set( $symbol_escape = '\' )
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,13 +22,13 @@ $symbol_escape = '\' )
 
     <!-- Flag enabling/disabling the deletion of existing ACL data.
          This will only happen if shogunInitEnabled is set to true. -->
-    <bean id="deleteAclData" class="java.lang.Boolean">
-        <constructor-arg value="${symbol_dollar}{init.deleteAclData}"></constructor-arg>
+    <bean id="cleanupAclTables" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.cleanupAclTables}"></constructor-arg>
     </bean>
 
     <!-- The path to the ACL cleanup script which deletes existing ACL entries. -->
-    <bean id="aclCleanupScriptPath" class="java.lang.String">
-        <constructor-arg value="${symbol_dollar}{init.aclCleanupScriptPath}"></constructor-arg>
+    <bean id="cleanupAclTablesScriptPath" class="java.lang.String">
+        <constructor-arg value="${symbol_dollar}{init.cleanupAclTablesScriptPath}"></constructor-arg>
     </bean>
 
     <!-- Flag enabling/disabling project-specific initialization on startup -->
@@ -40,5 +39,25 @@ $symbol_escape = '\' )
     <!-- This bean initializes needed database objects or similar -->
     <bean id="contentInitializer" class="${package}.init.ProjectContentInitializer"
         init-method="initializeDatabaseContent" />
+
+    <!-- Flag enabling/disabling the creation of default users on startup -->
+    <bean id="createDefaultUsers" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.createDefaultUsers}"></constructor-arg>
+    </bean>
+
+    <!-- Flag enabling/disabling the creation of default layouts on startup -->
+    <bean id="createDefaultLayouts" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.createDefaultLayouts}"></constructor-arg>
+    </bean>
+
+    <!-- Flag enabling/disabling the creation of default modules on startup -->
+    <bean id="createDefaultModules" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.createDefaultModules}"></constructor-arg>
+    </bean>
+
+    <!-- Flag enabling/disabling the creation of default modules on startup -->
+    <bean id="createDefaultApplications" class="java.lang.Boolean">
+        <constructor-arg value="${symbol_dollar}{init.createDefaultApplications}"></constructor-arg>
+    </bean>
 
 </beans>

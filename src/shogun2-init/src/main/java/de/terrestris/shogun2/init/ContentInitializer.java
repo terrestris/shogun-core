@@ -1,11 +1,9 @@
 package de.terrestris.shogun2.init;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -22,16 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.layout.BorderLayout;
 import de.terrestris.shogun2.model.layout.Layout;
-import de.terrestris.shogun2.model.module.Header;
-import de.terrestris.shogun2.model.module.LayerTree;
 import de.terrestris.shogun2.model.module.Module;
-import de.terrestris.shogun2.model.module.NominatimSearch;
-import de.terrestris.shogun2.model.module.NominatimSearch.NominatimFormatType;
-import de.terrestris.shogun2.model.module.OverpassSearch;
-import de.terrestris.shogun2.model.module.OverpassSearch.OverpassFormatType;
-import de.terrestris.shogun2.model.module.Viewport;
 import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
@@ -65,15 +55,47 @@ public class ContentInitializer {
 	 * will only happen if {@link #shogunInitEnabled} is true.
 	 */
 	@Autowired
-	@Qualifier("deleteAclData")
-	private Boolean deleteAclData;
+	@Qualifier("cleanupAclTables")
+	private Boolean cleanupAclTables;
 
 	/**
 	 * The path to the acl cleanup script.
 	 */
 	@Autowired
-	@Qualifier("aclCleanupScriptPath")
-	private String aclCleanupScriptPath;
+	@Qualifier("cleanupAclTablesScriptPath")
+	private String cleanupAclTablesScriptPath;
+
+	/**
+	 * Flag symbolizing if a set of default {@link User}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultUsers")
+	private Boolean createDefaultUsers;
+
+	/**
+	 * Flag symbolizing if a set of default {@link Layout}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultLayouts")
+	private Boolean createDefaultLayouts;
+
+	/**
+	 * Flag symbolizing if a set of default {@link Module}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultModules")
+	private Boolean createDefaultModules;
+
+	/**
+	 * Flag symbolizing if a set of default {@link Application}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultApplications")
+	private Boolean createDefaultApplications;
 
 	/**
 	 * Initialization Service to init shogun content like users or default
@@ -104,83 +126,147 @@ public class ContentInitializer {
 	protected AuthenticationProvider authenticationProvider;
 
 	/**
+	 * A set of default users that will be created
+	 * if {@link #createDefaultUsers} is true.
+	 *
+	 * Using the {@link Resource} annotation as
+	 * recommended on http://stackoverflow.com/a/22463219
+	 */
+	@Resource(name = "defaultUsers")
+	private Set<User> defaultUsers;
+
+	/**
+	 * A set of default layouts that will be created
+	 * if {@link #createDefaultLayouts} is true.
+	 *
+	 */
+	@Resource(name = "defaultLayouts")
+	private Set<Layout> defaultLayouts;
+
+	/**
+	 * A set of default modules that will be created
+	 * if {@link #createDefaultModules} is true.
+	 *
+	 */
+	@Resource(name = "defaultModules")
+	private Set<Module> defaultModules;
+
+	/**
+	 * A set of default applications that will be created
+	 * if {@link #createDefaultApplications} is true.
+	 *
+	 */
+	@Resource(name = "defaultApplications")
+	private Set<Application> defaultApplications;
+
+	/**
 	 * The method called on initialization
 	 *
 	 * THIS WILL CURRENTLY PRODUCE SOME DEMO CONTENT
 	 */
 	public void initializeDatabaseContent() {
 
-		if (this.shogunInitEnabled.equals(true)) {
-			LOG.info("Initializing some SHOGun demo content!");
+		if (this.shogunInitEnabled) {
 
-			LOG.info("Cleaning up ACL tables...");
-			cleanupAclTables();
+			LOG.info("Initializing some SHOGun2 demo content!");
 
-			// CREATE USERS
-			User admin = new User("System", "Admin", "admin", "admin", true);
-			User user = new User("System", "User", "user", "user", true);
+			if(cleanupAclTables) {
+				cleanupAclTables();
+			}
 
-			initService.createUser(admin);
-			initService.createUser(user);
+			if(createDefaultUsers) {
+				createDefaultUsers();
+			}
 
-			LOG.info("Created an admin and a default user.");
+			if(createDefaultLayouts) {
+				createDefaultLayouts();
+			}
 
-			// CREATE APPS
-			Application adminApp = new Application("AdminApp", null);
-			Application userApp = new Application("UserApp", null);
+			if(createDefaultModules) {
+				createDefaultModules();
+			}
 
-			LOG.info("Created an admin app and a user app.");
+			if(createDefaultApplications) {
+				createDefaultApplications();
+			}
 
-			// CREATE AND ADD A VIEWPORT MODULE WITH A BORDER LAYOUT
-			BorderLayout borderLayout = new BorderLayout();
-			borderLayout.setRegions(Arrays.asList("north", "west"));
-			borderLayout.setPropertyHints(new HashSet<String>(Arrays.asList("height", "border")));
-			borderLayout.setPropertyMusts(new HashSet<String>(Arrays.asList("width")));
-
-			Map<String, String> properties = new HashMap<String, String>();
-			properties.put("width", "200");
-			properties.put("border", "2");
-
-			Viewport vp = new Viewport();
-
-			vp.setLayout(borderLayout);
-			vp.setProperties(properties);
-
-			Header headerModule = new Header();
-
-			NominatimSearch nominatimModule = new NominatimSearch();
-			nominatimModule.setFormat(NominatimFormatType.fromString("xml"));
-
-			OverpassSearch overpassModule = new OverpassSearch();
-			overpassModule.setFormat(OverpassFormatType.fromString("poPUp"));
-
-			headerModule.addModule(nominatimModule);
-			headerModule.addModule(overpassModule);
-
-			vp.addModule(headerModule);
-
-			LayerTree layerTreeModule = new LayerTree();
-			vp.addModule(layerTreeModule);
-
-			adminApp.setViewport(vp);
+			// TODO: get smarter here
+			User adminUser = null;
+			for (User user : defaultUsers) {
+				if(user.getAccountName().equals("admin")) {
+					adminUser = user;
+				}
+			}
 
 			// MANAGE SECURITY/ACL
+			if(adminUser != null) {
 
-			adminApp = initService.createApplication(adminApp);
-			userApp = initService.createApplication(userApp);
+				logInUser(adminUser);
 
-			logInUser(admin);
+				for (Application application : defaultApplications) {
+					aclSecurityUtil.addPermission(application, adminUser, BasePermission.READ);
+				}
 
-			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
-			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
-			aclSecurityUtil.addPermission(userApp, user, BasePermission.READ);
+				LOG.info("Managed security/ACL");
 
-			LOG.info("Managed security/ACL");
+				logoutUser();
+			}
 
-			logoutUser();
 		} else {
 			LOG.info("Not initializing anything for SHOGun2.");
 		}
+	}
+
+	/**
+	 * Creates the {@link User}s defined in {@link #defaultUsers}
+	 */
+	private void createDefaultUsers() {
+		LOG.info("Creating a set of default users.");
+
+		for (User user : defaultUsers) {
+			initService.createUser(user);
+		}
+
+		LOG.info("Created a total of " + defaultUsers.size() + " default users.");
+	}
+
+	/**
+	 * Creates the {@link Layout}s defined in {@link #defaultLayouts}
+	 */
+	private void createDefaultLayouts() {
+		LOG.info("Creating a set of default layouts.");
+
+		for (Layout layout : defaultLayouts) {
+			initService.createLayout(layout);
+		}
+
+		LOG.info("Created a total of " + defaultLayouts.size() + " default layouts.");
+	}
+
+	/**
+	 * Creates the {@link Module}s defined in {@link #defaultApplications}
+	 */
+	private void createDefaultModules() {
+		LOG.info("Creating a set of default modules.");
+
+		for (Module module : defaultModules) {
+			initService.createModule(module);
+		}
+
+		LOG.info("Created a total of " + defaultModules.size() + " default modules.");
+	}
+
+	/**
+	 * Creates the {@link Application}s defined in {@link #defaultApplications}
+	 */
+	private void createDefaultApplications() {
+		LOG.info("Creating a set of default applications.");
+
+		for (Application app : defaultApplications) {
+			initService.createApplication(app);
+		}
+
+		LOG.info("Created a total of " + defaultApplications.size() + " default applications.");
 	}
 
 	/**
@@ -208,11 +294,13 @@ public class ContentInitializer {
 	 */
 	private void cleanupAclTables() {
 		final ResourceDatabasePopulator rdp = new ResourceDatabasePopulator(
-				new ClassPathResource(aclCleanupScriptPath));
+				new ClassPathResource(cleanupAclTablesScriptPath));
+
+		LOG.info("Trying to clean up ACL tables.");
 
 		try {
 			rdp.populate(aclDataSource.getConnection());
-			LOG.info("Cleaned up ACL tables...");
+			LOG.info("Cleaned up ACL tables.");
 		} catch (ScriptException | SQLException e) {
 			LOG.error("Could not clean up ACL tables: " + e.getMessage());
 		}
