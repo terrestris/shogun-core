@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.layout.Layout;
 import de.terrestris.shogun2.model.module.Module;
@@ -88,6 +90,14 @@ public class ContentInitializer {
 	private Boolean createDefaultModules;
 
 	/**
+	 * Flag symbolizing if a set of default {@link Application}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultApplications")
+	private Boolean createDefaultApplications;
+
+	/**
 	 * Initialization Service to init shogun content like users or default
 	 * applications.
 	 */
@@ -129,8 +139,6 @@ public class ContentInitializer {
 	 * A set of default layouts that will be created
 	 * if {@link #createDefaultLayouts} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
 	@Resource(name = "defaultLayouts")
 	private Set<Layout> defaultLayouts;
@@ -139,11 +147,17 @@ public class ContentInitializer {
 	 * A set of default modules that will be created
 	 * if {@link #createDefaultModules} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
 	@Resource(name = "defaultModules")
 	private Set<Module> defaultModules;
+
+	/**
+	 * A set of default applications that will be created
+	 * if {@link #createDefaultApplications} is true.
+	 *
+	 */
+	@Resource(name = "defaultApplications")
+	private Set<Application> defaultApplications;
 
 	/**
 	 * The method called on initialization
@@ -172,18 +186,31 @@ public class ContentInitializer {
 				createDefaultModules();
 			}
 
-//			// MANAGE SECURITY/ACL
-//
-//			logInUser(admin);
-//
-//			aclSecurityUtil.addPermission(adminApp, admin, BasePermission.READ);
-//			aclSecurityUtil.addPermission(userApp, admin, BasePermission.READ);
-//			aclSecurityUtil.addPermission(userApp, user, BasePermission.READ);
-//
-//			LOG.info("Managed security/ACL");
-//
-//			logoutUser();
+			if(createDefaultApplications) {
+				createDefaultApplications();
+			}
 
+			// TODO: get smarter here
+			User adminUser = null;
+			for (User user : defaultUsers) {
+				if(user.getAccountName().equals("admin")) {
+					adminUser = user;
+				}
+			}
+
+			// MANAGE SECURITY/ACL
+			if(adminUser != null) {
+
+				logInUser(adminUser);
+
+				for (Application application : defaultApplications) {
+					aclSecurityUtil.addPermission(application, adminUser, BasePermission.READ);
+				}
+
+				LOG.info("Managed security/ACL");
+
+				logoutUser();
+			}
 
 		} else {
 			LOG.info("Not initializing anything for SHOGun2.");
@@ -217,7 +244,7 @@ public class ContentInitializer {
 	}
 
 	/**
-	 * Creates the {@link Module}s defined in {@link #defaultModules}
+	 * Creates the {@link Module}s defined in {@link #defaultApplications}
 	 */
 	private void createDefaultModules() {
 		LOG.info("Creating a set of default modules.");
@@ -227,6 +254,19 @@ public class ContentInitializer {
 		}
 
 		LOG.info("Created a total of " + defaultModules.size() + " default modules.");
+	}
+
+	/**
+	 * Creates the {@link Application}s defined in {@link #defaultApplications}
+	 */
+	private void createDefaultApplications() {
+		LOG.info("Creating a set of default applications.");
+
+		for (Application app : defaultApplications) {
+			initService.createApplication(app);
+		}
+
+		LOG.info("Created a total of " + defaultApplications.size() + " default applications.");
 	}
 
 	/**

@@ -103,4 +103,16 @@
         <ref bean="viewportModule" />
     </util:set>
 
+    <!-- Define applications -->
+    <bean id="defaultApplication" class="de.terrestris.shogun2.model.Application">
+        <property name="name" value="Default Application" />
+        <property name="description" value="Default Application" />
+        <property name="viewport" ref="viewportModule" />
+    </bean>
+
+    <!-- The Set<Application> of defaultApplications -->
+    <util:set id="defaultApplications" value-type="de.terrestris.shogun2.model.Application">
+        <ref bean="defaultApplication" />
+    </util:set>
+
 </beans>
