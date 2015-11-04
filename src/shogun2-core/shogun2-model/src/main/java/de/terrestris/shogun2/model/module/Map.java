@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
@@ -47,7 +47,7 @@ public class Map extends Module {
 	 * The MapConfig used by this Map. A MapConfig can be used by several maps
 	 * or overview maps.
 	 */
-	@OneToOne(
+	@ManyToOne(
 			fetch = FetchType.EAGER,
 			cascade = CascadeType.ALL
 	)
@@ -56,7 +56,7 @@ public class Map extends Module {
 	/**
 	 *
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	private OverviewMap overviewMap;
 
 	/**
