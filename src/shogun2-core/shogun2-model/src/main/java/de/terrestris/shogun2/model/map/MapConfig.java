@@ -1,15 +1,17 @@
 package de.terrestris.shogun2.model.map;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,8 +26,9 @@ import de.terrestris.shogun2.model.layer.util.Resolution;
 /**
  * The <i>MapConfig</i> is backend representation for an
  * <a href="http://openlayers.org/en/master/apidoc/ol.View.html"> OpenLayers 3 View</a>
- * 
+ *
  * @author Andre Henn
+ * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
  *
  */
@@ -37,20 +40,66 @@ public class MapConfig extends PersistentObject{
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
 	private String name;
+
+	/**
+	 *
+	 */
 	private Point2D.Double center;
 
+	/**
+	 *
+	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	private Extent extent;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "MAPCONFIG_RESOLUTIONS")
-	private List<Resolution> resolutions = new ArrayList<Resolution>();
+	/**
+	 *
+	 */
+	@ManyToMany(
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL
+	)
+	@JoinTable(
+			name = "MAPCONFIG_RESOLUTION",
+			joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
+	)
+	@OrderColumn(name = "INDEX")
+	private List<Resolution> resolutions;
 
+	/**
+	 *
+	 */
 	private Integer zoom;
-	private Double maxResolution;
-	private Double minResolution;
+
+	/**
+	 *
+	 */
+	@ManyToOne(
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL
+	)
+	private Resolution maxResolution;
+
+	/**
+	 *
+	 */
+	@ManyToOne(
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL
+	)
+	private Resolution minResolution;
+
+	/**
+	 *
+	 */
 	private Double rotation;
+
 	/*
 	 * use String as datatype since classical EPSG code
 	 * as well as OGC URN (urn:x-ogc:def:crs:EPSG:XXXX) should be covered.
@@ -76,7 +125,7 @@ public class MapConfig extends PersistentObject{
 	 * @param projection
 	 */
 	public MapConfig(String name, Point2D.Double center, Extent extent, List<Resolution> resolutions, Integer zoom,
-			Double maxResolution, Double minResolution, Double rotation, String projection) {
+			Resolution maxResolution, Resolution minResolution, Double rotation, String projection) {
 		super();
 		this.name = name;
 		this.center = center;
@@ -162,28 +211,28 @@ public class MapConfig extends PersistentObject{
 	/**
 	 * @return the maxResolution
 	 */
-	public Double getMaxResolution() {
+	public Resolution getMaxResolution() {
 		return maxResolution;
 	}
 
 	/**
 	 * @param maxResolution the maxResolution to set
 	 */
-	public void setMaxResolution(Double maxResolution) {
+	public void setMaxResolution(Resolution maxResolution) {
 		this.maxResolution = maxResolution;
 	}
 
 	/**
 	 * @return the minResolution
 	 */
-	public Double getMinResolution() {
+	public Resolution getMinResolution() {
 		return minResolution;
 	}
 
 	/**
 	 * @param minResolution the minResolution to set
 	 */
-	public void setMinResolution(Double minResolution) {
+	public void setMinResolution(Resolution minResolution) {
 		this.minResolution = minResolution;
 	}
 
@@ -223,6 +272,7 @@ public class MapConfig extends PersistentObject{
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(5, 13).
@@ -247,6 +297,7 @@ public class MapConfig extends PersistentObject{
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MapConfig))
 			return false;
