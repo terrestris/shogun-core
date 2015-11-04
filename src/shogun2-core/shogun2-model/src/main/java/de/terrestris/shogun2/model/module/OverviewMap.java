@@ -3,7 +3,10 @@
  */
 package de.terrestris.shogun2.model.module;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,7 +20,7 @@ import de.terrestris.shogun2.model.map.MapConfig;
 /**
  *
  * Class represents a GeoExt.component.OverviewMap, that displays an overview
- * map of an parent map.
+ * map of a parent map.
  *
  * @author Andre Henn
  * @author Daniel Koch
@@ -42,6 +45,15 @@ public class OverviewMap extends PersistentObject {
 	 *
 	 */
 	private MapConfig overviewMapConfig;
+
+	/**
+	 *
+	 */
+	@ManyToOne(
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL
+	)
+	private Map parentMap;
 
 	/**
 	 *
@@ -89,6 +101,20 @@ public class OverviewMap extends PersistentObject {
 	}
 
 	/**
+	 * @return the parentMap
+	 */
+	public Map getParentMap() {
+		return parentMap;
+	}
+
+	/**
+	 * @param parentMap the parentMap to set
+	 */
+	public void setParentMap(Map parentMap) {
+		this.parentMap = parentMap;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 *
 	 *      According to
@@ -123,6 +149,7 @@ public class OverviewMap extends PersistentObject {
 		return new EqualsBuilder().
 				append(getMagnification(), other.getMagnification()).
 				append(getOverviewMapConfig(), other.getOverviewMapConfig()).
+				append(getParentMap(), other.getParentMap()).
 				isEquals();
 	}
 
