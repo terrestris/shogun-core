@@ -53,6 +53,11 @@ public abstract class Module extends PersistentObject {
 	private String name;
 
 	/**
+	 * The class name (e.g. the xtype in ExtJS) of this module.
+	 */
+	private String xtype;
+
+	/**
 	 *
 	 */
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -87,6 +92,21 @@ public abstract class Module extends PersistentObject {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @return the xtype
+	 */
+	public String getXtype() {
+		return xtype;
+	}
+
+	/**
+	 * @param xtype
+	 *            the xtype to set
+	 */
+	public void setXtype(String xtype) {
+		this.xtype = xtype;
 	}
 
 	/**
@@ -128,6 +148,7 @@ public abstract class Module extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(5, 7).appendSuper(super.hashCode()).append(getName()).append(getLayout())
@@ -142,21 +163,31 @@ public abstract class Module extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Module))
 			return false;
 		Module other = (Module) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getName(), other.getName())
-				.append(getLayout(), other.getLayout()).append(getProperties(), other.getProperties()).isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(other))
+				.append(getName(), other.getName())
+				.append(getXtype(), other.getXtype())
+				.append(getLayout(), other.getLayout())
+				.append(getProperties(), other.getProperties())
+				.isEquals();
 	}
 
 	/**
 	 *
 	 */
+	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
-				.append("name", getName()).append("layout", getLayout()).append("properties", getProperties())
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString())
+				.append("name", getName())
+				.append("xtype", getXtype())
+				.append("layout", getLayout())
+				.append("properties", getProperties())
 				.toString();
 	}
 }

@@ -73,6 +73,7 @@
 
     <bean id="headerModule" class="de.terrestris.shogun2.model.module.Header">
         <property name="name" value="Viewport Header" />
+        <property name="xtype" value="panel" />
         <property name="properties">
             <util:map>
                 <entry key="region" value="north" />
