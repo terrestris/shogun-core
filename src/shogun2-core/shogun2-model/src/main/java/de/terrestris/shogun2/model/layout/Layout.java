@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.terrestris.shogun2.model.layout;
 
@@ -23,16 +23,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.model.module.CompositeModule;
 import de.terrestris.shogun2.model.module.Module;
 
 /**
- * This class represents the layout of a {@link Module} in a GUI. It provides
- * {@link #propertyHints}, which are (names) of <b>recommended</b> properties of
- * the corresponding {@link Module} and {@link #propertyMusts}, which are
- * (names) of <b>required</b> properties of the {@link Module}. The values of
- * such properties should be stored in
- * {@link Module#setProperties(java.util.Map)}
- * 
+ * This class represents the layout of a {@link CompositeModule} in a GUI.
+ * It provides {@link #propertyHints}, which are (names) of <b>recommended</b>
+ * properties for the children of the corresponding {@link CompositeModule} and
+ * {@link #propertyMusts}, which are (names) of <b>required</b> properties for
+ * the children of the {@link CompositeModule}. The values of such properties
+ * should be stored in the child {@link Module}s property map.
+ * ({@link Module#setProperties(java.util.Map)})
+ *
  * @author Nils Bühner
  *
  */
@@ -42,17 +44,18 @@ import de.terrestris.shogun2.model.module.Module;
 public class Layout extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * The type of the layout, e.g. "border", "absolute", "hbox" or "vbox".
 	 */
 	private String type;
 
 	/**
-	 * 
+	 * A set of property names that are <b>recommended</b> for the use in the
+	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "LAYOUT_PROPERTYHINTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
@@ -60,7 +63,8 @@ public class Layout extends PersistentObject {
 	private Set<String> propertyHints = new HashSet<String>();
 
 	/**
-	 * 
+	 * A set of property names that are <b>required</b> for the use in the
+	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "LAYOUT_PROPERTYMUSTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
@@ -76,7 +80,7 @@ public class Layout extends PersistentObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getType() {
@@ -84,7 +88,7 @@ public class Layout extends PersistentObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type
 	 */
 	public void setType(String type) {
@@ -131,8 +135,12 @@ public class Layout extends PersistentObject {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(13, 7).appendSuper(super.hashCode()).append(getType()).append(getPropertyHints())
-				.append(getPropertyMusts()).toHashCode();
+		return new HashCodeBuilder(13, 7)
+				.appendSuper(super.hashCode())
+				.append(getType())
+				.append(getPropertyHints())
+				.append(getPropertyMusts())
+				.toHashCode();
 	}
 
 	/**
@@ -148,18 +156,23 @@ public class Layout extends PersistentObject {
 			return false;
 		Layout other = (Layout) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getType(), other.getType())
+		return new EqualsBuilder()
+				.appendSuper(super.equals(other))
+				.append(getType(), other.getType())
 				.append(getPropertyHints(), other.getPropertyHints())
-				.append(getPropertyMusts(), other.getPropertyMusts()).isEquals();
+				.append(getPropertyMusts(), other.getPropertyMusts())
+				.isEquals();
 	}
 
 	/**
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
-				.append("type", getType()).append("propertyHints", getPropertyHints())
-				.append("propertyMusts", getPropertyMusts()).toString();
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString())
+				.append("type", getType())
+				.append("propertyHints", getPropertyHints())
+				.append("propertyMusts", getPropertyMusts())
+				.toString();
 	}
-
 }

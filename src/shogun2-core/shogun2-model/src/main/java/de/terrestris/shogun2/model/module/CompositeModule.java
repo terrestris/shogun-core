@@ -12,12 +12,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import de.terrestris.shogun2.model.layout.Layout;
 
 /**
  * This (abstract) class represents a composite {@link Module}, i.e. a module
@@ -35,6 +38,14 @@ public abstract class CompositeModule extends Module {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * The {@link Layout} of this {@link CompositeModule}, that contains
+	 * property hints/musts for the child modules of this
+	 * {@link CompositeModule}.
+	 */
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Layout layout;
+
+	/**
 	 *
 	 */
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -48,6 +59,20 @@ public abstract class CompositeModule extends Module {
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
 	public CompositeModule() {
+	}
+
+	/**
+	 * @return the layout
+	 */
+	public Layout getLayout() {
+		return layout;
+	}
+
+	/**
+	 * @param layout the layout to set
+	 */
+	public void setLayout(Layout layout) {
+		this.layout = layout;
 	}
 
 	/**
@@ -91,7 +116,11 @@ public abstract class CompositeModule extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(17, 19).appendSuper(super.hashCode()).append(getSubModules()).toHashCode();
+		return new HashCodeBuilder(17, 19)
+				.appendSuper(super.hashCode())
+				.append(getLayout())
+				.append(getSubModules())
+				.toHashCode();
 	}
 
 	/**
@@ -107,7 +136,10 @@ public abstract class CompositeModule extends Module {
 			return false;
 		CompositeModule other = (CompositeModule) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getSubModules(), other.getSubModules())
+		return new EqualsBuilder()
+				.appendSuper(super.equals(other))
+				.append(getLayout(), other.getLayout())
+				.append(getSubModules(), other.getSubModules())
 				.isEquals();
 	}
 
@@ -115,7 +147,9 @@ public abstract class CompositeModule extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
+				.appendSuper(super.toString())
+				.append("layout", getLayout())
 				.append("subModules", getSubModules()).toString();
 	}
 }
