@@ -29,6 +29,10 @@ public class Resolution extends PersistentObject {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
 	private Double resolution;
 
 	/**
@@ -69,6 +73,7 @@ public class Resolution extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(73, 13).
@@ -85,6 +90,7 @@ public class Resolution extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Resolution))
 			return false;
