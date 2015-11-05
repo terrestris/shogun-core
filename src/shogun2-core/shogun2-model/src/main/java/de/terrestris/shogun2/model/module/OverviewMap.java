@@ -3,10 +3,17 @@
  */
 package de.terrestris.shogun2.model.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -14,7 +21,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import de.terrestris.shogun2.model.PersistentObject;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
 
 /**
@@ -29,7 +40,7 @@ import de.terrestris.shogun2.model.map.MapConfig;
  */
 @Table
 @Entity
-public class OverviewMap extends PersistentObject {
+public class OverviewMap extends Module {
 
 	/**
 	 *
@@ -42,9 +53,16 @@ public class OverviewMap extends PersistentObject {
 	private Integer magnification;
 
 	/**
-	 *
+	 * The layers used within this OverviewMap.
 	 */
-	private MapConfig overviewMapConfig;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "OVERVIEWMAP_LAYERS",
+			joinColumns = { @JoinColumn(name = "OVERVIEWMAP_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
+	)
+	@OrderColumn(name = "INDEX")
+	private List<Layer> overviewMapLayers = new ArrayList<Layer>();
 
 	/**
 	 *
@@ -53,6 +71,11 @@ public class OverviewMap extends PersistentObject {
 			fetch = FetchType.EAGER,
 			cascade = CascadeType.ALL
 	)
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "name"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private Map parentMapModule;
 
 	/**
@@ -69,7 +92,6 @@ public class OverviewMap extends PersistentObject {
 	public OverviewMap(Integer magnification, MapConfig overviewMapConfig) {
 		super();
 		this.magnification = magnification;
-		this.overviewMapConfig = overviewMapConfig;
 	}
 
 	/**
@@ -87,17 +109,17 @@ public class OverviewMap extends PersistentObject {
 	}
 
 	/**
-	 * @return the overviewMapConfig
+	 * @return the overviewMapLayers
 	 */
-	public MapConfig getOverviewMapConfig() {
-		return overviewMapConfig;
+	public List<Layer> getOverviewMapLayers() {
+		return overviewMapLayers;
 	}
 
 	/**
-	 * @param overviewMapConfig the overviewMapConfig to set
+	 * @param overviewMapLayers the overviewMapLayers to set
 	 */
-	public void setOverviewMapConfig(MapConfig overviewMapConfig) {
-		this.overviewMapConfig = overviewMapConfig;
+	public void setOverviewMapLayers(List<Layer> overviewMapLayers) {
+		this.overviewMapLayers = overviewMapLayers;
 	}
 
 	/**
@@ -128,7 +150,7 @@ public class OverviewMap extends PersistentObject {
 		return new HashCodeBuilder(47, 13).
 				appendSuper(super.hashCode()).
 				append(getMagnification()).
-				append(getOverviewMapConfig()).
+				append(getOverviewMapLayers()).
 				toHashCode();
 	}
 
@@ -148,8 +170,8 @@ public class OverviewMap extends PersistentObject {
 
 		return new EqualsBuilder().
 				append(getMagnification(), other.getMagnification()).
-				append(getOverviewMapConfig(), other.getOverviewMapConfig()).
 				append(getParentMapModule(), other.getParentMapModule()).
+				append(getOverviewMapLayers(), other.getOverviewMapLayers()).
 				isEquals();
 	}
 
