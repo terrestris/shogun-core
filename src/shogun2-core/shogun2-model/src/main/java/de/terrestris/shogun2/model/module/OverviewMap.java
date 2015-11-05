@@ -53,7 +53,7 @@ public class OverviewMap extends PersistentObject {
 			fetch = FetchType.EAGER,
 			cascade = CascadeType.ALL
 	)
-	private Map parentMap;
+	private Map parentMapModule;
 
 	/**
 	 *
@@ -101,17 +101,17 @@ public class OverviewMap extends PersistentObject {
 	}
 
 	/**
-	 * @return the parentMap
+	 * @return the parentMapModule
 	 */
-	public Map getParentMap() {
-		return parentMap;
+	public Map getParentMapModule() {
+		return parentMapModule;
 	}
 
 	/**
-	 * @param parentMap the parentMap to set
+	 * @param parentMapModule the parentMapModule to set
 	 */
-	public void setParentMap(Map parentMap) {
-		this.parentMap = parentMap;
+	public void setParentMapModule(Map parentMapModule) {
+		this.parentMapModule = parentMapModule;
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class OverviewMap extends PersistentObject {
 		return new EqualsBuilder().
 				append(getMagnification(), other.getMagnification()).
 				append(getOverviewMapConfig(), other.getOverviewMapConfig()).
-				append(getParentMap(), other.getParentMap()).
+				append(getParentMapModule(), other.getParentMapModule()).
 				isEquals();
 	}
 
