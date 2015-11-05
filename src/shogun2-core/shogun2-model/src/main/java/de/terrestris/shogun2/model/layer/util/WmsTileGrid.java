@@ -7,12 +7,16 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
@@ -45,6 +49,10 @@ public class WmsTileGrid extends PersistentObject {
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
 	 */
+	@ManyToOne(
+			fetch = FetchType.EAGER
+	)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent tileGridExtent;
 
 	/**
@@ -122,6 +130,7 @@ public class WmsTileGrid extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(43, 13).
@@ -140,6 +149,7 @@ public class WmsTileGrid extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof WmsTileGrid))
 			return false;

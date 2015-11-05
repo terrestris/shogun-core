@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.map.MapConfig;
 
 /**
  *
@@ -87,9 +86,8 @@ public class OverviewMap extends Module {
 
 	/**
 	 * @param magnification
-	 * @param overviewMapConfig
 	 */
-	public OverviewMap(Integer magnification, MapConfig overviewMapConfig) {
+	public OverviewMap(Integer magnification) {
 		super();
 		this.magnification = magnification;
 	}

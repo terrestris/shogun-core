@@ -1,19 +1,23 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import java.util.Set;
+import java.util.List;
 
+//import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName;
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
@@ -38,17 +42,32 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	private int height;
 	private String version;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "LAYERDATASOURCE_LAYERNAME", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "LAYERNAME_ID") })
-	private Set<GeoWebServiceLayerName> layerNames;
+	@ManyToMany(
+			fetch = FetchType.EAGER
+	)
+	@JoinTable(
+			name = "TILEWMSLAYERDATASOURCE_LAYERNAME",
+			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
+	)
+	@OrderColumn(name = "INDEX")
+	@Cascade(CascadeType.SAVE_UPDATE)
+	private List<GeoWebServiceLayerName> layerNames;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "LAYERDATASOURCE_STYLE", joinColumns = { @JoinColumn(name = "DATASOURCE_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "STYLE_ID") })
-	private Set<GeoWebServiceLayerStyle> layerStyles;
+	@ManyToMany(
+			fetch = FetchType.EAGER
+	)
+	@JoinTable(
+			name = "TILEWMSLAYERDATASOURCE_STYLE",
+			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
+	)
+	@OrderColumn(name = "INDEX")
+	@Cascade(CascadeType.SAVE_UPDATE)
+	private List<GeoWebServiceLayerStyle> layerStyles;
 
-	@OneToOne
+	@ManyToOne()
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private WmsTileGrid tileGrid;
 
 	/**
@@ -70,14 +89,14 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	 * @param tileGrid
 	 */
 	public TileWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
-			Set<GeoWebServiceLayerName> layers,
-			Set<GeoWebServiceLayerStyle> styles, WmsTileGrid tileGrid) {
+			List<GeoWebServiceLayerName> layerNames,
+			List<GeoWebServiceLayerStyle> layerStyles, WmsTileGrid tileGrid) {
 		super(name, type, url);
 		this.width = width;
 		this.height = height;
 		this.version = version;
-		this.layerNames = layers;
-		this.layerStyles = styles;
+		this.layerNames = layerNames;
+		this.layerStyles = layerStyles;
 		this.tileGrid = tileGrid;
 	}
 
@@ -130,33 +149,32 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 
 
 	/**
-	 * @return the layers
+	 * @return the layerNames
 	 */
-	public Set<GeoWebServiceLayerName> getLayers() {
+	public List<GeoWebServiceLayerName> getLayerNames() {
 		return layerNames;
 	}
 
 
 	/**
-	 * @param layers the layers to set
+	 * @param layerNames the layerNames to set
 	 */
-	public void setLayers(Set<GeoWebServiceLayerName> layers) {
-		this.layerNames = layers;
+	public void setLayerNames(List<GeoWebServiceLayerName> layerNames) {
+		this.layerNames = layerNames;
 	}
 
-
 	/**
-	 * @return the styles
+	 * @return the layerStyles
 	 */
-	public Set<GeoWebServiceLayerStyle> getStyles() {
+	public List<GeoWebServiceLayerStyle> getLayerStyles() {
 		return layerStyles;
 	}
 
 	/**
-	 * @param styles the styles to set
+	 * @param layerStyles the layerStyles to set
 	 */
-	public void setStyles(Set<GeoWebServiceLayerStyle> styles) {
-		this.layerStyles = styles;
+	public void setLayerStyles(List<GeoWebServiceLayerStyle> layerStyles) {
+		this.layerStyles = layerStyles;
 	}
 
 	/**
@@ -181,6 +199,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(47, 13).
@@ -188,8 +207,8 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 				append(getWidth()).
 				append(getHeight()).
 				append(getVersion()).
-				append(getLayers()).
-				append(getStyles()).
+				append(getLayerNames()).
+				append(getLayerStyles()).
 				append(getTileGrid()).
 				toHashCode();
 	}
@@ -202,6 +221,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TileWmsLayerDataSource))
 			return false;
@@ -212,8 +232,8 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 				append(getWidth(), other.getWidth()).
 				append(getHeight(), other.getHeight()).
 				append(getVersion(), other.getVersion()).
-				append(getLayers(), other.getLayers()).
-				append(getStyles(), other.getStyles()).
+				append(getLayerNames(), other.getLayerNames()).
+				append(getLayerStyles(), other.getLayerStyles()).
 				append(getTileGrid(), other.getTileGrid()).
 				isEquals();
 	}

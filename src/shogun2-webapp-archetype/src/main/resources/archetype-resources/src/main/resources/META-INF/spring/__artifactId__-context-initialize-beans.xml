@@ -183,11 +183,86 @@
         <property name="zoom" value="16" />
     </bean>
 
+    <!-- Define the Layers -->
+    <bean id="osmWmsLayerTileGridExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
+        <property name="lowerLeft">
+            <bean class="java.awt.geom.Point2D$Double">
+                <constructor-arg index="0" value="-180.0" />
+                <constructor-arg index="1" value="-90.0" />
+            </bean>
+        </property>
+        <property name="upperRight">
+            <bean class="java.awt.geom.Point2D$Double">
+                <constructor-arg index="0" value="180.0" />
+                <constructor-arg index="1" value="90.0" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="osmWmsLayerTileGridOrigin" class="java.awt.geom.Point2D$Double">
+        <constructor-arg index="0" value="-180.0" />
+        <constructor-arg index="1" value="-90.0" />
+    </bean>
+
+    <bean id="osmWmsLayerTileGrid" class="de.terrestris.shogun2.model.layer.util.WmsTileGrid">
+        <property name="tileGridOrigin" ref="osmWmsLayerTileGridOrigin" />
+        <property name="tileGridExtent" ref="osmWmsLayerTileGridExtent" />
+        <property name="tileSize" value="256" />
+    </bean>
+
+    <bean id="osmWmsLayerName" class="de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName">
+        <property name="layerName" value="OSM-WMS" />
+    </bean>
+
+    <bean id="osmWmsLayerStyle" class="de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle">
+        <property name="styleName" value="" />
+    </bean>
+
+    <bean id="osmWmsLayerDataSource" class="de.terrestris.shogun2.model.layer.source.TileWmsLayerDataSource">
+        <property name="name" value="OSM-WMS" />
+        <property name="url" value="http://ows.terrestris.de/osm/service?" />
+        <property name="type" value="ol.source.TileWMS" />
+        <property name="version" value="1.1.0" />
+        <property name="layerNames">
+            <util:list>
+                <ref bean="osmWmsLayerName" />
+            </util:list>
+        </property>
+        <property name="layerStyles">
+            <util:set>
+                <ref bean="osmWmsLayerStyle" />
+            </util:set>
+        </property>
+        <property name="tileGrid" ref="osmWmsLayerTileGrid" />
+    </bean>
+
+    <bean id="osmWmsLayerAppearance" class="de.terrestris.shogun2.model.layer.appearance.LayerAppearance">
+        <property name="type" value="" />
+        <property name="attribution" value="(c) OpenStreetMap contributors (http://www.openstreetmap.org/copyright)" />
+        <property name="name" value="OSM-WMS" />
+        <property name="maxScale" value="0" />
+        <property name="minScale" value="100000000" />
+        <property name="opacity" value="1" />
+        <property name="visible" value="true" />
+    </bean>
+
+    <bean id="osmWmsLayer" class="de.terrestris.shogun2.model.layer.Layer">
+        <property name="name" value="OSM-WMS" />
+        <property name="type" value="WMS" />
+        <property name="source" ref="osmWmsLayerDataSource" />
+        <property name="appearance" ref="osmWmsLayerAppearance" />
+    </bean>
+
     <!-- Define the Map -->
     <bean id="mapModule" class="de.terrestris.shogun2.model.module.Map">
-        <property name="name" value="Legend Tree" />
+        <property name="name" value="Main Map" />
         <property name="xtype" value="shogun-component-map" />
         <property name="mapConfig" ref="mapConfigModule" />
+        <property name="mapLayers">
+            <util:list>
+                <ref bean="osmWmsLayer" />
+            </util:list>
+        </property>
         <property name="properties">
             <util:map>
                 <entry key="region" value="center" />
@@ -255,3 +330,4 @@
     </util:set>
 
 </beans>
+
