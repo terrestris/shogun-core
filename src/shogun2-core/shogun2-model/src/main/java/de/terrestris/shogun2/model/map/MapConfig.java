@@ -3,14 +3,12 @@ package de.terrestris.shogun2.model.map;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
@@ -18,6 +16,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.util.Extent;
@@ -54,16 +54,15 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent extent;
 
 	/**
 	 *
 	 */
-	@ManyToMany(
-			fetch = FetchType.EAGER,
-			cascade = CascadeType.ALL
-	)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 			name = "MAPCONFIG_RESOLUTION",
 			joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
@@ -80,19 +79,15 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToOne(
-			fetch = FetchType.EAGER,
-			cascade = CascadeType.ALL
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Resolution maxResolution;
 
 	/**
 	 *
 	 */
-	@ManyToOne(
-			fetch = FetchType.EAGER,
-			cascade = CascadeType.ALL
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Resolution minResolution;
 
 	/**
