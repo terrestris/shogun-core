@@ -6,12 +6,11 @@ package de.terrestris.shogun2.model.module;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -20,6 +19,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
@@ -48,21 +49,24 @@ public class Map extends Module {
 	 * or overview maps.
 	 */
 	@ManyToOne(
-			fetch = FetchType.EAGER,
-			cascade = CascadeType.ALL
+			fetch = FetchType.EAGER
 	)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private MapConfig mapConfig;
 
 	/**
 	 * The layers used within this Map.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ManyToMany(
+			fetch = FetchType.EAGER
+	)
 	@JoinTable(
 			name = "MAP_LAYERS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "INDEX")
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private List<Layer> mapLayers = new ArrayList<Layer>();
 
 	/**
