@@ -6,7 +6,6 @@ package de.terrestris.shogun2.model.module;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -56,12 +54,6 @@ public abstract class Module extends PersistentObject {
 	 * The class name (e.g. the xtype in ExtJS) of this module.
 	 */
 	private String xtype;
-
-	/**
-	 *
-	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private Layout layout;
 
 	/**
 	 *
@@ -110,22 +102,6 @@ public abstract class Module extends PersistentObject {
 	}
 
 	/**
-	 *
-	 * @return
-	 */
-	public Layout getLayout() {
-		return layout;
-	}
-
-	/**
-	 *
-	 * @param layout
-	 */
-	public void setLayout(Layout layout) {
-		this.layout = layout;
-	}
-
-	/**
 	 * @return the properties
 	 */
 	public Map<String, String> getProperties() {
@@ -151,8 +127,11 @@ public abstract class Module extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(5, 7).appendSuper(super.hashCode()).append(getName()).append(getLayout())
-				.append(getProperties()).toHashCode();
+		return new HashCodeBuilder(5, 7)
+				.appendSuper(super.hashCode())
+				.append(getName())
+				.append(getProperties())
+				.toHashCode();
 	}
 
 	/**
@@ -172,7 +151,6 @@ public abstract class Module extends PersistentObject {
 		return new EqualsBuilder().appendSuper(super.equals(other))
 				.append(getName(), other.getName())
 				.append(getXtype(), other.getXtype())
-				.append(getLayout(), other.getLayout())
 				.append(getProperties(), other.getProperties())
 				.isEquals();
 	}
@@ -186,7 +164,6 @@ public abstract class Module extends PersistentObject {
 				.appendSuper(super.toString())
 				.append("name", getName())
 				.append("xtype", getXtype())
-				.append("layout", getLayout())
 				.append("properties", getProperties())
 				.toString();
 	}
