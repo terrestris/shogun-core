@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
@@ -37,10 +39,16 @@ public class Layer extends PersistentObject {
 	private String name;
 	private String type;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(
+			fetch = FetchType.EAGER
+	)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerDataSource source;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(
+			fetch = FetchType.EAGER
+	)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerAppearance appearance;
 
 	/**
@@ -128,6 +136,7 @@ public class Layer extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(29, 13).
@@ -147,6 +156,7 @@ public class Layer extends PersistentObject {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Layer))
 			return false;
