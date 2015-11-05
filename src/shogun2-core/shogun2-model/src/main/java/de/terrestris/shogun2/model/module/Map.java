@@ -54,12 +54,6 @@ public class Map extends Module {
 	private MapConfig mapConfig;
 
 	/**
-	 *
-	 */
-	@ManyToOne(cascade = CascadeType.ALL)
-	private OverviewMap overviewMap;
-
-	/**
 	 * The layers used within this Map.
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
