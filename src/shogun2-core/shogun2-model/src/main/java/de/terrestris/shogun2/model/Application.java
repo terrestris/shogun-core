@@ -2,7 +2,6 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +14,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import ch.rasc.extclassgenerator.Model;
 import de.terrestris.shogun2.model.module.Viewport;
@@ -75,7 +76,8 @@ public class Application extends PersistentObject {
 	/**
 	 * 
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Viewport viewport;
 
 	/**
@@ -188,6 +190,7 @@ public class Application extends PersistentObject {
 	 * 
 	 *      Using Apache Commons String Builder.
 	 */
+	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
 				.append("name", getName()).append("description", getDescription()).append("language", getLanguage())

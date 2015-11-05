@@ -6,7 +6,6 @@ package de.terrestris.shogun2.model.module;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -19,6 +18,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layout.Layout;
 
@@ -42,15 +43,20 @@ public abstract class CompositeModule extends Module {
 	 * property hints/musts for the child modules of this
 	 * {@link CompositeModule}.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private Layout layout;
 
 	/**
 	 *
 	 */
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "MODULE_SUBMODULE", joinColumns = { @JoinColumn(name = "MODULE_ID") }, inverseJoinColumns = {
-			@JoinColumn(name = "SUBMODULE_ID") })
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinTable(
+			name = "MODULE_SUBMODULE",
+			joinColumns = { @JoinColumn(name = "MODULE_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "SUBMODULE_ID") }
+	)
 	@OrderColumn(name = "INDEX")
 	private List<Module> subModules = new ArrayList<Module>();
 
@@ -114,6 +120,7 @@ public abstract class CompositeModule extends Module {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(17, 19)
@@ -131,6 +138,7 @@ public abstract class CompositeModule extends Module {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CompositeModule))
 			return false;
@@ -146,6 +154,7 @@ public abstract class CompositeModule extends Module {
 	/**
 	 *
 	 */
+	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 				.appendSuper(super.toString())
