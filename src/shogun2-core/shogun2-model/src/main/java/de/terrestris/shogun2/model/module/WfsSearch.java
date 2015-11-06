@@ -20,6 +20,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import de.terrestris.shogun2.model.layer.Layer;
+
 /**
  * A module to search features of a WFS.
  *
@@ -35,18 +41,27 @@ public class WfsSearch extends Module {
 	 */
 	private static final long serialVersionUID = 1L;
 
-//	/**
-//	 * A list of EPSG-Codes the should be available in the module.
-//	 */
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@CollectionTable(name = "WfsSearch_Layers", joinColumns = @JoinColumn(name = "WfsSearch_ID") )
-//	@Column(name = "Layer")
-//	@OrderColumn(name = "INDEX")
-//	private List<Layer> layers = new ArrayList<Layer>();
+	/**
+	 * The layers to search in.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "WFSSEARCH_LAYERS", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
+	@Column(name = "LAYER")
+	@OrderColumn(name = "INDEX")
+	// The List of layers will be serialized (JSON) as an array of ID values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "id"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<Layer> layers = new ArrayList<Layer>();
 
+	/**
+	 * The WFS server URL
+	 */
 	private String wfsServerUrl;
 
-	/*
+	/**
 	 * Characters needed to send a request.
 	 */
 	private Integer minSearchTextChars;
@@ -57,7 +72,8 @@ public class WfsSearch extends Module {
 	private Integer typeDelay;
 
 	/**
-	 * A list of EPSG-Codes the should be available in the module.
+	 * The allowed data-types to match against in the describefeaturetype
+	 * response
 	 */
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
@@ -76,6 +92,20 @@ public class WfsSearch extends Module {
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
 	public WfsSearch() {
+	}
+
+	/**
+	 * @return the layers
+	 */
+	public List<Layer> getLayers() {
+		return layers;
+	}
+
+	/**
+	 * @param layers the layers to set
+	 */
+	public void setLayers(List<Layer> layers) {
+		this.layers = layers;
 	}
 
 	/**
