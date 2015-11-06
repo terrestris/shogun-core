@@ -253,6 +253,11 @@
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
+    <!-- Define map controls -->
+    <bean id="controlZoomSlider" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="ZoomSlider" />
+    </bean>
+
     <!-- Define the Map -->
     <bean id="mapModule" class="de.terrestris.shogun2.model.module.Map">
         <property name="name" value="Main Map" />
@@ -262,6 +267,11 @@
             <util:list>
                 <ref bean="osmWmsLayer" />
             </util:list>
+        </property>
+        <property name="mapControls">
+            <util:set>
+                <ref bean="controlZoomSlider" />
+            </util:set>
         </property>
         <property name="properties">
             <util:map>
