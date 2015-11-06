@@ -19,6 +19,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.util.Extent;
 import de.terrestris.shogun2.model.layer.util.Resolution;
@@ -69,6 +73,13 @@ public class MapConfig extends PersistentObject{
 			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
 	)
 	@OrderColumn(name = "INDEX")
+	// The List of resolutions will be serialized (JSON) as an array of resolution
+	// values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<Resolution> resolutions;
 
 	/**
@@ -81,6 +92,13 @@ public class MapConfig extends PersistentObject{
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
+	// The maxResolution will be serialized (JSON)
+	// as the simple resolution value
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private Resolution maxResolution;
 
 	/**
@@ -88,6 +106,13 @@ public class MapConfig extends PersistentObject{
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
+	// The minResolution will be serialized (JSON)
+	// as the simple resolution value
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private Resolution minResolution;
 
 	/**
