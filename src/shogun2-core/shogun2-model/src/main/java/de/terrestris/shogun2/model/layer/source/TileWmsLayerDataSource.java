@@ -45,7 +45,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 			fetch = FetchType.EAGER
 	)
 	@JoinTable(
-			name = "TILEWMSLAYERDATASOURCE_LAYERNAME",
+			name = "TILEWMSLAYERDATASRC_LAYERNAME",
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)

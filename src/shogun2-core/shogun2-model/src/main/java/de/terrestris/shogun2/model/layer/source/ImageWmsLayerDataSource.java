@@ -41,7 +41,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "IMAGEWMSLAYERDATASOURCE_LAYERNAME",
+			name = "IMAGEWMSLAYERDATASRC_LAYERNAME",
 			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
