@@ -45,9 +45,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	private int height;
 	private String version;
 
-	@ManyToMany(
-			fetch = FetchType.EAGER
-	)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "TILEWMSLAYERDATASRC_LAYERNAME",
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
@@ -64,9 +62,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerName> layerNames;
 
-	@ManyToMany(
-			fetch = FetchType.EAGER
-	)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "TILEWMSLAYERDATASOURCE_STYLE",
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },

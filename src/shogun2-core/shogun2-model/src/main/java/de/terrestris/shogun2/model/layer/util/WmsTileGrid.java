@@ -49,9 +49,7 @@ public class WmsTileGrid extends PersistentObject {
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
 	 */
-	@ManyToOne(
-			fetch = FetchType.EAGER
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent tileGridExtent;
 
