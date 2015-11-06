@@ -64,7 +64,7 @@ public class Map extends Module {
 			fetch = FetchType.EAGER
 	)
 	@JoinTable(
-			name = "MAP_CONTROLS",
+			name = "MAP_MAPCONTROLS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
 	)
