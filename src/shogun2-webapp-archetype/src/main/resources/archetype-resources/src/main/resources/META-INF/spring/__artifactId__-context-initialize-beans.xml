@@ -40,9 +40,9 @@
         </property>
         <property name="regions">
             <util:list>
+                <value>center</value>
                 <value>north</value>
                 <value>west</value>
-                <value>center</value>
             </util:list>
         </property>
     </bean>
@@ -133,8 +133,8 @@
         <property name="name" value="default" />
         <property name="center">
             <bean class="java.awt.geom.Point2D$Double">
-                <constructor-arg index="0" value="51.492582" />
-                <constructor-arg index="1" value="7.451868" />
+                <constructor-arg index="0" value="829473" />
+                <constructor-arg index="1" value="6708897" />
             </bean>
         </property>
         <property name="minResolution" ref="res01" />
@@ -166,14 +166,14 @@
             <bean class="de.terrestris.shogun2.model.layer.util.Extent">
                 <property name="lowerLeft">
                     <bean class="java.awt.geom.Point2D$Double">
-                        <constructor-arg index="0" value="-180.0" />
-                        <constructor-arg index="1" value="-90.0" />
+                        <constructor-arg index="0" value="-20026376.39" />
+                        <constructor-arg index="1" value="-20048966.10" />
                     </bean>
                 </property>
                 <property name="upperRight">
                     <bean class="java.awt.geom.Point2D$Double">
-                        <constructor-arg index="0" value="180.0" />
-                        <constructor-arg index="1" value="90.0" />
+                        <constructor-arg index="0" value="20026376.39" />
+                        <constructor-arg index="1" value="20048966.10" />
                     </bean>
                 </property>
             </bean>
@@ -187,21 +187,21 @@
     <bean id="osmWmsLayerTileGridExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
         <property name="lowerLeft">
             <bean class="java.awt.geom.Point2D$Double">
-                <constructor-arg index="0" value="-180.0" />
-                <constructor-arg index="1" value="-90.0" />
+                <constructor-arg index="0" value="-20026376.39" />
+                <constructor-arg index="1" value="-20048966.10" />
             </bean>
         </property>
         <property name="upperRight">
             <bean class="java.awt.geom.Point2D$Double">
-                <constructor-arg index="0" value="180.0" />
-                <constructor-arg index="1" value="90.0" />
+                <constructor-arg index="0" value="20026376.39" />
+                <constructor-arg index="1" value="20048966.10" />
             </bean>
         </property>
     </bean>
 
     <bean id="osmWmsLayerTileGridOrigin" class="java.awt.geom.Point2D$Double">
-        <constructor-arg index="0" value="-180.0" />
-        <constructor-arg index="1" value="-90.0" />
+        <constructor-arg index="0" value="0" />
+        <constructor-arg index="1" value="0" />
     </bean>
 
     <bean id="osmWmsLayerTileGrid" class="de.terrestris.shogun2.model.layer.util.WmsTileGrid">
@@ -218,11 +218,17 @@
         <property name="styleName" value="" />
     </bean>
 
-    <bean id="osmWmsLayerDataSource" class="de.terrestris.shogun2.model.layer.source.TileWmsLayerDataSource">
+    <bean id="tileWMSDataSourceTemplate" class="de.terrestris.shogun2.model.layer.source.TileWmsLayerDataSource">
+        <property name="type" value="TileWMS" />
+        <property name="width" value="256" />
+        <property name="height" value="256" />
+        <property name="version" value="1.1.0" />
+        <property name="tileGrid" ref="osmWmsLayerTileGrid" />
+    </bean>
+
+    <bean id="osmWmsLayerDataSource" parent="tileWMSDataSourceTemplate">
         <property name="name" value="OSM-WMS" />
         <property name="url" value="http://ows.terrestris.de/osm/service?" />
-        <property name="type" value="ol.source.TileWMS" />
-        <property name="version" value="1.1.0" />
         <property name="layerNames">
             <util:list>
                 <ref bean="osmWmsLayerName" />
@@ -233,7 +239,21 @@
                 <ref bean="osmWmsLayerStyle" />
             </util:set>
         </property>
-        <property name="tileGrid" ref="osmWmsLayerTileGrid" />
+    </bean>
+
+    <bean id="osmWmsLayerGrayDataSource" parent="tileWMSDataSourceTemplate">
+        <property name="name" value="OSM-WMS" />
+        <property name="url" value="http://ows.terrestris.de/osm-gray/service?" />
+        <property name="layerNames">
+            <util:list>
+                <ref bean="osmWmsLayerName" />
+            </util:list>
+        </property>
+        <property name="layerStyles">
+            <util:set>
+                <ref bean="osmWmsLayerStyle" />
+            </util:set>
+        </property>
     </bean>
 
     <bean id="osmWmsLayerAppearance" class="de.terrestris.shogun2.model.layer.appearance.LayerAppearance">
@@ -248,8 +268,15 @@
 
     <bean id="osmWmsLayer" class="de.terrestris.shogun2.model.layer.Layer">
         <property name="name" value="OSM-WMS" />
-        <property name="type" value="WMS" />
+        <property name="type" value="Tile" />
         <property name="source" ref="osmWmsLayerDataSource" />
+        <property name="appearance" ref="osmWmsLayerAppearance" />
+    </bean>
+
+    <bean id="osmWmsLayerGray" class="de.terrestris.shogun2.model.layer.Layer">
+        <property name="name" value="OSM-WMS GRAY" />
+        <property name="type" value="Tile" />
+        <property name="source" ref="osmWmsLayerGrayDataSource" />
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
@@ -261,6 +288,7 @@
         <property name="mapLayers">
             <util:list>
                 <ref bean="osmWmsLayer" />
+                <ref bean="osmWmsLayerGray" />
             </util:list>
         </property>
         <property name="properties">
@@ -291,7 +319,7 @@
     <!-- Define the LayerTree -->
     <bean id="layerTreeModule" class="de.terrestris.shogun2.model.module.LayerTree">
         <property name="name" value="Legend Tree" />
-        <property name="xtype" value="basigx-panel-legendtree" />
+        <property name="xtype" value="shogun-view-panel-legendtree" />
         <property name="properties">
             <util:map>
                 <entry key="region" value="west" />
@@ -305,9 +333,9 @@
         <property name="layout" ref="borderLayout" />
         <property name="subModules">
             <util:list value-type="de.terrestris.shogun2.model.module.Module">
+                <ref bean="mapModule" />
                 <ref bean="headerModule" />
                 <ref bean="layerTreeModule" />
-                <ref bean="mapModule" />
             </util:list>
         </property>
     </bean>
@@ -330,4 +358,3 @@
     </util:set>
 
 </beans>
-
