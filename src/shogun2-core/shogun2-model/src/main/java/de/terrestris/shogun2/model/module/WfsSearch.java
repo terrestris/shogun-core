@@ -68,7 +68,7 @@ public class WfsSearch extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "WFSSEARCH_LAYERS", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
 	@Column(name = "LAYER")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	// The List of layers will be serialized (JSON) as an array of ID values
 	@JsonIdentityInfo(
 			generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -84,7 +84,7 @@ public class WfsSearch extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
 	@Column(name = "FEATUREDATATYPES")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<String> allowedFeatureTypeDataTypes = new ArrayList<String>();
 
 	/**

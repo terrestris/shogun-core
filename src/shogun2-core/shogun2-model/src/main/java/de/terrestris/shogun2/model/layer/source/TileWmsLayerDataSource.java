@@ -51,7 +51,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerNames will be serialized (JSON) as an array of
 	// simple layerName string values
@@ -68,7 +68,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerStyles will be serialized (JSON) as an array of
 	// simple layerStyle string values

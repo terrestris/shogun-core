@@ -56,7 +56,7 @@ public class BorderLayout extends Layout {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "BORDERLAYOUT_REGIONS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "REGION")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<String> regions = new ArrayList<String>();
 
 	/**

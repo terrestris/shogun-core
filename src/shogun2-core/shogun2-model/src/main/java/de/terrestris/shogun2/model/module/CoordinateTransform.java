@@ -42,7 +42,7 @@ public class CoordinateTransform extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "COORDINATETRANSFORM_EPSG", joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
 	@Column(name = "EPSG")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<String> epsgCodes = new ArrayList<String>();
 
 	/**

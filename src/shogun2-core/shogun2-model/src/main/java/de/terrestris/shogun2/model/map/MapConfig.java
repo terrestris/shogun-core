@@ -72,7 +72,7 @@ public class MapConfig extends PersistentObject{
 			joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	// The List of resolutions will be serialized (JSON) as an array of resolution
 	// values
 	@JsonIdentityInfo(

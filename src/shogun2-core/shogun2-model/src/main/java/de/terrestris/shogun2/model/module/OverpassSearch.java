@@ -113,7 +113,7 @@ public class OverpassSearch extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "OVERPASS_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "OVERPASS_ID") )
 	@Column(name = "VIEWBOXINTEGER")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
 
 	/**

@@ -61,7 +61,7 @@ public class OverviewMap extends Module {
 			joinColumns = { @JoinColumn(name = "OVERVIEWMAP_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Layer> overviewMapLayers = new ArrayList<Layer>();
 
 	/**

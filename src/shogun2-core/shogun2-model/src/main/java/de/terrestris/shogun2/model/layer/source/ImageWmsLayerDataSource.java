@@ -49,7 +49,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerNames will be serialized (JSON) as an array of
 	// simple layerName string values
@@ -66,7 +66,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerStyles will be serialized (JSON) as an array of
 	// simple layerStyle string values

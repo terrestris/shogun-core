@@ -61,7 +61,7 @@ public class Map extends Module {
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private List<Layer> mapLayers = new ArrayList<Layer>();
 

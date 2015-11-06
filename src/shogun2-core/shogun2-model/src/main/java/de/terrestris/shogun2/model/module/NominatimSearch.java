@@ -112,7 +112,7 @@ public class NominatimSearch extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "NOMINATIM_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "NOMINATIM_ID") )
 	@Column(name = "VIEWBOXINTEGER")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
 
 	/**
