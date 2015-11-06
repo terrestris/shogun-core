@@ -69,7 +69,6 @@ public class Layout extends PersistentObject {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "LAYOUT_PROPERTYMUSTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "PROPERTYNAME")
-	@OrderColumn(name = "INDEX")
 	private Set<String> propertyMusts = new HashSet<String>();
 
 	/**
