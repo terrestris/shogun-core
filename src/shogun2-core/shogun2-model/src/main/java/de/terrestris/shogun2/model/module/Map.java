@@ -4,7 +4,9 @@
 package de.terrestris.shogun2.model.module;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,6 +26,7 @@ import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
+import de.terrestris.shogun2.model.map.MapControl;
 
 /**
  *
@@ -53,6 +56,20 @@ public class Map extends Module {
 	)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private MapConfig mapConfig;
+
+	/**
+	 * The controls used within this Map.
+	 */
+	@ManyToMany(
+			fetch = FetchType.EAGER
+	)
+	@JoinTable(
+			name = "MAP_MAPCONTROLS",
+			joinColumns = { @JoinColumn(name = "MAP_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
+	)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	private Set<MapControl> mapControls = new HashSet<MapControl>();
 
 	/**
 	 * The layers used within this Map.
@@ -103,6 +120,20 @@ public class Map extends Module {
 	}
 
 	/**
+	 * @return the controls
+	 */
+	public Set<MapControl> getMapControls() {
+		return mapControls;
+	}
+
+	/**
+	 * @param controls the controls to set
+	 */
+	public void setMapControls(Set<MapControl> mapControls) {
+		this.mapControls = mapControls;
+	}
+
+	/**
 	 * @return the mapLayers
 	 */
 	public List<Layer> getMapLayers() {
@@ -131,6 +162,7 @@ public class Map extends Module {
 				appendSuper(super.hashCode()).
 				append(getName()).
 				append(getMapLayers()).
+				append(getMapControls()).
 				append(getMapConfig()).
 				toHashCode();
 	}
@@ -152,6 +184,7 @@ public class Map extends Module {
 		return new EqualsBuilder().
 				append(getName(), other.getName()).
 				append(getMapConfig(), other.getMapConfig()).
+				append(getMapControls(), other.getMapControls()).
 				append(getMapLayers(), other.getMapLayers()).
 				isEquals();
 	}
