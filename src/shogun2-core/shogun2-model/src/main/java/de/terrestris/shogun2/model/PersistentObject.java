@@ -62,7 +62,7 @@ public abstract class PersistentObject implements Serializable {
 	private final ReadableDateTime created;
 
 	/**
-	 * The getter of this property {@link #getCreated()} is annotated with
+	 * The getter of this property {@link #getModified()} is annotated with
 	 * {@link JsonIgnore}. This way, the annotation can be overwritten in
 	 * subclasses.
 	 */
