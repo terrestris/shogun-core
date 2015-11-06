@@ -79,7 +79,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerStyle> layerStyles;
 
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private WmsTileGrid tileGrid;
 
