@@ -39,15 +39,11 @@ public class Layer extends PersistentObject {
 	private String name;
 	private String type;
 
-	@ManyToOne(
-			fetch = FetchType.EAGER
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerDataSource source;
 
-	@ManyToOne(
-			fetch = FetchType.EAGER
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerAppearance appearance;
 

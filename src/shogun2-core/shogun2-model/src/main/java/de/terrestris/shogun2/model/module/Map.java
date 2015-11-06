@@ -48,18 +48,14 @@ public class Map extends Module {
 	 * The MapConfig used by this Map. A MapConfig can be used by several maps
 	 * or overview maps.
 	 */
-	@ManyToOne(
-			fetch = FetchType.EAGER
-	)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private MapConfig mapConfig;
 
 	/**
 	 * The layers used within this Map.
 	 */
-	@ManyToMany(
-			fetch = FetchType.EAGER
-	)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "MAP_LAYERS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
