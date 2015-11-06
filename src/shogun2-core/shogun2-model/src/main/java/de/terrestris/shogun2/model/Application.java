@@ -16,6 +16,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.joda.time.ReadableDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.rasc.extclassgenerator.Model;
 import de.terrestris.shogun2.model.module.Viewport;
@@ -74,7 +77,7 @@ public class Application extends PersistentObject {
 	private String url;
 
 	/**
-	 * 
+	 *
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Cascade(CascadeType.SAVE_UPDATE)
@@ -90,6 +93,26 @@ public class Application extends PersistentObject {
 	public Application(String name, String description) {
 		this.name = name;
 		this.description = description;
+	}
+
+	/**
+	 * Overwrite this getter to set the {@link JsonIgnore} value to false
+	 * for this subclass.
+	 */
+	@Override
+	@JsonIgnore(false)
+	public ReadableDateTime getCreated() {
+		return super.getCreated();
+	}
+
+	/**
+	 * Overwrite this getter to set the {@link JsonIgnore} value to false
+	 * for this subclass.
+	 */
+	@Override
+	@JsonIgnore(false)
+	public ReadableDateTime getModified() {
+		return super.getModified();
 	}
 
 	public String getName() {
@@ -157,7 +180,7 @@ public class Application extends PersistentObject {
 
 	/**
 	 * @see java.lang.Object#hashCode()
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -170,7 +193,7 @@ public class Application extends PersistentObject {
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      According to http://stackoverflow.com/q/27581 it is recommended to
 	 *      use only getter-methods when using ORM like Hibernate
 	 */
@@ -187,7 +210,7 @@ public class Application extends PersistentObject {
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
+	 *
 	 *      Using Apache Commons String Builder.
 	 */
 	@Override
