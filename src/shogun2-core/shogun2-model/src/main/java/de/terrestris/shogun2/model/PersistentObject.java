@@ -143,10 +143,7 @@ public abstract class PersistentObject implements Serializable {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString()).append("id", getId())
-				.append("created", getCreated())
-				.append("modified", getModified()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

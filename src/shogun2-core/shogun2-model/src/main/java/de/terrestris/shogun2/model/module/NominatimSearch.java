@@ -272,15 +272,7 @@ public class NominatimSearch extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getFormat()).
-				append(getResultLimit()).
-				append(getViewboxlbrt()).
-				append(getMinSearchTextChars()).
-				append(getTypeDelay()).
-				append(getGroupHeaderTpl()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

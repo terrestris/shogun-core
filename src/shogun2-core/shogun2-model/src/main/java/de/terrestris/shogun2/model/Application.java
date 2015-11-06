@@ -215,9 +215,7 @@ public class Application extends PersistentObject {
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
-				.append("name", getName()).append("description", getDescription()).append("language", getLanguage())
-				.append("open", getOpen()).append("active", getActive()).append("url", getUrl()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

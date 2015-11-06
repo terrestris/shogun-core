@@ -225,14 +225,7 @@ public class WfsSearch extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getWfsServerUrl()).
-				append(getMinSearchTextChars()).
-				append(getTypeDelay()).
-				append(getAllowedFeatureTypeDataTypes()).
-				append(getGroupHeaderTpl()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

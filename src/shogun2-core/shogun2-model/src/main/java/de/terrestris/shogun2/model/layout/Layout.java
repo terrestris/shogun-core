@@ -168,11 +168,6 @@ public class Layout extends PersistentObject {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("type", getType())
-				.append("propertyHints", getPropertyHints())
-				.append("propertyMusts", getPropertyMusts())
-				.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

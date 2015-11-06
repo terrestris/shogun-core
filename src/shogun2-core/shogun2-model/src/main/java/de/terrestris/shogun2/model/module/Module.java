@@ -160,11 +160,6 @@ public abstract class Module extends PersistentObject {
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("name", getName())
-				.append("xtype", getXtype())
-				.append("properties", getProperties())
-				.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }
