@@ -10,11 +10,9 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -57,7 +55,7 @@ public class Layout extends PersistentObject {
 	 * A set of property names that are <b>recommended</b> for the use in the
 	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "LAYOUT_PROPERTYHINTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "PROPERTYNAME")
 	private Set<String> propertyHints = new HashSet<String>();
@@ -66,7 +64,7 @@ public class Layout extends PersistentObject {
 	 * A set of property names that are <b>required</b> for the use in the
 	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "LAYOUT_PROPERTYMUSTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "PROPERTYNAME")
 	private Set<String> propertyMusts = new HashSet<String>();

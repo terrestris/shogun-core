@@ -3,7 +3,6 @@ package de.terrestris.shogun2.model.layer.source;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -45,7 +44,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	private int height;
 	private String version;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(
 			name = "TILEWMSLAYERDATASRC_LAYERNAME",
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
@@ -62,7 +61,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerName> layerNames;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(
 			name = "TILEWMSLAYERDATASOURCE_STYLE",
 			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
@@ -79,7 +78,7 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerStyle> layerStyles;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private WmsTileGrid tileGrid;
 

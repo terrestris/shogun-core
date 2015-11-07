@@ -10,7 +10,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -39,7 +38,7 @@ public class CoordinateTransform extends Module {
 	/**
 	 * A list of EPSG-Codes that should be available in the module.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "COORDINATETRANSFORM_EPSG", joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
 	@Column(name = "EPSG")
 	@OrderColumn(name = "IDX")

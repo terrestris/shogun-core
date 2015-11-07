@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -43,14 +42,14 @@ public abstract class CompositeModule extends Module {
 	 * property hints/musts for the child modules of this
 	 * {@link CompositeModule}.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Layout layout;
 
 	/**
 	 *
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 			name = "MODULE_SUBMODULE",

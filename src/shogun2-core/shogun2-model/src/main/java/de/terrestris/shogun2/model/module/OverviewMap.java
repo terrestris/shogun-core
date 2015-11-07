@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
@@ -55,7 +54,7 @@ public class OverviewMap extends Module {
 	/**
 	 * The layers used within this OverviewMap.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@JoinTable(
 			name = "OVERVIEWMAP_LAYERS",
 			joinColumns = { @JoinColumn(name = "OVERVIEWMAP_ID") },
@@ -67,7 +66,7 @@ public class OverviewMap extends Module {
 	/**
 	 *
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIdentityInfo(
 			generator = ObjectIdGenerators.PropertyGenerator.class,
