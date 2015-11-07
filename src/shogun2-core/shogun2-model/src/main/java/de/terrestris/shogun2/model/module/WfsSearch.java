@@ -20,6 +20,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import de.terrestris.shogun2.model.layer.Layer;
+
 /**
  * A module to search features of a WFS.
  *
@@ -35,18 +41,12 @@ public class WfsSearch extends Module {
 	 */
 	private static final long serialVersionUID = 1L;
 
-//	/**
-//	 * A list of EPSG-Codes the should be available in the module.
-//	 */
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@CollectionTable(name = "WfsSearch_Layers", joinColumns = @JoinColumn(name = "WfsSearch_ID") )
-//	@Column(name = "Layer")
-//	@OrderColumn(name = "INDEX")
-//	private List<Layer> layers = new ArrayList<Layer>();
-
+	/**
+	 * The WFS server URL
+	 */
 	private String wfsServerUrl;
 
-	/*
+	/**
 	 * Characters needed to send a request.
 	 */
 	private Integer minSearchTextChars;
@@ -57,19 +57,35 @@ public class WfsSearch extends Module {
 	private Integer typeDelay;
 
 	/**
-	 * A list of EPSG-Codes the should be available in the module.
-	 */
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
-	@Column(name = "FEATUREDATATYPES")
-	@OrderColumn(name = "INDEX")
-	private List<String> allowedFeatureTypeDataTypes = new ArrayList<String>();
-
-	/**
 	 * The template of the grouping Header.
 	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
 	 */
 	private String groupHeaderTpl;
+
+	/**
+	 * The layers to search in.
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "WFSSEARCH_LAYERS", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
+	@Column(name = "LAYER")
+	@OrderColumn(name = "IDX")
+	// The List of layers will be serialized (JSON) as an array of ID values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "id"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<Layer> layers = new ArrayList<Layer>();
+
+	/**
+	 * The allowed data-types to match against in the describefeaturetype
+	 * response
+	 */
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
+	@Column(name = "FEATUREDATATYPES")
+	@OrderColumn(name = "IDX")
+	private List<String> allowedFeatureTypeDataTypes = new ArrayList<String>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -121,20 +137,6 @@ public class WfsSearch extends Module {
 	}
 
 	/**
-	 * @return the allowedFeatureTypeDataTypes
-	 */
-	public List<String> getAllowedFeatureTypeDataTypes() {
-		return allowedFeatureTypeDataTypes;
-	}
-
-	/**
-	 * @param allowedFeatureTypeDataTypes the allowedFeatureTypeDataTypes to set
-	 */
-	public void setAllowedFeatureTypeDataTypes(List<String> allowedFeatureTypeDataTypes) {
-		this.allowedFeatureTypeDataTypes = allowedFeatureTypeDataTypes;
-	}
-
-	/**
 	 * @return the groupHeaderTpl
 	 */
 	public String getGroupHeaderTpl() {
@@ -146,6 +148,34 @@ public class WfsSearch extends Module {
 	 */
 	public void setGroupHeaderTpl(String groupHeaderTpl) {
 		this.groupHeaderTpl = groupHeaderTpl;
+	}
+
+	/**
+	 * @return the layers
+	 */
+	public List<Layer> getLayers() {
+		return layers;
+	}
+
+	/**
+	 * @param layers the layers to set
+	 */
+	public void setLayers(List<Layer> layers) {
+		this.layers = layers;
+	}
+
+	/**
+	 * @return the allowedFeatureTypeDataTypes
+	 */
+	public List<String> getAllowedFeatureTypeDataTypes() {
+		return allowedFeatureTypeDataTypes;
+	}
+
+	/**
+	 * @param allowedFeatureTypeDataTypes the allowedFeatureTypeDataTypes to set
+	 */
+	public void setAllowedFeatureTypeDataTypes(List<String> allowedFeatureTypeDataTypes) {
+		this.allowedFeatureTypeDataTypes = allowedFeatureTypeDataTypes;
 	}
 
 	/**
@@ -195,14 +225,7 @@ public class WfsSearch extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getWfsServerUrl()).
-				append(getMinSearchTextChars()).
-				append(getTypeDelay()).
-				append(getAllowedFeatureTypeDataTypes()).
-				append(getGroupHeaderTpl()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

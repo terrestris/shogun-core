@@ -211,15 +211,7 @@ public class Button extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getText()).
-				append(getTooltip()).
-				append(getGlyph()).
-				append(getConnectedModule()).
-				append(getInteraction()).
-				append(getButtonAction()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

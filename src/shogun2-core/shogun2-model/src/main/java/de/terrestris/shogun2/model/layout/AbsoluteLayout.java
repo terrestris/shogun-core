@@ -57,7 +57,7 @@ public class AbsoluteLayout extends Layout {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "ABSOLUTELAYOUT_COORDS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "COORD")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Point> coords = new ArrayList<Point>();
 
 	/**
@@ -108,8 +108,7 @@ public class AbsoluteLayout extends Layout {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).appendSuper(super.toString())
-				.append("coords", getCoords()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

@@ -17,6 +17,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName;
 import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
 
@@ -41,12 +45,19 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "IMAGEWMSLAYERDATASOURCE_LAYERNAME",
+			name = "IMAGEWMSLAYERDATASRC_LAYERNAME",
 			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
+	// The List of layerNames will be serialized (JSON) as an array of
+	// simple layerName string values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "layerName"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerName> layerNames;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -55,8 +66,15 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
+	// The List of layerStyles will be serialized (JSON) as an array of
+	// simple layerStyle string values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "styleName"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerStyle> layerStyles;
 
 	/**

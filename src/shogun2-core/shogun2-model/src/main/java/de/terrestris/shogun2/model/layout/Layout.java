@@ -69,7 +69,6 @@ public class Layout extends PersistentObject {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "LAYOUT_PROPERTYMUSTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "PROPERTYNAME")
-	@OrderColumn(name = "INDEX")
 	private Set<String> propertyMusts = new HashSet<String>();
 
 	/**
@@ -168,11 +167,6 @@ public class Layout extends PersistentObject {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("type", getType())
-				.append("propertyHints", getPropertyHints())
-				.append("propertyMusts", getPropertyMusts())
-				.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

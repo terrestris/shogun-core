@@ -57,7 +57,7 @@ public abstract class CompositeModule extends Module {
 			joinColumns = { @JoinColumn(name = "MODULE_ID") },
 			inverseJoinColumns = { @JoinColumn(name = "SUBMODULE_ID") }
 	)
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Module> subModules = new ArrayList<Module>();
 
 	/**
@@ -156,9 +156,6 @@ public abstract class CompositeModule extends Module {
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("layout", getLayout())
-				.append("subModules", getSubModules()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

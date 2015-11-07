@@ -113,7 +113,7 @@ public class OverpassSearch extends Module {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "OVERPASS_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "OVERPASS_ID") )
 	@Column(name = "VIEWBOXINTEGER")
-	@OrderColumn(name = "INDEX")
+	@OrderColumn(name = "IDX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
 
 	/**
@@ -272,15 +272,7 @@ public class OverpassSearch extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getFormat()).
-				append(getResultLimit()).
-				append(getViewboxlbrt()).
-				append(getMinSearchTextChars()).
-				append(getTypeDelay()).
-				append(getGroupHeaderTpl()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

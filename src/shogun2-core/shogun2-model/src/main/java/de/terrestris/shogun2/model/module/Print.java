@@ -91,10 +91,7 @@ public class Print extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getUrl()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

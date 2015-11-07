@@ -144,11 +144,6 @@ public class Person extends PersistentObject {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("firstName", getFirstName())
-				.append("lastName", getLastName()).append("email", getEmail())
-				.append("language", getLanguage())
-				.append("birthday", getBirthday()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

@@ -122,11 +122,6 @@ public class User extends Person {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString())
-				.append("accountName", getAccountName())
-				.append("password", getPassword())
-				.append("active", isActive())
-				.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

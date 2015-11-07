@@ -20,6 +20,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ch.rasc.extclassgenerator.ModelField;
 
 /**
@@ -50,10 +52,20 @@ public abstract class PersistentObject implements Serializable {
 	@ModelField(useNull = true)
 	private final Integer id = null;
 
+	/**
+	 * The getter of this property {@link #getCreated()} is annotated with
+	 * {@link JsonIgnore}. This way, the annotation can be overwritten in
+	 * subclasses.
+	 */
 	@Column(updatable = false)
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private final ReadableDateTime created;
 
+	/**
+	 * The getter of this property {@link #getModified()} is annotated with
+	 * {@link JsonIgnore}. This way, the annotation can be overwritten in
+	 * subclasses.
+	 */
 	@Column
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private ReadableDateTime modified;
@@ -70,10 +82,24 @@ public abstract class PersistentObject implements Serializable {
 		return id;
 	}
 
+	/**
+	 * Ignore the {@link #created} property when de-/serializing.
+	 * This can be overwritten in subclasses.
+	 * 
+	 * @return The date of the creation of the entity.
+	 */
+	@JsonIgnore
 	public ReadableDateTime getCreated() {
 		return created;
 	}
 
+	/**
+	 * Ignore the {@link #modified} property when de-/serializing.
+	 * This can be overwritten in subclasses.
+	 * 
+	 * @return The date of the last modification of the entity.
+	 */
+	@JsonIgnore
 	public ReadableDateTime getModified() {
 		return modified;
 	}
@@ -117,10 +143,7 @@ public abstract class PersistentObject implements Serializable {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-				.appendSuper(super.toString()).append("id", getId())
-				.append("created", getCreated())
-				.append("modified", getModified()).toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

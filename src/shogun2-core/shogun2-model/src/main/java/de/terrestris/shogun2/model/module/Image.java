@@ -133,12 +133,7 @@ public class Image extends Module {
 	 *
 	 */
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE).
-				appendSuper(super.toString()).
-				append(getSrc()).
-				append(getLink()).
-				append(getAltText()).
-				toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }
