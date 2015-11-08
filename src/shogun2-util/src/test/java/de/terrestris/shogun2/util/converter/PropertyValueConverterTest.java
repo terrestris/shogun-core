@@ -23,6 +23,7 @@ public class PropertyValueConverterTest {
 		String testValue = "test";
 		Object convertedValue = converter.convertToEntityAttribute(testValue);
 
+		assertTrue(convertedValue instanceof String);
 		assertTrue(testValue.equals(convertedValue));
 	}
 
@@ -33,10 +34,16 @@ public class PropertyValueConverterTest {
 	public void convertToEntityAttribute_convertsToLong() {
 
 		String testValue = "42";
+		String negativeTestValue = "-42";
+
 		Object convertedValue = converter.convertToEntityAttribute(testValue);
+		Object convertedNegativeValue = converter.convertToEntityAttribute(negativeTestValue);
 
 		assertTrue(convertedValue instanceof Long);
 		assertTrue(((Long)convertedValue) == 42);
+
+		assertTrue(convertedNegativeValue instanceof Long);
+		assertTrue(((Long)convertedNegativeValue) == -42);
 	}
 
 	/**
@@ -46,10 +53,16 @@ public class PropertyValueConverterTest {
 	public void convertToEntityAttribute_convertsToDouble() {
 
 		String testValue = "17.42";
+		String negativeTestValue = "-17.42";
+
 		Object convertedValue = converter.convertToEntityAttribute(testValue);
+		Object convertedNegativeValue = converter.convertToEntityAttribute(negativeTestValue);
 
 		assertTrue(convertedValue instanceof Double);
 		assertTrue(((Double)convertedValue) == 17.42);
+
+		assertTrue(convertedNegativeValue instanceof Double);
+		assertTrue(((Double)convertedNegativeValue) == -17.42);
 	}
 
 	/**
@@ -90,9 +103,13 @@ public class PropertyValueConverterTest {
 	public void convertToDatabaseColumn_convertsIntegerToString() {
 
 		int testValue = 42;
+		int negativeTestValue = -42;
+
 		String convertedValue = converter.convertToDatabaseColumn(testValue);
+		String convertedNegativeValue = converter.convertToDatabaseColumn(negativeTestValue);
 
 		assertTrue("42".equals(convertedValue));
+		assertTrue("-42".equals(convertedNegativeValue));
 	}
 
 	/**
@@ -102,9 +119,13 @@ public class PropertyValueConverterTest {
 	public void convertToDatabaseColumn_convertsDoubleToString() {
 
 		double testValue = 17.42;
+		double negativeTestValue = -17.42;
+
 		String convertedValue = converter.convertToDatabaseColumn(testValue);
+		String convertedNegativeValue = converter.convertToDatabaseColumn(negativeTestValue);
 
 		assertTrue("17.42".equals(convertedValue));
+		assertTrue("-17.42".equals(convertedNegativeValue));
 	}
 
 	/**
