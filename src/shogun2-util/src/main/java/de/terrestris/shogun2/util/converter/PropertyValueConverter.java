@@ -42,7 +42,9 @@ public class PropertyValueConverter implements AttributeConverter<Object, String
 		} else if ("false".equalsIgnoreCase(dbData)) {
 			return false;
 		} else if (NumberUtils.isParsable(dbData)) {
-			if (NumberUtils.isDigits(dbData)) {
+			if (NumberUtils.isDigits(dbData) ||
+					(dbData.startsWith("-") &&
+							NumberUtils.isDigits(dbData.substring(1)))) {
 				return Long.parseLong(dbData);
 			} else {
 				return Double.parseDouble(dbData);
