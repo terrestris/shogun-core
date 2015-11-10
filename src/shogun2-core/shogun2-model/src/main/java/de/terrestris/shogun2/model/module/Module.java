@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layout.Layout;
+import de.terrestris.shogun2.util.converter.PropertyValueConverter;
 
 /**
  * A module is the visual representation of a component in the GUI. A module can
@@ -62,7 +64,8 @@ public abstract class Module extends PersistentObject {
 	@MapKeyColumn(name = "PROPERTY")
 	@Column(name = "VALUE")
 	@CollectionTable(name = "MODULE_PROPERTIES", joinColumns = @JoinColumn(name = "MODULE_ID") )
-	private Map<String, String> properties = new HashMap<String, String>();
+	@Convert(converter = PropertyValueConverter.class, attributeName="value")
+	private Map<String, Object> properties = new HashMap<String, Object>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -104,7 +107,7 @@ public abstract class Module extends PersistentObject {
 	/**
 	 * @return the properties
 	 */
-	public Map<String, String> getProperties() {
+	public Map<String, Object> getProperties() {
 		return properties;
 	}
 
@@ -112,7 +115,7 @@ public abstract class Module extends PersistentObject {
 	 * @param properties
 	 *            the properties to set
 	 */
-	public void setProperties(Map<String, String> properties) {
+	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}
 
