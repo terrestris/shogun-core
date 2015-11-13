@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>${groupId}</groupId>
@@ -68,11 +71,11 @@
                 <configuration>
                     <wtpversion>2.0</wtpversion>
                     <wtpmanifest>true</wtpmanifest>
-                    <!-- If useProjectReferences is true, it is very likely 
-                        that you get problems when using a webapplication server like tomcat in Eclipse, 
-                        because the WTP mechanism does not work as expected in some points. For example 
-                        the resources in src/test/resources would also be scanned, e.g. for spring-context 
-                        configurations, although these resources should be independent from the tested 
+                    <!-- If useProjectReferences is true, it is very likely
+                        that you get problems when using a webapplication server like tomcat in Eclipse,
+                        because the WTP mechanism does not work as expected in some points. For example
+                        the resources in src/test/resources would also be scanned, e.g. for spring-context
+                        configurations, although these resources should be independent from the tested
                         sources. -->
                     <useProjectReferences>false</useProjectReferences>
                     <downloadSources>${downloadSources}</downloadSources>
@@ -97,25 +100,25 @@
                 </executions>
             </plugin>
 
-            <!-- Checkout/clone the shogun2 client to this application.
-                 For checkout just run mvn scm:checkout in your app directory -->
+            <!-- Checkout/clone the shogun2 client to this application. For
+                checkout just run mvn scm:checkout in your app directory -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
                 <version>${maven-scm-plugin.version}</version>
                 <configuration>
-                    <!-- The directory to checkout the sources to for the bootstrap 
-                         and checkout goals -->
+                    <!-- The directory to checkout the sources to for the
+                        bootstrap and checkout goals -->
                     <checkoutDirectory>${project.basedir}/src/main/webapp/client</checkoutDirectory>
                     <!-- The type of connection to use (connection or developerConnection) -->
                     <connectionType>developerConnection</connectionType>
                     <!-- The base repository -->
                     <connectionUrl>scm:git:https://github.com/terrestris/shogun2-client.git</connectionUrl>
-                    <!-- IMPORTANT: Set your git username here! (Assuming you have
-                                    fork already) -->
+                    <!-- IMPORTANT: Set your git username here! (Assuming
+                        you have fork already) -->
                     <developerConnectionUrl>scm:git:https://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
                 </configuration>
-           </plugin>
+            </plugin>
 
         </plugins>
     </build>
