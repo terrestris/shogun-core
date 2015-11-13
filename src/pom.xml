@@ -160,7 +160,9 @@
             </properties>
         </profile>
 
-        <!-- A profile to configure the build of the Javadocs with UMLGraph -->
+        <!-- A profile to configure the build of the Javadocs with UMLGraph.
+            This requires that 'graphviz' is installed on your system: sudo apt-get install
+            graphviz -->
         <profile>
             <id>umlgraph</id>
             <build>
@@ -297,6 +299,10 @@
 
     </dependencies>
 
+    <!-- The dependencyManagement section will make the configured (versions
+        of the) artifacts available in the submodules, where they can be referenced
+        without configuring the version. This allows the central configuration of
+        dependency (versions) in this file. -->
     <dependencyManagement>
 
         <dependencies>
