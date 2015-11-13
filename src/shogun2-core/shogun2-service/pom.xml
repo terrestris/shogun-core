@@ -13,7 +13,7 @@
     </parent>
 
     <artifactId>shogun2-service</artifactId>
-    <packaging>jar</packaging>
+    <packaging>jar</packaging>>
 
     <name>SHOGun2 Services</name>
 

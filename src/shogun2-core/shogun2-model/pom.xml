@@ -37,7 +37,7 @@
         <dependency>
             <groupId>ch.rasc</groupId>
             <artifactId>extclassgenerator</artifactId>
-         </dependency>
+        </dependency>
     </dependencies>
 
 </project>
