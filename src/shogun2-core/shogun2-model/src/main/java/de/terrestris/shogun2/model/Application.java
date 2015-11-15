@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
@@ -79,7 +78,7 @@ public class Application extends PersistentObject {
 	/**
 	 *
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Viewport viewport;
 

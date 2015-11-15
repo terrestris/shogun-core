@@ -7,7 +7,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -49,7 +48,7 @@ public class WmsTileGrid extends PersistentObject {
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent tileGridExtent;
 

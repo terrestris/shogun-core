@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -60,7 +59,7 @@ public abstract class Module extends PersistentObject {
 	/**
 	 *
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@MapKeyColumn(name = "PROPERTY")
 	@Column(name = "VALUE")
 	@CollectionTable(name = "MODULE_PROPERTIES", joinColumns = @JoinColumn(name = "MODULE_ID") )

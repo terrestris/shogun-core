@@ -11,7 +11,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -54,7 +53,7 @@ public class AbsoluteLayout extends Layout {
 	/**
 	 * 
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "ABSOLUTELAYOUT_COORDS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "COORD")
 	@OrderColumn(name = "IDX")
