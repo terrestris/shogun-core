@@ -1,15 +1,24 @@
 package de.terrestris.shogun2.model.layer.appearance;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.Layer;
+import de.terrestris.shogun2.model.layer.util.Resolution;
 
 /**
  *
@@ -27,12 +36,53 @@ public class LayerAppearance extends PersistentObject{
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	private String type;
+
+	/**
+	 *
+	 */
 	private String attribution;
+
+	/**
+	 *
+	 */
 	private String name;
-	private Double maxScale;
-	private Double minScale;
+
+	/**
+	 *
+	 */
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	// The maxResolution will be serialized (JSON)
+	// as the simple resolution value
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private Resolution maxResolution;
+
+	/**
+	 *
+	 */
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	// The maxResolution will be serialized (JSON)
+	// as the simple resolution value
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private Resolution minResolution;
+
+	/**
+	 *
+	 */
 	private Double opacity;
+
+	/**
+	 *
+	 */
 	private Boolean visible;
 
 	/**
@@ -46,35 +96,20 @@ public class LayerAppearance extends PersistentObject{
 	 * @param type
 	 * @param attribution
 	 * @param name
-	 * @param maxScale
-	 * @param minScale
+	 * @param maxResolution
+	 * @param minResolution
 	 * @param opacity
 	 * @param visible
 	 */
-	public LayerAppearance(String type, String attribution, String name, Double maxScale, Double minScale,
-			Double opacity, Boolean visible) {
+	public LayerAppearance(String attribution, String name, Resolution maxResolution,
+			Resolution minResolution, Double opacity, Boolean visible) {
 		super();
-		this.type = type;
 		this.attribution = attribution;
 		this.name = name;
-		this.maxScale = maxScale;
-		this.minScale = minScale;
+		this.maxResolution = maxResolution;
+		this.minResolution = minResolution;
 		this.opacity = opacity;
 		this.visible = visible;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	/**
@@ -106,31 +141,31 @@ public class LayerAppearance extends PersistentObject{
 	}
 
 	/**
-	 * @return the maxScale
+	 * @return the maxResolution
 	 */
-	public Double getMaxScale() {
-		return maxScale;
+	public Resolution getMaxResolution() {
+		return maxResolution;
 	}
 
 	/**
-	 * @param maxScale the maxScale to set
+	 * @param maxResolution the maxResolution to set
 	 */
-	public void setMaxScale(Double maxScale) {
-		this.maxScale = maxScale;
+	public void setMaxResolution(Resolution maxResolution) {
+		this.maxResolution = maxResolution;
 	}
 
 	/**
-	 * @return the minScale
+	 * @return the minResolution
 	 */
-	public Double getMinScale() {
-		return minScale;
+	public Resolution getMinResolution() {
+		return minResolution;
 	}
 
 	/**
-	 * @param minScale the minScale to set
+	 * @param minResolution the minResolution to set
 	 */
-	public void setMinScale(Double minScale) {
-		this.minScale = minScale;
+	public void setMinResolution(Resolution minResolution) {
+		this.minResolution = minResolution;
 	}
 
 	/**
@@ -169,15 +204,15 @@ public class LayerAppearance extends PersistentObject{
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(31, 13).
 				appendSuper(super.hashCode()).
-				append(getType()).
 				append(getAttribution()).
 				append(getName()).
-				append(getMaxScale()).
-				append(getMinScale()).
+				append(getMaxResolution()).
+				append(getMinResolution()).
 				append(getOpacity()).
 				append(getVisible()).
 				toHashCode();
@@ -191,6 +226,7 @@ public class LayerAppearance extends PersistentObject{
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof LayerAppearance))
 			return false;
@@ -198,11 +234,10 @@ public class LayerAppearance extends PersistentObject{
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
-				append(getType(), other.getType()).
 				append(getAttribution(), other.getAttribution()).
 				append(getName(), other.getName()).
-				append(getMaxScale(), other.getMaxScale()).
-				append(getMinScale(), other.getMinScale()).
+				append(getMaxResolution(), other.getMaxResolution()).
+				append(getMinResolution(), other.getMinResolution()).
 				append(getOpacity(), other.getOpacity()).
 				append(getVisible(), other.getVisible()).
 				isEquals();
