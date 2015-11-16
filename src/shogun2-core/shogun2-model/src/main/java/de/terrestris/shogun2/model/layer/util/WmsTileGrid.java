@@ -5,10 +5,15 @@ package de.terrestris.shogun2.model.layer.util;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,6 +22,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
@@ -36,6 +45,11 @@ public class WmsTileGrid extends PersistentObject {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The tileGrid type. Typically one of `TileGrid` or `WMTS`.
+	 */
+	private String type;
 
 	/**
 	 * The tile grid origin, i.e. where the x and y axes meet ([z, 0, 0]).
@@ -59,6 +73,26 @@ public class WmsTileGrid extends PersistentObject {
 	private Integer tileSize;
 
 	/**
+	 * The tileGrid resolutions.
+	 */
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinTable(
+			name = "WMSTILEGRID_RESOLUTION",
+			joinColumns = { @JoinColumn(name = "WMSTILEGRID_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
+	)
+	@OrderColumn(name = "IDX")
+	// The List of resolutions will be serialized (JSON) as an array of resolution
+	// values
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "resolution"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<Resolution> tileGridResolutions;
+
+	/**
 	 *
 	 */
 	public WmsTileGrid() {
@@ -76,6 +110,20 @@ public class WmsTileGrid extends PersistentObject {
 		this.tileGridOrigin = tileGridOrigin;
 		this.tileGridExtent = tileGridExtent;
 		this.tileSize = tileSize;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
@@ -121,6 +169,20 @@ public class WmsTileGrid extends PersistentObject {
 	}
 
 	/**
+	 * @return the tileGridResolutions
+	 */
+	public List<Resolution> getTileGridResolutions() {
+		return tileGridResolutions;
+	}
+
+	/**
+	 * @param tileGridResolutions the tileGridResolutions to set
+	 */
+	public void setTileGridResolutions(List<Resolution> tileGridResolutions) {
+		this.tileGridResolutions = tileGridResolutions;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 *
 	 *      According to
@@ -133,9 +195,11 @@ public class WmsTileGrid extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(43, 13).
 				appendSuper(super.hashCode()).
+				append(getType()).
 				append(getTileSize()).
 				append(getTileGridOrigin()).
 				append(getTileGridExtent()).
+				append(getTileGridResolutions()).
 				toHashCode();
 	}
 
@@ -155,9 +219,11 @@ public class WmsTileGrid extends PersistentObject {
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
+				append(getType(), other.getType()).
 				append(getTileGridExtent(), other.getTileGridExtent()).
 				append(getTileGridOrigin(), other.getTileGridOrigin()).
 				append(getTileSize(), other.getTileSize()).
+				append(getTileGridResolutions(), other.getTileGridResolutions()).
 				isEquals();
 	}
 
