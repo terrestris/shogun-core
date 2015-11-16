@@ -31,16 +31,16 @@ import de.terrestris.shogun2.util.converter.PropertyValueConverter;
  * be connected to a {@link Layout} and it stores basic properties (like
  * <i>border</i>, <i>height</i> , <i>width</i>, ...).
  *
- * This class is the abstract superclass of either simple (e.g.
- * {@link LayerTree}) or complex ({@link CompositeModule}) subclasses and can
- * thereby considered as a node in a tree structure of (sub-)modules.
+ * This class is the simple base class of either simple (e.g. {@link LayerTree})
+ * or complex ({@link CompositeModule}) subclasses and can thereby considered
+ * as a node in a tree structure of (sub-)modules.
  *
  * @author Nils Bühner
  *
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Module extends PersistentObject {
+public class Module extends PersistentObject {
 
 	/**
 	 *

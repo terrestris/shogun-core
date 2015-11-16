@@ -24,14 +24,14 @@ import org.hibernate.annotations.CascadeType;
 import de.terrestris.shogun2.model.layout.Layout;
 
 /**
- * This (abstract) class represents a composite {@link Module}, i.e. a module
+ * This class represents a (simple) composite {@link Module}, i.e. a module 
  * having children/submodules.
  *
  * @author Nils Bühner
  *
  */
 @Entity
-public abstract class CompositeModule extends Module {
+public class CompositeModule extends Module {
 
 	/**
 	 *
