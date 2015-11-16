@@ -47,6 +47,11 @@ public class WmsTileGrid extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * The tileGrid type. Typically one of `TileGrid` or `WMTS`.
+	 */
+	private String type;
+
+	/**
 	 * The tile grid origin, i.e. where the x and y axes meet ([z, 0, 0]).
 	 * Tile coordinates increase left to right and upwards.
 	 * If not specified, extent or origins must be provided.
@@ -105,6 +110,20 @@ public class WmsTileGrid extends PersistentObject {
 		this.tileGridOrigin = tileGridOrigin;
 		this.tileGridExtent = tileGridExtent;
 		this.tileSize = tileSize;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**
@@ -176,6 +195,7 @@ public class WmsTileGrid extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(43, 13).
 				appendSuper(super.hashCode()).
+				append(getType()).
 				append(getTileSize()).
 				append(getTileGridOrigin()).
 				append(getTileGridExtent()).
@@ -199,6 +219,7 @@ public class WmsTileGrid extends PersistentObject {
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
+				append(getType(), other.getType()).
 				append(getTileGridExtent(), other.getTileGridExtent()).
 				append(getTileGridOrigin(), other.getTileGridOrigin()).
 				append(getTileSize(), other.getTileSize()).
