@@ -1,7 +1,6 @@
 package de.terrestris.shogun2.model.layer.appearance;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -50,7 +49,7 @@ public class LayerAppearance extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The maxResolution will be serialized (JSON)
 	// as the simple resolution value
@@ -64,7 +63,7 @@ public class LayerAppearance extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The maxResolution will be serialized (JSON)
 	// as the simple resolution value

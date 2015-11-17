@@ -8,7 +8,6 @@ import java.awt.geom.Point2D.Double;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -63,7 +62,7 @@ public class WmsTileGrid extends PersistentObject {
 	 * by ol.source.Tile sources. When no origin or origins are configured,
 	 * the origin will be set to the top-left corner of the extent.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent tileGridExtent;
 
@@ -75,7 +74,7 @@ public class WmsTileGrid extends PersistentObject {
 	/**
 	 * The tileGrid resolutions.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany()
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 			name = "WMSTILEGRID_RESOLUTION",

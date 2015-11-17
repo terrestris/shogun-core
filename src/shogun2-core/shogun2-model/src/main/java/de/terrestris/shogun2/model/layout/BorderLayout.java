@@ -10,7 +10,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -53,7 +52,7 @@ public class BorderLayout extends Layout {
 	/**
 	 * 
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "BORDERLAYOUT_REGIONS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
 	@Column(name = "REGION")
 	@OrderColumn(name = "IDX")

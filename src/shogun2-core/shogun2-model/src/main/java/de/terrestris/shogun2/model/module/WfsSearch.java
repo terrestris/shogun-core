@@ -10,7 +10,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -65,7 +64,7 @@ public class WfsSearch extends Module {
 	/**
 	 * The layers to search in.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "WFSSEARCH_LAYERS", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
 	@Column(name = "LAYER")
 	@OrderColumn(name = "IDX")
@@ -81,7 +80,7 @@ public class WfsSearch extends Module {
 	 * The allowed data-types to match against in the describefeaturetype
 	 * response
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
 	@Column(name = "FEATUREDATATYPES")
 	@OrderColumn(name = "IDX")

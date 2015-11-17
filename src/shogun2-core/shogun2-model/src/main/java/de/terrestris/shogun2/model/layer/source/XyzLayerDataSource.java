@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -43,7 +42,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	@OneToOne
 	private Extent extent;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	@JoinTable(name = "LAYERDATASOURCE_RESOLUTIONS")
 	private List<Resolution> resolutions = new ArrayList<Resolution>();
 

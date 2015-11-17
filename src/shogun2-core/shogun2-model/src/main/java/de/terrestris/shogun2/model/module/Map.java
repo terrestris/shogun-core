@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -51,16 +50,14 @@ public class Map extends Module {
 	 * The MapConfig used by this Map. A MapConfig can be used by several maps
 	 * or overview maps.
 	 */
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private MapConfig mapConfig;
 
 	/**
 	 * The controls used within this Map.
 	 */
-	@ManyToMany(
-			fetch = FetchType.EAGER
-	)
+	@ManyToMany
 	@JoinTable(
 			name = "MAP_MAPCONTROLS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
@@ -72,7 +69,7 @@ public class Map extends Module {
 	/**
 	 * The layers used within this Map.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(
 			name = "MAP_LAYERS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },

@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -50,7 +49,7 @@ public class MapControl extends PersistentObject {
 	/**
 	 *
 	 */
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection
 	@MapKeyColumn(name = "MAPCTRLPROPERTY")
 	@Column(name = "VALUE")
 	@CollectionTable(
