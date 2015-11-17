@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -58,9 +57,7 @@ public class Map extends Module {
 	/**
 	 * The controls used within this Map.
 	 */
-	@ManyToMany(
-			fetch = FetchType.EAGER
-	)
+	@ManyToMany
 	@JoinTable(
 			name = "MAP_MAPCONTROLS",
 			joinColumns = { @JoinColumn(name = "MAP_ID") },
