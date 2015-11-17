@@ -12,7 +12,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -109,7 +108,7 @@ public class NominatimSearch extends Module {
 	/**
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "NOMINATIM_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "NOMINATIM_ID") )
 	@Column(name = "VIEWBOXINTEGER")
 	@OrderColumn(name = "IDX")

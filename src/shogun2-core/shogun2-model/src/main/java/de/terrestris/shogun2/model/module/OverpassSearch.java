@@ -12,7 +12,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -110,7 +109,7 @@ public class OverpassSearch extends Module {
 	/**
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection
 	@CollectionTable(name = "OVERPASS_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "OVERPASS_ID") )
 	@Column(name = "VIEWBOXINTEGER")
 	@OrderColumn(name = "IDX")

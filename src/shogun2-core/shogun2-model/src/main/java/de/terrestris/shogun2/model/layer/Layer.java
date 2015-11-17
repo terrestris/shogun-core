@@ -1,7 +1,6 @@
 package de.terrestris.shogun2.model.layer;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -39,11 +38,11 @@ public class Layer extends PersistentObject {
 	private String name;
 	private String type;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerDataSource source;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerAppearance appearance;
 
