@@ -24,7 +24,7 @@
         <ref bean="adminUser" />
     </util:set>
 
-    <!-- Define layouts -->
+    <!-- The Border layout -->
     <bean id="borderLayout" class="de.terrestris.shogun2.model.layout.BorderLayout">
         <property name="propertyHints">
             <util:set id="propertyHints">
@@ -47,6 +47,7 @@
         </property>
     </bean>
 
+    <!-- The Absolute layout -->
     <bean id="absoluteLayout" class="de.terrestris.shogun2.model.layout.AbsoluteLayout">
         <property name="propertyMusts">
             <util:set id="propertyMusts">
@@ -57,17 +58,27 @@
         <!-- TODO coords property -->
     </bean>
 
+    <!-- The HBOX layout -->
+    <bean id="hboxLayout" class="de.terrestris.shogun2.model.layout.Layout">
+        <property name="type" value="hbox" />
+        <property name="propertyHints">
+            <util:set id="propertyHints">
+                <value>flex</value>
+                <value>width</value>
+            </util:set>
+        </property>
+        <property name="propertyMusts">
+            <util:set id="propertyMusts">
+            </util:set>
+        </property>
+    </bean>
+
     <!-- The Set<Layout> of defaultLayouts -->
     <util:set id="defaultLayouts" value-type="de.terrestris.shogun2.model.layout.Layout">
         <ref bean="borderLayout" />
         <ref bean="absoluteLayout" />
+        <ref bean="hboxLayout" />
     </util:set>
-
-    <!-- Define modules -->
-    <bean id="logoModule" class="de.terrestris.shogun2.model.module.Image">
-        <property name="name" value="Logo Image" />
-        <property name="src" value="logo.png" />
-    </bean>
 
     <!-- The Resolutions -->
     <bean id="res01" class="de.terrestris.shogun2.model.layer.util.Resolution">
@@ -183,6 +194,32 @@
         <property name="zoom" value="16" />
     </bean>
 
+    <!-- Define map controls -->
+    <bean id="controlAttribution" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="Attribution" />
+    </bean>
+
+    <bean id="controlZoom" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="Zoom" />
+    </bean>
+
+    <bean id="controlRotate" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="Rotate" />
+    </bean>
+
+    <bean id="controlZoomSlider" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="ZoomSlider" />
+    </bean>
+
+    <bean id="controlScaleLine" class="de.terrestris.shogun2.model.map.MapControl">
+        <property name="mapControlName" value="ScaleLine" />
+        <property name="mapControlProperties">
+            <util:map>
+                <entry key="units" value="metric" />
+            </util:map>
+        </property>
+    </bean>
+
     <!-- Define the Layers -->
     <bean id="osmWmsLayerTileGridExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
         <property name="lowerLeft">
@@ -205,9 +242,33 @@
     </bean>
 
     <bean id="osmWmsLayerTileGrid" class="de.terrestris.shogun2.model.layer.util.WmsTileGrid">
+        <property name="type" value="TileGrid" />
         <property name="tileGridOrigin" ref="osmWmsLayerTileGridOrigin" />
         <property name="tileGridExtent" ref="osmWmsLayerTileGridExtent" />
         <property name="tileSize" value="256" />
+        <property name="tileGridResolutions">
+            <util:list>
+                <ref bean="res01" />
+                <ref bean="res02" />
+                <ref bean="res03" />
+                <ref bean="res04" />
+                <ref bean="res05" />
+                <ref bean="res06" />
+                <ref bean="res07" />
+                <ref bean="res08" />
+                <ref bean="res09" />
+                <ref bean="res10" />
+                <ref bean="res11" />
+                <ref bean="res12" />
+                <ref bean="res13" />
+                <ref bean="res14" />
+                <ref bean="res15" />
+                <ref bean="res16" />
+                <ref bean="res17" />
+                <ref bean="res18" />
+                <ref bean="res19" />
+            </util:list>
+        </property>
     </bean>
 
     <bean id="osmWmsLayerName" class="de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName">
@@ -227,7 +288,6 @@
     </bean>
 
     <bean id="osmWmsLayerDataSource" parent="tileWMSDataSourceTemplate">
-        <property name="name" value="OSM-WMS" />
         <property name="url" value="http://ows.terrestris.de/osm/service?" />
         <property name="layerNames">
             <util:list>
@@ -242,7 +302,6 @@
     </bean>
 
     <bean id="osmWmsLayerGrayDataSource" parent="tileWMSDataSourceTemplate">
-        <property name="name" value="OSM-WMS" />
         <property name="url" value="http://ows.terrestris.de/osm-gray/service?" />
         <property name="layerNames">
             <util:list>
@@ -257,11 +316,9 @@
     </bean>
 
     <bean id="osmWmsLayerAppearance" class="de.terrestris.shogun2.model.layer.appearance.LayerAppearance">
-        <property name="type" value="" />
-        <property name="attribution" value="(c) OpenStreetMap contributors (http://www.openstreetmap.org/copyright)" />
-        <property name="name" value="OSM-WMS" />
-        <property name="maxScale" value="0" />
-        <property name="minScale" value="100000000" />
+        <property name="attribution" value="© &lt;a href='http://www.openstreetmap.org/copyright'&gt;OpenStreetMap contributors&lt;/a&gt; &lt;br&gt;" />
+        <property name="maxResolution" ref="res01" />
+        <property name="minResolution" ref="res19" />
         <property name="opacity" value="1" />
         <property name="visible" value="true" />
     </bean>
@@ -280,11 +337,6 @@
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
-    <!-- Define map controls -->
-    <bean id="controlZoomSlider" class="de.terrestris.shogun2.model.map.MapControl">
-        <property name="mapControlName" value="ZoomSlider" />
-    </bean>
-
     <!-- Define the Map -->
     <bean id="mapModule" class="de.terrestris.shogun2.model.module.Map">
         <property name="name" value="Main Map" />
@@ -298,7 +350,11 @@
         </property>
         <property name="mapControls">
             <util:set>
+                <ref bean="controlAttribution" />
+                <ref bean="controlZoom" />
+                <ref bean="controlRotate" />
                 <ref bean="controlZoomSlider" />
+                <ref bean="controlScaleLine" />
             </util:set>
         </property>
         <property name="properties">
@@ -309,21 +365,48 @@
     </bean>
 
     <!-- Define the Header -->
+    <bean id="headerLogoModule" class="de.terrestris.shogun2.model.module.Image">
+        <property name="name" value="Logo Image" />
+        <property name="xtype" value="imagecomponent" />
+        <property name="properties">
+            <util:map>
+                <entry key="src" value="resources/img/logo_terrestris.svg" />
+                <entry key="margin" value="0 0 10 95" />
+                <entry key="width" value="160" />
+                <entry key="height" value="100" />
+            </util:map>
+        </property>
+    </bean>
+
+    <bean id="headerTitleModule" class="de.terrestris.shogun2.model.module.Module">
+        <property name="name" value="Logo Title" />
+        <property name="xtype" value="displayfield" />
+        <property name="properties">
+            <util:map>
+                <entry key="flex" value="1" />
+                <entry key="value" value="SHOGun2 Client" />
+                <entry key="fieldStyle" value="color:#FFFFFF; font-size:30px; text-align: center; padding-top: 40px;" />
+            </util:map>
+        </property>
+    </bean>
+
     <bean id="headerModule" class="de.terrestris.shogun2.model.module.Header">
         <property name="name" value="Viewport Header" />
         <property name="xtype" value="panel" />
+        <property name="layout" ref="hboxLayout" />
         <property name="properties">
             <util:map>
                 <entry key="region" value="north" />
+                <entry key="height" value="120" />
+                <entry key="bodyStyle" value="background:#5FA2DD;" />
             </util:map>
         </property>
         <property name="subModules">
             <util:list value-type="de.terrestris.shogun2.model.module.Module">
-                <ref bean="logoModule" />
-                <!-- TODO add more header submodules !? -->
+                <ref bean="headerLogoModule" />
+                <ref bean="headerTitleModule" />
             </util:list>
         </property>
-        <!-- TODO add layout (vbox!?) -->
     </bean>
 
     <!-- Define the LayerTree -->
@@ -333,6 +416,8 @@
         <property name="properties">
             <util:map>
                 <entry key="region" value="west" />
+                <entry key="title" value="Layer Panel" />
+                <entry key="split" value="true" />
             </util:map>
         </property>
     </bean>
