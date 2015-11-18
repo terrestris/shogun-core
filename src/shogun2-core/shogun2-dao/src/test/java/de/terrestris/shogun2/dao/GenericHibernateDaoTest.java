@@ -28,6 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.paging.PagingResult;
 
 /**
  * The most basic concrete class extending the {@link GenericHibernateDao}, will
@@ -103,6 +104,21 @@ public class GenericHibernateDaoTest {
 	private Application getRandomSavedMockApp() {
 		String randomName = "A name " + getRandomStr();
 		return getSavedMockApp(randomName);
+	}
+
+	/**
+	 *
+	 * Helper to get a set of random saved mock apps
+	 *
+	 * @param nrOfMockApps
+	 * @return
+	 */
+	private Set<Application> getNrOfRandomSavedMockApps(int nrOfMockApps) {
+		Set<Application> mockApps = new HashSet<Application>();
+		for(int i = 0; i < nrOfMockApps; i++) {
+			mockApps.add(this.getRandomSavedMockApp());
+		}
+		return mockApps;
 	}
 
 	/**
@@ -485,4 +501,47 @@ public class GenericHibernateDaoTest {
 		assertFalse("findByCriteria() returned expected applications (app2)",
 				got.contains(app2));
 	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * if only the firstResult value is given.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_worksWithFirstResultOnly() {
+
+		int nrOfMockApps = 10;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
+
+		int firstResult = 2;
+		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(firstResult, null , null);
+
+		List<Application> queriedApps = r.getResultList();
+
+		assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+		assertEquals(nrOfMockApps - firstResult, queriedApps.size());
+		assertTrue(mockApps.containsAll(queriedApps));
+	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * if only the maxResults value is given.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_worksWithMaxResultsOnly() {
+
+		int nrOfMockApps = 10;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
+
+		int maxResults = 3;
+		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(null, maxResults , null);
+
+		List<Application> queriedApps = r.getResultList();
+
+		assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+		assertEquals(maxResults, queriedApps.size());
+		assertTrue(mockApps.containsAll(queriedApps));
+	}
+
 }
