@@ -15,6 +15,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -38,6 +39,7 @@ import de.terrestris.shogun2.util.converter.PropertyValueConverter;
  *
  */
 @Entity
+@Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Module extends PersistentObject {
 

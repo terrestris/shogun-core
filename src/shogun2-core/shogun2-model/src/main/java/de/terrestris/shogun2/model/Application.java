@@ -20,7 +20,7 @@ import org.joda.time.ReadableDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ch.rasc.extclassgenerator.Model;
-import de.terrestris.shogun2.model.module.Viewport;
+import de.terrestris.shogun2.model.module.CompositeModule;
 
 /**
  * This class represents a (GIS-)application, which can be opened in a browser.
@@ -80,7 +80,7 @@ public class Application extends PersistentObject {
 	 */
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
-	private Viewport viewport;
+	private CompositeModule viewport;
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -165,7 +165,7 @@ public class Application extends PersistentObject {
 	/**
 	 * @return the viewport
 	 */
-	public Viewport getViewport() {
+	public CompositeModule getViewport() {
 		return viewport;
 	}
 
@@ -173,7 +173,7 @@ public class Application extends PersistentObject {
 	 * @param viewport
 	 *            the viewport to set
 	 */
-	public void setViewport(Viewport viewport) {
+	public void setViewport(CompositeModule viewport) {
 		this.viewport = viewport;
 	}
 
