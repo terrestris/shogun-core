@@ -34,6 +34,7 @@
             </activation>
             <properties>
                 <jdk.version>1.7</jdk.version>
+                <jetty-maven-plugin.version>9.2.14.v20151106</jetty-maven-plugin.version>
             </properties>
         </profile>
 
@@ -47,12 +48,45 @@
                 <jdk.version>1.8</jdk.version>
                 <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <jetty-maven-plugin.version>9.3.6.v20151106</jetty-maven-plugin.version>
             </properties>
         </profile>
     </profiles>
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty-maven-plugin.version}</version>
+                <configuration>
+                    <httpConnector>
+                        <!-- The port number for the connector to listen on -->
+                        <port>8081</port>
+                        <!-- The timeout in milliseconds -->
+                        <idleTimeout>30000</idleTimeout>
+                    </httpConnector>
+                    <!-- The pause in seconds between sweeps of the webapp
+                         to check for changes and automatically hot redeploy
+                         if any are detected -->
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <webAppConfig>
+                        <!-- Terminate the server on any startup exception -->
+                        <throwUnavailableOnStartupException>true</throwUnavailableOnStartupException>
+                    </webAppConfig>
+                </configuration>
+                <executions>
+                    <!-- Run the server on mvn:test -->
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
