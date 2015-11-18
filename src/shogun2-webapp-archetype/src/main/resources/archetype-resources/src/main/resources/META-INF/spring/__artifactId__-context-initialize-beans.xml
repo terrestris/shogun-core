@@ -390,7 +390,7 @@
         </property>
     </bean>
 
-    <bean id="headerModule" class="de.terrestris.shogun2.model.module.Header">
+    <bean id="headerModule" class="de.terrestris.shogun2.model.module.CompositeModule">
         <property name="name" value="Viewport Header" />
         <property name="xtype" value="panel" />
         <property name="layout" ref="hboxLayout" />
@@ -410,7 +410,7 @@
     </bean>
 
     <!-- Define the LayerTree -->
-    <bean id="layerTreeModule" class="de.terrestris.shogun2.model.module.LayerTree">
+    <bean id="layerTreeModule" class="de.terrestris.shogun2.model.module.CompositeModule">
         <property name="name" value="Legend Tree" />
         <property name="xtype" value="shogun-view-panel-legendtree" />
         <property name="properties">
@@ -423,7 +423,7 @@
     </bean>
 
     <!-- Define the Viewport -->
-    <bean id="viewportModule" class="de.terrestris.shogun2.model.module.Viewport">
+    <bean id="viewportModule" class="de.terrestris.shogun2.model.module.CompositeModule">
         <property name="name" value="Viewport with Border Layout" />
         <property name="layout" ref="borderLayout" />
         <property name="subModules">
