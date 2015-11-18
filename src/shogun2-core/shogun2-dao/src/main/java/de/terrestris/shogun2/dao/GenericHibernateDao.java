@@ -101,8 +101,10 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 		Criteria criteria = getSession().createCriteria(clazz);
 
 		// add paging info
-		if (maxResults != null && firstResult != null) {
+		if (maxResults != null) {
 			criteria.setMaxResults(maxResults);
+		}
+		if (firstResult != null) {
 			criteria.setFirstResult(firstResult);
 		}
 
@@ -113,9 +115,11 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 			}
 		}
 
-		for (Criterion c : criterion) {
-			if (c != null) {
-				criteria.add(c);
+		if(criterion != null) {
+			for (Criterion c : criterion) {
+				if (c != null) {
+					criteria.add(c);
+				}
 			}
 		}
 
