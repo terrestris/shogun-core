@@ -20,7 +20,6 @@
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
-        <jetty-maven-plugin.version>9.3.6.v20151106</jetty-maven-plugin.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
@@ -35,6 +34,7 @@
             </activation>
             <properties>
                 <jdk.version>1.7</jdk.version>
+                <jetty-maven-plugin.version>9.2.14.v20151106</jetty-maven-plugin.version>
             </properties>
         </profile>
 
@@ -48,6 +48,7 @@
                 <jdk.version>1.8</jdk.version>
                 <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
+                <jetty-maven-plugin.version>9.3.6.v20151106</jetty-maven-plugin.version>
             </properties>
         </profile>
     </profiles>
