@@ -20,6 +20,7 @@
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
+        <jetty-maven-plugin.version>9.3.6.v20151106</jetty-maven-plugin.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>false</downloadJavadocs>
@@ -53,6 +54,38 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty-maven-plugin.version}</version>
+                <configuration>
+                    <httpConnector>
+                        <!-- The port number for the connector to listen on -->
+                        <port>8081</port>
+                        <!-- The timeout in milliseconds -->
+                        <idleTimeout>30000</idleTimeout>
+                    </httpConnector>
+                    <!-- The pause in seconds between sweeps of the webapp
+                         to check for changes and automatically hot redeploy
+                         if any are detected -->
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <webAppConfig>
+                        <!-- Terminate the server on any startup exception -->
+                        <throwUnavailableOnStartupException>true</throwUnavailableOnStartupException>
+                    </webAppConfig>
+                </configuration>
+                <executions>
+                    <!-- Run the server on mvn:test -->
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
