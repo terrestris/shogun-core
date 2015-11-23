@@ -62,7 +62,9 @@
         <constructor-arg>
             <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
                 <property name="cacheManager">
-                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+                        <property name="shared" value="true" />
+                    </bean>
                 </property>
                 <property name="cacheName" value="aclCache"/>
             </bean>
