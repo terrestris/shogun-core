@@ -39,7 +39,7 @@ import de.terrestris.shogun2.model.User;
 @Transactional(value = "aclTransactionManager")
 @Rollback(true)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context-acl.xml" })
-public abstract class AclTestBase {
+public abstract class AbstractAclTestBase {
 
 	/**
 	 * The ACL service, which is used to check if the AclUtil made correct

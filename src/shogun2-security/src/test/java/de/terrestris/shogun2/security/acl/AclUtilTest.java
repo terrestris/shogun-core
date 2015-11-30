@@ -25,7 +25,7 @@ import de.terrestris.shogun2.model.User;
  * @author Nils Bühner
  *
  */
-public class AclUtilTest extends AclTestBase {
+public class AclUtilTest extends AbstractAclTestBase {
 
 	/**
 	 * The AclUtil that will be tested here.
