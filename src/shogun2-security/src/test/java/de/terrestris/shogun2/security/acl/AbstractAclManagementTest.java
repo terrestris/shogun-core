@@ -1,6 +1,8 @@
 package de.terrestris.shogun2.security.acl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -129,9 +131,24 @@ public abstract class AbstractAclManagementTest<E extends PersistentObject> exte
 	}
 
 	/**
+	 * @throws IllegalAccessException
+	 * @throws NoSuchFieldException
 	 *
 	 */
 	@Test
-	public void handleAclAfterDelete_interceptsAsExpected() {
+	public void handleAclAfterDelete_interceptsAsExpected()
+			throws NoSuchFieldException, IllegalAccessException {
+
+		// save object and assert that ACL entries are available
+		implToUse = serviceToUse.saveOrUpdate(implToUse);
+		Acl acl = aclService.readAclById(new ObjectIdentityImpl(implToUse));
+
+		assertFalse(acl.getEntries().isEmpty());
+
+		// delete object and assert that ACL entries are empty
+		serviceToUse.delete(implToUse);
+		acl = aclService.readAclById(new ObjectIdentityImpl(implToUse));
+
+		assertTrue(acl.getEntries().isEmpty());
 	}
 }
