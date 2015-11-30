@@ -18,7 +18,7 @@
         <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
     </jdbc:initialize-database>
 
-    <context:component-scan base-package="de.terrestris.shogun2.security.acl" />
+    <context:component-scan base-package="de.terrestris.shogun2" />
 
     <context:property-placeholder location="classpath*:META-INF/*.properties" />
 
@@ -30,14 +30,9 @@
         <constructor-arg ref="aclCache"/>
     </bean>
 
-    <!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html#jdbc-datasource -->
-    <bean id="aclDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-        destroy-method="close">
-        <property name="driverClass" value="${acl.jdbc.driverClassName}" />
-        <property name="jdbcUrl" value="${acl.jdbc.url}" />
-        <property name="user" value="${acl.jdbc.username}" />
-        <property name="password" value="${acl.jdbc.password}" />
-
+    <!-- Using c3p0 connection pooling. This abstract class should be extended -->
+    <bean id="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        abstract="true" destroy-method="close">
         <!-- Configuration of the c3p0 Connection Pool -->
         <property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
         <property name="minPoolSize" value="${c3p0.minPoolSize}" />
@@ -47,6 +42,14 @@
         <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
         <property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}" />
         <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+    </bean>
+
+    <!-- Extend the abstract c3p0 data source -->
+    <bean id="aclDataSource" parent="c3p0DataSource">
+        <property name="driverClass" value="${acl.jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${acl.jdbc.url}" />
+        <property name="user" value="${acl.jdbc.username}" />
+        <property name="password" value="${acl.jdbc.password}" />
     </bean>
 
     <!-- Declare a lookup strategy-->
