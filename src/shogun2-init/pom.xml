@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shogun2-service</artifactId>
+            <artifactId>shogun2-security</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
