@@ -167,12 +167,6 @@
 
         <dependency>
             <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-util</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.terrestris</groupId>
             <artifactId>shogun2-web</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
