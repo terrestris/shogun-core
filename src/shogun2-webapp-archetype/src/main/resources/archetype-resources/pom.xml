@@ -152,7 +152,7 @@
                     <connectionUrl>scm:git:https://github.com/terrestris/shogun2-client.git</connectionUrl>
                     <!-- IMPORTANT: Set your git username here! (Assuming
                         you have fork already) -->
-                    <developerConnectionUrl>scm:git:https://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
+                    <developerConnectionUrl>scm:git:https://github.com/{{USERNAME}}/shogun2-client.git</developerConnectionUrl>
                 </configuration>
             </plugin>
 
