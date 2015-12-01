@@ -12,7 +12,7 @@
 
     <!-- Initialize the ACL database schema on startup -->
     <jdbc:initialize-database data-source="aclDataSource">
-        <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
+        <jdbc:script location="${symbol_dollar}{init.createAclTablesScriptPath}"/>
     </jdbc:initialize-database>
 
     <!-- Flag enabling/disabling SHOGun2 initialization on startup -->

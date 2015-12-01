@@ -16,6 +16,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <shogun2.version>0.0.1-SNAPSHOT</shogun2.version>
+
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
@@ -150,7 +152,7 @@
                     <connectionUrl>scm:git:https://github.com/terrestris/shogun2-client.git</connectionUrl>
                     <!-- IMPORTANT: Set your git username here! (Assuming
                         you have fork already) -->
-                    <developerConnectionUrl>scm:git:https://github.com/[USERNAME]/shogun2-client.git</developerConnectionUrl>
+                    <developerConnectionUrl>scm:git:https://github.com/{{USERNAME}}/shogun2-client.git</developerConnectionUrl>
                 </configuration>
             </plugin>
 
@@ -162,19 +164,13 @@
         <dependency>
             <groupId>de.terrestris</groupId>
             <artifactId>shogun2-init</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-util</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${shogun2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>de.terrestris</groupId>
             <artifactId>shogun2-web</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${shogun2.version}</version>
         </dependency>
 
     </dependencies>
