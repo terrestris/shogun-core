@@ -22,7 +22,7 @@
         <!-- SHOGun -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shogun2-dao</artifactId>
+            <artifactId>shogun2-service</artifactId>
             <version>${project.version}</version>
         </dependency>
 

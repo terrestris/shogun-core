@@ -17,7 +17,7 @@ import de.terrestris.shogun2.paging.PagingResult;
 
 /**
  * @author Nils Bühner
- * 
+ *
  */
 public abstract class GenericHibernateDao<E extends PersistentObject, ID extends Serializable> {
 
@@ -46,7 +46,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 
 	/**
 	 * Returns all Entities by calling findByCriteria(), i.e. without arguments.
-	 * 
+	 *
 	 * @see GenericHibernateDao#findByCriteria(Criterion...)
 	 * @return All entities
 	 */
@@ -66,7 +66,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	/**
 	 * Gets the results, that match a variable number of passed criterions. Call
 	 * this method without arguments to find all entities.
-	 * 
+	 *
 	 * @param criterion
 	 *            A variable number of hibernate criterions
 	 * @return Entities matching the passed hibernate criterions
@@ -75,18 +75,14 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	public List<E> findByCriteria(Criterion... criterion) {
 		Criteria criteria = getSession().createCriteria(clazz);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		for (Criterion c : criterion) {
-			if (c != null) {
-				criteria.add(c);
-			}
-		}
+		addCriterionsToCriteria(criteria, criterion);
 		return criteria.list();
 	}
 
 	/**
 	 * Gets the results, that match a variable number of passed criterions,
 	 * considering the paging- and sort-info at the same time.
-	 * 
+	 *
 	 * @param firstResult
 	 *            Starting index for the paging request.
 	 * @param maxResults
@@ -101,8 +97,10 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 		Criteria criteria = getSession().createCriteria(clazz);
 
 		// add paging info
-		if (maxResults != null && firstResult != null) {
+		if (maxResults != null) {
 			criteria.setMaxResults(maxResults);
+		}
+		if (firstResult != null) {
 			criteria.setFirstResult(firstResult);
 		}
 
@@ -113,23 +111,36 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 			}
 		}
 
+		if(criterion != null) {
+			addCriterionsToCriteria(criteria, criterion);
+		}
+
+		return new PagingResult<E>(criteria.list(), getTotalCount(criterion));
+	}
+
+	/**
+	 * Returns the total count of db entries for the current type.
+	 * @param criterion
+	 *
+	 * @return
+	 */
+	private Number getTotalCount(Criterion... criterion) {
+		Criteria criteria = getSession().createCriteria(clazz);
+		addCriterionsToCriteria(criteria, criterion);
+		criteria.setProjection(Projections.rowCount());
+		return (Long) criteria.uniqueResult();
+	}
+
+	/**
+	 *
+	 * @param criteria
+	 * @param criterion
+	 */
+	private void addCriterionsToCriteria(Criteria criteria, Criterion... criterion) {
 		for (Criterion c : criterion) {
 			if (c != null) {
 				criteria.add(c);
 			}
 		}
-
-		return new PagingResult<E>(criteria.list(), getTotalCount());
-	}
-
-	/**
-	 * Returns the total count of db entries for the current type.
-	 * 
-	 * @return
-	 */
-	private Number getTotalCount() {
-		Criteria criteria = getSession().createCriteria(clazz);
-		criteria.setProjection(Projections.rowCount());
-		return (Long) criteria.uniqueResult();
 	}
 }

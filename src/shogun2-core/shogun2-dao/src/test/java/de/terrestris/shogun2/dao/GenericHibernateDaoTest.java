@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
@@ -28,6 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.paging.PagingResult;
 
 /**
  * The most basic concrete class extending the {@link GenericHibernateDao}, will
@@ -103,6 +106,21 @@ public class GenericHibernateDaoTest {
 	private Application getRandomSavedMockApp() {
 		String randomName = "A name " + getRandomStr();
 		return getSavedMockApp(randomName);
+	}
+
+	/**
+	 *
+	 * Helper to get a set of random saved mock apps
+	 *
+	 * @param nrOfMockApps
+	 * @return
+	 */
+	private Set<Application> getNrOfRandomSavedMockApps(int nrOfMockApps) {
+		Set<Application> mockApps = new HashSet<Application>();
+		for(int i = 0; i < nrOfMockApps; i++) {
+			mockApps.add(this.getRandomSavedMockApp());
+		}
+		return mockApps;
 	}
 
 	/**
@@ -484,5 +502,133 @@ public class GenericHibernateDaoTest {
 				got.contains(app1));
 		assertFalse("findByCriteria() returned expected applications (app2)",
 				got.contains(app2));
+	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * if only the firstResult value is given.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_worksWithFirstResultOnly() {
+
+		int nrOfMockApps = 10;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
+
+		int firstResult = 2;
+		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(firstResult, null , null);
+
+		List<Application> queriedApps = r.getResultList();
+
+		assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+		assertEquals(nrOfMockApps - firstResult, queriedApps.size());
+		assertTrue(mockApps.containsAll(queriedApps));
+	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * if only the maxResults value is given.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_worksWithMaxResultsOnly() {
+
+		int nrOfMockApps = 10;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
+
+		int maxResults = 3;
+		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(null, maxResults , null);
+
+		List<Application> queriedApps = r.getResultList();
+
+		assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+		assertEquals(maxResults, queriedApps.size());
+		assertTrue(mockApps.containsAll(queriedApps));
+	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * if only the sort order is given.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_worksWithSortOrderOnly() {
+
+		int nrOfMockApps = 10;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
+
+		// get them in ASC order by id
+		List<Order> ascOrder = Arrays.asList(Order.asc("id"));
+		PagingResult<Application> ascResults = dao.findByCriteriaWithSortingAndPaging(null, null, ascOrder);
+
+		List<Application> ascApps = ascResults.getResultList();
+
+		// get them in DESC order by id
+		List<Order> descOrder = Arrays.asList(Order.desc("id"));
+		PagingResult<Application> descResults = dao.findByCriteriaWithSortingAndPaging(null, null, descOrder);
+
+		List<Application> descApps = descResults.getResultList();
+
+		assertEquals(new Long(nrOfMockApps), ascResults.getTotalCount());
+		assertEquals(new Long(nrOfMockApps), descResults.getTotalCount());
+		assertTrue(mockApps.containsAll(ascApps));
+		assertTrue(mockApps.containsAll(descApps));
+
+		// test if ascApps and descApps have opposite order
+		for(int i = 0; i < nrOfMockApps; i++) {
+			Application asc = ascApps.get(i);
+			Application desc = descApps.get(nrOfMockApps - 1 - i);
+
+			assertEquals(asc, desc);
+		}
+	}
+
+	/**
+	 * Tests whether findByCriteriaWithSortingAndPaging works as expected
+	 * in common usage.
+	 */
+	@Test
+	public void findByCriteriaWithSortingAndPaging_commonUsage() {
+
+		int evenNrOfMockApps = 60;
+
+		Set<Application> mockApps = getNrOfRandomSavedMockApps(evenNrOfMockApps);
+
+		for (Application application : mockApps) {
+			application.setActive(true);
+		}
+
+		int firstResult = 23;
+		int maxResults = 10;
+
+		List<Order> order = Arrays.asList(Order.desc("id"));
+
+		// criterion restricts to ODD id values
+		Criterion crit = Restrictions.sqlRestriction("{alias}.id % 2 = 1");
+
+		// query
+		PagingResult<Application> pagingResult = dao.findByCriteriaWithSortingAndPaging(firstResult, maxResults , order, crit);
+
+		List<Application> resultApps = pagingResult.getResultList();
+
+		// as we filtered for odd values
+		int expectedTotalCount = evenNrOfMockApps / 2;
+
+		// depending on firstResult...
+		int expectedResultSize = Math.min(maxResults, expectedTotalCount - firstResult);
+
+		assertTrue(mockApps.containsAll(resultApps));
+		assertEquals(new Long(expectedTotalCount), pagingResult.getTotalCount());
+		assertEquals(expectedResultSize, resultApps.size());
+
+		// check order (DESC)
+		Integer previousMax = null;
+		for (Application app : resultApps) {
+			Integer id = app.getId();
+			if(previousMax != null) {
+				assertTrue(previousMax >= id);
+			}
+			previousMax = id;
+		}
 	}
 }

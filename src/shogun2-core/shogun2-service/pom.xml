@@ -26,10 +26,10 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Spring Security -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shogun2-security</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
         </dependency>
 
         <!-- JUnit -->
