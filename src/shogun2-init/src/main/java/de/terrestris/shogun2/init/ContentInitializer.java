@@ -170,6 +170,18 @@ public class ContentInitializer {
 
 			LOG.info("Initializing some SHOGun2 demo content!");
 
+			// TODO: get smarter here
+			// determine the admin and remember the rawPassword because this
+			// is needed for later authentication of the admin user
+			User adminUser = null;
+			String rawAdminPassword = null;
+			for (User user : defaultUsers) {
+				if(user.getAccountName().equals("admin")) {
+					adminUser = user;
+					rawAdminPassword = user.getPassword();
+				}
+			}
+
 			if(cleanupAclTables) {
 				cleanupAclTables();
 			}
@@ -190,18 +202,10 @@ public class ContentInitializer {
 				createDefaultApplications();
 			}
 
-			// TODO: get smarter here
-			User adminUser = null;
-			for (User user : defaultUsers) {
-				if(user.getAccountName().equals("admin")) {
-					adminUser = user;
-				}
-			}
-
 			// MANAGE SECURITY/ACL
 			if(adminUser != null) {
 
-				logInUser(adminUser);
+				logInUser(adminUser, rawAdminPassword);
 
 				for (Application application : defaultApplications) {
 					aclSecurityUtil.addPermission(application, adminUser, BasePermission.READ);
@@ -274,9 +278,10 @@ public class ContentInitializer {
 	 * ROLE_ADMIN to write ACL entries to the database).
 	 *
 	 * @param user
+	 * @param rawPassword
 	 */
-	private void logInUser(User user) {
-		Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getAccountName(), user.getPassword());
+	private void logInUser(User user, String rawPassword) {
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getAccountName(), rawPassword);
 
 		Authentication authResult = authenticationProvider.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(authResult);
