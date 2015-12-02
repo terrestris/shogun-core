@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,15 +52,25 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @see GenericHibernateDao#findByCriteria(Criterion...)
 	 * @return All entities
 	 */
-	public List<E> findAll() {
+	public List<E> findAll() throws HibernateException {
 		return findByCriteria();
 	}
 
+	/**
+	 * Saves or updates the passed entity.
+	 *
+	 * @param e The entity to save or update in the database.
+	 */
 	public void saveOrUpdate(E e) {
 		e.setModified(DateTime.now());
 		getSession().saveOrUpdate(e);
 	}
 
+	/**
+	 * Deletes the passed entity.
+	 *
+	 * @param e The entity to remove from the database.
+	 */
 	public void delete(E e) {
 		getSession().delete(e);
 	}
@@ -72,11 +84,25 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @return Entities matching the passed hibernate criterions
 	 */
 	@SuppressWarnings("unchecked")
-	public List<E> findByCriteria(Criterion... criterion) {
-		Criteria criteria = getSession().createCriteria(clazz);
-		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-		addCriterionsToCriteria(criteria, criterion);
+	public List<E> findByCriteria(Criterion... criterion) throws HibernateException {
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
 		return criteria.list();
+	}
+
+	/**
+	 * Gets the unique result, that matches a variable number of passed
+	 * criterions.
+	 *
+	 * @param criterion
+	 *            A variable number of hibernate criterions
+	 * @return Entity matching the passed hibernate criterions
+	 *
+	 * @throws HibernateException if there is more than one matching result
+	 */
+	@SuppressWarnings("unchecked")
+	public E findByUniqueCriteria(Criterion... criterion) throws HibernateException {
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+		return (E) criteria.uniqueResult();
 	}
 
 	/**
@@ -93,8 +119,9 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 */
 	@SuppressWarnings("unchecked")
 	public PagingResult<E> findByCriteriaWithSortingAndPaging(Integer firstResult,
-			Integer maxResults, List<Order> sorters, Criterion... criterion) {
-		Criteria criteria = getSession().createCriteria(clazz);
+			Integer maxResults, List<Order> sorters, Criterion... criterion) throws HibernateException {
+
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
 
 		// add paging info
 		if (maxResults != null) {
@@ -111,11 +138,22 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 			}
 		}
 
-		if(criterion != null) {
-			addCriterionsToCriteria(criteria, criterion);
-		}
-
 		return new PagingResult<E>(criteria.list(), getTotalCount(criterion));
+	}
+
+	/**
+	 * Helper method: Creates a criteria for the {@link #clazz} of this dao.
+	 * The query results will be handled with a
+	 * {@link DistinctRootEntityResultTransformer}. The criteria will contain
+	 * all passed criterions.
+	 *
+	 * @return
+	 */
+	private Criteria createDistinctRootEntityCriteria(Criterion... criterion) {
+		Criteria criteria = getSession().createCriteria(clazz);
+		addCriterionsToCriteria(criteria, criterion);
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return criteria;
 	}
 
 	/**
@@ -124,7 +162,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 *
 	 * @return
 	 */
-	private Number getTotalCount(Criterion... criterion) {
+	private Number getTotalCount(Criterion... criterion) throws HibernateException {
 		Criteria criteria = getSession().createCriteria(clazz);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setProjection(Projections.rowCount());
@@ -132,14 +170,17 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	}
 
 	/**
+	 * Helper method: Adds all criterions to the criteria (if not null).
 	 *
 	 * @param criteria
 	 * @param criterion
 	 */
 	private void addCriterionsToCriteria(Criteria criteria, Criterion... criterion) {
-		for (Criterion c : criterion) {
-			if (c != null) {
-				criteria.add(c);
+		if(criteria != null) {
+			for (Criterion c : criterion) {
+				if (c != null) {
+					criteria.add(c);
+				}
 			}
 		}
 	}

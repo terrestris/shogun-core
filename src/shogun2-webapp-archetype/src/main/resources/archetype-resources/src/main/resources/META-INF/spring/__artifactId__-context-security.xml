@@ -16,8 +16,16 @@
         <security:expression-handler ref="methodExpressionHandler" />
     </security:global-method-security>
 
+    <!-- bcrypt password encoder -->
+    <bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <!-- Configure the strength (log rounds). Default = 10 -->
+        <constructor-arg value="10"/>
+    </bean>
+
     <!-- Custom Authentication Provider -->
-    <bean id="shogun2AuthenticationProvider" class="de.terrestris.shogun2.security.Shogun2AuthenticationProvider" />
+    <bean id="shogun2AuthenticationProvider" class="de.terrestris.shogun2.security.Shogun2AuthenticationProvider">
+        <property name="passwordEncoder" ref="bcryptEncoder" />
+    </bean>
 
     <security:authentication-manager alias="authenticationManager" >
         <security:authentication-provider ref="shogun2AuthenticationProvider" />

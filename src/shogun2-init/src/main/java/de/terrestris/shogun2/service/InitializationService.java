@@ -2,6 +2,7 @@ package de.terrestris.shogun2.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,9 @@ public class InitializationService {
 	@Autowired
 	private ApplicationDao applicationDao;
 
+	@Autowired
+	private BCryptPasswordEncoder bcrypt;
+
 	/**
 	 * Used to create a user.
 	 *
@@ -53,6 +57,9 @@ public class InitializationService {
 	 * @return
 	 */
 	public User createUser(User user) {
+		// encode the raw password using bcrypt
+		final String pwHash = bcrypt.encode(user.getPassword());
+		user.setPassword(pwHash);
 		userDao.saveOrUpdate(user);
 		LOG.debug("Created the user " + user);
 		return user;

@@ -15,7 +15,8 @@
         <property name="firstName" value="First Name"/>
         <property name="lastName" value="Last Name"/>
         <property name="accountName" value="admin"/>
-        <property name="password" value="password"/>
+        <!-- This will be encrypted when the init service saves the user. -->
+        <property name="password" value="shogun2"/>
         <property name="active" value="true"/>
     </bean>
 
