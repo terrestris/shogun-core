@@ -38,7 +38,7 @@ import de.terrestris.shogun2.service.UserService;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-shogun2-auth.xml" })
+@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
 public class Shogun2AuthenticationProviderTest {
 
 	@Mock

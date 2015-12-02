@@ -38,7 +38,9 @@ import de.terrestris.shogun2.model.User;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional(value = "aclTransactionManager")
 @Rollback(true)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context-acl.xml" })
+@ContextConfiguration(locations = {
+		"classpath*:META-INF/spring/test-context-acl.xml",
+		"classpath*:META-INF/spring/test-encoder-bean.xml"})
 public abstract class AbstractAclTestBase {
 
 	/**
