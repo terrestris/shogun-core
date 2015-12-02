@@ -54,11 +54,21 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 		return findByCriteria();
 	}
 
+	/**
+	 * Saves or updates the passed entity.
+	 *
+	 * @param e The entity to save or update in the database.
+	 */
 	public void saveOrUpdate(E e) {
 		e.setModified(DateTime.now());
 		getSession().saveOrUpdate(e);
 	}
 
+	/**
+	 * Deletes the passed entity.
+	 *
+	 * @param e The entity to remove from the database.
+	 */
 	public void delete(E e) {
 		getSession().delete(e);
 	}
@@ -132,6 +142,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	}
 
 	/**
+	 * Helper method: Adds all criterions to the criteria (if not null).
 	 *
 	 * @param criteria
 	 * @param criterion
