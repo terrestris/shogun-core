@@ -3,6 +3,7 @@ package de.terrestris.shogun2.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,8 +15,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
+import de.terrestris.shogun2.service.UserGroupService;
 import de.terrestris.shogun2.service.UserService;
 
 /**
@@ -34,14 +39,21 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	private UserService userService;
 
 	@Autowired
+	private UserGroupService userGroupService;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	/**
+	 *
+	 * This method has to be {@link Transactional} to allow that associated entities
+	 * can be fetched lazily.
 	 *
 	 * @see org.springframework.security.authentication.AuthenticationProvider#
 	 *      authenticate(org.springframework.security.core.Authentication)
 	 */
 	@Override
+	@Transactional(value="transactionManager", readOnly=true)
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 
@@ -56,9 +68,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 		User user = userService.findByAccountName(accountName);
 
-		// prepare authorities
-		GrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_USER");
-		GrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_ADMIN");
+		// prepare set of authorities
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
 
 		String encryptedPassword = null;
@@ -73,15 +83,28 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			// check if rawPassword matches the hash from db
 			if(passwordEncoder.matches(rawPassword, encryptedPassword)) {
 
-				// TODO: become smarter here by getting authority from
-				// user object/database here
-				if (accountName.equals("admin")) {
-					// TODO !
-					grantedAuthorities.add(adminAuthority);
-				} else {
-					// TODO !
-					grantedAuthorities.add(userAuthority);
+				// collect all roles of the user
+				Set<UserGroup> userGroups = userGroupService.findGroupsOfUser(user);
+
+				Set<Role> allUserRoles = new HashSet<Role>();
+
+				// user roles
+				if(user != null) {
+					allUserRoles.addAll(user.getRoles());
 				}
+
+				// userGroup roles
+				if(userGroups != null) {
+					for (UserGroup userGroup : userGroups) {
+						allUserRoles.addAll(userGroup.getRoles());
+					}
+				}
+
+				// create granted authorities for the security context
+				for (Role role : allUserRoles) {
+					grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+				}
+
 			} else {
 				LOG.warn("The given password for user '" + accountName + "' does not match.");
 				throw new BadCredentialsException(exceptionMessage);
@@ -107,7 +130,17 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 		final boolean isAuthenticated = authResult.isAuthenticated();
 		final String authLog = isAuthenticated ? "could succesfully" : "could NOT";
-		LOG.debug("The User '" + accountName + "' " + authLog  + " be authenticated.");
+		LOG.debug("The user '" + accountName + "' " + authLog  + " be authenticated.");
+
+		if(isAuthenticated) {
+			Set<String> grantedRoles = new HashSet<String>();
+			for (GrantedAuthority auth : grantedAuthorities) {
+				grantedRoles.add(auth.getAuthority());
+			}
+			LOG.debug("The user '" + accountName
+					+ "' got the following roles: "
+					+ StringUtils.join(grantedRoles, ", "));
+		}
 
 		return authResult;
 	}

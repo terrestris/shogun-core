@@ -10,6 +10,22 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!-- Define roles -->
+    <bean id="adminRole" class="de.terrestris.shogun2.model.Role">
+        <property name="name" value="ROLE_ADMIN"/>
+        <property name="description" value="Administrator Role"/>
+    </bean>
+    <bean id="userRole" class="de.terrestris.shogun2.model.Role">
+        <property name="name" value="ROLE_USER"/>
+        <property name="description" value="User Role"/>
+    </bean>
+
+    <!-- The Set<Role> of defaultRoles -->
+    <util:set id="defaultRoles" value-type="de.terrestris.shogun2.model.Role">
+        <ref bean="adminRole" />
+        <ref bean="userRole" />
+    </util:set>
+
     <!-- Define users -->
     <bean id="adminUser" class="de.terrestris.shogun2.model.User">
         <property name="firstName" value="First Name"/>
@@ -18,11 +34,52 @@
         <!-- This will be encrypted when the init service saves the user. -->
         <property name="password" value="shogun2"/>
         <property name="active" value="true"/>
+        <property name="roles">
+            <util:set id="adminUserRoles">
+                <ref bean="adminRole"/>
+            </util:set>
+        </property>
     </bean>
 
     <!-- The Set<User> of defaultUsers -->
     <util:set id="defaultUsers" value-type="de.terrestris.shogun2.model.User">
         <ref bean="adminUser" />
+    </util:set>
+
+    <!-- Define userGroups -->
+    <bean id="adminUserGroup" class="de.terrestris.shogun2.model.UserGroup">
+        <property name="name" value="Admin User Group"/>
+        <property name="owner" ref="adminUser"/>
+        <property name="members">
+            <util:set id="adminUserGroupMembers">
+                <ref bean="adminUser"/>
+            </util:set>
+        </property>
+        <property name="roles">
+            <util:set id="adminUserGroupRoles">
+                <ref bean="adminRole"/>
+            </util:set>
+        </property>
+    </bean>
+    <bean id="defaultUserGroup" class="de.terrestris.shogun2.model.UserGroup">
+        <property name="name" value="Default User Group"/>
+        <property name="owner" ref="adminUser"/>
+        <property name="members">
+            <util:set id="defaultUserGroupMembers">
+                <ref bean="adminUser"/>
+            </util:set>
+        </property>
+        <property name="roles">
+            <util:set id="defaultUserGroupRoles">
+                <ref bean="userRole"/>
+            </util:set>
+        </property>
+    </bean>
+
+    <!-- The Set<UserGroup> of defaultUserGroups -->
+    <util:set id="defaultUserGroups" value-type="de.terrestris.shogun2.model.UserGroup">
+        <ref bean="adminUserGroup" />
+        <ref bean="defaultUserGroup" />
     </util:set>
 
     <!-- The Border layout -->

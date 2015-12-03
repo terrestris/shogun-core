@@ -19,7 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.layout.Layout;
 import de.terrestris.shogun2.model.module.Module;
 import de.terrestris.shogun2.security.acl.AclUtil;
@@ -66,12 +68,28 @@ public class ContentInitializer {
 	private String cleanupAclTablesScriptPath;
 
 	/**
+	 * Flag symbolizing if a set of default {@link Role}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultRoles")
+	private Boolean createDefaultRoles;
+
+	/**
 	 * Flag symbolizing if a set of default {@link User}s should be created
 	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
 	 */
 	@Autowired
 	@Qualifier("createDefaultUsers")
 	private Boolean createDefaultUsers;
+
+	/**
+	 * Flag symbolizing if a set of default {@link UserGroup}s should be created
+	 * up on startup. This will only happen if {@link #shogunInitEnabled} is true.
+	 */
+	@Autowired
+	@Qualifier("createDefaultUserGroups")
+	private Boolean createDefaultUserGroups;
 
 	/**
 	 * Flag symbolizing if a set of default {@link Layout}s should be created
@@ -126,6 +144,16 @@ public class ContentInitializer {
 	protected AuthenticationProvider authenticationProvider;
 
 	/**
+	 * A set of default roles that will be created
+	 * if {@link #createDefaultRoles} is true.
+	 *
+	 * Using the {@link Resource} annotation as
+	 * recommended on http://stackoverflow.com/a/22463219
+	 */
+	@Resource(name = "defaultRoles")
+	private Set<Role> defaultRoles;
+
+	/**
 	 * A set of default users that will be created
 	 * if {@link #createDefaultUsers} is true.
 	 *
@@ -134,6 +162,16 @@ public class ContentInitializer {
 	 */
 	@Resource(name = "defaultUsers")
 	private Set<User> defaultUsers;
+
+	/**
+	 * A set of default userGroups that will be created
+	 * if {@link #createDefaultUserGroups} is true.
+	 *
+	 * Using the {@link Resource} annotation as
+	 * recommended on http://stackoverflow.com/a/22463219
+	 */
+	@Resource(name = "defaultUserGroups")
+	private Set<UserGroup> defaultUserGroups;
 
 	/**
 	 * A set of default layouts that will be created
@@ -186,8 +224,16 @@ public class ContentInitializer {
 				cleanupAclTables();
 			}
 
+			if(createDefaultRoles) {
+				createDefaultRoles();
+			}
+
 			if(createDefaultUsers) {
 				createDefaultUsers();
+			}
+
+			if(createDefaultUserGroups) {
+				createDefaultUserGroups();
 			}
 
 			if(createDefaultLayouts) {
@@ -224,6 +270,19 @@ public class ContentInitializer {
 	/**
 	 * Creates the {@link User}s defined in {@link #defaultUsers}
 	 */
+	private void createDefaultRoles() {
+		LOG.info("Creating a set of default roles.");
+
+		for (Role role : defaultRoles) {
+			initService.createRole(role);
+		}
+
+		LOG.info("Created a total of " + defaultRoles.size() + " default roles.");
+	}
+
+	/**
+	 * Creates the {@link User}s defined in {@link #defaultUsers}
+	 */
 	private void createDefaultUsers() {
 		LOG.info("Creating a set of default users.");
 
@@ -232,6 +291,19 @@ public class ContentInitializer {
 		}
 
 		LOG.info("Created a total of " + defaultUsers.size() + " default users.");
+	}
+
+	/**
+	 * Creates the {@link UserGroup}s defined in {@link #defaultUserGroups}
+	 */
+	private void createDefaultUserGroups() {
+		LOG.info("Creating a set of default user groups.");
+
+		for (UserGroup userGroup : defaultUserGroups) {
+			initService.createUserGroup(userGroup);
+		}
+
+		LOG.info("Created a total of " + defaultUserGroups.size() + " default user groups.");
 	}
 
 	/**

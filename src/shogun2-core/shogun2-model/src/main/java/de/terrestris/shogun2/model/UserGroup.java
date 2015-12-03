@@ -5,9 +5,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,88 +18,87 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import ch.rasc.extclassgenerator.Model;
-
 /**
  * @author Nils Bühner
  *
  */
 @Entity
 @Table
-@Model(value = "shogun2.model.User",
-	readMethod = "userService.findWithSortingAndPagingExtDirect",
-	createMethod = "userService.saveOrUpdateCollection",
-	updateMethod = "userService.saveOrUpdateCollection",
-	destroyMethod = "userService.deleteCollection")
-public class User extends Person {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class UserGroup extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique = true)
-	private String accountName;
-
 	@Column
-	private String password;
+	private String name;
 
-	@Column
-	private boolean active;
+	@ManyToOne
+	private User owner;
 
 	@ManyToMany
 	@JoinTable(
-		name = "USER_ROLE",
-		joinColumns = { @JoinColumn(name = "USER_ID") },
+		name = "USERGROUP_USER",
+		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "USER_ID") }
+	)
+	private Set<User> members = new HashSet<User>();
+
+	@ManyToMany
+	@JoinTable(
+		name = "USERGROUP_ROLE",
+		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }
 	)
 	private Set<Role> roles = new HashSet<Role>();
 
 	/**
-	 * Default constructor
+	 * Default Constructor
 	 */
-	public User() {
+	public UserGroup() {
 	}
 
-	public User(String firstName, String lastName, String accountName) {
-		super(firstName, lastName);
-		this.accountName = accountName;
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public User(String firstName, String lastName, String accountName,
-			String password) {
-		super(firstName, lastName);
-		this.accountName = accountName;
-		this.password = password;
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public User(String firstName, String lastName, String accountName,
-			String password, boolean active) {
-		super(firstName, lastName);
-		this.accountName = accountName;
-		this.password = password;
-		this.active = active;
+	/**
+	 * @return the owner
+	 */
+	public User getOwner() {
+		return owner;
 	}
 
-	public String getAccountName() {
-		return accountName;
+	/**
+	 * @param owner
+	 *            the owner to set
+	 */
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+	/**
+	 * @return the members
+	 */
+	public Set<User> getMembers() {
+		return members;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
+	/**
+	 * @param members the members to set
+	 */
+	public void setMembers(Set<User> members) {
+		this.members = members;
 	}
 
 	/**
@@ -124,9 +126,12 @@ public class User extends Person {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(23, 13).appendSuper(super.hashCode())
-				.append(getAccountName()).append(getPassword())
-				.append(isActive()).toHashCode();
+		return new HashCodeBuilder(53, 19).appendSuper(super.hashCode())
+				.append(getName())
+				.append(getOwner())
+				.append(getMembers())
+				.append(getRoles())
+				.toHashCode();
 	}
 
 	/**
@@ -139,14 +144,16 @@ public class User extends Person {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof User))
+		if (!(obj instanceof UserGroup))
 			return false;
-		User other = (User) obj;
+		UserGroup other = (UserGroup) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getAccountName(), other.getAccountName())
-				.append(getPassword(), other.getPassword())
-				.append(isActive(), other.isActive()).isEquals();
+				.append(getName(), other.getName())
+				.append(getOwner(), other.getOwner())
+				.append(getMembers(), other.getMembers())
+				.append(getRoles(), other.getRoles())
+				.isEquals();
 	}
 
 	/**
