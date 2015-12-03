@@ -3,6 +3,7 @@ package de.terrestris.shogun2.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -129,7 +130,17 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 		final boolean isAuthenticated = authResult.isAuthenticated();
 		final String authLog = isAuthenticated ? "could succesfully" : "could NOT";
-		LOG.debug("The User '" + accountName + "' " + authLog  + " be authenticated.");
+		LOG.debug("The user '" + accountName + "' " + authLog  + " be authenticated.");
+
+		if(isAuthenticated) {
+			Set<String> grantedRoles = new HashSet<String>();
+			for (GrantedAuthority auth : grantedAuthorities) {
+				grantedRoles.add(auth.getAuthority());
+			}
+			LOG.debug("The user '" + accountName
+					+ "' got the following roles: "
+					+ StringUtils.join(grantedRoles, ", "));
+		}
 
 		return authResult;
 	}
