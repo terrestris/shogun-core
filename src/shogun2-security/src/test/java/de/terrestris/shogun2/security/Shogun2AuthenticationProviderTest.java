@@ -22,10 +22,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -74,8 +76,7 @@ public class Shogun2AuthenticationProviderTest {
 		// 1. Mock an authentication request object
 		final String shogun2UserName = "user";
 		final String shogun2UserPass = "password";
-		final String encryptedPassword = passwordEncoder.encode(shogun2UserPass);
-		final User userToAuth = new User("firstName", "lastName", shogun2UserName, encryptedPassword);
+		final User userToAuth = createUserMock(shogun2UserName, shogun2UserPass);
 
 		final Role adminRole = new Role("ROLE_ADMIN");
 		final Role userRole = new Role("ROLE_USER");
@@ -131,6 +132,68 @@ public class Shogun2AuthenticationProviderTest {
 		assertThat(authResult.getAuthorities(),
 				IsIterableContainingInAnyOrder
 						.<GrantedAuthority> containsInAnyOrder(adminAuthority, userAuthority));
+	}
+
+	/**
+	 * Tests whether a {@link UsernameNotFoundException} is thrown when a user
+	 * could not be found.
+	 */
+	@Test(expected=UsernameNotFoundException.class)
+	public void authenticate_shouldThrowUsernameNotFoundExceptionIfUserNotFound() {
+
+		// 1. Mock an authentication request object
+		final String shogun2UserName = "user";
+
+		// 2. Mock the auth request
+		Authentication authRequest = mock(Authentication.class);
+		when(authRequest.getName()).thenReturn(shogun2UserName);
+
+		// 3. Mock the userService by returning null (-> no user found)
+		when(userService.findByAccountName(shogun2UserName)).thenReturn(null);
+
+		// 4. Call the authenticate method with the mocked object to provoke
+		// the expected UserNameNotFoundException
+		authProvider.authenticate(authRequest);
+	}
+
+	/**
+	 * Tests whether a {@link BadCredentialsException} is thrown when the
+	 * password does not match.
+	 */
+	@Test(expected=BadCredentialsException.class)
+	public void authenticate_shouldThrowBadCredentialsExceptionIfPasswordDoesNotMatch() {
+
+		// 1. Mock an authentication request object
+		final String shogun2UserName = "user";
+		final String correctPassword = "correctPassword";
+		final User userToAuth = createUserMock(shogun2UserName, correctPassword);
+
+		final String wrongPassword = "wrongPassword";
+
+		// 2. Mock the auth request with the wrong password
+		Authentication authRequest = mock(Authentication.class);
+		when(authRequest.getName()).thenReturn(shogun2UserName);
+		when(authRequest.getCredentials()).thenReturn(wrongPassword);
+
+		// 3. Mock the userService
+		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+
+		// 4. Call the authenticate method with the mocked object to provoke
+		// the expected BadCredentialsException
+		authProvider.authenticate(authRequest);
+	}
+
+	/**
+	 * Creates a simple user mock with an encrypted password.
+	 *
+	 * @param accountName
+	 * @param password
+	 * @return
+	 */
+	private User createUserMock(final String accountName, final String password) {
+		final String encryptedPassword = passwordEncoder.encode(password);
+		final User userToAuth = new User("firstName", "lastName", accountName, encryptedPassword);
+		return userToAuth;
 	}
 
 }
