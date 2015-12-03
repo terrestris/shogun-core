@@ -149,7 +149,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 *
 	 * @return
 	 */
-	private Criteria createDistinctRootEntityCriteria(Criterion... criterion) {
+	protected Criteria createDistinctRootEntityCriteria(Criterion... criterion) {
 		Criteria criteria = getSession().createCriteria(clazz);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
