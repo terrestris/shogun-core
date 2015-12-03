@@ -19,7 +19,7 @@ public class Role extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column
+	@Column(unique=true, nullable=false)
 	private String name;
 
 	@Column
@@ -79,6 +79,7 @@ public class Role extends PersistentObject {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(13, 53).appendSuper(super.hashCode())
 				.append(getName())
+				.append(getDescription())
 				.toHashCode();
 	}
 
@@ -97,7 +98,8 @@ public class Role extends PersistentObject {
 		Role other = (Role) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName()).isEquals();
+				.append(getName(), other.getName())
+				.append(getDescription(), other.getDescription()).isEquals();
 	}
 
 	/**
