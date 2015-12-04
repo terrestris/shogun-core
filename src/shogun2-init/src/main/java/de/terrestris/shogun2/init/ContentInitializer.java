@@ -3,7 +3,6 @@ package de.terrestris.shogun2.init;
 import java.sql.SQLException;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -143,8 +142,6 @@ public class ContentInitializer {
 	 * A set of default roles that will be created
 	 * if {@link #createDefaultRoles} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
 	@Autowired(required = false)
 	private Set<Role> defaultRoles;
@@ -153,8 +150,6 @@ public class ContentInitializer {
 	 * A set of default users that will be created
 	 * if {@link #createDefaultUsers} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
 	@Autowired(required = false)
 	private Set<User> defaultUsers;
@@ -163,8 +158,6 @@ public class ContentInitializer {
 	 * A set of default userGroups that will be created
 	 * if {@link #createDefaultUserGroups} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
 	@Autowired(required = false)
 	private Set<UserGroup> defaultUserGroups;
