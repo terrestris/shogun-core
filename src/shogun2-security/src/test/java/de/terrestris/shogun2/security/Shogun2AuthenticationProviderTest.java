@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,6 +53,9 @@ public class Shogun2AuthenticationProviderTest {
 
 	@Mock
 	private UserGroupService userGroupService;
+
+	@Mock
+	private RoleHierarchyImpl roleHierarchy;
 
 	@InjectMocks
 	private Shogun2AuthenticationProvider authProvider;
@@ -111,10 +116,16 @@ public class Shogun2AuthenticationProviderTest {
 			}
 		}).when(userGroupService).findGroupsOfUser(userToAuth);
 
-		// 4. Call the authenticate method with the mocked object
+		// 4. Mock the roleHierarchy (return empty collection)
+		when(
+			roleHierarchy
+					.getReachableGrantedAuthorities(anyCollectionOf(GrantedAuthority.class)))
+			.thenReturn(new HashSet<GrantedAuthority>());
+
+		// 5. Call the authenticate method with the mocked object
 		Authentication authResult = authProvider.authenticate(authRequest);
 
-		// 5. Assert that the authResult is valid
+		// 6. Assert that the authResult is valid
 		assertNotNull(authResult);
 		assertThat(authResult, instanceOf(UsernamePasswordAuthenticationToken.class));
 		assertTrue(authResult.isAuthenticated());
