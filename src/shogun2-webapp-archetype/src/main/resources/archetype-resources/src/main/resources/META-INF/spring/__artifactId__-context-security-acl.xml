@@ -92,12 +92,15 @@ $symbol_escape = '\' )
     <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
         <constructor-arg>
             <list>
+                <!-- the authority needed to change ownership -->
                 <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>
+                <!-- the authority needed to modify auditing details -->
                 <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>
+                <!-- the authority needed to change other ACL and ACE details -->
                 <bean class="org.springframework.security.core.authority.SimpleGrantedAuthority">
                     <constructor-arg value="ROLE_ADMIN"/>
                 </bean>

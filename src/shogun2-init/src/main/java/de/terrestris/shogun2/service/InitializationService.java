@@ -2,7 +2,7 @@ package de.terrestris.shogun2.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +58,7 @@ public class InitializationService {
 	private ApplicationDao applicationDao;
 
 	@Autowired
-	private BCryptPasswordEncoder bcrypt;
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * Used to create a role.
@@ -68,7 +68,7 @@ public class InitializationService {
 	 */
 	public Role createRole(Role role) {
 		roleDao.saveOrUpdate(role);
-		LOG.debug("Created the role " + role);
+		LOG.trace("Created the role " + role);
 		return role;
 	}
 
@@ -80,10 +80,10 @@ public class InitializationService {
 	 */
 	public User createUser(User user) {
 		// encode the raw password using bcrypt
-		final String pwHash = bcrypt.encode(user.getPassword());
+		final String pwHash = passwordEncoder.encode(user.getPassword());
 		user.setPassword(pwHash);
 		userDao.saveOrUpdate(user);
-		LOG.debug("Created the user " + user);
+		LOG.trace("Created the user " + user);
 		return user;
 	}
 
@@ -95,7 +95,7 @@ public class InitializationService {
 	 */
 	public UserGroup createUserGroup(UserGroup userGroup) {
 		userGroupDao.saveOrUpdate(userGroup);
-		LOG.debug("Created the user group " + userGroup);
+		LOG.trace("Created the user group " + userGroup);
 		return userGroup;
 	}
 
@@ -106,7 +106,7 @@ public class InitializationService {
 	 */
 	public Layout createLayout(Layout layout) {
 		layoutDao.saveOrUpdate(layout);
-		LOG.debug("Created the layout " + layout);
+		LOG.trace("Created the layout " + layout);
 		return layout;
 	}
 
@@ -117,7 +117,7 @@ public class InitializationService {
 	 */
 	public Module createModule(Module module) {
 		moduleDao.saveOrUpdate(module);
-		LOG.debug("Created the module " + module);
+		LOG.trace("Created the module " + module);
 		return module;
 	}
 
@@ -129,7 +129,7 @@ public class InitializationService {
 	 */
 	public Application createApplication(Application application) {
 		applicationDao.saveOrUpdate(application);
-		LOG.debug("Created the application " + application);
+		LOG.trace("Created the application " + application);
 		return application;
 	}
 

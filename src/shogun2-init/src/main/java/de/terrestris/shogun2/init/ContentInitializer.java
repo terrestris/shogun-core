@@ -3,7 +3,6 @@ package de.terrestris.shogun2.init;
 import java.sql.SQLException;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.datasource.init.ScriptException;
+import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,12 +28,7 @@ import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
- * Class to initialize some kind of content.
- *
- * <b>ATTENTION:</b> This class is currently used to provide some demo content.
- * In future, certain entities (like some default {@link Layout}s or
- * {@link Module} s should be created on the base of (configurable) bean
- * definitions.
+ * Class to initialize an initial set of content based on bean definitions.
  *
  * @author Nils Bühner
  *
@@ -147,30 +142,24 @@ public class ContentInitializer {
 	 * A set of default roles that will be created
 	 * if {@link #createDefaultRoles} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
-	@Resource(name = "defaultRoles")
+	@Autowired(required = false)
 	private Set<Role> defaultRoles;
 
 	/**
 	 * A set of default users that will be created
 	 * if {@link #createDefaultUsers} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
-	@Resource(name = "defaultUsers")
+	@Autowired(required = false)
 	private Set<User> defaultUsers;
 
 	/**
 	 * A set of default userGroups that will be created
 	 * if {@link #createDefaultUserGroups} is true.
 	 *
-	 * Using the {@link Resource} annotation as
-	 * recommended on http://stackoverflow.com/a/22463219
 	 */
-	@Resource(name = "defaultUserGroups")
+	@Autowired(required = false)
 	private Set<UserGroup> defaultUserGroups;
 
 	/**
@@ -178,7 +167,7 @@ public class ContentInitializer {
 	 * if {@link #createDefaultLayouts} is true.
 	 *
 	 */
-	@Resource(name = "defaultLayouts")
+	@Autowired(required = false)
 	private Set<Layout> defaultLayouts;
 
 	/**
@@ -186,7 +175,7 @@ public class ContentInitializer {
 	 * if {@link #createDefaultModules} is true.
 	 *
 	 */
-	@Resource(name = "defaultModules")
+	@Autowired(required = false)
 	private Set<Module> defaultModules;
 
 	/**
@@ -194,13 +183,12 @@ public class ContentInitializer {
 	 * if {@link #createDefaultApplications} is true.
 	 *
 	 */
-	@Resource(name = "defaultApplications")
+	@Autowired(required = false)
 	private Set<Application> defaultApplications;
 
 	/**
 	 * The method called on initialization
 	 *
-	 * THIS WILL CURRENTLY PRODUCE SOME DEMO CONTENT
 	 */
 	public void initializeDatabaseContent() {
 
@@ -346,8 +334,10 @@ public class ContentInitializer {
 	}
 
 	/**
-	 * This method logs in the passed user. (The ACL system needs a user with
-	 * ROLE_ADMIN to write ACL entries to the database).
+	 * This method logs in the passed user. (The ACL system requires an
+	 * authenticated user with a satisfying authority (based on the config of
+	 * the {@link AclAuthorizationStrategyImpl}) to write ACL entries to the
+	 * database.
 	 *
 	 * @param user
 	 * @param rawPassword
@@ -363,7 +353,7 @@ public class ContentInitializer {
 	 * Logs out the current user
 	 */
 	private void logoutUser() {
-		SecurityContextHolder.getContext().setAuthentication(null);
+		SecurityContextHolder.clearContext();
 	}
 
 	/**
