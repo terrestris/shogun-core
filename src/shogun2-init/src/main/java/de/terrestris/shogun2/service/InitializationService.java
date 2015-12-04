@@ -68,7 +68,7 @@ public class InitializationService {
 	 */
 	public Role createRole(Role role) {
 		roleDao.saveOrUpdate(role);
-		LOG.debug("Created the role " + role);
+		LOG.trace("Created the role " + role);
 		return role;
 	}
 
@@ -83,7 +83,7 @@ public class InitializationService {
 		final String pwHash = bcrypt.encode(user.getPassword());
 		user.setPassword(pwHash);
 		userDao.saveOrUpdate(user);
-		LOG.debug("Created the user " + user);
+		LOG.trace("Created the user " + user);
 		return user;
 	}
 
@@ -95,7 +95,7 @@ public class InitializationService {
 	 */
 	public UserGroup createUserGroup(UserGroup userGroup) {
 		userGroupDao.saveOrUpdate(userGroup);
-		LOG.debug("Created the user group " + userGroup);
+		LOG.trace("Created the user group " + userGroup);
 		return userGroup;
 	}
 
@@ -106,7 +106,7 @@ public class InitializationService {
 	 */
 	public Layout createLayout(Layout layout) {
 		layoutDao.saveOrUpdate(layout);
-		LOG.debug("Created the layout " + layout);
+		LOG.trace("Created the layout " + layout);
 		return layout;
 	}
 
@@ -117,7 +117,7 @@ public class InitializationService {
 	 */
 	public Module createModule(Module module) {
 		moduleDao.saveOrUpdate(module);
-		LOG.debug("Created the module " + module);
+		LOG.trace("Created the module " + module);
 		return module;
 	}
 
@@ -129,7 +129,7 @@ public class InitializationService {
 	 */
 	public Application createApplication(Application application) {
 		applicationDao.saveOrUpdate(application);
-		LOG.debug("Created the application " + application);
+		LOG.trace("Created the application " + application);
 		return application;
 	}
 
