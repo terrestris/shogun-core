@@ -67,7 +67,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public E update(@PathVariable int id, @RequestBody E entity) throws Exception {
 		LOG.debug("update " + entity.getClass() + id +" with body" + entity);
 
