@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,8 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public List<E> findAll() {
-		return this.service.findAll();
+	public ResponseEntity<List<E>> findAll() {
+		return new ResponseEntity<List<E>>(this.service.findAll(), HttpStatus.OK);
 	}
 
 	/**
@@ -43,10 +45,10 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	public E create(@RequestBody E entity) {
+	public ResponseEntity<E> create(@RequestBody E entity) {
 		LOG.debug("create() with body "+entity+" of type " + entity.getClass());
 		E created = this.service.saveOrUpdate(entity);
-		return created;
+		return new ResponseEntity<E>(created, HttpStatus.OK);
 	}
 
 	/**
@@ -55,9 +57,9 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public E get(@PathVariable int id) {
+	public ResponseEntity<E> get(@PathVariable int id) {
 		E entity = this.service.findById(id);
-		return entity;
+		return new ResponseEntity<E>(entity, HttpStatus.OK);
 	}
 
 	/**
@@ -68,16 +70,15 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public E update(@PathVariable int id, @RequestBody E entity) throws Exception {
+	public ResponseEntity<E> update(@PathVariable int id, @RequestBody E entity) {
 		LOG.debug("update " + entity.getClass() + id +" with body" + entity);
 
 		if (entity.getId() == id) {
 			E updated = this.service.saveOrUpdate(entity);
 			LOG.debug("updated entity: " + updated);
-			return updated;
+			return new ResponseEntity<E>(updated, HttpStatus.OK);
 		} else {
-			throw new IllegalArgumentException(
-					"The entities id is not equal to the id in the path.");
+			return new ResponseEntity<E>(HttpStatus.NOT_MODIFIED);
 		}
 	}
 
@@ -87,10 +88,10 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
-	public E delete(@PathVariable int id) {
-		E entity = this.service.findById(id);
-		this.service.delete(entity);
-		return entity;
+	public ResponseEntity<E> delete(@PathVariable int id) {
+		E deleted = this.service.findById(id);
+		this.service.delete(deleted);
+		return new ResponseEntity<E>(deleted, HttpStatus.OK);
 	}
 
 }
