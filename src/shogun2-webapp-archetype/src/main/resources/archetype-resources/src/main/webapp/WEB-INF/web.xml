@@ -41,6 +41,7 @@
     <servlet-mapping>
         <servlet-name>${artifactId}</servlet-name>
         <url-pattern>*.action</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
     <!-- Needed for the Ext Direct api.js.
@@ -87,6 +88,7 @@
     <filter-mapping>
         <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>*.action</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
     </filter-mapping>
 
 </web-app>
