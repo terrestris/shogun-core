@@ -3,6 +3,7 @@ package de.terrestris.shogun2.rest;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,10 @@ import de.terrestris.shogun2.service.AbstractCrudService;
 @RequestMapping(value="/rest")
 public abstract class AbstractRestController<E extends PersistentObject> {
 
+	/**
+	 * The Logger
+	 */
+	private static final Logger LOG = Logger.getLogger(AbstractRestController.class);
 
 	@Autowired
 	private AbstractCrudService<E> service;
@@ -40,8 +45,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public E create(@RequestBody E json) {
-		System.out.println("create() with body "+json+" of type "
-				+ json.getClass());
+		LOG.info("create() with body "+json+" of type " + json.getClass());
 		E created = this.service.saveOrUpdate(json);
 		return created;
 	}
@@ -66,22 +70,22 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.POST)
 	public E update(@PathVariable int id, @RequestBody E json) throws Exception {
-		System.out.println("update() of id#"+id+" with body "+json);
-		System.out.println("E json is of type "+json.getClass());
+		LOG.info("update() of id#"+id+" with body "+json);
+		LOG.info("E json is of type "+json.getClass());
 
 		E entity = this.service.findById(id);
 		try {
 			BeanUtils.copyProperties(entity, json);
 		}
 		catch (Exception e) {
-			System.out.println("while copying properties " + e);
+			LOG.info("while copying properties " + e);
 			throw e;
 		}
 
-		System.out.println("merged entity: " + entity);
+		LOG.info("merged entity: " + entity);
 
 		E updated = this.service.saveOrUpdate(entity);
-		System.out.println("updated enitity: " + updated);
+		LOG.info("updated enitity: " + updated);
 
 		return updated;
 	}
