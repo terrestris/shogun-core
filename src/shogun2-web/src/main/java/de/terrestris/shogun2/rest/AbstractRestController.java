@@ -2,7 +2,6 @@ package de.terrestris.shogun2.rest;
 
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,13 +39,13 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 
 	/**
 	 * Create an entity.
-	 * @param json
+	 * @param entity
 	 * @return
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	public E create(@RequestBody E json) {
-		LOG.info("create() with body "+json+" of type " + json.getClass());
-		E created = this.service.saveOrUpdate(json);
+	public E create(@RequestBody E entity) {
+		LOG.debug("create() with body "+entity+" of type " + entity.getClass());
+		E created = this.service.saveOrUpdate(entity);
 		return created;
 	}
 
@@ -57,37 +56,29 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public E get(@PathVariable int id) {
-		E instance = this.service.findById(id);
-		return instance;
+		E entity = this.service.findById(id);
+		return entity;
 	}
 
 	/**
 	 * Updates an entity by id.
 	 * @param id
-	 * @param json
+	 * @param entity
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/{id}", method=RequestMethod.POST)
-	public E update(@PathVariable int id, @RequestBody E json) throws Exception {
-		LOG.info("update() of id#"+id+" with body "+json);
-		LOG.info("E json is of type "+json.getClass());
+	public E update(@PathVariable int id, @RequestBody E entity) throws Exception {
+		LOG.debug("update " + entity.getClass() + id +" with body" + entity);
 
-		E entity = this.service.findById(id);
-		try {
-			BeanUtils.copyProperties(entity, json);
+		if (entity.getId() == id) {
+			E updated = this.service.saveOrUpdate(entity);
+			LOG.debug("updated entity: " + updated);
+			return updated;
+		} else {
+			throw new IllegalArgumentException(
+					"The entities id is not equal to the id in the path.");
 		}
-		catch (Exception e) {
-			LOG.info("while copying properties " + e);
-			throw e;
-		}
-
-		LOG.info("merged entity: " + entity);
-
-		E updated = this.service.saveOrUpdate(entity);
-		LOG.info("updated enitity: " + updated);
-
-		return updated;
 	}
 
 	/**
