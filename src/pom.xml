@@ -131,6 +131,9 @@
         <ext-direct-spring.version>1.6.1</ext-direct-spring.version>
         <ext-class-generator.version>1.0.8</ext-class-generator.version>
 
+        <!-- Java Mail API -->
+        <javax-mail-api.version>1.5.4</javax-mail-api.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -581,6 +584,19 @@
                 <artifactId>commons-dbutils</artifactId>
                 <version>${commons-dbutils.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${javax-mail-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${javax-mail-api.version}</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
