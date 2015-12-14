@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -32,6 +33,12 @@ public class MailPublisherTest {
 	 */
 	@Autowired
 	private MailPublisher mailPublisher;
+
+	/**
+	 * A simple mail template
+	 */
+	@Autowired
+	private SimpleMailMessage registrationMailMessageTemplate;
 
 	/**
 	 * The test-suite mail server.
@@ -182,6 +189,49 @@ public class MailPublisherTest {
 		assertEquals(from, messages[0].getFrom()[0].toString());
 
 		assertNull(messages[0].getRecipients(Message.RecipientType.TO));
+
+	}
+
+	/**
+	 * @throws MessagingException
+	 *
+	 */
+	@Test
+	public void sendMail_template() throws MessagingException {
+
+		String to = "to@shogun2.de";
+
+		String str1 = "The Username";
+		String str2 = "http://tokenized-registration-shogun2.de";
+
+		registrationMailMessageTemplate.setTo(to);
+
+		registrationMailMessageTemplate.setText(
+				String.format(
+						registrationMailMessageTemplate.getText(),
+						str1,
+						str2
+				)
+		);
+
+		mailPublisher.sendMail(registrationMailMessageTemplate);
+
+		// wait for max 5s for 1 email to arrive
+		// waitForIncomingEmail() is useful if you're sending stuff
+		// asynchronously in a separate thread
+		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+
+		// the BCC header isn't carried in the message-header, therefore we
+		// can't access it directly and we can only test if two mails were
+		// sent without having a TO-header set
+		Message[] messages = greenMail.getReceivedMessages();
+		assertEquals(1, messages.length);
+
+		assertEquals(mailPublisher.getDefaultMailSender(),
+				messages[0].getFrom()[0].toString());
+
+		assertEquals(to, messages[0].getRecipients(
+				Message.RecipientType.TO)[0].toString());
 
 	}
 
