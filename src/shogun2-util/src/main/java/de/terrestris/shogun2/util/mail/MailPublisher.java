@@ -95,22 +95,47 @@ public class MailPublisher {
 			String[] bcc, String subject, String msg, Boolean html,
 			String attachmentFilename, File attachmentFile) throws MessagingException {
 
+		Boolean multipart = false;
+
+		// if a attachment file is required, we have to use a multipart massage
+		if (attachmentFilename!= null && attachmentFile != null) {
+			multipart = true;
+		}
+
 		MimeMessage mimeMailMessage = mailSender.createMimeMessage();
-		MimeMessageHelper mimeHelper = new MimeMessageHelper(mimeMailMessage);
+		MimeMessageHelper mimeHelper = new MimeMessageHelper(mimeMailMessage,
+				multipart);
 
 		// fallback to default mail sender
 		if (from == null || from.isEmpty()) {
 			from = defaultMailSender;
 		}
 
+		// set minimal configuration
 		mimeHelper.setFrom(from);
-		mimeHelper.setReplyTo(replyTo);
 		mimeHelper.setTo(to);
-		mimeHelper.setBcc(bcc);
-		mimeHelper.setCc(cc);
 		mimeHelper.setSubject(subject);
 		mimeHelper.setText(msg, html);
-		mimeHelper.addAttachment(attachmentFilename, attachmentFile);
+
+		// add replyTo address if set
+		if (replyTo != null && !replyTo.isEmpty()) {
+			mimeHelper.setReplyTo(replyTo);
+		}
+
+		// add bcc address(es) if set
+		if (bcc != null && bcc.length > 0) {
+			mimeHelper.setBcc(bcc);
+		}
+
+		// add cc address(es) if set
+		if (cc != null && cc.length > 0) {
+			mimeHelper.setCc(cc);
+		}
+
+		// add attachment file if set
+		if (attachmentFilename!= null && attachmentFile != null) {
+			mimeHelper.addAttachment(attachmentFilename, attachmentFile);
+		}
 
 		sendMail(mimeMailMessage);
 	}
@@ -148,6 +173,13 @@ public class MailPublisher {
 	 */
 	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
+	}
+
+	/**
+	 * @return the defaultMailSender
+	 */
+	public String getDefaultMailSender() {
+		return defaultMailSender;
 	}
 
 	/**
