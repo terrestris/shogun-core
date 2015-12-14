@@ -38,12 +38,42 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public Session getSession() {
+	/**
+	 * Obtains the current session.
+	 *
+	 * @return
+	 */
+	private Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
 
+	/**
+	 * Return the real object from the database. Returns null if the object does
+	 * not exist.
+	 *
+	 * @param id
+	 *
+	 * @see http://www.mkyong.com/hibernate/different-between-session-get-and-session-load/
+	 *
+	 * @return The object from the database or null if it does not exist
+	 */
 	public E findById(ID id) {
 		return (E) getSession().get(clazz, id);
+	}
+
+	/**
+	 * Return a proxy of the object (without hitting the database). This should
+	 * only be used if it is assumed that the object really exists and where
+	 * non-existence would be an actual error.
+	 *
+	 * @param id
+	 *
+	 * @see http://www.mkyong.com/hibernate/different-between-session-get-and-session-load/
+	 *
+	 * @return
+	 */
+	public E loadById(ID id) {
+		return (E) getSession().load(clazz, id);
 	}
 
 	/**
