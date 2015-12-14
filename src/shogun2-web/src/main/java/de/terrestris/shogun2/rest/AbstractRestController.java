@@ -40,8 +40,15 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<E>> findAll() {
-		return new ResponseEntity<List<E>>(this.service.findAll(),
-				HttpStatus.OK);
+		final List<E> resultList = this.service.findAll();
+
+		if (resultList != null && !resultList.isEmpty()) {
+			LOG.trace("Found a total of " + resultList.size()
+					+ " entities of type "
+					+ resultList.get(0).getClass().getSimpleName());
+		}
+
+		return new ResponseEntity<List<E>>(resultList, HttpStatus.OK);
 	}
 
 	/**
@@ -55,6 +62,8 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 
 		try {
 			E entity = this.service.findById(id);
+			LOG.trace("Found " + entity.getClass().getSimpleName()
+					+ " with ID " + entity.getId());
 			return new ResponseEntity<E>(entity, HttpStatus.OK);
 		} catch (Exception e) {
 			LOG.error("Error finding entity with id " + id + ": "
@@ -87,6 +96,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 
 		try {
 			entity = this.service.saveOrUpdate(entity);
+			LOG.trace("Created " + simpleClassName + " with ID " + entity.getId());
 			return new ResponseEntity<E>(entity, HttpStatus.CREATED);
 		} catch (Exception e) {
 			LOG.error(errorMessagePrefix + e.getMessage());
@@ -110,6 +120,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 		if (payloadId == id) {
 			try {
 				E updated = this.service.saveOrUpdate(entity);
+				LOG.trace("Updated " + simpleClassName + " with ID " + id);
 				return new ResponseEntity<E>(updated, HttpStatus.OK);
 			} catch (Exception e) {
 				LOG.error("Error updating " + simpleClassName + ":"
@@ -147,7 +158,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 			final String proxyClassName = entityToDelete.getClass().getSimpleName();
 			final String simpleClassName = StringUtils.substringBefore(proxyClassName, "_$$_");
 
-			LOG.debug("Deleted " + simpleClassName + " with ID " + id);
+			LOG.trace("Deleted " + simpleClassName + " with ID " + id);
 			return new ResponseEntity<E>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			LOG.error("Error deleting entity with ID " + id + ": "
