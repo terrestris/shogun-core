@@ -7,10 +7,11 @@ import de.terrestris.shogun2.model.User;
 
 /**
  * @author Kai Volland
+ * @author Nils Bühner
  *
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserRestController extends
 		AbstractRestController<User> {
 

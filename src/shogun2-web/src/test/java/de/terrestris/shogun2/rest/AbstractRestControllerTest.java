@@ -27,6 +27,8 @@ import de.terrestris.shogun2.service.ApplicationService;
 /**
  *
  * @author Kai Volland
+ * @author Nils Bühner
+ * 
  * @param <E>
  */
 public class AbstractRestControllerTest<E> {
@@ -65,7 +67,7 @@ public class AbstractRestControllerTest<E> {
 		when(applicationServiceMock.findAll()).thenReturn(
 				Arrays.asList(first, second));
 
-		mockMvc.perform(get("/application"))
+		mockMvc.perform(get("/applications"))
 			.andExpect(status().isOk())
 			.andExpect(
 				content().contentType("application/json;charset=UTF-8"))

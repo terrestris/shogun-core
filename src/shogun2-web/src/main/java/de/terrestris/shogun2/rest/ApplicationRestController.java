@@ -7,10 +7,11 @@ import de.terrestris.shogun2.model.Application;
 
 /**
  * @author Kai Volland
+ * @author Nils Bühner
  *
  */
 @RestController
-@RequestMapping("/application")
+@RequestMapping("/applications")
 public class ApplicationRestController extends
 		AbstractRestController<Application> {
 
