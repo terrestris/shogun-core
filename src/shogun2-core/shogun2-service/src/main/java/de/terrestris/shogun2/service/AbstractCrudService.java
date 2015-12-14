@@ -10,16 +10,16 @@ import de.terrestris.shogun2.model.PersistentObject;
 
 /**
  * This abstract service class provides basic CRUD functionality.
- * 
+ *
  * @author Nils Bühner
  * @see AbstractDaoService
- * 
+ *
  */
 public abstract class AbstractCrudService<E extends PersistentObject> extends
 		AbstractDaoService<E> {
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 * @return
 	 */
@@ -30,6 +30,8 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	}
 
 	/**
+	 * Return the real object from the database. Returns null if the object does
+	 * not exist.
 	 * 
 	 * @param id
 	 * @return
@@ -40,7 +42,20 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	}
 
 	/**
+	 * Return a proxy of the object (without hitting the database). This should
+	 * only be used if it is assumed that the object really exists and where
+	 * non-existence would be an actual error.
 	 * 
+	 * @param id
+	 * @return
+	 */
+	@PostAuthorize("hasPermission(returnObject, 'READ')")
+	public E loadById(int id) {
+		return dao.loadById(id);
+	}
+
+	/**
+	 *
 	 * @return
 	 */
 	@PostFilter("hasPermission(filterObject, 'READ')")
@@ -49,7 +64,7 @@ public abstract class AbstractCrudService<E extends PersistentObject> extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 */
 	@PreAuthorize("hasPermission(#e, 'DELETE')")
