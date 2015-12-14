@@ -102,17 +102,23 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<E> update(@PathVariable int id, @RequestBody E entity) {
-		if (entity.getId() == id) {
+
+		final String simpleClassName = entity.getClass().getSimpleName();
+		final Integer payloadId = entity.getId();
+
+		if (payloadId == id) {
 			try {
 				E updated = this.service.saveOrUpdate(entity);
-				LOG.debug("Updated entity: " + updated);
 				return new ResponseEntity<E>(updated, HttpStatus.OK);
 			} catch (Exception e) {
-				LOG.error("There is no " + entity.getClass() + " with id " + id);
+				LOG.error("Error updating " + simpleClassName + ":"
+						+ e.getMessage());
 				return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
 			}
 		} else {
-			LOG.error("Can't update " + id + " with body" + entity);
+			LOG.error("Error updating " + simpleClassName
+					+ ": Requested to update entity with ID " + id
+					+ ", but payload ID is " + payloadId);
 			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
 		}
 	}
