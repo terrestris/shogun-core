@@ -63,19 +63,32 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	}
 
 	/**
-	 * Create an entity.
+	 * Create/save an entity.
 	 *
 	 * @param entity
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<E> create(@RequestBody E entity) {
+	public ResponseEntity<E> save(@RequestBody E entity) {
+
+		final String simpleClassName = entity.getClass().getSimpleName();
+		final String errorMessagePrefix = "Error when saving entity of type "
+				+ simpleClassName + ": ";
+
+		// ID value MUST be null to assure that
+		// saveOrUpdate will save and not update
+		final Integer id = entity.getId();
+		if (id != null) {
+			LOG.error(errorMessagePrefix + "ID value is set to " + id
+					+ ", but MUST be null");
+			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+		}
+
 		try {
-			E created = this.service.saveOrUpdate(entity);
-			LOG.debug("Create " + entity.getClass() + " with body " + entity);
-			return new ResponseEntity<E>(created, HttpStatus.CREATED);
+			entity = this.service.saveOrUpdate(entity);
+			return new ResponseEntity<E>(entity, HttpStatus.CREATED);
 		} catch (Exception e) {
-			LOG.debug("Malformed body: " + entity);
+			LOG.error(errorMessagePrefix + e.getMessage());
 			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
 		}
 	}
