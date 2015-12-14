@@ -2,6 +2,7 @@ package de.terrestris.shogun2.rest;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -131,15 +132,27 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<E> delete(@PathVariable int id) {
-		E deleted = this.service.findById(id);
-		if(deleted != null) {
-			this.service.delete(deleted);
-			LOG.debug("Delted " + id + " of type " + deleted.getClass());
-			return new ResponseEntity<E>(deleted, HttpStatus.OK);
-		} else {
-			LOG.error("There is no object with id " + id);
+
+		try {
+			// Use the loadById method to get a proxy that will throw exceptions
+			// when the object can later not be accessed. This is more performant
+			// than using the findById method, which will always hit the database.
+			E entityToDelete = this.service.loadById(id);
+
+			this.service.delete(entityToDelete);
+
+			// extract the original classname from the name of the proxy, which
+			// also contains _$$_ and some kind of hash after the original
+			// classname
+			final String proxyClassName = entityToDelete.getClass().getSimpleName();
+			final String simpleClassName = StringUtils.substringBefore(proxyClassName, "_$$_");
+
+			LOG.debug("Deleted " + simpleClassName + " with ID " + id);
+			return new ResponseEntity<E>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			LOG.error("Error deleting entity with ID " + id + ": "
+					+ e.getMessage());
 			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
 		}
 	}
-
 }
