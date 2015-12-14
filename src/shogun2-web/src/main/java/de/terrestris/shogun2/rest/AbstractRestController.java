@@ -17,6 +17,7 @@ import de.terrestris.shogun2.service.AbstractCrudService;
 /**
  * @author Kai Volland
  * @author Daniel Koch
+ * @author Nils Bühner
  *
  */
 @RequestMapping(value = "/rest")
@@ -32,7 +33,7 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	private AbstractCrudService<E> service;
 
 	/**
-	 * Find all Entities.
+	 * Find all entities.
 	 *
 	 * @return
 	 */
@@ -49,9 +50,16 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<E> get(@PathVariable int id) {
-		E entity = this.service.findById(id);
-		return new ResponseEntity<E>(entity, HttpStatus.OK);
+	public ResponseEntity<E> findById(@PathVariable Integer id) {
+
+		try {
+			E entity = this.service.findById(id);
+			return new ResponseEntity<E>(entity, HttpStatus.OK);
+		} catch (Exception e) {
+			LOG.error("Error finding entity with id " + id + ": "
+					+ e.getMessage());
+			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	/**
