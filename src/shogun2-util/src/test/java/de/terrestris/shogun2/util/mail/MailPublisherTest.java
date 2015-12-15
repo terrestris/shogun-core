@@ -221,9 +221,6 @@ public class MailPublisherTest {
 		// asynchronously in a separate thread
 		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		// the BCC header isn't carried in the message-header, therefore we
-		// can't access it directly and we can only test if two mails were
-		// sent without having a TO-header set
 		Message[] messages = greenMail.getReceivedMessages();
 		assertEquals(1, messages.length);
 
@@ -401,9 +398,6 @@ public class MailPublisherTest {
 		// asynchronously in a separate thread
 		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		// the BCC header isn't carried in the message-header, therefore we
-		// can't access it directly and we can only test if two mails were
-		// sent without having a TO-header set
 		Message[] messages = greenMail.getReceivedMessages();
 		assertEquals(1, messages.length);
 
@@ -442,9 +436,6 @@ public class MailPublisherTest {
 		// asynchronously in a separate thread
 		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		// the BCC header isn't carried in the message-header, therefore we
-		// can't access it directly and we can only test if two mails were
-		// sent without having a TO-header set
 		Message[] messages = greenMail.getReceivedMessages();
 		assertEquals(1, messages.length);
 
