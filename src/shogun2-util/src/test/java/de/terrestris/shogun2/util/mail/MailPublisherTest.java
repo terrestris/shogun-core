@@ -25,7 +25,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context.xml" })
+@ContextConfiguration(locations = { "classpath*:META-INF/spring/mail-test-context.xml" })
 public class MailPublisherTest {
 
 	/**
