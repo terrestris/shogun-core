@@ -18,7 +18,8 @@
         <jdbc:script location="classpath:META-INF/sql/create_acl_schema.sql"/>
     </jdbc:initialize-database>
 
-    <context:component-scan base-package="de.terrestris.shogun2" />
+    <context:component-scan base-package="de.terrestris.shogun2.security,
+        de.terrestris.shogun2.service, de.terrestris.shogun2.dao" />
 
     <context:property-placeholder location="classpath*:META-INF/*.properties" />
 

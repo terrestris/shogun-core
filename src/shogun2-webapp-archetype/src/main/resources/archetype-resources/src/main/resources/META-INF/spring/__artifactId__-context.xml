@@ -37,4 +37,31 @@
         </constructor-arg>
     </bean>
 
+    <!-- The mailSender configuration -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.server.host}" />
+        <property name="port" value="${mail.server.port}" />
+        <property name="username" value="${mail.server.username}" />
+        <property name="password" value="${mail.server.password}" />
+        <property name="javaMailProperties">
+           <props>
+                  <prop key="mail.transport.protocol">${mail.server.transportProtocol}</prop>
+                  <prop key="mail.smtp.auth">${mail.server.smtpAuth}</prop>
+                  <prop key="mail.smtp.starttls.enable">${mail.server.smtpStartTlsEnable}</prop>
+               </props>
+        </property>
+    </bean>
+
+    <!-- The default mail sender -->
+    <bean id="defaultMailSender" class="java.lang.String">
+        <constructor-arg value="${mail.defaultSender}"></constructor-arg>
+    </bean>
+
+    <!-- A simple mail message template -->
+    <bean id="registrationMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="${mail.defaultSender}" />
+        <property name="subject" value="${mail.registrationMailTemplateSubject}" />
+        <property name="text" value="${mail.registrationMailTemplateText}" />
+    </bean>
+
 </beans>
