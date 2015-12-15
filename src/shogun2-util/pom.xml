@@ -40,13 +40,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shogun2-model</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -77,4 +73,3 @@
     </dependencies>
 
 </project>
-

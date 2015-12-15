@@ -22,9 +22,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.terrestris.shogun2.converter.PropertyValueConverter;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layout.Layout;
-import de.terrestris.shogun2.util.converter.PropertyValueConverter;
 
 /**
  * A module is the visual representation of a component in the GUI. A module can

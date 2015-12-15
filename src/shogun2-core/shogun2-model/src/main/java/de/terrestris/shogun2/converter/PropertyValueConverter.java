@@ -1,7 +1,7 @@
 /**
  *
  */
-package de.terrestris.shogun2.util.converter;
+package de.terrestris.shogun2.converter;
 
 import javax.persistence.AttributeConverter;
 
