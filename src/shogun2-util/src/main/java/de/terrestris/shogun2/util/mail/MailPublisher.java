@@ -169,6 +169,13 @@ public class MailPublisher {
 	}
 
 	/**
+	 * @return the mailSender
+	 */
+	public JavaMailSender getMailSender() {
+		return mailSender;
+	}
+
+	/**
 	 * @param mailSender the mailSender to set
 	 */
 	public void setMailSender(JavaMailSender mailSender) {
