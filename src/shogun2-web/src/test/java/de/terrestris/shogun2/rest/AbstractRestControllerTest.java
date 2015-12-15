@@ -20,64 +20,104 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.service.ApplicationService;
+import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.service.AbstractCrudService;
 
 /**
  *
  * @author Kai Volland
  * @author Nils Bühner
- * 
- * @param <E>
+ *
  */
-public class AbstractRestControllerTest<E> {
+public class AbstractRestControllerTest {
 
+	/**
+	 * A private model class for that exists only to test the
+	 * {@link AbstractRestController}.
+	 *
+	 */
+	private class TestModel extends PersistentObject {
+		private static final long serialVersionUID = 1L;
+		private String testValue;
+		@SuppressWarnings("unused")
+		public String getTestValue() {return testValue;}
+		public void setTestValue(String testValue) {this.testValue = testValue;}
+	}
+
+	/**
+	 * A private REST controller for the {@link TestModel}. This class
+	 * only exists in the scope of this test and is used to test the
+	 * {@link AbstractRestController}.
+	 */
+	@RestController
+	@RequestMapping("/test")
+	private class TestModelRestController extends AbstractRestController<TestModel> {}
+
+	/**
+	 * Spring MVC test support
+	 */
 	private MockMvc mockMvc;
 
+	/**
+	 * The service, whose behavior will be mocked up. It will be injected to the
+	 * controller to test.
+	 */
 	@Mock
-	private ApplicationService applicationServiceMock;
+	private AbstractCrudService<TestModel> serviceMock;
 
+	/**
+	 * The controller that will be tested.
+	 */
 	@InjectMocks
-	private ApplicationRestController applicationRestController;
+	private AbstractRestController<TestModel> restController;
 
+	/**
+	 * Test setup and init of mocks.
+	 */
 	@Before
 	public void setUp() {
+
+		restController = new TestModelRestController();
 
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
 
 		// Setup Spring test in standalone mode
-		this.mockMvc = MockMvcBuilders.standaloneSetup(applicationRestController)
-				.build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(restController).build();
 	}
 
+	/**
+	 * Tests whether the REST findAll interface will return all entities and a
+	 * HTTP Status Code 200 (OK).
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void findAllEntities_shouldReturn_ListOfEntitiesAndOK()
 			throws Exception {
-		String firstAppName = "Application 0";
-		String secondAppName = "Application 1";
+		String firstValue = "value 1";
+		String secondValue = "value 2";
 
-		String firstAppDesc = "Description of Application 0";
-		String secondAppDesc = "Description of Application 1";
+		TestModel first = new TestModel();
+		first.setTestValue(firstValue);
 
-		Application first = new Application(firstAppName, firstAppDesc);
-		Application second = new Application(secondAppName, secondAppDesc);
+		TestModel second = new TestModel();
+		second.setTestValue(secondValue);
 
-		when(applicationServiceMock.findAll()).thenReturn(
-				Arrays.asList(first, second));
+		when(serviceMock.findAll()).thenReturn(Arrays.asList(first, second));
 
-		mockMvc.perform(get("/applications"))
+		// Test GET method
+		mockMvc.perform(get("/test"))
 			.andExpect(status().isOk())
-			.andExpect(
-				content().contentType("application/json;charset=UTF-8"))
+			.andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(jsonPath("$", hasSize(2)))
-			.andExpect(jsonPath("$[0].name", is(firstAppName)))
-			.andExpect(jsonPath("$[0].description", is(firstAppDesc)))
-			.andExpect(jsonPath("$[1].name", is(secondAppName)))
-			.andExpect(jsonPath("$[1].description", is(secondAppDesc)));
+			.andExpect(jsonPath("$[0].testValue", is(firstValue)))
+			.andExpect(jsonPath("$[1].testValue", is(secondValue)));
 
-		verify(applicationServiceMock, times(1)).findAll();
-		verifyNoMoreInteractions(applicationServiceMock);
+		verify(serviceMock, times(1)).findAll();
+		verifyNoMoreInteractions(serviceMock);
 	}
 }
