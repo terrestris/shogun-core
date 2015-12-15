@@ -12,7 +12,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 
 import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,13 @@ public class MailPublisherTest {
 	/**
 	 * The test-suite mail server.
 	 */
-	private GreenMail greenMail;
+	private static GreenMail greenMail;
 
 	/**
 	 * Start the mail server before each test.
 	 */
-	@Before
-	public void startMailServer() {
+	@BeforeClass
+	public static void startMailServer() {
 		greenMail = new GreenMail(ServerSetupTest.SMTP);
 		greenMail.start();
 	}
@@ -57,9 +58,18 @@ public class MailPublisherTest {
 	/**
 	 * Stop the mail server after each test.
 	 */
-	@After
-	public void stopMailServer() {
+	@AfterClass
+	public static void stopMailServer() {
 		greenMail.stop();
+	}
+
+	/**
+	 *
+	 */
+	@After
+	@SuppressWarnings("static-method")
+	public void resetMailServer() {
+		greenMail.reset();
 	}
 
 	/**
