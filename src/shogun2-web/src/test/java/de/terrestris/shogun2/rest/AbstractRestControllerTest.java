@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
+import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  *
@@ -53,7 +54,7 @@ public class AbstractRestControllerTest {
 	 * {@link AbstractRestController}.
 	 */
 	@RestController
-	@RequestMapping("/test")
+	@RequestMapping("/tests")
 	private class TestModelRestController extends AbstractRestController<TestModel> {}
 
 	/**
@@ -92,7 +93,7 @@ public class AbstractRestControllerTest {
 	/**
 	 * Tests whether the REST findAll interface will return all entities and a
 	 * HTTP Status Code 200 (OK).
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -110,7 +111,7 @@ public class AbstractRestControllerTest {
 		when(serviceMock.findAll()).thenReturn(Arrays.asList(first, second));
 
 		// Test GET method
-		mockMvc.perform(get("/test"))
+		mockMvc.perform(get("/tests"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(jsonPath("$", hasSize(2)))
@@ -120,4 +121,34 @@ public class AbstractRestControllerTest {
 		verify(serviceMock, times(1)).findAll();
 		verifyNoMoreInteractions(serviceMock);
 	}
+
+	/**
+	 * Tests whether the REST findById interface will return an expected entity
+	 * and a HTTP Status Code 200 (OK).
+	 * @throws Exception
+	 *
+	 */
+	@Test
+	public void findById_shouldReturn_EntityAndOK() throws Exception {
+		int id = 42;
+		String value = "value";
+
+		TestModel testInstance = new TestModel();
+		testInstance.setTestValue(value);
+
+		TestUtil.setIdOnPersistentObject(testInstance, id);
+
+		when(serviceMock.findById(id)).thenReturn(testInstance);
+
+		// Test GET method with ID
+		mockMvc.perform(get("/tests/" + id))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("application/json;charset=UTF-8"))
+			.andExpect(jsonPath("$.id", is(id)))
+			.andExpect(jsonPath("$.testValue", is(value)));
+
+		verify(serviceMock, times(1)).findById(id);
+		verifyNoMoreInteractions(serviceMock);
+	}
+
 }
