@@ -233,6 +233,11 @@ public class MailPublisherTest {
 		assertEquals(to, messages[0].getRecipients(
 				Message.RecipientType.TO)[0].toString());
 
+		assertTrue(GreenMailUtil.getBody(
+				messages[0]).contains(str1));
+
+		assertTrue(GreenMailUtil.getBody(
+				messages[0]).contains(str2));
 	}
 
 	/**
