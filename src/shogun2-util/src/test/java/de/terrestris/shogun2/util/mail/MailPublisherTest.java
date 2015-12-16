@@ -77,7 +77,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMail_minimal_configuration() throws MessagingException {
+	public void sendMail_minimal_configuration() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -109,7 +109,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMail_replyTo() throws MessagingException {
+	public void sendMail_replyTo() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -141,7 +141,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMail_cc() throws MessagingException {
+	public void sendMail_cc() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -174,7 +174,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMail_bcc() throws MessagingException {
+	public void sendMail_bcc() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {};
@@ -207,7 +207,7 @@ public class MailPublisherTest {
 	 *
 	 */
 	@Test
-	public void sendMail_template() throws MessagingException {
+	public void sendMail_template() throws Exception, MessagingException {
 
 		String to = "to@shogun2.de";
 
@@ -252,7 +252,7 @@ public class MailPublisherTest {
 	 *
 	 */
 	@Test
-	public void sendMimeMail_minimal_configuration() throws MessagingException {
+	public void sendMimeMail_minimal_configuration() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -289,7 +289,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMimeMail_replyTo() throws MessagingException {
+	public void sendMimeMail_replyTo() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -322,7 +322,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMimeMail_cc() throws MessagingException {
+	public void sendMimeMail_cc() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -356,7 +356,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMimeMail_bcc() throws MessagingException {
+	public void sendMimeMail_bcc() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {};
@@ -391,7 +391,7 @@ public class MailPublisherTest {
 	 * @throws MessagingException
 	 */
 	@Test
-	public void sendMimeMail_html() throws MessagingException {
+	public void sendMimeMail_html() throws Exception, MessagingException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
@@ -421,7 +421,7 @@ public class MailPublisherTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void sendMimeMail_attachment() throws MessagingException, IOException {
+	public void sendMimeMail_attachment() throws Exception, MessagingException, IOException {
 
 		String from = "from@shogun2.de";
 		String[] to = {"to@shogun2.de"};
