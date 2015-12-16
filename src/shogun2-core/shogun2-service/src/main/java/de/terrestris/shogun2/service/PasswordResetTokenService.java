@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.token.PasswordResetToken;
  * @author Daniel Koch
  *
  */
-@Service("passwordResetService")
+@Service("passwordResetTokenService")
 public class PasswordResetTokenService extends AbstractCrudService<PasswordResetToken> {
 
 	/**
@@ -50,7 +50,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 				Restrictions.eq("token", token)
 		);
 
-		PasswordResetToken passwordResetToken = 
+		PasswordResetToken passwordResetToken =
 				dao.findByUniqueCriteria(criteria);
 
 		return passwordResetToken;
@@ -60,28 +60,38 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 *
 	 * @param user
 	 * @return
+	 * @throws Exception
 	 */
-	public PasswordResetToken generateResetPasswordToken(User user) {
+	public PasswordResetToken generateResetPasswordToken(User user) throws Exception {
 
 		PasswordResetToken passwordResetToken;
 
+		// generate the token itself
 		String token = UUID.randomUUID().toString();
 
 		// check if the user has an open reset request / not used token
 		passwordResetToken = findByUser(user);
 
-		// if so, delete it
+		// if it's present, delete it
 		if (passwordResetToken != null) {
 			LOG.debug("User has an open request already, delete it first");
 			dao.delete(passwordResetToken);
 		}
 
-		// and create a blank new one
-		passwordResetToken = new PasswordResetToken();
-		passwordResetToken.setUser(user);
-		passwordResetToken.setToken(token);
+		// and try to create a blank new one
+		try {
+			passwordResetToken = new PasswordResetToken();
+			passwordResetToken.setUser(user);
+			passwordResetToken.setToken(token);
 
-		dao.saveOrUpdate(passwordResetToken);
+			dao.saveOrUpdate(passwordResetToken);
+
+			LOG.debug("Successfully created the reset-password token.");
+
+		} catch(Exception e) {
+			throw new Exception("Could not create the reset-password "
+					+ "token: " + e.getMessage());
+		}
 
 		return passwordResetToken;
 	}
