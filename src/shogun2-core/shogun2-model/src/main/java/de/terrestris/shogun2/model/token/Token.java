@@ -122,7 +122,7 @@ public abstract class Token extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(17, 37).
+		return new HashCodeBuilder(17, 29).
 				appendSuper(super.hashCode()).
 				append(getToken()).
 				append(getExpirationDate()).
