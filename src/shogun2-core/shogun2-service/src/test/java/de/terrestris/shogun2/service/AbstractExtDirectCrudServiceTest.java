@@ -16,7 +16,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +45,7 @@ import ch.ralscha.extdirectspring.bean.SortInfo;
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
+import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  * Test for the {@link AbstractCrudService}.
@@ -110,7 +110,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
-				setIdOnPersistentObject(po, 1);
+				TestUtil.setIdOnPersistentObject(po, 1);
 
 				return po;
 			}
@@ -151,7 +151,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 		ReadableDateTime created = implToTest.getCreated();
 		ReadableDateTime modified = implToTest.getModified();
 
-		setIdOnPersistentObject(implToTest, id);
+		TestUtil.setIdOnPersistentObject(implToTest, id);
 
 		doAnswer(new Answer<E>() {
 			public E answer(InvocationOnMock invocation)
@@ -193,7 +193,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 
 		Integer existingId = 17;
 
-		setIdOnPersistentObject(implToTest, existingId);
+		TestUtil.setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
 		doReturn(implToTest).when(dao).findById(existingId);
@@ -249,8 +249,8 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 		E obj1 = (E) implToTest;
 		E obj2 = (E) BeanUtils.cloneBean(obj1);
 
-		setIdOnPersistentObject(obj1, id1);
-		setIdOnPersistentObject(obj2, id2);
+		TestUtil.setIdOnPersistentObject(obj1, id1);
+		TestUtil.setIdOnPersistentObject(obj2, id2);
 
 		persistedObjectList.add((E) obj1);
 		persistedObjectList.add((E) obj2);
@@ -309,7 +309,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 
 		Integer existingId = 17;
 
-		setIdOnPersistentObject(implToTest, existingId);
+		TestUtil.setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
 		doReturn(implToTest).when(dao).findById(existingId);
@@ -372,7 +372,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
-				setIdOnPersistentObject(po, nextId);
+				TestUtil.setIdOnPersistentObject(po, nextId);
 				nextId++;
 
 				return po;
@@ -526,30 +526,8 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 			InvocationTargetException, NoSuchMethodException {
 		@SuppressWarnings("unchecked")
 		E obj = (E) BeanUtils.cloneBean(implToTest);
-		setIdOnPersistentObject(obj, id);
+		TestUtil.setIdOnPersistentObject(obj, id);
 		return obj;
 	}
 
-	/**
-	 * Helper method that uses reflection to set the (inaccessible) id field of
-	 * the given {@link PersistentObject}.
-	 * 
-	 * @param persistentObject
-	 *            The object with the inaccessible id field
-	 * @param id
-	 *            The id to set
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 */
-	private static final void setIdOnPersistentObject(
-			PersistentObject persistentObject, Integer id)
-			throws NoSuchFieldException, IllegalAccessException {
-		// use reflection to get the inaccessible final field 'id'
-		Field idField = PersistentObject.class.getDeclaredField("id");
-
-		// make the field accessible and set the value
-		idField.setAccessible(true);
-		idField.set(persistentObject, id);
-		idField.setAccessible(false);
-	}
 }

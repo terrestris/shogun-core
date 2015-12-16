@@ -3,10 +3,11 @@
 #set(
 $symbol_escape = '\' )
 #if( ${package} == ${shogun2-parent-package} )
-#set( $web_packages_to_scan = "${shogun2-parent-package}.*.web" )
+#set( $web_packages_to_scan = "${shogun2-parent-package}.*.rest,
+${shogun2-parent-package}.*.web" )
 #else
-#set ( $web_packages_to_scan = "${shogun2-parent-package}.*.web,
-${package}.web" )
+#set ( $web_packages_to_scan = "${shogun2-parent-package}.*.rest,
+ ${shogun2-parent-package}.*.web, ${package}.web" )
 #end
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/context"
