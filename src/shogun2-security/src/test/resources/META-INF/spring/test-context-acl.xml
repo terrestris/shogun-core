@@ -19,7 +19,12 @@
     </jdbc:initialize-database>
 
     <context:component-scan base-package="de.terrestris.shogun2.security,
-        de.terrestris.shogun2.service, de.terrestris.shogun2.dao" />
+            de.terrestris.shogun2.dao" />
+
+    <context:component-scan base-package="de.terrestris.shogun2.service" use-default-filters="false">
+        <context:include-filter type="aspectj" expression="de.terrestris.shogun2.service..ApplicationService*"/>
+        <context:include-filter type="aspectj" expression="de.terrestris.shogun2.service..PersonService*"/>
+    </context:component-scan>
 
     <context:property-placeholder location="classpath*:META-INF/*.properties" />
 
