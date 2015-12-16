@@ -2,6 +2,8 @@ package de.terrestris.shogun2.web;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,14 +40,14 @@ public class UserController extends AbstractWebController {
 	 * @param email
 	 * @return
 	 */
-	@RequestMapping(value = "/resetPassword.action", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> resetPassword(
+	@RequestMapping(value = "/resetPassword.action", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> resetPassword(HttpServletRequest request,
 			@RequestParam(value = "email") String email) {
 
 		LOG.info("Requested to reset a password.");
 
 		try {
-			Boolean success = userService.resetPassword(email);
+			Boolean success = userService.resetPassword(request, email);
 			if (success) {
 				return this.getModelMapSuccess("Your password has been reset. "
 						+ "Please check your mails!");
@@ -64,15 +66,16 @@ public class UserController extends AbstractWebController {
 	 * @param token
 	 * @return
 	 */
-	@RequestMapping(value = "/changePassword.action", method = RequestMethod.GET)
+	@RequestMapping(value = "/changePassword.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> changePassword(
+			@RequestParam(value = "password") String password,
 			@RequestParam(value = "id") int id,
 			@RequestParam(value = "token") String token) {
 
 		LOG.info("Requested to change a password.");
 
 		try {
-			Boolean success = userService.changePassword(id, token);
+			Boolean success = userService.changePassword(password, id, token);
 			if (success) {
 				return this.getModelMapSuccess("Your password has been changed!");
 			} else {
