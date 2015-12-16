@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.service.PasswordResetTokenService;
 import de.terrestris.shogun2.service.UserService;
 
 /**
@@ -37,6 +38,12 @@ public class UserController extends AbstractWebController {
 
 	/**
 	 *
+	 */
+	@Autowired
+	private PasswordResetTokenService passwordResetTokenService;
+
+	/**
+	 *
 	 * @param email
 	 * @return
 	 */
@@ -47,7 +54,8 @@ public class UserController extends AbstractWebController {
 		LOG.info("Requested to reset a password.");
 
 		try {
-			Boolean success = userService.resetPassword(request, email);
+			Boolean success = passwordResetTokenService
+					.sendResetPasswordMail(request, email);
 			if (success) {
 				return this.getModelMapSuccess("Your password has been reset. "
 						+ "Please check your mails!");
@@ -75,7 +83,8 @@ public class UserController extends AbstractWebController {
 		LOG.info("Requested to change a password.");
 
 		try {
-			Boolean success = userService.changePassword(password, id, token);
+			Boolean success = passwordResetTokenService
+					.changePassword(password, id, token);
 			if (success) {
 				return this.getModelMapSuccess("Your password has been changed!");
 			} else {
