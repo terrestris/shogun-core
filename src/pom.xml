@@ -135,6 +135,9 @@
         <!-- Java Mail API -->
         <javax-mail-api.version>1.5.4</javax-mail-api.version>
 
+        <!-- Java Transaction API -->
+        <jta.version>1.1</jta.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -586,12 +589,20 @@
                 <version>${commons-dbutils.version}</version>
             </dependency>
 
+            <!-- Java -->
+            <dependency>
+                <groupId>javax.transaction</groupId>
+                <artifactId>jta</artifactId>
+                <version>${jta.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>javax.mail-api</artifactId>
                 <version>${javax-mail-api.version}</version>
             </dependency>
 
+            <!-- Mail -->
             <dependency>
                 <groupId>com.sun.mail</groupId>
                 <artifactId>javax.mail</artifactId>
