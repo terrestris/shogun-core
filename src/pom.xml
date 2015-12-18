@@ -84,16 +84,16 @@
         <tomcat.version>8.0.28</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.2.2.RELEASE</spring.version>
-        <spring-security.version>4.0.2.RELEASE</spring-security.version>
+        <spring.version>4.2.4.RELEASE</spring.version>
+        <spring-security.version>4.0.3.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
-        <jackson.version>2.6.3</jackson.version>
+        <jackson.version>2.6.4</jackson.version>
         <ehcache.version>2.10.1</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.0.2.Final</hibernate.version>
-        <c3p0.version>0.9.5.1</c3p0.version>
+        <hibernate.version>5.0.5.Final</hibernate.version>
+        <c3p0.version>0.9.5.2</c3p0.version>
         <h2.version>1.4.190</h2.version>
 
         <!-- Testing -->
@@ -134,6 +134,9 @@
 
         <!-- Java Mail API -->
         <javax-mail-api.version>1.5.4</javax-mail-api.version>
+
+        <!-- Java Transaction API -->
+        <jta.version>1.1</jta.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
@@ -586,12 +589,20 @@
                 <version>${commons-dbutils.version}</version>
             </dependency>
 
+            <!-- Java -->
+            <dependency>
+                <groupId>javax.transaction</groupId>
+                <artifactId>jta</artifactId>
+                <version>${jta.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>javax.mail-api</artifactId>
                 <version>${javax-mail-api.version}</version>
             </dependency>
 
+            <!-- Mail -->
             <dependency>
                 <groupId>com.sun.mail</groupId>
                 <artifactId>javax.mail</artifactId>
