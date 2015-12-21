@@ -11,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
@@ -64,14 +66,16 @@ public class WfsSearch extends Module {
 	/**
 	 * The layers to search in.
 	 */
-	@ElementCollection
-	@CollectionTable(name = "WFSSEARCH_LAYERS", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
-	@Column(name = "LAYER")
+	@ManyToMany
+	@JoinTable(
+		joinColumns = { @JoinColumn(name = "WFSSEARCH_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
+	)
 	@OrderColumn(name = "IDX")
 	// The List of layers will be serialized (JSON) as an array of ID values
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "id"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<Layer> layers = new ArrayList<Layer>();
@@ -81,8 +85,10 @@ public class WfsSearch extends Module {
 	 * response
 	 */
 	@ElementCollection
-	@CollectionTable(name = "WFSSEARCH_FEATUREDATATYPES", joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
-	@Column(name = "FEATUREDATATYPES")
+	@CollectionTable(
+		name = "WFSSEARCHES_FEATUREDATATYPES",
+		joinColumns = @JoinColumn(name = "WFSSEARCH_ID") )
+	@Column(name = "FEATUREDATATYPE")
 	@OrderColumn(name = "IDX")
 	private List<String> allowedFeatureTypeDataTypes = new ArrayList<String>();
 
