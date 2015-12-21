@@ -15,6 +15,11 @@
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <!-- (Optionally) define a prefix for table names -->
+    <bean id="tablePrefix" class="java.lang.String">
+        <constructor-arg value="${symbol_dollar}{ddl.tablePrefix}" />
+    </bean>
+
     <!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html${symbol_pound}jdbc-datasource -->
     <bean id="shogun2DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
         destroy-method="close">

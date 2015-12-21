@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Limits identifier length if necessary.
@@ -19,6 +21,10 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 
 	protected static final int LENGTH_LIMIT_POSTGRESQL = 63;
 
+	@Autowired(required = false)
+	@Qualifier("tablePrefix")
+	private String tablePrefix;
+
 	/**
 	 * Converts table names to lower case and limits the length if necessary.
 	 */
@@ -28,7 +34,7 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 		// call superclass and get string value
 		Identifier tableIdentifier = super.toPhysicalTableName(name, context);
 
-		return convertToLimitedLowerCase(context, tableIdentifier);
+		return convertToLimitedLowerCase(context, tableIdentifier, tablePrefix);
 	}
 
 	/**
@@ -40,17 +46,32 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 		// call superclass and get string value
 		Identifier columnIdentifier = super.toPhysicalColumnName(name, context);
 
-		return convertToLimitedLowerCase(context, columnIdentifier);
+		return convertToLimitedLowerCase(context, columnIdentifier, null);
 	}
 
 	/**
+	 * Converts a given {@link Identifier} to the lower case representation. If
+	 * the given context has a character limit for identifiers, this will be
+	 * respected.
+	 *
 	 * @param context
+	 *            The JDBC context
 	 * @param identifier
+	 *            The identifier
+	 * @param prefix
+	 *            Optional prefix to use for the idenifiert. Will be ignored, if
+	 *            null
 	 * @return
 	 */
-	private Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier) {
+	private Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier, String prefix) {
+		String identifierText = identifier.getText();
+
+		if(prefix != null) {
+			identifierText = prefix + identifierText;
+		}
+
 		// always convert to lowercase
-		String identifierText = identifier.getText().toLowerCase();
+		identifierText = identifierText.toLowerCase();
 
 		// determine the length limit based on the JDBC context
 		Integer lengthLimit = getIdentifierLengthLimit(context);
@@ -91,6 +112,20 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 		// H2 has no limit --> http://stackoverflow.com/a/30477403
 
 		return null;
+	}
+
+	/**
+	 * @return the tablePrefix
+	 */
+	public String getTablePrefix() {
+		return tablePrefix;
+	}
+
+	/**
+	 * @param tablePrefix the tablePrefix to set
+	 */
+	public void setTablePrefix(String tablePrefix) {
+		this.tablePrefix = tablePrefix;
 	}
 
 }
