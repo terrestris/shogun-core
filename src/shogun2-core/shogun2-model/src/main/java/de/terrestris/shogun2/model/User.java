@@ -43,7 +43,6 @@ public class User extends Person {
 
 	@ManyToMany
 	@JoinTable(
-		name = "USER_ROLE",
 		joinColumns = { @JoinColumn(name = "USER_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }
 	)

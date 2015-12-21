@@ -43,7 +43,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	private Extent extent;
 
 	@OneToMany
-	@JoinTable(name = "LAYERDATASOURCE_RESOLUTIONS")
+	@JoinTable(name = "XYZLAYERDATASRC_RESOLUTIONS")
 	private List<Resolution> resolutions = new ArrayList<Resolution>();
 
 	private Integer tileSize;

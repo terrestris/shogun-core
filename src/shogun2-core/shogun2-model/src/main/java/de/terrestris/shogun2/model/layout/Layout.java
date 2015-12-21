@@ -56,7 +56,7 @@ public class Layout extends PersistentObject {
 	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
 	@ElementCollection
-	@CollectionTable(name = "LAYOUT_PROPERTYHINTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
 	@Column(name = "PROPERTYNAME")
 	private Set<String> propertyHints = new HashSet<String>();
 
@@ -65,7 +65,7 @@ public class Layout extends PersistentObject {
 	 * related child modules. {@link CompositeModule#getSubModules()}.
 	 */
 	@ElementCollection
-	@CollectionTable(name = "LAYOUT_PROPERTYMUSTS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
 	@Column(name = "PROPERTYNAME")
 	private Set<String> propertyMusts = new HashSet<String>();
 

@@ -46,9 +46,9 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 
 	@ManyToMany
 	@JoinTable(
-			name = "TILEWMSLAYERDATASRC_LAYERNAME",
-			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
+		name = "TILEWMSLAYERDATASRC_LAYERNAME",
+		joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
@@ -63,9 +63,9 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 
 	@ManyToMany
 	@JoinTable(
-			name = "TILEWMSLAYERDATASOURCE_STYLE",
-			joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
+		name = "TILEWMSLAYERDATASOURCE_STYLE",
+		joinColumns = { @JoinColumn(name = "TILEWMSLAYERDATASOURCE_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)

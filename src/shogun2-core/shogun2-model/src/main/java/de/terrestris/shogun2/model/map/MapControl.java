@@ -50,15 +50,15 @@ public class MapControl extends PersistentObject {
 	 *
 	 */
 	@ElementCollection
-	@MapKeyColumn(name = "MAPCTRLPROPERTY")
+	@MapKeyColumn(name = "PROPERTY")
 	@Column(name = "VALUE")
 	@CollectionTable(
-			name = "MAPCONTROL_MAPCTRLPROPERTIES",
-			joinColumns = @JoinColumn(name = "MAPCONTROL_ID")
+		name = "MAPCONTROLS_PROPERTIES",
+		joinColumns = @JoinColumn(name = "MAPCONTROL_ID")
 	)
 	@Convert(
-			converter = PropertyValueConverter.class,
-			attributeName = "value"
+		converter = PropertyValueConverter.class,
+		attributeName = "value"
 	)
 	private Map<String, Object> mapControlProperties = new HashMap<String, Object>();
 

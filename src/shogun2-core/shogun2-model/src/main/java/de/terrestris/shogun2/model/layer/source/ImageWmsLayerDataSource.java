@@ -44,34 +44,34 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	@ManyToMany
 	@JoinTable(
-			name = "IMAGEWMSLAYERDATASRC_LAYERNAME",
-			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
+		name = "IMAGEWMSLAYERDATASRC_LAYERNAME",
+		joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerNames will be serialized (JSON) as an array of
 	// simple layerName string values
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "layerName"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "layerName"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerName> layerNames;
 
 	@ManyToMany
 	@JoinTable(
-			name = "IMAGEWMSLAYERDATASOURCE_STYLE",
-			joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
+		name = "IMAGEWMSLAYERDATASOURCE_STYLE",
+		joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerStyles will be serialized (JSON) as an array of
 	// simple layerStyle string values
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "styleName"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "styleName"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<GeoWebServiceLayerStyle> layerStyles;

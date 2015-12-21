@@ -54,7 +54,7 @@ public class AbsoluteLayout extends Layout {
 	 * 
 	 */
 	@ElementCollection
-	@CollectionTable(name = "ABSOLUTELAYOUT_COORDS", joinColumns = @JoinColumn(name = "LAYOUT_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
 	@Column(name = "COORD")
 	@OrderColumn(name = "IDX")
 	private List<Point> coords = new ArrayList<Point>();
