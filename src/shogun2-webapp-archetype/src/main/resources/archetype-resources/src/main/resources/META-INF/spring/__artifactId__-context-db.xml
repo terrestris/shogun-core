@@ -38,6 +38,12 @@
         class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="shogun2DataSource" />
         <property name="packagesToScan" value="${model_packages_to_scan}" />
+        <property name="implicitNamingStrategy">
+            <bean class="de.terrestris.shogun2.util.naming.ImplicitNamingStrategyShogun2" />
+        </property>
+        <property name="physicalNamingStrategy">
+            <bean class="de.terrestris.shogun2.util.naming.PhysicalNamingStrategyShogun2" />
+        </property>
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${symbol_dollar}{hibernate.dialect}</prop>
