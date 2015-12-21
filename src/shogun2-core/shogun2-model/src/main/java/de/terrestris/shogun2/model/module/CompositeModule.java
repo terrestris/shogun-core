@@ -54,7 +54,7 @@ public class CompositeModule extends Module {
 	@ManyToMany
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
-		name = "MODULE_SUBMODULE",
+		name = "MODULES_SUBMODULES",
 		joinColumns = { @JoinColumn(name = "MODULE_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "SUBMODULE_ID") }
 	)
