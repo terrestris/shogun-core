@@ -52,6 +52,8 @@ public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaComp
 		plural.append(singular);
 
 		if (singular.endsWith(String.valueOf(LAST_CHAR_Y))) {
+			// e.g. "City" -> "Cities"
+
 			// replace last char with suffix form
 			int length = plural.length();
 			plural.replace(length - 1, length, PLURAL_SUFFIX_IES);
@@ -61,10 +63,17 @@ public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaComp
 				|| singular.endsWith(String.valueOf(LAST_CHAR_Z))
 				|| singular.endsWith(LAST_CHARS_CH)
 				|| singular.endsWith(LAST_CHARS_SH)) {
+			// e.g. "Bus" -> "Buses"
+			// e.g. "Box" -> "Boxes"
+			// e.g. "Buzz" -> "Buzzes"
+			// e.g. "Wish" -> "Wishes"
+			// e.g. "Pitch" -> "Pitches"
 
 			plural.append(PLURAL_SUFFIX_ES);
 
 		} else {
+			// e.g. "Boat" -> "Boats"
+
 			// default
 			plural.append(PLURAL_SUFFIX_S);
 		}
