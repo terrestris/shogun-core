@@ -14,16 +14,16 @@ public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaComp
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String PLURAL_SUFFIX_S = "s";
+	private static final char PLURAL_SUFFIX_S = 's';
 
-	private static final String LAST_CHAR_S = "s";
-	private static final String LAST_CHAR_X = "x";
-	private static final String LAST_CHAR_Z = "z";
+	private static final char LAST_CHAR_S = 's';
+	private static final char LAST_CHAR_X = 'x';
+	private static final char LAST_CHAR_Z = 'z';
 	private static final String LAST_CHARS_CH = "ch";
 	private static final String LAST_CHARS_SH = "sh";
 	private static final String PLURAL_SUFFIX_ES = "es";
 
-	private static final String LAST_CHAR_Y = "y";
+	private static final char LAST_CHAR_Y = 'y';
 	private static final String PLURAL_SUFFIX_IES = "ies";
 
 	/**
@@ -51,14 +51,14 @@ public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaComp
 		// start with singular form
 		plural.append(singular);
 
-		if (singular.endsWith(LAST_CHAR_Y)) {
+		if (singular.endsWith(String.valueOf(LAST_CHAR_Y))) {
 			// replace last char with suffix form
 			int length = plural.length();
 			plural.replace(length - 1, length, PLURAL_SUFFIX_IES);
 
-		} else if (singular.endsWith(LAST_CHAR_S)
-				|| singular.endsWith(LAST_CHAR_X)
-				|| singular.endsWith(LAST_CHAR_Z)
+		} else if (singular.endsWith(String.valueOf(LAST_CHAR_S))
+				|| singular.endsWith(String.valueOf(LAST_CHAR_X))
+				|| singular.endsWith(String.valueOf(LAST_CHAR_Z))
 				|| singular.endsWith(LAST_CHARS_CH)
 				|| singular.endsWith(LAST_CHARS_SH)) {
 
