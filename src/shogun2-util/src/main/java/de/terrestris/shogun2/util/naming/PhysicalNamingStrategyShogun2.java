@@ -19,7 +19,6 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 
 	protected static final int LENGTH_LIMIT_POSTGRESQL = 63;
 
-
 	/**
 	 * Converts table names to lower case and limits the length if necessary.
 	 */
@@ -27,20 +26,41 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 	public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment context) {
 
 		// call superclass and get string value
-		Identifier standardPhysicalIdentifier = super.toPhysicalTableName(name, context);
+		Identifier tableIdentifier = super.toPhysicalTableName(name, context);
 
+		return convertToLimitedLowerCase(context, tableIdentifier);
+	}
+
+	/**
+	 * Converts column names to lower case and limits the length if necessary.
+	 */
+	@Override
+	public Identifier toPhysicalColumnName(Identifier name, JdbcEnvironment context) {
+
+		// call superclass and get string value
+		Identifier columnIdentifier = super.toPhysicalColumnName(name, context);
+
+		return convertToLimitedLowerCase(context, columnIdentifier);
+	}
+
+	/**
+	 * @param context
+	 * @param identifier
+	 * @return
+	 */
+	private Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier) {
 		// always convert to lowercase
-		String tableNameLowerCase = standardPhysicalIdentifier.getText().toLowerCase();
+		String identifierText = identifier.getText().toLowerCase();
 
 		// determine the length limit based on the JDBC context
 		Integer lengthLimit = getIdentifierLengthLimit(context);
 
 		// limit length if necessary
-		if (lengthLimit != null && tableNameLowerCase.length() > lengthLimit) {
-			tableNameLowerCase = StringUtils.substring(tableNameLowerCase, 0, lengthLimit);
+		if (lengthLimit != null && identifierText.length() > lengthLimit) {
+			identifierText = StringUtils.substring(identifierText, 0, lengthLimit);
 		}
 
-		return Identifier.toIdentifier(tableNameLowerCase);
+		return Identifier.toIdentifier(identifierText);
 	}
 
 	/**
