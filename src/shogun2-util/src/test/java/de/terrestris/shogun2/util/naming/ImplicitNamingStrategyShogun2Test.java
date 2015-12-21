@@ -102,7 +102,7 @@ public class ImplicitNamingStrategyShogun2Test {
 	 * @param singularClassName
 	 * @param expectedPluralForm
 	 */
-	private void assertCorrectPluralForm(String singularClassName, String expectedPluralForm) {
+	private void assertCorrectPluralForm(final String singularClassName, String expectedPluralForm) {
 		EntityNaming entityName = new EntityNaming() {
 
 			@Override
