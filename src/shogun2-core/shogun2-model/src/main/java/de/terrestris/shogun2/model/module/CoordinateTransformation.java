@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @Entity
 @Table
-public class CoordinateTransform extends Module {
+public class CoordinateTransformation extends Module {
 
 	/**
 	 *
@@ -39,7 +39,9 @@ public class CoordinateTransform extends Module {
 	 * A list of EPSG-Codes that should be available in the module.
 	 */
 	@ElementCollection
-	@CollectionTable(name = "COORDINATETRANSFORM_EPSG", joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
+	@CollectionTable(
+		name = "COORDINATETRANSFORMATIONS_EPSG",
+		joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
 	@Column(name = "EPSG")
 	@OrderColumn(name = "IDX")
 	private List<String> epsgCodes = new ArrayList<String>();
@@ -53,7 +55,7 @@ public class CoordinateTransform extends Module {
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public CoordinateTransform() {
+	public CoordinateTransformation() {
 	}
 
 	/**
@@ -111,9 +113,9 @@ public class CoordinateTransform extends Module {
 	 *      when using ORM like Hibernate
 	 */
 	public boolean equals(Object obj) {
-		if (!(obj instanceof CoordinateTransform))
+		if (!(obj instanceof CoordinateTransformation))
 			return false;
-		CoordinateTransform other = (CoordinateTransform) obj;
+		CoordinateTransformation other = (CoordinateTransformation) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
