@@ -24,45 +24,83 @@ public class PhysicalNamingStrategyShogun2Test {
 	private final PhysicalNamingStrategyShogun2 namingStrategy = new PhysicalNamingStrategyShogun2();
 
 	/**
-	 * Tests whether physical names are transformed to lowercase.
+	 * Tests whether physical table names are transformed to lowercase.
 	 *
 	 * @throws SQLException
 	 */
 	@Test
-	public void testPhysicalNamesAreLowercase() throws SQLException {
+	public void testPhysicalTableNamesAreLowercase() throws SQLException {
 		String className = "SomeCamelCaseClass";
 		String expectedPhysicalName = "somecamelcaseclass";
 		Dialect dialect = new H2Dialect();
 
-		assertExpectedPhysicalName(dialect, className, expectedPhysicalName);
+		assertExpectedPhysicalTableName(dialect, className, expectedPhysicalName);
 	}
 
 	/**
-	 * Tests whether the Oracle identifier limit is respected.
+	 * Tests whether the Oracle identifier limit is respected in case of tables.
 	 */
 	@Test
-	public void testOracleIdentifierLimit() throws SQLException {
+	public void testOracleTableIdentifierLimit() throws SQLException {
 		int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_ORACLE;
 		Dialect dialect = new Oracle12cDialect();
 
-		testIdentifierLimit(lengthLimit, dialect);
+		testTableIdentifierLimit(lengthLimit, dialect);
 	}
 
 	/**
-	 * Tests whether the PostgreSQL identifier limit is respected.
+	 * Tests whether the PostgreSQL identifier limit is respected in case of
+	 * tables.
 	 */
 	@Test
-	public void testPostgreSqlIdentifierLimit() throws SQLException {
+	public void testPostgreSqlTableIdentifierLimit() throws SQLException {
 		int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_POSTGRESQL;
 		Dialect dialect = new PostgreSQL94Dialect();
 
-		testIdentifierLimit(lengthLimit, dialect);
+		testTableIdentifierLimit(lengthLimit, dialect);
 	}
 
 	/**
-	 * Tests whether the identifier limit is respected.
+	 * Tests whether physical column are transformed to lowercase.
+	 *
+	 * @throws SQLException
 	 */
-	public void testIdentifierLimit(int lengthLimit, Dialect dialect) throws SQLException {
+	@Test
+	public void testPhysicalColumnNamesAreLowercase() throws SQLException {
+		String columnName = "SomeCamelCaseColumn";
+		String expectedPhysicalName = "somecamelcasecolumn";
+		Dialect dialect = new H2Dialect();
+
+		assertExpectedPhysicalColumnName(dialect, columnName, expectedPhysicalName);
+	}
+
+	/**
+	 * Tests whether the Oracle identifier limit is respected in case of columns.
+	 */
+	@Test
+	public void testOracleColumnIdentifierLimit() throws SQLException {
+		int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_ORACLE;
+		Dialect dialect = new Oracle12cDialect();
+
+		testColumnIdentifierLimit(lengthLimit, dialect);
+	}
+
+	/**
+	 * Tests whether the PostgreSQL identifier limit is respected in case of
+	 * columns.
+	 */
+	@Test
+	public void testPostgreSqlColumnIdentifierLimit() throws SQLException {
+		int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_POSTGRESQL;
+		Dialect dialect = new PostgreSQL94Dialect();
+
+		testColumnIdentifierLimit(lengthLimit, dialect);
+	}
+
+	/**
+	 * Tests whether the identifier limit is respected in case of tables.
+	 */
+	public void testTableIdentifierLimit(int lengthLimit, Dialect dialect) throws SQLException {
 
 		char dummyChar = 'A';
 		int exceedingLength = lengthLimit + 1;
@@ -72,22 +110,53 @@ public class PhysicalNamingStrategyShogun2Test {
 
 		assertEquals(expectedLimitedLowerCasePhysicalName.length(), lengthLimit);
 
-		assertExpectedPhysicalName(dialect, exceedingClassName, expectedLimitedLowerCasePhysicalName);
+		assertExpectedPhysicalTableName(dialect, exceedingClassName, expectedLimitedLowerCasePhysicalName);
+	}
+
+	/**
+	 * Tests whether the identifier limit is respected in case of columns.
+	 */
+	public void testColumnIdentifierLimit(int lengthLimit, Dialect dialect) throws SQLException {
+
+		char dummyChar = 'A';
+		int exceedingLength = lengthLimit + 1;
+
+		String exceedingClassName = StringUtils.repeat(dummyChar, exceedingLength);
+		String expectedLimitedLowerCasePhysicalName = StringUtils.repeat(dummyChar, lengthLimit).toLowerCase();
+
+		assertEquals(expectedLimitedLowerCasePhysicalName.length(), lengthLimit);
+
+		assertExpectedPhysicalColumnName(dialect, exceedingClassName, expectedLimitedLowerCasePhysicalName);
 	}
 
 	/**
 	 * @param dialect
 	 * @param className
-	 * @param expectedPhysicalName
+	 * @param expectedPhysicalTableName
 	 */
-	private void assertExpectedPhysicalName(Dialect dialect, String className, String expectedPhysicalName) {
+	private void assertExpectedPhysicalTableName(Dialect dialect, String className, String expectedPhysicalTableName) {
 		JdbcEnvironment context = Mockito.mock(JdbcEnvironment.class);
 		when(context.getDialect()).thenReturn(dialect);
 
 		Identifier classIdentifier = Identifier.toIdentifier(className);
 		String actualPhysicalName = namingStrategy.toPhysicalTableName(classIdentifier, context).getText();
 
-		assertEquals(expectedPhysicalName, actualPhysicalName);
+		assertEquals(expectedPhysicalTableName, actualPhysicalName);
+	}
+
+	/**
+	 * @param dialect
+	 * @param columnName
+	 * @param expectedPhysicalColumnName
+	 */
+	private void assertExpectedPhysicalColumnName(Dialect dialect, String columnName, String expectedPhysicalColumnName) {
+		JdbcEnvironment context = Mockito.mock(JdbcEnvironment.class);
+		when(context.getDialect()).thenReturn(dialect);
+
+		Identifier classIdentifier = Identifier.toIdentifier(columnName);
+		String actualPhysicalName = namingStrategy.toPhysicalColumnName(classIdentifier, context).getText();
+
+		assertEquals(expectedPhysicalColumnName, actualPhysicalName);
 	}
 
 }
