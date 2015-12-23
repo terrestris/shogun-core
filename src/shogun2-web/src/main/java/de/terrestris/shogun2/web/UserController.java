@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.terrestris.shogun2.service.PasswordResetTokenService;
-import de.terrestris.shogun2.service.UserService;
 
 /**
  *
@@ -29,12 +28,6 @@ public class UserController extends AbstractWebController {
 	 */
 	private static final Logger LOG =
 			Logger.getLogger(UserController.class);
-
-	/**
-	 *
-	 */
-	@Autowired
-	private UserService userService;
 
 	/**
 	 *
