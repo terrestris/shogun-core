@@ -90,24 +90,6 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	}
 
 	/**
-	 *
-	 * @return
-	 */
-	public User updateExistingUser(User user) {
-
-		if(user.getId() == null) {
-			// to be sure that we are in the
-			// "update" case, the id must not be null
-			return user;
-		}
-
-		dao.saveOrUpdate(user);
-
-		return user;
-
-	}
-
-	/**
 	 * @return the passwordEncoder
 	 */
 	public PasswordEncoder getPasswordEncoder() {

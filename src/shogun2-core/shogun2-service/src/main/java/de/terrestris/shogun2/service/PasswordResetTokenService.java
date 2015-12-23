@@ -83,9 +83,10 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 */
 	public PasswordResetToken findByUser(User user) {
 
-		SimpleExpression eqEmail = Restrictions.eq("user", user);
+		SimpleExpression eqUser = Restrictions.eq("user", user);
+
 		PasswordResetToken passwordResetToken =
-				dao.findByUniqueCriteria(eqEmail);
+				dao.findByUniqueCriteria(eqUser);
 
 		return passwordResetToken;
 	}
@@ -94,12 +95,9 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 *
 	 * @return
 	 */
-	public PasswordResetToken findByIdAndToken(int id, String token) {
+	public PasswordResetToken findByTokenValue(String token) {
 
-		Criterion criteria = Restrictions.and(
-				Restrictions.eq("id", id),
-				Restrictions.eq("token", token)
-		);
+		Criterion criteria = Restrictions.eq("token", token);
 
 		PasswordResetToken passwordResetToken =
 				dao.findByUniqueCriteria(criteria);
@@ -163,18 +161,17 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	/**
 	 *
 	 * @param password
-	 * @param id
 	 * @param token
 	 * @return
 	 * @throws Exception
 	 */
-	public Boolean changePassword(String password, int id, String token)
+	public Boolean changePassword(String password, String token)
 			throws Exception {
 
 		Boolean success = false;
 
 		// try to find the provided token
-		PasswordResetToken passwordResetToken = findByIdAndToken(id, token);
+		PasswordResetToken passwordResetToken = findByTokenValue(token);
 
 		if (passwordResetToken == null) {
 			throw new Exception("The provided token is not valid.");
@@ -202,7 +199,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// finally update the password (encrypted)
 		try {
 			user.setPassword(passwordEncoder.encode(password));
-			userService.updateExistingUser(user);
+			userService.saveOrUpdate(user);
 			LOG.debug("Successfully updated the password.");
 		} catch(Exception e) {
 			throw new Exception("Could not update the password: "
@@ -225,19 +222,15 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	public URI createResetPasswordURI(HttpServletRequest request,
+	private URI createResetPasswordURI(HttpServletRequest request,
 			PasswordResetToken resetPasswordToken) throws URISyntaxException {
 
 		// get the webapp URI
 		URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);
 
 		// build the change-password URI send to the user
-		URI tokenURI = new URIBuilder()
-				.setScheme(appURI.getScheme())
-				.setHost(appURI.getHost())
-				.setPort(appURI.getPort())
+		URI tokenURI = new URIBuilder(appURI)
 				.setPath(appURI.getPath() + changePasswordPath)
-				.setParameter("id", String.valueOf(resetPasswordToken.getId()))
 				.setParameter("token", resetPasswordToken.getToken())
 				.build();
 

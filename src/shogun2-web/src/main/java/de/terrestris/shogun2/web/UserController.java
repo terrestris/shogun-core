@@ -70,14 +70,13 @@ public class UserController extends AbstractWebController {
 	@RequestMapping(value = "/changePassword.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> changePassword(
 			@RequestParam(value = "password") String password,
-			@RequestParam(value = "id") int id,
 			@RequestParam(value = "token") String token) {
 
 		LOG.info("Requested to change a password.");
 
 		try {
 			Boolean success = passwordResetTokenService
-					.changePassword(password, id, token);
+					.changePassword(password, token);
 			if (success) {
 				return this.getModelMapSuccess("Your password has been changed!");
 			} else {
