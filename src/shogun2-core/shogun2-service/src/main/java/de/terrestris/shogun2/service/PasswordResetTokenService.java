@@ -2,7 +2,6 @@ package de.terrestris.shogun2.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +30,15 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
  */
 @Service("passwordResetTokenService")
 public class PasswordResetTokenService extends AbstractCrudService<PasswordResetToken> {
+
+	/**
+	 * An expiry tolerance in minutes for the creation of a new
+	 * {@link PasswordResetToken}. I.e. if a token is requested for a
+	 * {@link User} and an there is an existing token that expires within the
+	 * minutes configured in this constant, the existing token will be deleted
+	 * and a new one will be created.
+	 */
+	private static final int EXPIRY_TOLERANCE_MINUTES = 5;
 
 	/**
 	 * The Logger
@@ -122,7 +130,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		}
 
 		// generate and save the unique reset-password token for the user
-		PasswordResetToken resetPasswordToken = generateResetPasswordToken(user);
+		PasswordResetToken resetPasswordToken = getValidTokenForUser(user);
 
 		// create the reset-password URI that will be send to the user
 		URI resetPasswordURI = createResetPasswordURI(request,
@@ -237,32 +245,43 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	}
 
 	/**
+	 * Returns a valid (i.e. non-expired) {@link PasswordResetToken} for the
+	 * given user. If the user already has an open and valid token, it will be
+	 * returned. If the user has an invalid (i.e. (soon-) expired) token, it
+	 * will be deleted and a new one will be generated and returned by this
+	 * method.
 	 *
 	 * @param user
-	 * @return
+	 *            The user that wants to reset the password.
+	 * @return A valid (i.e. non-expired) password reset token.
 	 * @throws Exception
 	 */
-	public PasswordResetToken generateResetPasswordToken(User user) throws Exception {
-
-		PasswordResetToken passwordResetToken;
-
-		// generate the token itself
-		String token = UUID.randomUUID().toString();
+	private PasswordResetToken getValidTokenForUser(User user) throws Exception {
 
 		// check if the user has an open reset request / not used token
-		passwordResetToken = findByUser(user);
+		PasswordResetToken passwordResetToken = findByUser(user);
 
-		// if it's present, delete it
+		// if there is already an existing token for the user...
 		if (passwordResetToken != null) {
-			LOG.debug("User has an open request already, delete it first");
-			dao.delete(passwordResetToken);
+
+			if (passwordResetToken.expiresWithin(EXPIRY_TOLERANCE_MINUTES)) {
+				LOG.debug("User already has an expired token (or at least a "
+						+ "token that expires within the next "
+						+ EXPIRY_TOLERANCE_MINUTES + " minutes). This token "
+								+ "will be deleted.");
+
+				// delete the expired token
+				dao.delete(passwordResetToken);
+			} else {
+				// return the existing and valid token
+				return passwordResetToken;
+			}
+
 		}
 
-		// and try to create a blank new one
+		// create a new one
 		try {
-			passwordResetToken = new PasswordResetToken();
-			passwordResetToken.setUser(user);
-			passwordResetToken.setToken(token);
+			passwordResetToken = new PasswordResetToken(user);
 
 			dao.saveOrUpdate(passwordResetToken);
 
