@@ -44,7 +44,7 @@ public class UserController extends AbstractWebController {
 	public @ResponseBody Map<String, Object> resetPassword(HttpServletRequest request,
 			@RequestParam(value = "email") String email) {
 
-		LOG.info("Requested to reset a password.");
+		LOG.debug("Requested to reset a password for " + email);
 
 		try {
 			Boolean success = passwordResetTokenService
@@ -72,7 +72,7 @@ public class UserController extends AbstractWebController {
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "token") String token) {
 
-		LOG.info("Requested to change a password.");
+		LOG.debug("Requested to change a password for token " + token);
 
 		try {
 			Boolean success = passwordResetTokenService

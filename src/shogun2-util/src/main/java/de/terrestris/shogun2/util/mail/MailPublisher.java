@@ -2,6 +2,7 @@ package de.terrestris.shogun2.util.mail;
 
 import java.io.File;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
@@ -88,11 +89,13 @@ public class MailPublisher {
 	 *             content type ("text/plain").
 	 * @param attachmentFilename The attachment file name.
 	 * @param attachmentFile The file resource to be applied to the mail.
+	 * @throws MessagingException 
 	 * @throws Exception 
 	 */
 	public void sendMimeMail(String from, String replyTo, String[] to, String[] cc,
 			String[] bcc, String subject, String msg, Boolean html,
-			String attachmentFilename, File attachmentFile) throws Exception {
+			String attachmentFilename, File attachmentFile)
+					throws MessagingException, MailException {
 
 		Boolean multipart = false;
 
@@ -144,14 +147,10 @@ public class MailPublisher {
 	 * @param mailMessage
 	 * @throws Exception 
 	 */
-	public void sendMail(SimpleMailMessage mailMessage) throws Exception {
+	public void sendMail(SimpleMailMessage mailMessage) throws MailException {
 		LOG.debug("Requested to send a mail");
-		try {
-			mailSender.send(mailMessage);
-			LOG.debug("Successfully send mail.");
-		} catch(MailException e) {
-			throw new Exception("Could not send the mail: " + e.getMessage());
-		}
+		mailSender.send(mailMessage);
+		LOG.debug("Successfully send mail.");
 	}
 
 	/**
@@ -159,14 +158,10 @@ public class MailPublisher {
 	 * @param mimeMessage
 	 * @throws Exception 
 	 */
-	public void sendMail(MimeMessage mimeMessage) throws Exception {
+	public void sendMail(MimeMessage mimeMessage) throws MailException {
 		LOG.debug("Requested to send a mail");
-		try {
-			mailSender.send(mimeMessage);
-			LOG.debug("Successfully send mail.");
-		} catch(MailException e) {
-			throw new Exception("Could not send the mail: " + e.getMessage());
-		}
+		mailSender.send(mimeMessage);
+		LOG.debug("Successfully send mail.");
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -12,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -113,9 +115,10 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 * @throws UsernameNotFoundException
 	 * @throws Exception
 	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException 
 	 */
 	public Boolean sendResetPasswordMail(HttpServletRequest request, String email) throws
-			UsernameNotFoundException, Exception, URISyntaxException {
+			UsernameNotFoundException, URISyntaxException, UnsupportedEncodingException, MailException {
 
 		Boolean success = false;
 
@@ -239,17 +242,15 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 
 	/**
 	 * Returns a valid (i.e. non-expired) {@link PasswordResetToken} for the
-	 * given user. If the user already has an open and valid token, it will be
-	 * returned. If the user has an invalid (i.e. (soon-) expired) token, it
-	 * will be deleted and a new one will be generated and returned by this
-	 * method.
+	 * given user. If the user already owns a valid token, it will be returned.
+	 * If the user has an invalid/expired token, it will be deleted and a new
+	 * one will be generated and returned by this method.
 	 *
 	 * @param user
 	 *            The user that wants to reset the password.
 	 * @return A valid (i.e. non-expired) password reset token.
-	 * @throws Exception
 	 */
-	private PasswordResetToken getValidTokenForUser(User user) throws Exception {
+	private PasswordResetToken getValidTokenForUser(User user) {
 
 		// check if the user has an open reset request / not used token
 		PasswordResetToken passwordResetToken = findByUser(user);
@@ -273,17 +274,11 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		}
 
 		// create a new one
-		try {
-			passwordResetToken = new PasswordResetToken(user);
+		passwordResetToken = new PasswordResetToken(user);
 
-			dao.saveOrUpdate(passwordResetToken);
+		dao.saveOrUpdate(passwordResetToken);
 
-			LOG.debug("Successfully created the reset-password token.");
-
-		} catch(Exception e) {
-			throw new Exception("Could not create the reset-password "
-					+ "token: " + e.getMessage());
-		}
+		LOG.debug("Successfully created the reset-password token.");
 
 		return passwordResetToken;
 	}
