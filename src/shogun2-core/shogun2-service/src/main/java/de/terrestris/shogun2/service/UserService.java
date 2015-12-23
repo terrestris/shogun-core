@@ -22,8 +22,8 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	/**
 	 * The Logger
 	 */
-	private static final Logger LOG =
-			Logger.getLogger(UserService.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(UserService.class);
 
 	/**
 	 * The autowired PasswordEncoder
@@ -40,8 +40,9 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	public User findByAccountName(String accountName) {
 
-		SimpleExpression eqAccountName = Restrictions.eq("accountName",
-				accountName);
+		SimpleExpression eqAccountName =
+			Restrictions.eq("accountName", accountName);
+
 		User user = dao.findByUniqueCriteria(eqAccountName);
 
 		return user;
@@ -54,8 +55,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	public User findByEmail(String email) {
 
-		SimpleExpression eqEmail = Restrictions.eq("email",
-				email);
+		SimpleExpression eqEmail = Restrictions.eq("email", email);
 		User user = dao.findByUniqueCriteria(eqEmail);
 
 		return user;
