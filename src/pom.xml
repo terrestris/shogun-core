@@ -27,6 +27,20 @@
         <url>https://travis-ci.org/terrestris/shogun2</url>
     </ciManagement>
 
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <name>Sonatype Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <developers>
         <developer>
             <!-- the developers github username -->
