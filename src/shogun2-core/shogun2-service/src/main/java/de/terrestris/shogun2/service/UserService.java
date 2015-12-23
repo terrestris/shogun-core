@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,15 @@ import de.terrestris.shogun2.model.User;
 @Service("userService")
 public class UserService extends AbstractExtDirectCrudService<User> {
 
+	/**
+	 * The Logger
+	 */
+	private static final Logger LOG =
+			Logger.getLogger(UserService.class);
+
+	/**
+	 * The autowired PasswordEncoder
+	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -33,6 +43,20 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		SimpleExpression eqAccountName = Restrictions.eq("accountName",
 				accountName);
 		User user = dao.findByUniqueCriteria(eqAccountName);
+
+		return user;
+	}
+
+	/**
+	 *
+	 * @param email
+	 * @return
+	 */
+	public User findByEmail(String email) {
+
+		SimpleExpression eqEmail = Restrictions.eq("email",
+				email);
+		User user = dao.findByUniqueCriteria(eqEmail);
 
 		return user;
 	}
@@ -63,6 +87,24 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		dao.saveOrUpdate(user);
 
 		return user;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public User updateExistingUser(User user) {
+
+		if(user.getId() == null) {
+			// to be sure that we are in the
+			// "update" case, the id must not be null
+			return user;
+		}
+
+		dao.saveOrUpdate(user);
+
+		return user;
+
 	}
 
 	/**

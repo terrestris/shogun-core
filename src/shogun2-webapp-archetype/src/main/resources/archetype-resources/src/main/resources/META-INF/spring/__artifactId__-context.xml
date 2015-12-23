@@ -57,11 +57,23 @@
         <constructor-arg value="${mail.defaultSender}"></constructor-arg>
     </bean>
 
-    <!-- A simple mail message template -->
+    <!-- The registration-success mail message template -->
     <bean id="registrationMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
         <property name="from" value="${mail.defaultSender}" />
         <property name="subject" value="${mail.registrationMailTemplateSubject}" />
         <property name="text" value="${mail.registrationMailTemplateText}" />
+    </bean>
+
+    <!-- The reset-password mail message template -->
+    <bean id="resetPasswordMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="${mail.defaultSender}" />
+        <property name="subject" value="${mail.resetPasswordMailMessageTemplateSubject}" />
+        <property name="text" value="${mail.resetPasswordMailMessageTemplateText}" />
+    </bean>
+
+    <!-- The (relative) URL to your change password client component -->
+    <bean id="changePasswordPath" class="java.lang.String">
+        <constructor-arg value="${login.changePasswordPath}"></constructor-arg>
     </bean>
 
 </beans>

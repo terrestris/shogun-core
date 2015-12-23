@@ -2,7 +2,6 @@ package de.terrestris.shogun2.util.mail;
 
 import java.io.File;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
@@ -51,9 +50,10 @@ public class MailPublisher {
 	 * @param bcc A list of blind carbon copy mail recipient addresses.
 	 * @param subject The mail subject.
 	 * @param msg The mail message text.
+	 * @throws Exception 
 	 */
 	public void sendMail(String from, String replyTo, String[] to, String[] cc,
-			String[] bcc, String subject, String msg) {
+			String[] bcc, String subject, String msg) throws Exception {
 
 		SimpleMailMessage simpleMailMassage = new SimpleMailMessage();
 
@@ -88,12 +88,11 @@ public class MailPublisher {
 	 *             content type ("text/plain").
 	 * @param attachmentFilename The attachment file name.
 	 * @param attachmentFile The file resource to be applied to the mail.
-	 *
-	 * @throws MessagingException
+	 * @throws Exception 
 	 */
 	public void sendMimeMail(String from, String replyTo, String[] to, String[] cc,
 			String[] bcc, String subject, String msg, Boolean html,
-			String attachmentFilename, File attachmentFile) throws MessagingException {
+			String attachmentFilename, File attachmentFile) throws Exception {
 
 		Boolean multipart = false;
 
@@ -143,28 +142,30 @@ public class MailPublisher {
 	/**
 	 *
 	 * @param mailMessage
+	 * @throws Exception 
 	 */
-	public void sendMail(SimpleMailMessage mailMessage) {
+	public void sendMail(SimpleMailMessage mailMessage) throws Exception {
 		LOG.debug("Requested to send a mail");
 		try {
 			mailSender.send(mailMessage);
 			LOG.debug("Successfully send mail.");
 		} catch(MailException e) {
-			LOG.error("Could not send the mail: " + e.getMessage());
+			throw new Exception("Could not send the mail: " + e.getMessage());
 		}
 	}
 
 	/**
 	 *
 	 * @param mimeMessage
+	 * @throws Exception 
 	 */
-	public void sendMail(MimeMessage mimeMessage) {
+	public void sendMail(MimeMessage mimeMessage) throws Exception {
 		LOG.debug("Requested to send a mail");
 		try {
 			mailSender.send(mimeMessage);
 			LOG.debug("Successfully send mail.");
 		} catch(MailException e) {
-			LOG.error("Could not send the mail: " + e.getMessage());
+			throw new Exception("Could not send the mail: " + e.getMessage());
 		}
 	}
 
