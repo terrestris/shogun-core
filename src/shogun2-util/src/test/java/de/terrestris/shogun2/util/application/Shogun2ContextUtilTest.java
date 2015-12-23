@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-public class Shogun2ServletContextTest {
+public class Shogun2ContextUtilTest {
 
 	/**
 	 * The mockup request
