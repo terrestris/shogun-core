@@ -31,9 +31,9 @@ public class PasswordResetToken extends Token {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The default expiration in hours
+	 * The default expiration in minutes
 	 */
-	private static final int DEFAULT_EXPIRATION_HOURS = 48;
+	private static final int DEFAULT_EXPIRATION_MINUTES = 60;
 
 	/**
 	 * The user who has requested the token. Hereby one user can have one
@@ -44,23 +44,23 @@ public class PasswordResetToken extends Token {
 	private final User user;
 
 	/**
-	 * Constructor. Uses the {@link #DEFAULT_EXPIRATION_HOURS} value.
+	 * Constructor. Uses the {@link #DEFAULT_EXPIRATION_MINUTES} value.
 	 *
 	 * @param The user that wants to reset the password.
 	 */
 	public PasswordResetToken(User user) {
-		this(user, DEFAULT_EXPIRATION_HOURS);
+		this(user, DEFAULT_EXPIRATION_MINUTES);
 	}
 
 	/**
 	 * Constructor
 	 *
 	 * @param user The user that wants to reset the password.
-	 * @param expirationInHours The expiration period in hours
+	 * @param expirationInMinutes The expiration period in minutes
 	 */
-	public PasswordResetToken(User user, int expirationInHours) {
+	public PasswordResetToken(User user, int expirationInMinutes) {
 		// call super constructor
-		super(expirationInHours);
+		super(expirationInMinutes);
 
 		// set the user
 		this.user = user;

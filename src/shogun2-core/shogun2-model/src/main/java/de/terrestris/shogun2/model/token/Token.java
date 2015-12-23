@@ -50,9 +50,9 @@ public abstract class Token extends PersistentObject {
 	/**
 	 * Constructor
 	 *
-	 * @param expirationInHours The expiration period in hours
+	 * @param expirationInMinutes The expiration period in minutes
 	 */
-	protected Token(int expirationInHours) {
+	protected Token(int expirationInMinutes) {
 		// call super constructor to assure that created/modified is set
 		super();
 
@@ -60,7 +60,7 @@ public abstract class Token extends PersistentObject {
 		this.token = UUID.randomUUID().toString();
 
 		// set the expiration date
-		this.expirationDate = ((DateTime) getCreated()).plusHours(expirationInHours);
+		this.expirationDate = ((DateTime) getCreated()).plusMinutes(expirationInMinutes);
 	}
 
 	/**
