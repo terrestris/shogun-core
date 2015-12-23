@@ -6,15 +6,13 @@ import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Daniel Koch
  *
  */
-@Component
-public class Shogun2ServletContext {
+public class Shogun2ContextUtil {
 
 	/**
 	 * Returns the full webapplication URI from a given request.
@@ -30,7 +28,7 @@ public class Shogun2ServletContext {
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	public URI getApplicationURIFromRequest(HttpServletRequest request)
+	public static final URI getApplicationURIFromRequest(HttpServletRequest request)
 			throws URISyntaxException {
 
 		URI appURI = null;

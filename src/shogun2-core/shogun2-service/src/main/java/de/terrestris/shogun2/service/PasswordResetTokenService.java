@@ -21,7 +21,7 @@ import org.springframework.web.util.UriUtils;
 
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
-import de.terrestris.shogun2.util.application.Shogun2ServletContext;
+import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
 import de.terrestris.shogun2.util.mail.MailPublisher;
 
 /**
@@ -37,12 +37,6 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 */
 	private static final Logger LOG =
 			Logger.getLogger(PasswordResetTokenService.class);
-
-	/**
-	 *
-	 */
-	@Autowired
-	private Shogun2ServletContext contextUtil;
 
 	/**
 	 *
@@ -227,7 +221,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 			PasswordResetToken resetPasswordToken) throws URISyntaxException {
 
 		// get the webapp URI
-		URI appURI = contextUtil.getApplicationURIFromRequest(request);
+		URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);
 
 		// build the change-password URI send to the user
 		URI tokenURI = new URIBuilder()
@@ -280,20 +274,6 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		}
 
 		return passwordResetToken;
-	}
-
-	/**
-	 * @return the contextUtil
-	 */
-	public Shogun2ServletContext getContextUtil() {
-		return contextUtil;
-	}
-
-	/**
-	 * @param contextUtil the contextUtil to set
-	 */
-	public void setContextUtil(Shogun2ServletContext contextUtil) {
-		this.contextUtil = contextUtil;
 	}
 
 	/**
