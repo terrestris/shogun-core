@@ -108,19 +108,15 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	}
 
 	/**
-	 *
 	 * @param request
 	 * @param email
-	 * @return
 	 * @throws UsernameNotFoundException
-	 * @throws Exception
 	 * @throws URISyntaxException
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
+	 * @throws MailException
 	 */
-	public Boolean sendResetPasswordMail(HttpServletRequest request, String email) throws
+	public void sendResetPasswordMail(HttpServletRequest request, String email) throws
 			UsernameNotFoundException, URISyntaxException, UnsupportedEncodingException, MailException {
-
-		Boolean success = false;
 
 		// get the user by the provided email address
 		User user = userService.findByEmail(email);
@@ -155,23 +151,14 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// and send the mail
 		mailPublisher.sendMail(resetPwdMsg);
 
-		// we did it!
-		success = true;
-
-		return success;
 	}
 
 	/**
-	 *
-	 * @param password
+	 * @param rawPassword
 	 * @param token
-	 * @return
 	 * @throws Exception
 	 */
-	public Boolean changePassword(String password, String token)
-			throws Exception {
-
-		Boolean success = false;
+	public void changePassword(String rawPassword, String token) throws Exception {
 
 		// try to find the provided token
 		PasswordResetToken passwordResetToken = findByTokenValue(token);
@@ -201,7 +188,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 
 		// finally update the password (encrypted)
 		try {
-			user.setPassword(passwordEncoder.encode(password));
+			user.setPassword(passwordEncoder.encode(rawPassword));
 			userService.saveOrUpdate(user);
 			LOG.debug("Successfully updated the password.");
 		} catch(Exception e) {
@@ -212,10 +199,6 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// delete the token
 		dao.delete(passwordResetToken);
 
-		// we did it!
-		success = true;
-
-		return success;
 	}
 
 	/**
