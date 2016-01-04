@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -80,6 +81,9 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 		if (user == null) {
 			LOG.warn("No user for account name '" + accountName + "' could be found.");
 			throw new UsernameNotFoundException(exceptionMessage);
+		} else if (!user.isActive()) {
+			LOG.warn("The user with the account name '" + accountName + "' is not active.");
+			throw new DisabledException(exceptionMessage);
 		} else {
 
 			encryptedPassword = user.getPassword();
