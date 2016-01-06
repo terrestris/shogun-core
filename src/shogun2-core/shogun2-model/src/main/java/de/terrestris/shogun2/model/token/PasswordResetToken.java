@@ -44,6 +44,13 @@ public class PasswordResetToken extends Token {
 	private final User user;
 
 	/**
+	 * Default constructor
+	 */
+	public PasswordResetToken() {
+		this(null, DEFAULT_EXPIRATION_MINUTES);
+	}
+
+	/**
 	 * Constructor. Uses the {@link #DEFAULT_EXPIRATION_MINUTES} value.
 	 *
 	 * @param The user that wants to reset the password.
