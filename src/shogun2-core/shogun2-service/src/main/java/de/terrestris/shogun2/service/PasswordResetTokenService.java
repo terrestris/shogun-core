@@ -28,19 +28,20 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
 /**
  *
  * @author Daniel Koch
+ * @author Nils Bühner
  *
  */
 @Service("passwordResetTokenService")
 public class PasswordResetTokenService extends AbstractCrudService<PasswordResetToken> {
 
 	/**
-	 * An expiry tolerance in minutes for the creation of a new
+	 * An expiry threshold in minutes for the creation of a new
 	 * {@link PasswordResetToken}. I.e. if a token is requested for a
 	 * {@link User} and an there is an existing token that expires within the
 	 * minutes configured in this constant, the existing token will be deleted
 	 * and a new one will be created.
 	 */
-	private static final int EXPIRY_TOLERANCE_MINUTES = 5;
+	private static final int EXPIRY_THRESHOLD_MINUTES = 5;
 
 	/**
 	 * The Logger
@@ -241,10 +242,10 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// if there is already an existing token for the user...
 		if (passwordResetToken != null) {
 
-			if (passwordResetToken.expiresWithin(EXPIRY_TOLERANCE_MINUTES)) {
+			if (passwordResetToken.expiresWithin(EXPIRY_THRESHOLD_MINUTES)) {
 				LOG.debug("User already has an expired token (or at least a "
 						+ "token that expires within the next "
-						+ EXPIRY_TOLERANCE_MINUTES + " minutes). This token "
+						+ EXPIRY_THRESHOLD_MINUTES + " minutes). This token "
 								+ "will be deleted.");
 
 				// delete the expired token
