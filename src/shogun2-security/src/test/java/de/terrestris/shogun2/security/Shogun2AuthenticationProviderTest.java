@@ -213,6 +213,9 @@ public class Shogun2AuthenticationProviderTest {
 		final String correctPassword = "correctPassword";
 		final User userToAuth = createUserMock(shogun2UserName, correctPassword);
 
+		// set user as inactive
+		userToAuth.setActive(false);
+
 		// 2. Mock the auth request for the inactive user
 		Authentication authRequest = mock(Authentication.class);
 		when(authRequest.getName()).thenReturn(shogun2UserName);
