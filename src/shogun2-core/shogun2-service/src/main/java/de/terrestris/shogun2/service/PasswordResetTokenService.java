@@ -1,8 +1,8 @@
 package de.terrestris.shogun2.service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,28 +22,32 @@ import org.springframework.web.util.UriUtils;
 
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
-import de.terrestris.shogun2.util.application.Shogun2ServletContext;
+import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
 import de.terrestris.shogun2.util.mail.MailPublisher;
 
 /**
  *
  * @author Daniel Koch
+ * @author Nils Bühner
  *
  */
 @Service("passwordResetTokenService")
 public class PasswordResetTokenService extends AbstractCrudService<PasswordResetToken> {
 
 	/**
+	 * An expiry threshold in minutes for the creation of a new
+	 * {@link PasswordResetToken}. I.e. if a token is requested for a
+	 * {@link User} and an there is an existing token that expires within the
+	 * minutes configured in this constant, the existing token will be deleted
+	 * and a new one will be created.
+	 */
+	private static final int EXPIRY_THRESHOLD_MINUTES = 5;
+
+	/**
 	 * The Logger
 	 */
 	private static final Logger LOG =
 			Logger.getLogger(PasswordResetTokenService.class);
-
-	/**
-	 *
-	 */
-	@Autowired
-	private Shogun2ServletContext contextUtil;
 
 	/**
 	 *
@@ -81,9 +86,10 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 */
 	public PasswordResetToken findByUser(User user) {
 
-		SimpleExpression eqEmail = Restrictions.eq("user", user);
+		SimpleExpression eqUser = Restrictions.eq("user", user);
+
 		PasswordResetToken passwordResetToken =
-				dao.findByUniqueCriteria(eqEmail);
+				dao.findByUniqueCriteria(eqUser);
 
 		return passwordResetToken;
 	}
@@ -92,12 +98,9 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 *
 	 * @return
 	 */
-	public PasswordResetToken findByIdAndToken(int id, String token) {
+	public PasswordResetToken findByTokenValue(String token) {
 
-		Criterion criteria = Restrictions.and(
-				Restrictions.eq("id", id),
-				Restrictions.eq("token", token)
-		);
+		Criterion criteria = Restrictions.eq("token", token);
 
 		PasswordResetToken passwordResetToken =
 				dao.findByUniqueCriteria(criteria);
@@ -106,18 +109,15 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	}
 
 	/**
-	 *
 	 * @param request
 	 * @param email
-	 * @return
 	 * @throws UsernameNotFoundException
-	 * @throws Exception
 	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws MailException
 	 */
-	public Boolean sendResetPasswordMail(HttpServletRequest request, String email) throws
-			UsernameNotFoundException, Exception, URISyntaxException {
-
-		Boolean success = false;
+	public void sendResetPasswordMail(HttpServletRequest request, String email) throws
+			UsernameNotFoundException, URISyntaxException, UnsupportedEncodingException, MailException {
 
 		// get the user by the provided email address
 		User user = userService.findByEmail(email);
@@ -128,7 +128,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		}
 
 		// generate and save the unique reset-password token for the user
-		PasswordResetToken resetPasswordToken = generateResetPasswordToken(user);
+		PasswordResetToken resetPasswordToken = getValidTokenForUser(user);
 
 		// create the reset-password URI that will be send to the user
 		URI resetPasswordURI = createResetPasswordURI(request,
@@ -152,27 +152,17 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// and send the mail
 		mailPublisher.sendMail(resetPwdMsg);
 
-		// we did it!
-		success = true;
-
-		return success;
 	}
 
 	/**
-	 *
-	 * @param password
-	 * @param id
+	 * @param rawPassword
 	 * @param token
-	 * @return
 	 * @throws Exception
 	 */
-	public Boolean changePassword(String password, int id, String token)
-			throws Exception {
-
-		Boolean success = false;
+	public void changePassword(String rawPassword, String token) throws Exception {
 
 		// try to find the provided token
-		PasswordResetToken passwordResetToken = findByIdAndToken(id, token);
+		PasswordResetToken passwordResetToken = findByTokenValue(token);
 
 		if (passwordResetToken == null) {
 			throw new Exception("The provided token is not valid.");
@@ -199,8 +189,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 
 		// finally update the password (encrypted)
 		try {
-			user.setPassword(passwordEncoder.encode(password));
-			userService.updateExistingUser(user);
+			userService.updatePassword(user, rawPassword);
 			LOG.debug("Successfully updated the password.");
 		} catch(Exception e) {
 			throw new Exception("Could not update the password: "
@@ -210,10 +199,6 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 		// delete the token
 		dao.delete(passwordResetToken);
 
-		// we did it!
-		success = true;
-
-		return success;
 	}
 
 	/**
@@ -223,19 +208,15 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	public URI createResetPasswordURI(HttpServletRequest request,
+	private URI createResetPasswordURI(HttpServletRequest request,
 			PasswordResetToken resetPasswordToken) throws URISyntaxException {
 
 		// get the webapp URI
-		URI appURI = contextUtil.getApplicationURIFromRequest(request);
+		URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);
 
 		// build the change-password URI send to the user
-		URI tokenURI = new URIBuilder()
-				.setScheme(appURI.getScheme())
-				.setHost(appURI.getHost())
-				.setPort(appURI.getPort())
+		URI tokenURI = new URIBuilder(appURI)
 				.setPath(appURI.getPath() + changePasswordPath)
-				.setParameter("id", String.valueOf(resetPasswordToken.getId()))
 				.setParameter("token", resetPasswordToken.getToken())
 				.build();
 
@@ -243,57 +224,46 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	}
 
 	/**
+	 * Returns a valid (i.e. non-expired) {@link PasswordResetToken} for the
+	 * given user. If the user already owns a valid token, it will be returned.
+	 * If the user has an invalid/expired token, it will be deleted and a new
+	 * one will be generated and returned by this method.
 	 *
 	 * @param user
-	 * @return
-	 * @throws Exception
+	 *            The user that wants to reset the password.
+	 * @return A valid (i.e. non-expired) password reset token.
 	 */
-	public PasswordResetToken generateResetPasswordToken(User user) throws Exception {
-
-		PasswordResetToken passwordResetToken;
-
-		// generate the token itself
-		String token = UUID.randomUUID().toString();
+	private PasswordResetToken getValidTokenForUser(User user) {
 
 		// check if the user has an open reset request / not used token
-		passwordResetToken = findByUser(user);
+		PasswordResetToken passwordResetToken = findByUser(user);
 
-		// if it's present, delete it
+		// if there is already an existing token for the user...
 		if (passwordResetToken != null) {
-			LOG.debug("User has an open request already, delete it first");
-			dao.delete(passwordResetToken);
+
+			if (passwordResetToken.expiresWithin(EXPIRY_THRESHOLD_MINUTES)) {
+				LOG.debug("User already has an expired token (or at least a "
+						+ "token that expires within the next "
+						+ EXPIRY_THRESHOLD_MINUTES + " minutes). This token "
+								+ "will be deleted.");
+
+				// delete the expired token
+				dao.delete(passwordResetToken);
+			} else {
+				// return the existing and valid token
+				return passwordResetToken;
+			}
+
 		}
 
-		// and try to create a blank new one
-		try {
-			passwordResetToken = new PasswordResetToken();
-			passwordResetToken.setUser(user);
-			passwordResetToken.setToken(token);
+		// create a new one
+		passwordResetToken = new PasswordResetToken(user);
 
-			dao.saveOrUpdate(passwordResetToken);
+		dao.saveOrUpdate(passwordResetToken);
 
-			LOG.debug("Successfully created the reset-password token.");
-
-		} catch(Exception e) {
-			throw new Exception("Could not create the reset-password "
-					+ "token: " + e.getMessage());
-		}
+		LOG.debug("Successfully created the reset-password token.");
 
 		return passwordResetToken;
-	}
-
-	/**
-	 * @return the contextUtil
-	 */
-	public Shogun2ServletContext getContextUtil() {
-		return contextUtil;
-	}
-
-	/**
-	 * @param contextUtil the contextUtil to set
-	 */
-	public void setContextUtil(Shogun2ServletContext contextUtil) {
-		this.contextUtil = contextUtil;
 	}
 
 	/**

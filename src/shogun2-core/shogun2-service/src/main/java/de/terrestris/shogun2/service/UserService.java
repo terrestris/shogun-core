@@ -22,8 +22,8 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	/**
 	 * The Logger
 	 */
-	private static final Logger LOG =
-			Logger.getLogger(UserService.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(UserService.class);
 
 	/**
 	 * The autowired PasswordEncoder
@@ -40,8 +40,9 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	public User findByAccountName(String accountName) {
 
-		SimpleExpression eqAccountName = Restrictions.eq("accountName",
-				accountName);
+		SimpleExpression eqAccountName =
+			Restrictions.eq("accountName", accountName);
+
 		User user = dao.findByUniqueCriteria(eqAccountName);
 
 		return user;
@@ -54,8 +55,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	public User findByEmail(String email) {
 
-		SimpleExpression eqEmail = Restrictions.eq("email",
-				email);
+		SimpleExpression eqEmail = Restrictions.eq("email", email);
 		User user = dao.findByUniqueCriteria(eqEmail);
 
 		return user;
@@ -91,20 +91,18 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 
 	/**
 	 *
-	 * @return
+	 * @param user
+	 * @param rawPassword
+	 * @throws Exception
 	 */
-	public User updateExistingUser(User user) {
+	public void updatePassword(User user, String rawPassword) throws Exception {
 
 		if(user.getId() == null) {
-			// to be sure that we are in the
-			// "update" case, the id must not be null
-			return user;
+			throw new Exception("The ID of the user object is null.");
 		}
 
+		user.setPassword(passwordEncoder.encode(rawPassword));
 		dao.saveOrUpdate(user);
-
-		return user;
-
 	}
 
 	/**

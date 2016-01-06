@@ -12,17 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-public class Shogun2ServletContextTest {
+public class Shogun2ContextUtilTest {
 
 	/**
 	 * The mockup request
 	 */
 	private MockHttpServletRequest request;
-
-	/**
-	 * The class to test.
-	 */
-	private Shogun2ServletContext shogun2ServletContext = new Shogun2ServletContext();
 
 	/**
 	 *
@@ -59,9 +54,13 @@ public class Shogun2ServletContextTest {
 		request.setContextPath(path);
 		request.setParameters(params);
 
-		URI uri = shogun2ServletContext.getApplicationURIFromRequest(request);
+		// actually call the static method to test
+		URI uri = Shogun2ContextUtil.getApplicationURIFromRequest(request);
 
-		assertEquals(scheme + "://" + host + ":" + port + path, uri.toString());
+		String expected = scheme + "://" + host + ":" + port + path;
+		String actual = uri.toString();
+
+		assertEquals(expected, actual);
 
 	}
 }

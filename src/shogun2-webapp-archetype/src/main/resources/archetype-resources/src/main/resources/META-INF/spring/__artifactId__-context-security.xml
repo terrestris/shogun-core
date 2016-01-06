@@ -27,7 +27,6 @@
 
         <!-- URL security -->
         <intercept-url pattern="/login/**" access="permitAll" />
-        <intercept-url pattern="/user/register.action" access="permitAll" />
         <intercept-url pattern="/user/resetPassword.action" access="permitAll" />
         <intercept-url pattern="/user/changePassword.action" access="permitAll" />
         <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />

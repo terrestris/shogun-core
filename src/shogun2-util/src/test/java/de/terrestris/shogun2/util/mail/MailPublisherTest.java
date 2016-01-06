@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,7 +52,13 @@ public class MailPublisherTest {
 	 */
 	@BeforeClass
 	public static void startMailServer() {
-		greenMail = new GreenMail(ServerSetupTest.SMTP);
+		ServerSetup smtp = ServerSetupTest.SMTP;
+
+		// set timeout as we ran into this issue with CI:
+		// https://github.com/greenmail-mail-test/greenmail/issues/76
+		smtp.setServerStartupTimeout(3000L);
+
+		greenMail = new GreenMail(smtp);
 		greenMail.start();
 	}
 

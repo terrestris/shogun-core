@@ -1,6 +1,8 @@
 package de.terrestris.shogun2.model.token;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,11 +10,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.terrestris.shogun2.model.User;
+
 /**
  *
- * The PasswordResetToken class.
+ * A {@link Token} instance that has a one-to-one relation to a {@link User}
+ * that wants to reset the password.
  *
  * @author Daniel Koch
+ * @author Nils Bühner
  *
  */
 @Entity
@@ -25,15 +31,53 @@ public class PasswordResetToken extends Token {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The password token should be valid for 48h.
+	 * The default expiration in minutes
 	 */
-	private static final int expiration = 48;
+	private static final int DEFAULT_EXPIRATION_MINUTES = 60;
+
+	/**
+	 * The user who has requested the token. Hereby one user can have one
+	 * token and one token can be used by one user (at the same time) only.
+	 */
+	@OneToOne
+	@JoinColumn(name = "USER_ID")
+	private final User user;
+
+	/**
+	 * Default constructor
+	 */
+	public PasswordResetToken() {
+		this(null, DEFAULT_EXPIRATION_MINUTES);
+	}
+
+	/**
+	 * Constructor. Uses the {@link #DEFAULT_EXPIRATION_MINUTES} value.
+	 *
+	 * @param The user that wants to reset the password.
+	 */
+	public PasswordResetToken(User user) {
+		this(user, DEFAULT_EXPIRATION_MINUTES);
+	}
 
 	/**
 	 * Constructor
+	 *
+	 * @param user The user that wants to reset the password.
+	 * @param expirationInMinutes The expiration period in minutes
 	 */
-	public PasswordResetToken() {
-		super(expiration);
+	public PasswordResetToken(User user, int expirationInMinutes) {
+		// call super constructor
+		super(expirationInMinutes);
+
+		// set the user
+		this.user = user;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
 	}
 
 	/**
@@ -49,6 +93,7 @@ public class PasswordResetToken extends Token {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(17, 37).
 				appendSuper(super.hashCode()).
+				append(getUser()).
 				toHashCode();
 	}
 
@@ -68,6 +113,7 @@ public class PasswordResetToken extends Token {
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
+				append(getUser(), other.getUser()).
 				isEquals();
 	}
 

@@ -1,11 +1,11 @@
 package de.terrestris.shogun2.model.token;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,12 +16,13 @@ import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
 import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.model.User;
 
 /**
- * Base class for all tokens.
+ * Abstract base class for all tokens. A UUID token will be generated on
+ * instantiation. An expiration period has to be given in constructor.
  *
  * @author Daniel Koch
+ * @author Nils Bühner
  *
  */
 @Entity
@@ -34,17 +35,10 @@ public abstract class Token extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The token validity period (in hours).
-	 *
-	 * The Default is to 24.
-	 *
+	 * The (unique) token string itself.
 	 */
-	private static final int expiration = 24;
-
-	/**
-	 * The token string itself.
-	 */
-	private String token;
+	@Column(unique = true, updatable = false)
+	private final String token;
 
 	/**
 	 * The expiration date of the token. Will be set
@@ -54,19 +48,35 @@ public abstract class Token extends PersistentObject {
 	private final ReadableDateTime expirationDate;
 
 	/**
-	 * The user who has requested the token. Hereby one user can have one
-	 * token and one token can be used by one user (at the same time) only.
+	 * Constructor
+	 *
+	 * @param expirationInMinutes The expiration period in minutes
 	 */
-	@OneToOne
-	@JoinColumn(name = "USER_ID")
-	private User user;
+	protected Token(int expirationInMinutes) {
+		// call super constructor to assure that created/modified is set
+		super();
+
+		// create token
+		this.token = UUID.randomUUID().toString();
+
+		// set the expiration date
+		this.expirationDate = ((DateTime) getCreated()).plusMinutes(expirationInMinutes);
+	}
 
 	/**
-	 * Constructor
+	 * Helper method that returns true, if the token is expired in the given
+	 * number of minutes (starting from the current point of time).
+	 *
+	 * @param minutes
+	 * @return Whether or not the token expires within the given number of
+	 *         minutes.
 	 */
-	protected Token(int expiration) {
-		// set the expiration date
-		this.expirationDate = DateTime.now().plusHours(expiration);
+	public boolean expiresWithin(int minutes) {
+
+		DateTime dateToCheck = DateTime.now().plusMinutes(minutes);
+		boolean isExpired = dateToCheck.isAfter(this.expirationDate);
+
+		return isExpired;
 	}
 
 	/**
@@ -74,34 +84,6 @@ public abstract class Token extends PersistentObject {
 	 */
 	public String getToken() {
 		return token;
-	}
-
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	/**
-	 * @return the user
-	 */
-	public User getUser() {
-		return user;
-	}
-
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	/**
-	 * @return the expiration
-	 */
-	public static int getExpiration() {
-		return expiration;
 	}
 
 	/**
@@ -126,7 +108,6 @@ public abstract class Token extends PersistentObject {
 				appendSuper(super.hashCode()).
 				append(getToken()).
 				append(getExpirationDate()).
-				append(getUser()).
 				toHashCode();
 	}
 
@@ -148,7 +129,6 @@ public abstract class Token extends PersistentObject {
 				appendSuper(super.equals(other)).
 				append(getToken(), other.getToken()).
 				append(getExpirationDate(), other.getExpirationDate()).
-				append(getUser(), other.getUser()).
 				isEquals();
 	}
 
