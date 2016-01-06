@@ -48,7 +48,7 @@ import de.terrestris.shogun2.paging.PagingResult;
 import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
- * Test for the {@link AbstractCrudService}.
+ * Test for the {@link AbstractExtDirectCrudService}.
  * 
  * @author Nils Bühner
  * 
@@ -62,10 +62,10 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	protected static PersistentObject implToTest = null;
 
 	@Mock
-	private GenericHibernateDao<E, Integer> dao;
+	protected GenericHibernateDao<E, Integer> dao;
 
 	@InjectMocks
-	private AbstractExtDirectCrudService<E> crudService;
+	protected AbstractExtDirectCrudService<E> crudService;
 
 	@Before
 	public void setUp() {
