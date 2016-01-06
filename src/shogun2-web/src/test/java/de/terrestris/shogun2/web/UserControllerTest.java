@@ -109,7 +109,7 @@ public class UserControllerTest {
 		String token = "token";
 
 		// mock service
-		doNothing().when(tokenService).changePassword(password, token);
+		doNothing().when(tokenService).validateTokenAndUpdatePassword(password, token);
 
 		// Perform and test the POST-Request
 		mockMvc.perform(post("/user/changePassword.action")
@@ -122,7 +122,7 @@ public class UserControllerTest {
 			.andExpect(jsonPath("$.total", is(1)))
 			.andExpect(jsonPath("$.data", is("Your password was changed successfully.")));
 
-		verify(tokenService, times(1)).changePassword(password, token);
+		verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
 		verifyNoMoreInteractions(tokenService);
 	}
 
@@ -133,7 +133,7 @@ public class UserControllerTest {
 		String token = "token";
 
 		// mock service
-		doThrow(new RuntimeException("errormsg")).when(tokenService).changePassword(password, token);
+		doThrow(new RuntimeException("errormsg")).when(tokenService).validateTokenAndUpdatePassword(password, token);
 
 		// Perform and test the POST-Request
 		mockMvc.perform(post("/user/changePassword.action")
@@ -145,7 +145,7 @@ public class UserControllerTest {
 			.andExpect(jsonPath("$.success", is(false)))
 			.andExpect(jsonPath("$.message", containsString("Could not change the password.")));
 
-		verify(tokenService, times(1)).changePassword(password, token);
+		verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
 		verifyNoMoreInteractions(tokenService);
 	}
 }

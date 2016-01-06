@@ -70,7 +70,7 @@ public class UserController extends AbstractWebController {
 		LOG.debug("Requested to change a password for token " + token);
 
 		try {
-			passwordResetTokenService.changePassword(password, token);
+			passwordResetTokenService.validateTokenAndUpdatePassword(password, token);
 			return this.getModelMapSuccess("Your password was changed successfully.");
 
 		} catch (Exception e) {

@@ -159,7 +159,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 	 * @param token
 	 * @throws Exception
 	 */
-	public void changePassword(String rawPassword, String token) throws Exception {
+	public void validateTokenAndUpdatePassword(String rawPassword, String token) throws Exception {
 
 		// try to find the provided token
 		PasswordResetToken passwordResetToken = findByTokenValue(token);
