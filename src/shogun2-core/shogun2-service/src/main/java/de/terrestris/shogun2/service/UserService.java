@@ -90,6 +90,22 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	}
 
 	/**
+	 *
+	 * @param user
+	 * @param rawPassword
+	 * @throws Exception
+	 */
+	public void updatePassword(User user, String rawPassword) throws Exception {
+
+		if(user.getId() == null) {
+			throw new Exception("The ID of the user object is null.");
+		}
+
+		user.setPassword(passwordEncoder.encode(rawPassword));
+		dao.saveOrUpdate(user);
+	}
+
+	/**
 	 * @return the passwordEncoder
 	 */
 	public PasswordEncoder getPasswordEncoder() {

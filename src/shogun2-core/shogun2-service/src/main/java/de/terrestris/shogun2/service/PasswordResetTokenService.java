@@ -189,8 +189,7 @@ public class PasswordResetTokenService extends AbstractCrudService<PasswordReset
 
 		// finally update the password (encrypted)
 		try {
-			user.setPassword(passwordEncoder.encode(rawPassword));
-			userService.saveOrUpdate(user);
+			userService.updatePassword(user, rawPassword);
 			LOG.debug("Successfully updated the password.");
 		} catch(Exception e) {
 			throw new Exception("Could not update the password: "
