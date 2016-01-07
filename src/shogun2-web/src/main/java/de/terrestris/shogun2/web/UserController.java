@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.terrestris.shogun2.service.PasswordResetTokenService;
+import de.terrestris.shogun2.service.UserService;
 
 /**
  *
@@ -28,6 +29,12 @@ public class UserController extends AbstractWebController {
 	 */
 	private static final Logger LOG =
 			Logger.getLogger(UserController.class);
+
+	/**
+	 *
+	 */
+	@Autowired
+	private UserService userService;
 
 	/**
 	 *
@@ -77,6 +84,23 @@ public class UserController extends AbstractWebController {
 			LOG.error("Could not change the password: " + e.getMessage());
 			return this.getModelMapError("Could not change the password. "
 					+ "Please contact your administrator.");
+		}
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/getUserInfoBySession.action", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getUserInfoBySession() {
+
+		LOG.debug("Requested to return information about a logged in user");
+
+		try {
+			return this.getModelMapSuccess(userService.getUserInfoBySession());
+		} catch (Exception e) {
+			return this.getModelMapError("Could not obtain the user by "
+					+ "session: " + e.getMessage());
 		}
 	}
 }
