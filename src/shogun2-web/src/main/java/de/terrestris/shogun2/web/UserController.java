@@ -67,6 +67,23 @@ public class UserController extends AbstractWebController {
 
 	/**
 	 *
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/activate.action", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> activateUser(@RequestParam String token) {
+
+		try {
+			userService.activateUser(token);
+			return this.getModelMapSuccess("Your account has successfully been activated.");
+		} catch(Exception e) {
+			LOG.error("Account could not be activated: " + e.getMessage());
+			return this.getModelMapError("Account could not be activated.");
+		}
+	}
+
+	/**
+	 *
 	 * @param email
 	 * @return
 	 */

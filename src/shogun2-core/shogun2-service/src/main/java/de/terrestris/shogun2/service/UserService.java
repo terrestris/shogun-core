@@ -6,10 +6,13 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.RegistrationToken;
 
 /**
  * Service class for the {@link User} model.
@@ -37,6 +40,14 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	/**
+	 * The default user role that is assigned to a user if he activates his
+	 * account.
+	 */
+	@Autowired
+	@Qualifier("userRole")
+	private Role defaultUserRole;
 
 	/**
 	 * Returns the user for the given (unique) account name.
@@ -104,6 +115,35 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		registrationTokenService.sendRegistrationActivationMail(request, user);
 
 		return user;
+	}
+
+	/**
+	 *
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	public void activateUser(String tokenValue) throws Exception {
+
+		RegistrationToken token = registrationTokenService.findByTokenValue(tokenValue);
+
+		LOG.debug("Trying to activate user account with token: " + tokenValue);
+
+		// throws Exception if token is not valid
+		registrationTokenService.validateToken(token);
+
+		// set active=true
+		User user = token.getUser();
+		user.setActive(true);
+
+		// assign the default user role
+		user.getRoles().add(defaultUserRole);
+
+		// update the user
+		dao.saveOrUpdate(user);
+
+		LOG.info("The user '" + user.getAccountName()
+				+ "' has successfully been activated.");
 	}
 
 	/**
@@ -177,6 +217,20 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 */
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
+	}
+
+	/**
+	 * @return the defaultUserRole
+	 */
+	public Role getDefaultUserRole() {
+		return defaultUserRole;
+	}
+
+	/**
+	 * @param defaultUserRole the defaultUserRole to set
+	 */
+	public void setDefaultUserRole(Role defaultUserRole) {
+		this.defaultUserRole = defaultUserRole;
 	}
 
 }
