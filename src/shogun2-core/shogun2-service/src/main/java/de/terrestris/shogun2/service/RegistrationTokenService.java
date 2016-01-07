@@ -11,7 +11,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -30,15 +32,16 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
 public class RegistrationTokenService extends AbstractUserTokenService<RegistrationToken> {
 
 	/**
-	 * The relative URL for the SHOGun2 registration activation interface.
-	 */
-	private static final String REGISTER_ACTIVATION_URL = "/user/activate.action";
-
-	/**
 	 * The Logger
 	 */
 	private static final Logger LOG =
 			Logger.getLogger(RegistrationTokenService.class);
+
+	/**
+	 * The relative path for the SHOGun2 user activation interface.
+	 */
+	@Value("${login.accountActivationPath}")
+	private String accountActivationPath;
 
 	/**
 	 *
@@ -111,13 +114,38 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 
 		// build the registration activation link URI
 		URI tokenURI = new URIBuilder(appURI)
-				.setPath(appURI.getPath() + REGISTER_ACTIVATION_URL)
+				.setPath(appURI.getPath() + accountActivationPath)
 				.setParameter("token", registrationToken.getToken())
 				.build();
 
 		LOG.trace("Created the following URI for account activation: " + tokenURI);
 
 		return tokenURI;
+	}
+
+	/**
+	 * This method has no {@link PreAuthorize} annotation and should only be
+	 * used after an user account has been activated.
+	 *
+	 * @param token
+	 */
+	public void deleteTokenAfterActivation(RegistrationToken token) {
+		dao.delete(token);
+		LOG.trace("The registration token has been deleted.");
+	}
+
+	/**
+	 * @return the accountActivationPath
+	 */
+	public String getAccountActivationPath() {
+		return accountActivationPath;
+	}
+
+	/**
+	 * @param accountActivationPath the accountActivationPath to set
+	 */
+	public void setAccountActivationPath(String accountActivationPath) {
+		this.accountActivationPath = accountActivationPath;
 	}
 
 	/**
@@ -148,6 +176,5 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 			SimpleMailMessage registrationMailMessageTemplate) {
 		this.registrationMailMessageTemplate = registrationMailMessageTemplate;
 	}
-
 
 }

@@ -143,6 +143,9 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		// update the user
 		dao.saveOrUpdate(user);
 
+		// delete the token
+		registrationTokenService.deleteTokenAfterActivation(token);
+
 		LOG.info("The user '" + user.getAccountName()
 				+ "' has successfully been activated.");
 	}
