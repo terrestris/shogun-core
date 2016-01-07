@@ -65,16 +65,17 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	}
 
 	/**
-	 * If the passed token is null or expired, this method will throw an
-	 * {@link Exception}.
+	 * If the passed token is null or expired or if there is no user associated
+	 * with the token, this method will throw an {@link Exception}.
 	 *
 	 * @param userToken
-	 * @throws Exception if the token is not valid (e.g. because it is expired)
+	 * @throws Exception
+	 *             if the token is not valid (e.g. because it is expired)
 	 */
 	protected void validateToken(UserToken userToken) throws Exception {
 
 		if (userToken == null) {
-			throw new Exception("The provided does not exist.");
+			throw new Exception("The provided token does not exist.");
 		}
 
 		DateTime expirationDate = (DateTime) userToken
@@ -86,6 +87,11 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 		if (expirationDate.isBeforeNow()) {
 			throw new Exception("The token '" + tokenValue + "' expired on '"
 					+ expirationDate + "'");
+		}
+
+		// check if user is associated
+		if (userToken.getUser() == null) {
+			throw new Exception("There is no user associated with this token.");
 		}
 
 	}

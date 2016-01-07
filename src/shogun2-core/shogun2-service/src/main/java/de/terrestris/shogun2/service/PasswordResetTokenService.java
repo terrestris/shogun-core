@@ -139,11 +139,6 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 		// get the user of the provided token
 		User user = passwordResetToken.getUser();
 
-		if (user == null) {
-			throw new Exception("Could not find the user for the "
-					+ "provided token.");
-		}
-
 		// finally update the password (encrypted)
 		userService.updatePassword(user, rawPassword);
 
