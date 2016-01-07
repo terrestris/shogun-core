@@ -17,6 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ch.rasc.extclassgenerator.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Nils Bühner
  *
@@ -36,6 +38,7 @@ public class User extends Person {
 	private String accountName;
 
 	@Column
+	@JsonIgnore
 	private String password;
 
 	@Column
@@ -152,6 +155,7 @@ public class User extends Person {
 	/**
 	 *
 	 */
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}

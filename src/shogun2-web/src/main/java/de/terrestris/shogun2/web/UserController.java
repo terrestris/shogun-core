@@ -126,4 +126,21 @@ public class UserController extends AbstractWebController {
 					+ "Please contact your administrator.");
 		}
 	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/getUserInfoBySession.action", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getUserInfoBySession() {
+
+		LOG.debug("Requested to return information about a logged in user");
+
+		try {
+			return this.getModelMapSuccess(userService.getUserInfoBySession());
+		} catch (Exception e) {
+			return this.getModelMapError("Could not obtain the user by "
+					+ "session: " + e.getMessage());
+		}
+	}
 }

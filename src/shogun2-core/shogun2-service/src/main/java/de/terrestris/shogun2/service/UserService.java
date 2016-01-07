@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -188,6 +189,19 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 
 		user.setPassword(passwordEncoder.encode(rawPassword));
 		dao.saveOrUpdate(user);
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @throws Exception
+	 */
+	public User getUserInfoBySession() {
+
+		User loggedInUser = (User) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+
+		return loggedInUser;
 	}
 
 	/**

@@ -25,6 +25,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -85,6 +86,9 @@ public class Shogun2AuthenticationProviderTest {
 
 		final Role adminRole = new Role("ROLE_ADMIN");
 		final Role userRole = new Role("ROLE_USER");
+
+		// set user as active
+		userToAuth.setActive(true);
 
 		// grant admin role to the user
 		userToAuth.getRoles().add(adminRole);
@@ -181,6 +185,9 @@ public class Shogun2AuthenticationProviderTest {
 
 		final String wrongPassword = "wrongPassword";
 
+		// set user as active
+		userToAuth.setActive(true);
+
 		// 2. Mock the auth request with the wrong password
 		Authentication authRequest = mock(Authentication.class);
 		when(authRequest.getName()).thenReturn(shogun2UserName);
@@ -191,6 +198,34 @@ public class Shogun2AuthenticationProviderTest {
 
 		// 4. Call the authenticate method with the mocked object to provoke
 		// the expected BadCredentialsException
+		authProvider.authenticate(authRequest);
+	}
+
+	/**
+	 * Tests whether a {@link DisabledException} is thrown when the user is not
+	 * active.
+	 */
+	@Test(expected=DisabledException.class)
+	public void authenticate_shouldThrowDisabledExceptionIfUserIsInactive() {
+
+		// 1. Mock an authentication request object
+		final String shogun2UserName = "user";
+		final String correctPassword = "correctPassword";
+		final User userToAuth = createUserMock(shogun2UserName, correctPassword);
+
+		// set user as inactive
+		userToAuth.setActive(false);
+
+		// 2. Mock the auth request for the inactive user
+		Authentication authRequest = mock(Authentication.class);
+		when(authRequest.getName()).thenReturn(shogun2UserName);
+		when(authRequest.getCredentials()).thenReturn(correctPassword);
+
+		// 3. Mock the userService
+		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+
+		// 4. Call the authenticate method with the mocked object to provoke
+		// the expected DisabledException
 		authProvider.authenticate(authRequest);
 	}
 
