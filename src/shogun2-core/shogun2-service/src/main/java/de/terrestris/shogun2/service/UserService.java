@@ -111,12 +111,17 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @param request
 	 * @throws Exception
 	 */
-	public User getUserInfoBySession() {
+	public User getUserBySession() {
 
 		User loggedInUser = (User) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 
-		return loggedInUser;
+		// The SecurityContextHolder holds a static copy of the user from
+		// the moment he logged in. So we need to get the current instance from
+		// dao.
+		Integer id = loggedInUser.getId();
+
+		return dao.findById(id);
 	}
 
 	/**

@@ -91,13 +91,13 @@ public class UserController extends AbstractWebController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/getUserInfoBySession.action", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> getUserInfoBySession() {
+	@RequestMapping(value = "/getUserBySession.action", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> getUserBySession() {
 
-		LOG.debug("Requested to return information about a logged in user");
+		LOG.debug("Requested to return the logged in user");
 
 		try {
-			return this.getModelMapSuccess(userService.getUserInfoBySession());
+			return this.getModelMapSuccess(userService.getUserBySession());
 		} catch (Exception e) {
 			return this.getModelMapError("Could not obtain the user by "
 					+ "session: " + e.getMessage());
