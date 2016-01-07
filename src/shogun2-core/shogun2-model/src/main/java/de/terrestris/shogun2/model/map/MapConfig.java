@@ -67,16 +67,15 @@ public class MapConfig extends PersistentObject{
 	@ManyToMany
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
-			name = "MAPCONFIG_RESOLUTION",
-			joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
+		joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	// The List of resolutions will be serialized (JSON) as an array of resolution
 	// values
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "resolution"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<Resolution> resolutions;

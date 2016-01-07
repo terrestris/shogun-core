@@ -64,7 +64,7 @@ public class Module extends PersistentObject {
 	@ElementCollection
 	@MapKeyColumn(name = "PROPERTY")
 	@Column(name = "VALUE")
-	@CollectionTable(name = "MODULE_PROPERTIES", joinColumns = @JoinColumn(name = "MODULE_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "MODULE_ID"))
 	@Convert(converter = PropertyValueConverter.class, attributeName="value")
 	private Map<String, Object> properties = new HashMap<String, Object>();
 

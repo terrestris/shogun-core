@@ -6,10 +6,10 @@ package de.terrestris.shogun2.model.module;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -54,11 +54,10 @@ public class OverviewMap extends Module {
 	/**
 	 * The layers used within this OverviewMap.
 	 */
-	@ElementCollection
+	@ManyToMany
 	@JoinTable(
-			name = "OVERVIEWMAP_LAYERS",
-			joinColumns = { @JoinColumn(name = "OVERVIEWMAP_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
+		joinColumns = { @JoinColumn(name = "OVERVIEWMAP_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	private List<Layer> overviewMapLayers = new ArrayList<Layer>();
@@ -69,8 +68,8 @@ public class OverviewMap extends Module {
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "name"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "name"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private Map parentMapModule;

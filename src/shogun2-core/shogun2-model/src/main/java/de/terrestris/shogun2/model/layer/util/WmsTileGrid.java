@@ -74,19 +74,18 @@ public class WmsTileGrid extends PersistentObject {
 	/**
 	 * The tileGrid resolutions.
 	 */
-	@ManyToMany()
+	@ManyToMany
 	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
-			name = "WMSTILEGRID_RESOLUTION",
-			joinColumns = { @JoinColumn(name = "WMSTILEGRID_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
+		joinColumns = { @JoinColumn(name = "WMSTILEGRID_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	// The List of resolutions will be serialized (JSON) as an array of resolution
 	// values
 	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "resolution"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private List<Resolution> tileGridResolutions;

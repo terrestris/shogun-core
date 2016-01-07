@@ -109,7 +109,7 @@ public class NominatimSearch extends Module {
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
 	@ElementCollection
-	@CollectionTable(name = "NOMINATIM_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "NOMINATIM_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "NOMINATIM_ID"))
 	@Column(name = "VIEWBOXINTEGER")
 	@OrderColumn(name = "IDX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();

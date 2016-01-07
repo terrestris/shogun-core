@@ -59,9 +59,8 @@ public class Map extends Module {
 	 */
 	@ManyToMany
 	@JoinTable(
-			name = "MAP_MAPCONTROLS",
-			joinColumns = { @JoinColumn(name = "MAP_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
+		joinColumns = { @JoinColumn(name = "MAP_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
 	)
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private Set<MapControl> mapControls = new HashSet<MapControl>();
@@ -71,9 +70,8 @@ public class Map extends Module {
 	 */
 	@ManyToMany
 	@JoinTable(
-			name = "MAP_LAYERS",
-			joinColumns = { @JoinColumn(name = "MAP_ID") },
-			inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
+		joinColumns = { @JoinColumn(name = "MAP_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)

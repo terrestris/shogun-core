@@ -110,7 +110,7 @@ public class OverpassSearch extends Module {
 	 * A list of EPSG-Codes the should be available in the module.
 	 */
 	@ElementCollection
-	@CollectionTable(name = "OVERPASS_VIEWBOXLBRT", joinColumns = @JoinColumn(name = "OVERPASS_ID") )
+	@CollectionTable(joinColumns = @JoinColumn(name = "OVERPASS_ID"))
 	@Column(name = "VIEWBOXINTEGER")
 	@OrderColumn(name = "IDX")
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
