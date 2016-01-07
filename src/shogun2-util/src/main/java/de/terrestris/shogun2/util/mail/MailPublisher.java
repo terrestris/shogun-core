@@ -5,6 +5,7 @@ import java.io.File;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -148,20 +149,25 @@ public class MailPublisher {
 	 * @throws Exception 
 	 */
 	public void sendMail(SimpleMailMessage mailMessage) throws MailException {
-		LOG.debug("Requested to send a mail");
+		final String subject = mailMessage.getSubject();
+		final String to = StringUtils.join(mailMessage.getTo(), ", ");
+
+		LOG.debug("Sending a mail with subject '" + subject + "' to '" + to + "'");
 		mailSender.send(mailMessage);
-		LOG.debug("Successfully send mail.");
+		LOG.debug("Successfully sent mail to '" + to + "'");
 	}
 
 	/**
 	 *
 	 * @param mimeMessage
+	 * @throws MessagingException 
 	 * @throws Exception 
 	 */
-	public void sendMail(MimeMessage mimeMessage) throws MailException {
-		LOG.debug("Requested to send a mail");
+	public void sendMail(MimeMessage mimeMessage) throws MailException, MessagingException {
+		final String subject = mimeMessage.getSubject();
+		LOG.debug("Sending a mail (mime) with subject '" + subject + "'");
 		mailSender.send(mimeMessage);
-		LOG.debug("Successfully send mail.");
+		LOG.debug("Successfully sent mail (mime)");
 	}
 
 	/**

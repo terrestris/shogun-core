@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.service.PasswordResetTokenService;
+import de.terrestris.shogun2.service.UserService;
 
 /**
  *
@@ -33,7 +35,35 @@ public class UserController extends AbstractWebController {
 	 *
 	 */
 	@Autowired
+	private UserService userService;
+
+	/**
+	 *
+	 */
+	@Autowired
 	private PasswordResetTokenService passwordResetTokenService;
+
+	/**
+	 *
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	@RequestMapping(value = "/register.action", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
+			@RequestParam String email,
+			@RequestParam String password) {
+
+		try {
+			User user = userService.registerUser(email, password, false, request);
+			return this.getModelMapSuccess("You have been registered. "
+					+ "Please check your mails (" + user.getEmail()
+					+ ") for further instructions.");
+		} catch(Exception e) {
+			LOG.error("Could not register a new user: " + e.getMessage());
+			return this.getModelMapError("Could not register a new user.");
+		}
+	}
 
 	/**
 	 *
@@ -44,7 +74,7 @@ public class UserController extends AbstractWebController {
 	public @ResponseBody Map<String, Object> resetPassword(HttpServletRequest request,
 			@RequestParam(value = "email") String email) {
 
-		LOG.debug("Requested to reset a password for " + email);
+		LOG.debug("Requested to reset the password for '" + email + "'");
 
 		try {
 			passwordResetTokenService.sendResetPasswordMail(request, email);

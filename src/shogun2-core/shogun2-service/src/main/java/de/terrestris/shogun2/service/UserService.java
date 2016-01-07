@@ -1,5 +1,7 @@
 package de.terrestris.shogun2.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
@@ -22,8 +24,13 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	/**
 	 * The Logger
 	 */
-	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(UserService.class);
+
+	/**
+	 * Registration token service
+	 */
+	@Autowired
+	private RegistrationTokenService registrationTokenService;
 
 	/**
 	 * The autowired PasswordEncoder
@@ -62,6 +69,43 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	}
 
 	/**
+	 * Registers a new user
+	 *
+	 * @param email
+	 * @param rawPassword
+	 * @param isActive
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public User registerUser(String email, String rawPassword, boolean isActive,
+			HttpServletRequest request) throws Exception {
+
+		// check if a user with the email already exists
+		User user = this.findByEmail(email);
+
+		if(user != null) {
+			final String errorMessage = "User with eMail '" + email + "' already exists.";
+			LOG.info(errorMessage);
+			throw new Exception(errorMessage);
+		}
+
+		user = new User();
+
+		user.setEmail(email);
+		user.setAccountName(email);
+		user.setPassword(rawPassword);
+		user.setActive(isActive);
+
+		user = this.persistNewUser(user, true);
+
+		// create a token for the user and send an email with an "activation" link
+		registrationTokenService.sendRegistrationActivationMail(request, user);
+
+		return user;
+	}
+
+	/**
 	 * Persists a new user in the database.
 	 *
 	 * @param user
@@ -72,7 +116,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 *
 	 * @return The persisted user object (incl. ID value)
 	 */
-	public User createNewUser(User user, boolean encryptPassword) {
+	public User persistNewUser(User user, boolean encryptPassword) {
 
 		if(user.getId() != null) {
 			// to be sure that we are in the
@@ -103,6 +147,21 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 
 		user.setPassword(passwordEncoder.encode(rawPassword));
 		dao.saveOrUpdate(user);
+	}
+
+	/**
+	 * @return the registrationTokenService
+	 */
+	public RegistrationTokenService getRegistrationTokenService() {
+		return registrationTokenService;
+	}
+
+	/**
+	 * @param registrationTokenService the registrationTokenService to set
+	 */
+	public void setRegistrationTokenService(
+			RegistrationTokenService registrationTokenService) {
+		this.registrationTokenService = registrationTokenService;
 	}
 
 	/**
