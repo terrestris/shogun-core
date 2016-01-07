@@ -33,9 +33,9 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
 public class RegistrationTokenService extends AbstractUserTokenService<RegistrationToken> {
 
 	/**
-	 * The relative URL for the SHOGun2 finalize registration interface.
+	 * The relative URL for the SHOGun2 registration activation interface.
 	 */
-	private static final String REGISTER_FINALIZE_URL = "/register/finalize.action";
+	private static final String REGISTER_ACTIVATION_URL = "/register/activate.action";
 
 	/**
 	 * The Logger
@@ -106,7 +106,7 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 		RegistrationToken registrationToken = getValidTokenForUser(user);
 
 		// create the reset-password URI that will be send to the user
-		URI resetPasswordURI = createFinalizeRegistrationURI(request,
+		URI resetPasswordURI = createRegistrationActivationURI(request,
 				registrationToken);
 
 		// create a thread safe "copy" of the template message
@@ -137,7 +137,7 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	private URI createFinalizeRegistrationURI(HttpServletRequest request,
+	private URI createRegistrationActivationURI(HttpServletRequest request,
 			RegistrationToken registrationToken) throws URISyntaxException {
 
 		// get the webapp URI
@@ -145,7 +145,7 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 
 		// build the registration activation link URI
 		URI tokenURI = new URIBuilder(appURI)
-				.setPath(appURI.getPath() + REGISTER_FINALIZE_URL)
+				.setPath(appURI.getPath() + REGISTER_ACTIVATION_URL)
 				.setParameter("token", registrationToken.getToken())
 				.build();
 
