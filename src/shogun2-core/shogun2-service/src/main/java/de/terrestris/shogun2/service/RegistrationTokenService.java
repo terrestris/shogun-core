@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
@@ -55,35 +52,6 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	@Autowired
 	@Qualifier("registrationMailMessageTemplate")
 	private SimpleMailMessage registrationMailMessageTemplate;
-
-	/**
-	 *
-	 * @param user
-	 * @return
-	 */
-	public RegistrationToken findByUser(User user) {
-
-		SimpleExpression eqUser = Restrictions.eq("user", user);
-
-		RegistrationToken registrationToken =
-				dao.findByUniqueCriteria(eqUser);
-
-		return registrationToken;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public RegistrationToken findByTokenValue(String token) {
-
-		Criterion criteria = Restrictions.eq("token", token);
-
-		RegistrationToken registrationToken =
-				dao.findByUniqueCriteria(criteria);
-
-		return registrationToken;
-	}
 
 	/**
 	 * @throws InvocationTargetException
