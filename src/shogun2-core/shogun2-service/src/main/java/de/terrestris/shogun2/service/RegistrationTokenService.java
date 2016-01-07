@@ -35,7 +35,7 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	/**
 	 * The relative URL for the SHOGun2 registration activation interface.
 	 */
-	private static final String REGISTER_ACTIVATION_URL = "/register/activate.action";
+	private static final String REGISTER_ACTIVATION_URL = "/user/activate.action";
 
 	/**
 	 * The Logger
