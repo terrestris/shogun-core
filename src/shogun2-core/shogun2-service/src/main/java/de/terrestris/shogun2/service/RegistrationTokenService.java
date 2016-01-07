@@ -126,8 +126,6 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 		// and send the mail
 		mailPublisher.sendMail(registrationActivationMsg);
 
-		LOG.debug("Sent activation mail to " + email);
-
 	}
 
 	/**
@@ -148,6 +146,8 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 				.setPath(appURI.getPath() + REGISTER_ACTIVATION_URL)
 				.setParameter("token", registrationToken.getToken())
 				.build();
+
+		LOG.trace("Created the following URI for account activation: " + tokenURI);
 
 		return tokenURI;
 	}
