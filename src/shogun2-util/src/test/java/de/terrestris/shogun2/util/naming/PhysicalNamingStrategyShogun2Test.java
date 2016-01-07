@@ -12,6 +12,7 @@ import org.hibernate.dialect.H2Dialect;
 import org.hibernate.dialect.Oracle12cDialect;
 import org.hibernate.dialect.PostgreSQL94Dialect;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -21,7 +22,15 @@ import org.mockito.Mockito;
  */
 public class PhysicalNamingStrategyShogun2Test {
 
-	private final PhysicalNamingStrategyShogun2 namingStrategy = new PhysicalNamingStrategyShogun2();
+	private PhysicalNamingStrategyShogun2 namingStrategy;
+
+	/**
+	 * Setup before each test
+	 */
+	@Before
+	public void setUp() {
+		namingStrategy = new PhysicalNamingStrategyShogun2();
+	}
 
 	/**
 	 * Tests whether physical table names are transformed to lowercase.
@@ -127,6 +136,60 @@ public class PhysicalNamingStrategyShogun2Test {
 		assertEquals(expectedLimitedLowerCasePhysicalName.length(), lengthLimit);
 
 		assertExpectedPhysicalColumnName(dialect, exceedingClassName, expectedLimitedLowerCasePhysicalName);
+	}
+
+	/**
+	 * Tests whether the table prefix is being respected.
+	 *
+	 * @throws SQLException
+	 */
+	@Test
+	public void testIfTablePrefixIsBeingUsed() throws SQLException {
+		String tablePrefix = "TBL_";
+
+		namingStrategy.setTablePrefix(tablePrefix);
+
+		String className = "SomeCamelCaseClass";
+		String expectedPhysicalName = "tbl_somecamelcaseclass";
+		Dialect dialect = new H2Dialect();
+
+		assertExpectedPhysicalTableName(dialect, className, expectedPhysicalName);
+	}
+
+	/**
+	 * Tests whether everything is fine, if table prefix is null.
+	 *
+	 * @throws SQLException
+	 */
+	@Test
+	public void testIfTablePrefixIsNull() throws SQLException {
+		String tablePrefix = null;
+
+		namingStrategy.setTablePrefix(tablePrefix);
+
+		String className = "SomeCamelCaseClass";
+		String expectedPhysicalName = "somecamelcaseclass";
+		Dialect dialect = new H2Dialect();
+
+		assertExpectedPhysicalTableName(dialect, className, expectedPhysicalName);
+	}
+
+	/**
+	 * Tests whether everything is fine, if table prefix is empty.
+	 *
+	 * @throws SQLException
+	 */
+	@Test
+	public void testIfTablePrefixIsEmpty() throws SQLException {
+		String tablePrefix = "";
+
+		namingStrategy.setTablePrefix(tablePrefix);
+
+		String className = "SomeCamelCaseClass";
+		String expectedPhysicalName = "somecamelcaseclass";
+		Dialect dialect = new H2Dialect();
+
+		assertExpectedPhysicalTableName(dialect, className, expectedPhysicalName);
 	}
 
 	/**
