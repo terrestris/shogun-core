@@ -97,13 +97,19 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	}
 
 	/**
-	 * Returns a valid (i.e. non-expired) {@link UserToken} for the
-	 * given user. If the user already owns a valid token, it will be returned.
-	 * If the user has an invalid/expired token, it will be deleted and a new
-	 * one will be generated and returned by this method.
+	 * Returns a valid (i.e. non-expired) {@link UserToken} for the given user.
+	 * If the user already owns a valid token, it will be returned. If the user
+	 * has an invalid/expired token, it will be deleted and a new one will be
+	 * generated and returned by this method.
+	 *
+	 * An expiration time in minutes can also be passed. If this value is null,
+	 * the default value will be used.
 	 *
 	 * @param user
 	 *            The user that needs a token.
+	 * @param expirationTimeInMinutes
+	 *            The expiration time in minutes. If null, the default value
+	 *            will be used.
 	 * @return A valid user token.
 	 * @throws SecurityException
 	 * @throws NoSuchMethodException
@@ -112,7 +118,7 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	protected E getValidTokenForUser(User user) throws NoSuchMethodException,
+	protected E getValidTokenForUser(User user, Integer expirationTimeInMinutes) throws NoSuchMethodException,
 			SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
@@ -139,7 +145,7 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 
 		}
 
-		userToken = buildConcreteUserTokenInstance(user);
+		userToken = buildConcreteUserTokenInstance(user, expirationTimeInMinutes);
 
 		// persist the user token
 		dao.saveOrUpdate(userToken);
@@ -156,6 +162,7 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * {@link UserToken} (subclass) type.
 	 *
 	 * @param user
+	 * @param expirationTimeInMinutes
 	 * @return
 	 * @throws NoSuchMethodException
 	 * @throws InstantiationException
@@ -163,16 +170,27 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * @throws InvocationTargetException
 	 */
 	@SuppressWarnings("unchecked")
-	private E buildConcreteUserTokenInstance(User user)
+	private E buildConcreteUserTokenInstance(User user, Integer expirationTimeInMinutes)
 			throws NoSuchMethodException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
 
 		Class<E> concreteUserTokenClass = (Class<E>) ((ParameterizedType) this
 				.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
-		Constructor<E> c = concreteUserTokenClass.getConstructor(User.class);
+		Constructor<E> c;
+		E concreteInstance;
 
-		return c.newInstance(user);
+		// get the correct constructor (based on the value of
+		// expirationTimeInMinutes) and create a new instance
+		if(expirationTimeInMinutes == null) {
+			c = concreteUserTokenClass.getConstructor(User.class);
+			concreteInstance = c.newInstance(user);
+		} else {
+			c = concreteUserTokenClass.getConstructor(User.class, int.class);
+			concreteInstance = c.newInstance(user, expirationTimeInMinutes);
+		}
+
+		return concreteInstance;
 	}
 
 }

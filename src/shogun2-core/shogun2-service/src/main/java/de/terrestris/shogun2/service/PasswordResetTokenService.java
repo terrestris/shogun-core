@@ -95,7 +95,7 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 		}
 
 		// generate and save the unique reset-password token for the user
-		PasswordResetToken resetPasswordToken = getValidTokenForUser(user);
+		PasswordResetToken resetPasswordToken = getValidTokenForUser(user, null);
 
 		// create the reset-password URI that will be send to the user
 		URI resetPasswordURI = createResetPasswordURI(request,

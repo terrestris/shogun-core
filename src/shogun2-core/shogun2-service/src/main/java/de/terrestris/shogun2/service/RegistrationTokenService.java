@@ -44,6 +44,12 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	private String accountActivationPath;
 
 	/**
+	 * The registration token expiration time in minutes
+	 */
+	@Value("${login.registrationTokenExpirationTime}")
+	private int registrationTokenExpirationTime;
+
+	/**
 	 *
 	 */
 	@Autowired
@@ -74,7 +80,7 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 			URISyntaxException, UnsupportedEncodingException {
 
 		// generate and save the unique registration token for the user
-		RegistrationToken registrationToken = getValidTokenForUser(user);
+		RegistrationToken registrationToken = getValidTokenForUser(user, registrationTokenExpirationTime);
 
 		// create the reset-password URI that will be send to the user
 		URI resetPasswordURI = createRegistrationActivationURI(request,
@@ -146,6 +152,21 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	 */
 	public void setAccountActivationPath(String accountActivationPath) {
 		this.accountActivationPath = accountActivationPath;
+	}
+
+	/**
+	 * @return the registrationTokenExpirationTime
+	 */
+	public int getRegistrationTokenExpirationTime() {
+		return registrationTokenExpirationTime;
+	}
+
+	/**
+	 * @param registrationTokenExpirationTime the registrationTokenExpirationTime to set
+	 */
+	public void setRegistrationTokenExpirationTime(
+			int registrationTokenExpirationTime) {
+		this.registrationTokenExpirationTime = registrationTokenExpirationTime;
 	}
 
 	/**
