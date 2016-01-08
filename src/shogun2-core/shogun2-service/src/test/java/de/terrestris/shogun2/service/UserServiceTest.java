@@ -1,6 +1,7 @@
 package de.terrestris.shogun2.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -26,6 +27,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.RegistrationToken;
+import de.terrestris.shogun2.util.test.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
@@ -40,6 +43,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Override
 	@Before
 	public void setUp() {
 		super.setUp();
@@ -223,6 +227,204 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 			assertEquals("User with eMail '" + email + "' already exists.", msg);
 		}
 
+	}
+
+	@Test
+	public void activateUser_shouldActivateUserAsExpected() throws Exception {
+
+		// an inactive user that is assigend to a token
+		User user = new User();
+		user.setActive(false);
+
+		// create a token that is associated with the user
+		RegistrationToken token = new RegistrationToken(user);
+
+		// the token value that will be used for the call of
+		// activateUser(tokenValue)
+		String tokenValue = token.getToken();
+
+		// mock the registrationTokenService
+		when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
+		doNothing().when(registrationTokenService).validateToken(token);
+		doNothing().when(registrationTokenService).deleteTokenAfterActivation(token);
+
+		// mock the dao
+		doNothing().when(dao).saveOrUpdate(any(User.class));
+
+		// be sure that the user is not active before activating
+		assertFalse(user.isActive());
+
+		// finally call the method that is tested here
+		((UserService) crudService).activateUser(tokenValue);
+
+		// check first if user is active now
+		assertTrue(user.isActive());
+
+		// check if user has at least one role
+		assertFalse(user.getRoles().isEmpty());
+
+		// verify method invocations
+		verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
+		verify(registrationTokenService, times(1)).validateToken(token);
+		verify(registrationTokenService, times(1)).deleteTokenAfterActivation(token);
+		verifyNoMoreInteractions(registrationTokenService);
+
+		verify(dao, times(1)).saveOrUpdate(any(User.class));
+		verifyNoMoreInteractions(dao);
+
+	}
+
+	@Test
+	public void activateUser_shouldThrowExceptionIfTokenCouldNotBeValidated() throws Exception {
+		// an inactive user that is assigend to a token
+		User user = new User();
+		user.setActive(false);
+
+		// create a token that is associated with the user
+		RegistrationToken token = new RegistrationToken(user);
+
+		// the token value that will be used for the call of
+		// activateUser(tokenValue)
+		String tokenValue = token.getToken();
+
+		// mock the registrationTokenService
+		final String expectedErrorMsg = "invalid token";
+		when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
+		doThrow(new Exception(expectedErrorMsg)).when(registrationTokenService).validateToken(token);
+
+		// finally call the method that is tested here
+		try {
+			((UserService) crudService).activateUser(tokenValue);
+			fail("Should have thrown Exception, but did not!");
+		} catch (Exception e) {
+			final String actualErrorMsg = e.getMessage();
+			assertEquals(expectedErrorMsg, actualErrorMsg);
+
+			// verify method invocations
+			verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
+			verify(registrationTokenService, times(1)).validateToken(token);
+			verifyNoMoreInteractions(registrationTokenService);
+
+			verifyNoMoreInteractions(dao);
+		}
+	}
+
+	@Test
+	public void persistNewUser_shouldPersistAndEncrypt() {
+
+		String rawPassword = "p@sSw0rd";
+		boolean encryptPassword = true;
+
+		User unpersistedUser = new User();
+		unpersistedUser.setPassword(rawPassword);
+
+		// mock the dao
+		doNothing().when(dao).saveOrUpdate(any(User.class));
+
+		// finally call the method that is tested here
+		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+
+		// verify method invocations
+		verify(dao, times(1)).saveOrUpdate(any(User.class));
+		verifyNoMoreInteractions(dao);
+
+		// check if the password has been encrypted
+		assertTrue(passwordEncoder.matches(rawPassword, persistedUser.getPassword()));
+	}
+
+	@Test
+	public void persistNewUser_shouldPersistButNotEncrypt() {
+
+		String password = "p@sSw0rd";
+		boolean encryptPassword = false;
+
+		User unpersistedUser = new User();
+		unpersistedUser.setPassword(password);
+
+		// mock the dao
+		doNothing().when(dao).saveOrUpdate(any(User.class));
+
+		// finally call the method that is tested here
+		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+
+		// verify method invocations
+		verify(dao, times(1)).saveOrUpdate(any(User.class));
+		verifyNoMoreInteractions(dao);
+
+		// verify that the password is the same as before and was not encrypted
+		assertEquals(password, persistedUser.getPassword());
+	}
+
+	@Test
+	public void persistNewUser_doesNothingIfUserHasId() throws NoSuchFieldException, IllegalAccessException {
+
+		String rawPassword = "p@sSw0rd";
+		boolean encryptPassword = true;
+		Integer userId = 42;
+
+		User unpersistedUser = new User("Dummy", "User", "dummyuser");
+		unpersistedUser.setPassword(rawPassword);
+
+		TestUtil.setIdOnPersistentObject(unpersistedUser, userId);
+
+		// finally call the method that is tested here
+		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+
+		// verify method invocations
+		verifyNoMoreInteractions(dao);
+
+		// verify that nothing else happened (i.e. no password encryption)
+		assertEquals(unpersistedUser, persistedUser);
+	}
+
+	@Test
+	public void updatePassword_shouldUpdatePasswordAsExpected() throws Exception {
+
+		String oldPassword = "eNcrYpt3dOldP4ssw0rd";
+		String newPassword = "r4Wn3Wp@sSw0rd";
+		Integer userId = 42;
+
+		User user = new User();
+		user.setPassword(oldPassword);
+
+		TestUtil.setIdOnPersistentObject(user, userId );
+
+		// mock the dao
+		doNothing().when(dao).saveOrUpdate(any(User.class));
+
+		// finally call the method that is tested here
+		((UserService) crudService).updatePassword(user, newPassword);
+
+		// verify method invocations
+		verify(dao, times(1)).saveOrUpdate(any(User.class));
+		verifyNoMoreInteractions(dao);
+
+		// verify password
+		String encryptedNewPassword = user.getPassword();
+
+		assertFalse(oldPassword.equals(encryptedNewPassword));
+		assertTrue(passwordEncoder.matches(newPassword, encryptedNewPassword));
+	}
+
+	@Test
+	public void updatePassword_shouldThrowIfUserHasNoId() {
+
+		String newPassword = "r4Wn3Wp@sSw0rd";
+
+		// user without id
+		User user = new User();
+
+		// call the method that is tested here
+		try {
+			((UserService) crudService).updatePassword(user, newPassword);
+			fail("Should have thrown Exception, but did not!");
+		} catch (Exception e) {
+
+			assertEquals("The ID of the user object is null.", e.getMessage());
+
+			// verify method invocations
+			verifyNoMoreInteractions(dao);
+		}
 	}
 
 }
