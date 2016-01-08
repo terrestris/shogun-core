@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.service.PasswordResetTokenService;
 import de.terrestris.shogun2.service.UserService;
 
@@ -45,13 +46,52 @@ public class UserController extends AbstractWebController {
 	/**
 	 *
 	 * @param email
+	 * @param password
+	 * @return
+	 */
+	@RequestMapping(value = "/register.action", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
+			@RequestParam String email,
+			@RequestParam String password) {
+
+		try {
+			User user = userService.registerUser(email, password, false, request);
+			return this.getModelMapSuccess("You have been registered. "
+					+ "Please check your mails (" + user.getEmail()
+					+ ") for further instructions.");
+		} catch(Exception e) {
+			LOG.error("Could not register a new user: " + e.getMessage());
+			return this.getModelMapError("Could not register a new user.");
+		}
+	}
+
+	/**
+	 *
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/activate.action", method = RequestMethod.GET)
+	public @ResponseBody Map<String, Object> activateUser(@RequestParam String token) {
+
+		try {
+			userService.activateUser(token);
+			return this.getModelMapSuccess("Your account has successfully been activated.");
+		} catch(Exception e) {
+			LOG.error("Account could not be activated: " + e.getMessage());
+			return this.getModelMapError("Account could not be activated.");
+		}
+	}
+
+	/**
+	 *
+	 * @param email
 	 * @return
 	 */
 	@RequestMapping(value = "/resetPassword.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> resetPassword(HttpServletRequest request,
 			@RequestParam(value = "email") String email) {
 
-		LOG.debug("Requested to reset a password for " + email);
+		LOG.debug("Requested to reset the password for '" + email + "'");
 
 		try {
 			passwordResetTokenService.sendResetPasswordMail(request, email);
@@ -77,7 +117,7 @@ public class UserController extends AbstractWebController {
 		LOG.debug("Requested to change a password for token " + token);
 
 		try {
-			passwordResetTokenService.changePassword(password, token);
+			passwordResetTokenService.validateTokenAndUpdatePassword(password, token);
 			return this.getModelMapSuccess("Your password was changed successfully.");
 
 		} catch (Exception e) {

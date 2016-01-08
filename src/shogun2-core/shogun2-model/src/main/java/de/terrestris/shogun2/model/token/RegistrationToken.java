@@ -11,7 +11,7 @@ import de.terrestris.shogun2.model.User;
 /**
  *
  * A {@link Token} instance that has a one-to-one relation to a {@link User}
- * that wants to reset the password.
+ * that wants to register.
  *
  * @author Daniel Koch
  * @author Nils Bühner
@@ -19,7 +19,7 @@ import de.terrestris.shogun2.model.User;
  */
 @Entity
 @Table
-public class PasswordResetToken extends UserToken {
+public class RegistrationToken extends UserToken {
 
 	/**
 	 *
@@ -29,20 +29,20 @@ public class PasswordResetToken extends UserToken {
 	/**
 	 * Default constructor
 	 */
-	public PasswordResetToken() {
+	public RegistrationToken() {
 	}
 
 	/**
 	 * Constructor that uses the default expiration time.
 	 */
-	public PasswordResetToken(User user) {
+	public RegistrationToken(User user) {
 		super(user);
 	}
 
 	/**
 	 * Constructor that uses the passed values
 	 */
-	public PasswordResetToken(User user, int expirationInMinutes) {
+	public RegistrationToken(User user, int expirationInMinutes) {
 		super(user, expirationInMinutes);
 	}
 
