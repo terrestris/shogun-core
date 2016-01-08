@@ -5,6 +5,10 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -37,6 +41,11 @@ public class XyzLayerDataSource extends LayerDataSource {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "x", column = @Column(name = "CENTER_X")),
+		@AttributeOverride(name = "y", column = @Column(name = "CENTER_Y"))
+	})
 	private Point2D.Double center;
 
 	@OneToOne
