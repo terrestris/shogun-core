@@ -7,6 +7,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -55,6 +59,11 @@ public class WmsTileGrid extends PersistentObject {
 	 * Tile coordinates increase left to right and upwards.
 	 * If not specified, extent or origins must be provided.
 	 */
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "x", column = @Column(name = "TILEGRIDORIGIN_X")),
+		@AttributeOverride(name = "y", column = @Column(name = "TILEGRIDORIGIN_Y"))
+	})
 	private Point2D.Double tileGridOrigin;
 
 	/**

@@ -3,6 +3,10 @@ package de.terrestris.shogun2.model.map;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -52,6 +56,11 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "x", column = @Column(name = "CENTER_X")),
+		@AttributeOverride(name = "y", column = @Column(name = "CENTER_Y"))
+	})
 	private Point2D.Double center;
 
 	/**

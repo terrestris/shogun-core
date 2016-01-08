@@ -6,6 +6,10 @@ package de.terrestris.shogun2.model.layer.util;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -39,7 +43,19 @@ public class Extent extends PersistentObject {
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "x", column = @Column(name = "LOWERLEFT_X")),
+		@AttributeOverride(name = "y", column = @Column(name = "LOWERLEFT_Y"))
+	})
 	private Point2D.Double lowerLeft;
+
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "x", column = @Column(name = "UPPERRIGHT_X")),
+		@AttributeOverride(name = "y", column = @Column(name = "UPPERRIGHT_Y"))
+	})
 	private Point2D.Double upperRight;
 
 	/**
