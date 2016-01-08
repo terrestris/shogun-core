@@ -90,6 +90,12 @@
             <artifactId>httpclient</artifactId>
         </dependency>
 
+        <!-- BeanUtils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
