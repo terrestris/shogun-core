@@ -37,6 +37,12 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	private RegistrationTokenService registrationTokenService;
 
 	/**
+	 * Role service
+	 */
+	@Autowired
+	private RoleService roleService;
+
+	/**
 	 * The autowired PasswordEncoder
 	 */
 	@Autowired
@@ -44,7 +50,9 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 
 	/**
 	 * The default user role that is assigned to a user if he activates his
-	 * account.
+	 * account. ATTENTION: This autowired bean will NOT have an ID if the
+	 * system did not boot with hibernate/CREATE mode and SHOGun2-content
+	 * initialization!
 	 */
 	@Autowired
 	@Qualifier("userRole")
@@ -137,8 +145,13 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		User user = token.getUser();
 		user.setActive(true);
 
+		// get the persisted default user role
+		final String defaultRoleName = defaultUserRole.getName();
+		Role persistedDefaultUserRole = roleService
+				.findByRoleName(defaultRoleName);
+
 		// assign the default user role
-		user.getRoles().add(defaultUserRole);
+		user.getRoles().add(persistedDefaultUserRole);
 
 		// update the user
 		dao.saveOrUpdate(user);

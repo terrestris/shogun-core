@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
 import de.terrestris.shogun2.util.test.TestUtil;
@@ -36,6 +37,12 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 
 	@Mock
 	private RegistrationTokenService registrationTokenService;
+
+	@Mock
+	private RoleService roleService;
+
+	@Mock
+	private Role defaultUserRole;
 
 	/**
 	 * The autowired PasswordEncoder
@@ -248,6 +255,11 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doNothing().when(registrationTokenService).validateToken(token);
 		doNothing().when(registrationTokenService).deleteTokenAfterActivation(token);
 
+		//mock the role service
+		final String defaultUserRoleName = "ROLE_USER";
+		when(defaultUserRole.getName()).thenReturn(defaultUserRoleName);
+		when(roleService.findByRoleName(defaultUserRoleName)).thenReturn(defaultUserRole);
+
 		// mock the dao
 		doNothing().when(dao).saveOrUpdate(any(User.class));
 
@@ -268,6 +280,12 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		verify(registrationTokenService, times(1)).validateToken(token);
 		verify(registrationTokenService, times(1)).deleteTokenAfterActivation(token);
 		verifyNoMoreInteractions(registrationTokenService);
+
+		verify(defaultUserRole, times(1)).getName();
+		verifyNoMoreInteractions(defaultUserRole);
+
+		verify(roleService, times(1)).findByRoleName(defaultUserRoleName);
+		verifyNoMoreInteractions(roleService);
 
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
 		verifyNoMoreInteractions(dao);
