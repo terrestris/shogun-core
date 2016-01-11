@@ -18,6 +18,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import ch.rasc.extclassgenerator.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 /**
  * @author Nils Bühner
@@ -38,7 +40,7 @@ public class User extends Person {
 	private String accountName;
 
 	@Column
-	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
 	@Column
