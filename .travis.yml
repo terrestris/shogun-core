@@ -11,6 +11,11 @@ jdk:
   - oraclejdk8
   - openjdk7
 
+env:
+  global:
+  - secure: gmi5f87L/GsqhsrJj2WUtu261Ywry6fQM9eKY6KIv/z4TpHZDQf7TVgEnw1dKWnC2ogHXkPXGMHoR2BR44DCKrVrtGGAu7zPbSrtagquhpRwwAA3od5nV+lgx1EXvp8dJmUDPzxPBLoAYp+9eqXjH+TGziJy7bkxXO1OKX3H6mI=
+  - secure: OfjAssoJByPB8TzXB0tik5fDbar9CYWDpt964Itk3XODM8f5bzeft5hXmba4cCWvNa4etde5SzJQh68qZrWkvjzNClAtL6BpGMimX69tvRrqHvoE6h/PKD7DR2Uynpa1EBD3RD+7lyVHAX04/D3EIAyPI6olsHxwcLPokXV6njI=
+
 before_script:
   - cd src/
   - mvn --batch-mode --threads 2.0C -DskipTests=true install
@@ -35,6 +40,7 @@ script:
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
+  - ../scripts/snapshot-release.sh > /dev/null 2>&1
 
 after_script:
   - cd ..
@@ -43,3 +49,4 @@ notifications:
   email:
     on_success: never
     on_failure: never
+
