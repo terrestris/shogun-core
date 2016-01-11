@@ -74,16 +74,16 @@ public class UserControllerTest {
 		String rawPassword = "p@sSw0rd";
 		boolean isActive = false;
 
-		User user = new User();
-		user.setEmail(email);
-		user.setAccountName(email);
-		user.setPassword(passwordEncoder.encode(rawPassword));
-		user.setActive(isActive);
+		// mock result
+		User registeredUser = new User();
+		registeredUser.setEmail(email);
+		registeredUser.setAccountName(email);
+		registeredUser.setPassword(passwordEncoder.encode(rawPassword));
+		registeredUser.setActive(isActive);
 
 		// mock service
-		when(userService.registerUser(
-				eq(email), eq(rawPassword), eq(isActive), any(HttpServletRequest.class)))
-			.thenReturn(user);
+		when(userService.registerUser(any(User.class), any(HttpServletRequest.class)))
+			.thenReturn(registeredUser);
 
 
 		// Perform and test the POST-Request
@@ -98,8 +98,7 @@ public class UserControllerTest {
 			.andExpect(jsonPath("$.data", containsString("You have been registered.")))
 			.andExpect(jsonPath("$.data", containsString(email)));
 
-		verify(userService, times(1)).registerUser(
-				eq(email), eq(rawPassword), eq(isActive), any(HttpServletRequest.class));
+		verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
 		verifyNoMoreInteractions(userService);
 	}
 
@@ -108,12 +107,10 @@ public class UserControllerTest {
 
 		String email = "test@example.com";
 		String rawPassword = "p@sSw0rd";
-		boolean isActive = false;
 
 		// mock service
 		doThrow(new Exception("errormsg"))
-			.when(userService).registerUser(
-				eq(email), eq(rawPassword), eq(isActive), any(HttpServletRequest.class));
+			.when(userService).registerUser(any(User.class), any(HttpServletRequest.class));
 
 
 		// Perform and test the POST-Request
@@ -126,8 +123,7 @@ public class UserControllerTest {
 			.andExpect(jsonPath("$.success", is(false)))
 			.andExpect(jsonPath("$.message", is("Could not register a new user.")));
 
-		verify(userService, times(1)).registerUser(
-				eq(email), eq(rawPassword), eq(isActive), any(HttpServletRequest.class));
+		verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
 		verifyNoMoreInteractions(userService);
 	}
 

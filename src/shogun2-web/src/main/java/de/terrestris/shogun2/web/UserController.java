@@ -54,8 +54,18 @@ public class UserController extends AbstractWebController {
 			@RequestParam String email,
 			@RequestParam String password) {
 
+		// build the user object that will be passed to the service method
+		User user = new User();
+
+		user.setEmail(email);
+		user.setAccountName(email);
+		user.setPassword(password);
+		user.setActive(false);
+
 		try {
-			User user = userService.registerUser(email, password, false, request);
+
+			user = userService.registerUser(user, request);
+
 			return this.getModelMapSuccess("You have been registered. "
 					+ "Please check your mails (" + user.getEmail()
 					+ ") for further instructions.");

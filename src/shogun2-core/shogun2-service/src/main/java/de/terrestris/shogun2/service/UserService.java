@@ -92,31 +92,23 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * Registers a new user. Initially, the user will be inactive. An email with
 	 * an activation link will be sent to the user.
 	 *
-	 * @param email
-	 * @param rawPassword
-	 * @param isActive
+	 * @param user A user with an UNencrypted password (!)
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	public User registerUser(String email, String rawPassword, boolean isActive,
-			HttpServletRequest request) throws Exception {
+	public User registerUser(User user, HttpServletRequest request) throws Exception {
+
+		String email = user.getEmail();
 
 		// check if a user with the email already exists
-		User user = this.findByEmail(email);
+		User existingUser = this.findByEmail(email);
 
-		if(user != null) {
+		if(existingUser != null) {
 			final String errorMessage = "User with eMail '" + email + "' already exists.";
 			LOG.info(errorMessage);
 			throw new Exception(errorMessage);
 		}
-
-		user = new User();
-
-		user.setEmail(email);
-		user.setAccountName(email);
-		user.setPassword(rawPassword);
-		user.setActive(isActive);
 
 		user = this.persistNewUser(user, true);
 

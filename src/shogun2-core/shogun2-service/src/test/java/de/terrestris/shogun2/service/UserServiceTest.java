@@ -193,8 +193,15 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 
 		HttpServletRequest requestMock = mock(HttpServletRequest.class);
 
+		// create user instance
+		User user = new User();
+		user.setEmail(email);
+		user.setAccountName(email);
+		user.setPassword(rawPassword);
+		user.setActive(isActive);
+
 		// finally call the method that is tested here
-		User registeredUser = ((UserService) crudService).registerUser(email, rawPassword, isActive, requestMock);
+		User registeredUser = ((UserService) crudService).registerUser(user, requestMock);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
@@ -227,7 +234,14 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		HttpServletRequest requestMock = mock(HttpServletRequest.class);
 		// finally call the method that is tested here
 		try {
-			((UserService) crudService).registerUser(email, rawPassword, isActive, requestMock);
+			// create user instance
+			User user = new User();
+			user.setEmail(email);
+			user.setAccountName(email);
+			user.setPassword(rawPassword);
+			user.setActive(isActive);
+
+			((UserService) crudService).registerUser(user, requestMock);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String msg = e.getMessage();
