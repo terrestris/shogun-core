@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ch.rasc.extclassgenerator.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
