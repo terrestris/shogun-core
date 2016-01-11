@@ -72,10 +72,10 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * @throws Exception
 	 *             if the token is not valid (e.g. because it is expired)
 	 */
-	protected void validateToken(UserToken userToken) throws Exception {
+	public void validateToken(UserToken userToken) throws Exception {
 
 		if (userToken == null) {
-			throw new Exception("The provided token does not exist.");
+			throw new Exception("The provided token is null.");
 		}
 
 		DateTime expirationDate = (DateTime) userToken
