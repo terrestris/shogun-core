@@ -92,9 +92,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * Registers a new user. Initially, the user will be inactive. An email with
 	 * an activation link will be sent to the user.
 	 *
-	 * @param email
-	 * @param rawPassword
-	 * @param isActive
+	 * @param user A user with an UNencrypted password (!)
 	 * @param request
 	 * @return
 	 * @throws Exception
