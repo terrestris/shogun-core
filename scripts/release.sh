@@ -17,6 +17,13 @@ if [[ ! $RELEASE_VERSION =~ ^([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}$ ]]; then
     exit 1
 fi
 
+SCRIPTDIR=`dirname "$0"`
+
+pushd $SCRIPTDIR/../src/
+
 mvn release:clean
 mvn release:prepare --batch-mode -DreleaseVersion=$RELEASE_VERSION
 mvn release:perform --batch-mode
+
+popd
+
