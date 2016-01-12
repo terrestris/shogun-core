@@ -10,22 +10,46 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SHOGun2</name>
+    <description>SHOGun2 is a Java based WebGIS framework</description>
+    <url>https://github.com/terrestris/shogun2</url>
 
     <organization>
-        <name>terrestris GmbH &#038; Co. KG</name>
+        <name>terrestris GmbH &amp; Co. KG</name>
         <url>http://www.terrestris.de/</url>
     </organization>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <scm>
+        <url>https://github.com/terrestris/shogun2</url>
         <connection>scm:git:git://github.com/terrestris/shogun2.git</connection>
-        <developerConnection>scm:git:[fetch=]git://github.com/terrestris/shogun2.git[push=]git@github.com:terrestris/shogun2.git</developerConnection>
-        <url>https://github.com/terrestris/shogun2.git</url>
+        <developerConnection>scm:git:git@github.com:terrestris/shogun2.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <ciManagement>
         <system>travis</system>
         <url>https://travis-ci.org/terrestris/shogun2</url>
     </ciManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -47,7 +71,7 @@
             <id>buehner</id>
             <name>Nils Bühner</name>
             <email>buehner@terrestris.de</email>
-            <organization>terrestris GmbH &#038; Co. KG</organization>
+            <organization>terrestris GmbH &amp; Co. KG</organization>
             <organizationUrl>http://www.terrestris.de/</organizationUrl>
             <roles>
                 <role>architect</role>
@@ -60,7 +84,7 @@
             <id>marcjansen</id>
             <name>Marc Jansen</name>
             <email>jansen@terrestris.de</email>
-            <organization>terrestris GmbH &#038; Co. KG</organization>
+            <organization>terrestris GmbH &amp; Co. KG</organization>
             <organizationUrl>http://www.terrestris.de/</organizationUrl>
             <roles>
                 <role>architect</role>
@@ -73,7 +97,7 @@
             <id>dnlkoch</id>
             <name>Daniel Koch</name>
             <email>koch@terrestris.de</email>
-            <organization>terrestris GmbH &#038; Co. KG</organization>
+            <organization>terrestris GmbH &amp; Co. KG</organization>
             <organizationUrl>http://www.terrestris.de/</organizationUrl>
             <roles>
                 <role>architect</role>
@@ -141,6 +165,8 @@
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 
         <!-- Other -->
         <ext-direct-spring.version>1.6.1</ext-direct-spring.version>
@@ -217,6 +243,31 @@
                 </plugins>
             </build>
         </profile>
+
+        <!-- A profile that is used for release a version of SHOGun2 to the
+             Central Repository -->
+        <profile>
+            <id>release-artifact</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 
     <build>
@@ -310,6 +361,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>${maven-deploy-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <!-- Disable the release profile that is part of the
+                         Maven Super POM since we are using our own profile -->
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release-artifact</releaseProfiles>
+                    <goals>deploy</goals>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                </configuration>
             </plugin>
 
         </plugins>
