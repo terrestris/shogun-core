@@ -18,10 +18,6 @@ import de.terrestris.shogun2.model.Person;
 public class PersonService<E extends Person, D extends PersonDao<E>> extends
 		AbstractExtDirectCrudService<E, D> {
 
-	E peter() {
-		return null;
-	}
-
 	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
