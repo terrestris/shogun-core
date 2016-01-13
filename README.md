@@ -1,3 +1,5 @@
+![The SHOGun2 logo](resources/logo/shogun-logo-full-150px.png "SHOGun2")
+
 # SHOGun2
 
 [![Build Status](https://travis-ci.org/terrestris/shogun2.svg?branch=master)](https://travis-ci.org/terrestris/shogun2?branch=master) [![Coverage Status](https://coveralls.io/repos/terrestris/shogun2/badge.svg?branch=master)](https://coveralls.io/r/terrestris/shogun2?branch=master)
