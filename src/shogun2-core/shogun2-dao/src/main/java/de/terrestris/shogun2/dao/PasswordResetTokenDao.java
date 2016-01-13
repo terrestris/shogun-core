@@ -4,11 +4,25 @@ import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.token.PasswordResetToken;
 
-@Repository
-public class PasswordResetTokenDao extends GenericHibernateDao<PasswordResetToken, Integer> {
+@Repository("passwordResetTokenDao")
+public class PasswordResetTokenDao<E extends PasswordResetToken> extends
+		AbstractUserTokenDao<E> {
 
-	protected PasswordResetTokenDao() {
-		super(PasswordResetToken.class);
+	/**
+	 * Public default constructor for this DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	public PasswordResetTokenDao() {
+		super((Class<E>) PasswordResetToken.class);
+	}
+
+	/**
+	 * Constructor that has to be called by subclasses.
+	 *
+	 * @param clazz
+	 */
+	protected PasswordResetTokenDao(Class<E> clazz) {
+		super(clazz);
 	}
 
 }

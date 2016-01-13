@@ -4,11 +4,25 @@ import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.module.Module;
 
-@Repository
-public class ModuleDao extends GenericHibernateDao<Module, Integer> {
+@Repository("moduleDao")
+public class ModuleDao<E extends Module> extends
+		GenericHibernateDao<E, Integer> {
 
-	protected ModuleDao() {
-		super(Module.class);
+	/**
+	 * Public default constructor for this DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	public ModuleDao() {
+		super((Class<E>) Module.class);
+	}
+
+	/**
+	 * Constructor that has to be called by subclasses.
+	 *
+	 * @param clazz
+	 */
+	protected ModuleDao(Class<E> clazz) {
+		super(clazz);
 	}
 
 }
