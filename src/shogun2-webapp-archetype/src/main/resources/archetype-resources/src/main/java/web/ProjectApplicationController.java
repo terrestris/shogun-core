@@ -3,61 +3,40 @@
 #set( $symbol_escape = '\' )
 package ${package}.web;
 
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import ${package}.model.ProjectApplication;
+import ${package}.dao.ProjectApplicationDao;
 import ${package}.service.ProjectApplicationService;
+import de.terrestris.shogun2.web.ApplicationController;
 
+/**
+ * This is a demo controller that demonstrates how a SHOGun2 controllers can be
+ * extended.
+ * 
+ * @author Nils Bühner
+ *
+ * @param <E>
+ * @param <D>
+ * @param <S>
+ */
 @Controller
 @RequestMapping("/projectApplication")
-public class ProjectApplicationController {
+public class ProjectApplicationController<E extends ProjectApplication, D extends ProjectApplicationDao<E>, S extends ProjectApplicationService<E, D>>
+		extends ApplicationController<E, D, S> {
 
-	private static final Logger LOG = Logger
-			.getLogger(ProjectApplicationController.class);
-
+	/**
+	 * We have to use {@link Qualifier} to define the correct service here.
+	 * Otherwise, spring can not decide which service has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
 	@Autowired
-	private ProjectApplicationService projectApplicationService;
-
-	@RequestMapping(value = "/create.action", method = RequestMethod.GET)
-	public @ResponseBody
-	ProjectApplication createApplication(String specificString, Integer specificInteger) {
-		LOG.info("Trying to create a ProjectApplication now.");
-
-		ProjectApplication application = new ProjectApplication();
-		application.setName("Project App");
-		application.setDescription("Proj App Desc");
-		application.setLanguage(Locale.getDefault());
-
-		application.setProjectSpecificString(specificString);
-		application.setProjectSpecificInteger(specificInteger);
-
-		return projectApplicationService.saveOrUpdate(application);
+	@Qualifier("projectApplicationService")
+	public void setService(S service) {
+		super.setService(service);
 	}
-
-	@RequestMapping(value = "/delete.action", method = RequestMethod.GET)
-	public void deleteApplication(Integer id) {
-		LOG.info("Trying to delete ProjectApplication " + id + " now.");
-
-		ProjectApplication app = projectApplicationService.findById(id);
-		projectApplicationService.delete(app);
-
-		LOG.info("Deleted project app " + id);
-	}
-
-	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
-	public @ResponseBody
-	List<ProjectApplication> findAllApplications() {
-		LOG.info("Trying to find all ProjectApplications.");
-
-		return projectApplicationService.findAll();
-	}
-
 }

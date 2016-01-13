@@ -3,18 +3,19 @@
 #set( $symbol_escape = '\' )
 package ${package}.init;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import de.terrestris.shogun2.init.ContentInitializer;
 
+/**
+ * This is a demo class that demonstrates how the SHOGun2
+ * {@link ContentInitializer} can be extended.
+ *
+ * @author Nils Bühner
+ *
+ */
 public class ProjectContentInitializer extends ContentInitializer {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG = Logger.getLogger(ProjectContentInitializer.class);
 
 	/**
 	 * Flag symbolizing if something should be initialized on startup
