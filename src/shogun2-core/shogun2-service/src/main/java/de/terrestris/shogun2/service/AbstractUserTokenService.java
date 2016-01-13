@@ -1,15 +1,11 @@
 package de.terrestris.shogun2.service;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 
-import org.apache.log4j.Logger;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
-import org.joda.time.DateTime;
 
+import de.terrestris.shogun2.dao.AbstractUserTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
 import de.terrestris.shogun2.model.token.UserToken;
@@ -20,13 +16,8 @@ import de.terrestris.shogun2.model.token.UserToken;
  * @author Nils Bühner
  *
  */
-public abstract class AbstractUserTokenService<E extends UserToken> extends AbstractCrudService<E> {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG =
-			Logger.getLogger(AbstractUserTokenService.class);
+public abstract class AbstractUserTokenService<E extends UserToken, D extends AbstractUserTokenDao<E>>
+		extends AbstractTokenService<E, D> {
 
 	/**
 	 * An expiry threshold in minutes for the creation of a new
@@ -36,6 +27,18 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * and a new one will be created.
 	 */
 	private static final int EXPIRY_THRESHOLD_MINUTES = 5;
+
+	/**
+	 * Has to be implemented by subclasses to return a concrete instance for the
+	 * given values. Should return an instance with a default expiration time
+	 * if expirationTimeInMinutes is null.
+	 *
+	 *
+	 * @param user
+	 * @param expirationTimeInMinutes
+	 * @return
+	 */
+	protected abstract E buildConcreteInstance(User user, Integer expirationTimeInMinutes);
 
 	/**
 	 *
@@ -52,19 +55,6 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	}
 
 	/**
-	 *
-	 * @return
-	 */
-	public E findByTokenValue(String token) {
-
-		Criterion criteria = Restrictions.eq("token", token);
-
-		E userToken = dao.findByUniqueCriteria(criteria);
-
-		return userToken;
-	}
-
-	/**
 	 * If the passed token is null or expired or if there is no user associated
 	 * with the token, this method will throw an {@link Exception}.
 	 *
@@ -72,22 +62,11 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 	 * @throws Exception
 	 *             if the token is not valid (e.g. because it is expired)
 	 */
-	public void validateToken(UserToken userToken) throws Exception {
+	@Override
+	public void validateToken(E userToken) throws Exception {
 
-		if (userToken == null) {
-			throw new Exception("The provided token is null.");
-		}
-
-		DateTime expirationDate = (DateTime) userToken
-				.getExpirationDate();
-
-		String tokenValue = userToken.getToken();
-
-		// check if the token expire date is valid
-		if (expirationDate.isBeforeNow()) {
-			throw new Exception("The token '" + tokenValue + "' expired on '"
-					+ expirationDate + "'");
-		}
+		// call super
+		super.validateToken(userToken);
 
 		// check if user is associated
 		if (userToken.getUser() == null) {
@@ -145,7 +124,7 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 
 		}
 
-		userToken = buildConcreteUserTokenInstance(user, expirationTimeInMinutes);
+		userToken = buildConcreteInstance(user, expirationTimeInMinutes);
 
 		// persist the user token
 		dao.saveOrUpdate(userToken);
@@ -155,42 +134,6 @@ public abstract class AbstractUserTokenService<E extends UserToken> extends Abst
 				+ "' for user '" + user.getAccountName() + "'");
 
 		return userToken;
-	}
-
-	/**
-	 * Uses Java reflection to build a new instance of the correct concrete
-	 * {@link UserToken} (subclass) type.
-	 *
-	 * @param user
-	 * @param expirationTimeInMinutes
-	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	@SuppressWarnings("unchecked")
-	private E buildConcreteUserTokenInstance(User user, Integer expirationTimeInMinutes)
-			throws NoSuchMethodException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
-
-		Class<E> concreteUserTokenClass = (Class<E>) ((ParameterizedType) this
-				.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-
-		Constructor<E> c;
-		E concreteInstance;
-
-		// get the correct constructor (based on the value of
-		// expirationTimeInMinutes) and create a new instance
-		if(expirationTimeInMinutes == null) {
-			c = concreteUserTokenClass.getConstructor(User.class);
-			concreteInstance = c.newInstance(user);
-		} else {
-			c = concreteUserTokenClass.getConstructor(User.class, int.class);
-			concreteInstance = c.newInstance(user, expirationTimeInMinutes);
-		}
-
-		return concreteInstance;
 	}
 
 }

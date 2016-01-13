@@ -1,6 +1,8 @@
 package de.terrestris.shogun2.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
@@ -8,15 +10,40 @@ import de.terrestris.shogun2.model.PersistentObject;
 
 /**
  * This abstract service class simply provides a data access object for the type
- * {@link T}.
- * 
+ * {@link E} (and a logger).
+ *
  * @author Nils Bühner
- * 
+ *
  */
-@Transactional(value="transactionManager")
-public abstract class AbstractDaoService<T extends PersistentObject> {
+@Transactional(value = "transactionManager")
+public abstract class AbstractDaoService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>> {
 
-	@Autowired
-	protected GenericHibernateDao<T, Integer> dao;
+	/**
+	 * The LOGGER instance (that will be available in all subclasses)
+	 */
+	protected final Logger LOG = Logger.getLogger(getClass());
+
+	/**
+	 * The data access object
+	 */
+	protected D dao;
+
+	/**
+	 * Subclasses must implement this class and annotate it with
+	 * {@link Autowired} and {@link Qualifier}! This is necessary as there may
+	 * be multiple candidates to autowire (due to hierarchy) and we have to
+	 * configure the correct ones.
+	 *
+	 * @param dao
+	 *            the dao to set
+	 */
+	public abstract void setDao(D dao);
+
+	/**
+	 * @return the dao
+	 */
+	public D getDao() {
+		return dao;
+	}
 
 }
