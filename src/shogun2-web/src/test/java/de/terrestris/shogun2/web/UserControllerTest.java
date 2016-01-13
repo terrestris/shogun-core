@@ -31,7 +31,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import de.terrestris.shogun2.dao.PasswordResetTokenDao;
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.PasswordResetToken;
 import de.terrestris.shogun2.service.PasswordResetTokenService;
 import de.terrestris.shogun2.service.UserService;
 
@@ -45,14 +48,14 @@ public class UserControllerTest {
 
 	private MockMvc mockMvc;
 
-	@Mock
-	private PasswordResetTokenService tokenService;
+	@Mock(name="passwordResetTokenService")
+	private PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> tokenService;
 
-	@Mock
-	private UserService userService;
+	@Mock(name="service")
+	private UserService<User, UserDao<User>> userService;
 
 	@InjectMocks
-	private UserController UserController;
+	private UserController<User, UserDao<User>, UserService<User, UserDao<User>>> UserController;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
