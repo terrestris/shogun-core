@@ -141,7 +141,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByCriteria(Criterion... criterion) throws HibernateException {
-		LOG.trace("Finding all instances of " + clazz.getSimpleName()
+		LOG.trace("Finding instances of " + clazz.getSimpleName()
 				+ " based on " + criterion.length + " criteria");
 
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
