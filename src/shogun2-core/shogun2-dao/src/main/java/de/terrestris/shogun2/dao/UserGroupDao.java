@@ -11,24 +11,38 @@ import org.springframework.stereotype.Repository;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 
-@Repository
-public class UserGroupDao extends GenericHibernateDao<UserGroup, Integer> {
+@Repository("userGroupDao")
+public class UserGroupDao<E extends UserGroup> extends
+		GenericHibernateDao<E, Integer> {
 
-	protected UserGroupDao() {
-		super(UserGroup.class);
+	/**
+	 * Public default constructor for this DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	public UserGroupDao() {
+		super((Class<E>) UserGroup.class);
+	}
+
+	/**
+	 * Constructor that has to be called by subclasses.
+	 *
+	 * @param clazz
+	 */
+	protected UserGroupDao(Class<E> clazz) {
+		super(clazz);
 	}
 
 	/**
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<UserGroup> findGroupsOfUser(User user) throws HibernateException {
+	public Set<E> findGroupsOfUser(User user) throws HibernateException {
 		Criteria criteria = createDistinctRootEntityCriteria();
 
 		criteria.createAlias("members", "m");
 		criteria.add(Restrictions.eq("m.id", user.getId()));
 
-		return new HashSet<UserGroup>(criteria.list());
+		return new HashSet<E>(criteria.list());
 	}
 
 }

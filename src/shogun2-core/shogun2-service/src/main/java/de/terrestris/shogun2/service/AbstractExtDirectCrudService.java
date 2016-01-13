@@ -13,6 +13,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.bean.SortInfo;
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
 
@@ -23,8 +24,8 @@ import de.terrestris.shogun2.paging.PagingResult;
  * @author Nils Bühner
  * 
  */
-public abstract class AbstractExtDirectCrudService<E extends PersistentObject>
-		extends AbstractCrudService<E> {
+public abstract class AbstractExtDirectCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
+		extends AbstractCrudService<E, D> {
 
 	/**
 	 * Just calls the parent method, but is annotated with

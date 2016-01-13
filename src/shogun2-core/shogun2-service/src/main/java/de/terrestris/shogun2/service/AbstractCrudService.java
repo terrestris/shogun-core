@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -15,8 +16,8 @@ import de.terrestris.shogun2.model.PersistentObject;
  * @see AbstractDaoService
  *
  */
-public abstract class AbstractCrudService<E extends PersistentObject> extends
-		AbstractDaoService<E> {
+public abstract class AbstractCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
+		extends AbstractDaoService<E, D> {
 
 	/**
 	 *

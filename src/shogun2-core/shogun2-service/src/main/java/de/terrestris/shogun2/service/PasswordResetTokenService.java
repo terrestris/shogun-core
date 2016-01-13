@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
+import de.terrestris.shogun2.dao.PasswordResetTokenDao;
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
 import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
@@ -29,19 +30,14 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
  *
  */
 @Service("passwordResetTokenService")
-public class PasswordResetTokenService extends AbstractUserTokenService<PasswordResetToken> {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG =
-			Logger.getLogger(PasswordResetTokenService.class);
+public class PasswordResetTokenService<E extends PasswordResetToken, D extends PasswordResetTokenDao<E>>
+		extends AbstractUserTokenService<E, D> {
 
 	/**
 	 *
 	 */
 	@Autowired
-	private UserService userService;
+	private UserService<User, UserDao<User>> userService;
 
 	/**
 	 *
@@ -67,6 +63,30 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 	 */
 	@Autowired
 	private String changePasswordPath;
+
+	/**
+	 * We have to use {@link Qualifier} to define the correct dao here.
+	 * Otherwise, spring can not decide which dao has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
+	@Autowired
+	@Qualifier("passwordResetTokenDao")
+	public void setDao(D dao) {
+		this.dao = dao;
+	}
+
+	/**
+	 * Builds a concrete instance of this class.
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected E buildConcreteInstance(User user, Integer expirationTimeInMinutes) {
+		if(expirationTimeInMinutes == null) {
+			return (E) new PasswordResetToken(user);
+		}
+		return (E) new PasswordResetToken(user, expirationTimeInMinutes);
+	}
 
 	/**
 	 * @param request
@@ -126,13 +146,14 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 	 * @param token
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void validateTokenAndUpdatePassword(String rawPassword, String token) throws Exception {
 
 		// try to find the provided token
 		PasswordResetToken passwordResetToken = findByTokenValue(token);
 
 		// this would throw an exception if the token is not valid
-		this.validateToken(passwordResetToken);
+		this.validateToken((E) passwordResetToken);
 
 		// the user's password can be changed now
 
@@ -143,7 +164,7 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 		userService.updatePassword(user, rawPassword);
 
 		// delete the token
-		dao.delete(passwordResetToken);
+		dao.delete((E) passwordResetToken);
 
 		LOG.trace("Deleted the token.");
 		LOG.debug("Successfully updated the password.");
@@ -170,20 +191,6 @@ public class PasswordResetTokenService extends AbstractUserTokenService<Password
 				.build();
 
 		return tokenURI;
-	}
-
-	/**
-	 * @return the userService
-	 */
-	public UserService getUserService() {
-		return userService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
 	}
 
 	/**

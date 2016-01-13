@@ -4,15 +4,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.dao.PasswordResetTokenDao;
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.PasswordResetToken;
 import de.terrestris.shogun2.service.PasswordResetTokenService;
 import de.terrestris.shogun2.service.UserService;
 
@@ -23,25 +26,26 @@ import de.terrestris.shogun2.service.UserService;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController extends AbstractWebController {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG =
-			Logger.getLogger(UserController.class);
+public class UserController<E extends User, D extends UserDao<E>, S extends UserService<E, D>>
+		extends AbstractWebController<E, D, S> {
 
 	/**
 	 *
 	 */
 	@Autowired
-	private UserService userService;
+	private PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> passwordResetTokenService;
 
 	/**
-	 *
+	 * We have to use {@link Qualifier} to define the correct service here.
+	 * Otherwise, spring can not decide which service has to be autowired here
+	 * as there are multiple candidates.
 	 */
+	@Override
 	@Autowired
-	private PasswordResetTokenService passwordResetTokenService;
+	@Qualifier("userService")
+	public void setService(S service) {
+		this.service = service;
+	}
 
 	/**
 	 *
@@ -49,13 +53,14 @@ public class UserController extends AbstractWebController {
 	 * @param password
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/register.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
 			@RequestParam String email,
 			@RequestParam String password) {
 
 		// build the user object that will be passed to the service method
-		User user = new User();
+		E user = (E) new User();
 
 		user.setEmail(email);
 		user.setAccountName(email);
@@ -63,8 +68,7 @@ public class UserController extends AbstractWebController {
 		user.setActive(false);
 
 		try {
-
-			user = userService.registerUser(user, request);
+			user = service.registerUser(user, request);
 
 			return this.getModelMapSuccess("You have been registered. "
 					+ "Please check your mails (" + user.getEmail()
@@ -84,7 +88,7 @@ public class UserController extends AbstractWebController {
 	public @ResponseBody Map<String, Object> activateUser(@RequestParam String token) {
 
 		try {
-			userService.activateUser(token);
+			service.activateUser(token);
 			return this.getModelMapSuccess("Your account has successfully been activated.");
 		} catch(Exception e) {
 			LOG.error("Account could not be activated: " + e.getMessage());
@@ -147,10 +151,11 @@ public class UserController extends AbstractWebController {
 		LOG.debug("Requested to return the logged in user");
 
 		try {
-			return this.getModelMapSuccess(userService.getUserBySession());
+			return this.getModelMapSuccess(service.getUserBySession());
 		} catch (Exception e) {
 			return this.getModelMapError("Could not obtain the user by "
 					+ "session: " + e.getMessage());
 		}
 	}
+
 }

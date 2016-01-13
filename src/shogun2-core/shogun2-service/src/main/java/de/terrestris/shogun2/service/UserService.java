@@ -2,7 +2,6 @@ package de.terrestris.shogun2.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import de.terrestris.shogun2.dao.RegistrationTokenDao;
+import de.terrestris.shogun2.dao.RoleDao;
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
@@ -23,24 +25,20 @@ import de.terrestris.shogun2.model.token.RegistrationToken;
  *
  */
 @Service("userService")
-public class UserService extends AbstractExtDirectCrudService<User> {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG = Logger.getLogger(UserService.class);
+public class UserService<E extends User, D extends UserDao<E>> extends
+		PersonService<E, D> {
 
 	/**
 	 * Registration token service
 	 */
 	@Autowired
-	private RegistrationTokenService registrationTokenService;
+	private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
 
 	/**
 	 * Role service
 	 */
 	@Autowired
-	private RoleService roleService;
+	private RoleService<Role, RoleDao<Role>> roleService;
 
 	/**
 	 * The autowired PasswordEncoder
@@ -53,10 +51,24 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * account. ATTENTION: This autowired bean will NOT have an ID if the
 	 * system did not boot with hibernate/CREATE mode and SHOGun2-content
 	 * initialization!
+	 *
+	 * TODO: We should only autowire a string with the role name...
 	 */
 	@Autowired
 	@Qualifier("userRole")
 	private Role defaultUserRole;
+
+	/**
+	 * We have to use {@link Qualifier} to define the correct dao here.
+	 * Otherwise, spring can not decide which dao has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
+	@Autowired
+	@Qualifier("userDao")
+	public void setDao(D dao) {
+		super.setDao(dao);
+	}
 
 	/**
 	 * Returns the user for the given (unique) account name.
@@ -65,12 +77,12 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @param accountName A unique account name.
 	 * @return The unique user for the account name or null.
 	 */
-	public User findByAccountName(String accountName) {
+	public E findByAccountName(String accountName) {
 
 		SimpleExpression eqAccountName =
 			Restrictions.eq("accountName", accountName);
 
-		User user = dao.findByUniqueCriteria(eqAccountName);
+		E user = dao.findByUniqueCriteria(eqAccountName);
 
 		return user;
 	}
@@ -80,10 +92,10 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @param email
 	 * @return
 	 */
-	public User findByEmail(String email) {
+	public E findByEmail(String email) {
 
 		SimpleExpression eqEmail = Restrictions.eq("email", email);
-		User user = dao.findByUniqueCriteria(eqEmail);
+		E user = dao.findByUniqueCriteria(eqEmail);
 
 		return user;
 	}
@@ -97,7 +109,8 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @return
 	 * @throws Exception
 	 */
-	public User registerUser(User user, HttpServletRequest request) throws Exception {
+	@SuppressWarnings("unchecked")
+	public E registerUser(E user, HttpServletRequest request) throws Exception {
 
 		String email = user.getEmail();
 
@@ -110,7 +123,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 			throw new Exception(errorMessage);
 		}
 
-		user = this.persistNewUser(user, true);
+		user = (E) this.persistNewUser(user, true);
 
 		// create a token for the user and send an email with an "activation" link
 		registrationTokenService.sendRegistrationActivationMail(request, user);
@@ -124,6 +137,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void activateUser(String tokenValue) throws Exception {
 
 		RegistrationToken token = registrationTokenService.findByTokenValue(tokenValue);
@@ -134,7 +148,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		registrationTokenService.validateToken(token);
 
 		// set active=true
-		User user = token.getUser();
+		E user = (E) token.getUser();
 		user.setActive(true);
 
 		// get the persisted default user role
@@ -146,7 +160,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		user.getRoles().add(persistedDefaultUserRole);
 
 		// update the user
-		dao.saveOrUpdate(user);
+		dao.saveOrUpdate((E) user);
 
 		// delete the token
 		registrationTokenService.deleteTokenAfterActivation(token);
@@ -166,6 +180,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 *
 	 * @return The persisted user object (incl. ID value)
 	 */
+	@SuppressWarnings("unchecked")
 	public User persistNewUser(User user, boolean encryptPassword) {
 
 		if(user.getId() != null) {
@@ -178,7 +193,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 
-		dao.saveOrUpdate(user);
+		dao.saveOrUpdate((E) user);
 
 		return user;
 	}
@@ -189,6 +204,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 	 * @param rawPassword
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void updatePassword(User user, String rawPassword) throws Exception {
 
 		if(user.getId() == null) {
@@ -196,7 +212,7 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		}
 
 		user.setPassword(passwordEncoder.encode(rawPassword));
-		dao.saveOrUpdate(user);
+		dao.saveOrUpdate((E) user);
 	}
 
 	/**
@@ -215,21 +231,6 @@ public class UserService extends AbstractExtDirectCrudService<User> {
 		Integer id = loggedInUser.getId();
 
 		return dao.findById(id);
-	}
-
-	/**
-	 * @return the registrationTokenService
-	 */
-	public RegistrationTokenService getRegistrationTokenService() {
-		return registrationTokenService;
-	}
-
-	/**
-	 * @param registrationTokenService the registrationTokenService to set
-	 */
-	public void setRegistrationTokenService(
-			RegistrationTokenService registrationTokenService) {
-		this.registrationTokenService = registrationTokenService;
 	}
 
 	/**

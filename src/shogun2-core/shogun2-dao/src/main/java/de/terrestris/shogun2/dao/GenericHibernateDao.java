@@ -3,6 +3,7 @@ package de.terrestris.shogun2.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -18,16 +19,29 @@ import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
 
 /**
+ * The abstract superclass for all data access objects. Provides basic CRUD
+ * functionality and a logger instance for all subclasses.
+ *
  * @author Nils Bühner
  *
  */
 public abstract class GenericHibernateDao<E extends PersistentObject, ID extends Serializable> {
 
 	/**
+	 * The LOGGER instance (that will be available in all subclasses)
+	 */
+	protected final Logger LOG = Logger.getLogger(getClass());
+
+	/**
 	 * Represents the class of the entity
 	 */
 	private Class<E> clazz;
 
+	/**
+	 * Constructor
+	 *
+	 * @param clazz
+	 */
 	protected GenericHibernateDao(Class<E> clazz) {
 		this.clazz = clazz;
 	}
@@ -58,6 +72,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @return The object from the database or null if it does not exist
 	 */
 	public E findById(ID id) {
+		LOG.trace("Finding " + clazz.getSimpleName() + " with ID " + id);
 		return (E) getSession().get(clazz, id);
 	}
 
@@ -73,6 +88,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @return
 	 */
 	public E loadById(ID id) {
+		LOG.trace("Loading " + clazz.getSimpleName() + " with ID " + id);
 		return (E) getSession().load(clazz, id);
 	}
 
@@ -83,6 +99,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @return All entities
 	 */
 	public List<E> findAll() throws HibernateException {
+		LOG.trace("Finding all instances of " + clazz.getSimpleName());
 		return findByCriteria();
 	}
 
@@ -92,6 +109,14 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @param e The entity to save or update in the database.
 	 */
 	public void saveOrUpdate(E e) {
+		final Integer id = e.getId();
+		final boolean hasId = id != null;
+		String createOrUpdatePrefix = hasId ? "Updating" : "Creating a new";
+		String idSuffix = hasId ? "with ID " + id : "";
+
+		LOG.trace(createOrUpdatePrefix + " instance of " + clazz.getSimpleName()
+				+ idSuffix);
+
 		e.setModified(DateTime.now());
 		getSession().saveOrUpdate(e);
 	}
@@ -102,6 +127,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * @param e The entity to remove from the database.
 	 */
 	public void delete(E e) {
+		LOG.trace("Deleting " + clazz.getSimpleName() + " with ID " + e.getId());
 		getSession().delete(e);
 	}
 
@@ -115,6 +141,9 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByCriteria(Criterion... criterion) throws HibernateException {
+		LOG.trace("Finding instances of " + clazz.getSimpleName()
+				+ " based on " + criterion.length + " criteria");
+
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
 		return criteria.list();
 	}
@@ -131,6 +160,9 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 */
 	@SuppressWarnings("unchecked")
 	public E findByUniqueCriteria(Criterion... criterion) throws HibernateException {
+		LOG.trace("Finding one unique " + clazz.getSimpleName()
+				+ " based on " + criterion.length + " criteria");
+
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
 		return (E) criteria.uniqueResult();
 	}
@@ -151,13 +183,22 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	public PagingResult<E> findByCriteriaWithSortingAndPaging(Integer firstResult,
 			Integer maxResults, List<Order> sorters, Criterion... criterion) throws HibernateException {
 
+		int nrOfSorters = sorters == null ? 0 : sorters.size();
+
+		LOG.trace("Finding instances of " + clazz.getSimpleName()
+				+ " based on " + criterion.length + " criteria"
+				+ " with " + nrOfSorters + " sorters");
+
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
 
 		// add paging info
 		if (maxResults != null) {
+			LOG.trace("Limiting result set size to " + maxResults);
 			criteria.setMaxResults(maxResults);
 		}
 		if (firstResult != null) {
+			LOG.trace("Setting the first result to be retrieved to "
+					+ firstResult);
 			criteria.setFirstResult(firstResult);
 		}
 

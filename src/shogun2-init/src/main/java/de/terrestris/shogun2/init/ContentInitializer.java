@@ -38,7 +38,7 @@ public class ContentInitializer {
 	/**
 	 * The Logger
 	 */
-	private static final Logger LOG = Logger.getLogger(ContentInitializer.class);
+	protected final Logger LOG = Logger.getLogger(getClass());
 
 	/**
 	 * Flag symbolizing if content initialization should be active on startup
@@ -194,7 +194,7 @@ public class ContentInitializer {
 
 		if (this.shogunInitEnabled) {
 
-			LOG.info("Initializing some SHOGun2 demo content!");
+			LOG.info("Initializing SHOGun2 content");
 
 			// TODO: get smarter here
 			// determine the admin and remember the rawPassword because this

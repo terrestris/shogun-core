@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
+import de.terrestris.shogun2.dao.RegistrationTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
 import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
@@ -29,13 +29,8 @@ import de.terrestris.shogun2.util.mail.MailPublisher;
  *
  */
 @Service("registrationTokenService")
-public class RegistrationTokenService extends AbstractUserTokenService<RegistrationToken> {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG =
-			Logger.getLogger(RegistrationTokenService.class);
+public class RegistrationTokenService<E extends RegistrationToken, D extends RegistrationTokenDao<E>>
+		extends AbstractUserTokenService<E, D> {
 
 	/**
 	 * The relative path for the SHOGun2 user activation interface.
@@ -61,6 +56,30 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	@Autowired
 	@Qualifier("registrationMailMessageTemplate")
 	private SimpleMailMessage registrationMailMessageTemplate;
+
+	/**
+	 * We have to use {@link Qualifier} to define the correct dao here.
+	 * Otherwise, spring can not decide which dao has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
+	@Autowired
+	@Qualifier("registrationTokenDao")
+	public void setDao(D dao) {
+		this.dao = dao;
+	}
+
+	/**
+	 * Builds a concrete instance of this class.
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected E buildConcreteInstance(User user, Integer expirationTimeInMinutes) {
+		if(expirationTimeInMinutes == null) {
+			return (E) new RegistrationToken(user);
+		}
+		return (E) new RegistrationToken(user, expirationTimeInMinutes);
+	}
 
 	/**
 	 * @throws InvocationTargetException
@@ -135,8 +154,9 @@ public class RegistrationTokenService extends AbstractUserTokenService<Registrat
 	 *
 	 * @param token
 	 */
+	@SuppressWarnings("unchecked")
 	public void deleteTokenAfterActivation(RegistrationToken token) {
-		dao.delete(token);
+		dao.delete((E) token);
 		LOG.trace("The registration token has been deleted.");
 	}
 

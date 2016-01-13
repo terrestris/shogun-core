@@ -5,6 +5,7 @@ package de.terrestris.shogun2.security.acl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.terrestris.shogun2.dao.PersonDao;
 import de.terrestris.shogun2.model.Person;
 import de.terrestris.shogun2.service.AbstractCrudService;
 import de.terrestris.shogun2.service.PersonService;
@@ -14,10 +15,10 @@ import de.terrestris.shogun2.service.PersonService;
  *
  */
 public class PersonAclManagementTest extends
-		AbstractAclManagementTest<Person> {
+		AbstractAclManagementTest<Person, PersonDao<Person>> {
 
 	@Autowired
-	private PersonService personService;
+	private PersonService<Person, PersonDao<Person>> personService;
 
 	@Override
 	protected Person getImplToUse() {
@@ -25,7 +26,7 @@ public class PersonAclManagementTest extends
 	}
 
 	@Override
-	protected AbstractCrudService<Person> getCrudService() {
+	protected AbstractCrudService<Person, PersonDao<Person>> getCrudService() {
 		return personService;
 	}
 

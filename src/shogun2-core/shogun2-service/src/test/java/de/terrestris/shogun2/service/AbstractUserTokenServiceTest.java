@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -19,10 +20,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.dao.AbstractUserTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.UserToken;
 
@@ -32,23 +32,24 @@ import de.terrestris.shogun2.model.token.UserToken;
  * @author Nils Bühner
  *
  */
-@SuppressWarnings({ "unchecked" })
-public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
+public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extends AbstractUserTokenDao<E>, S extends AbstractUserTokenService<E, D>> {
 
 	/**
 	 * Static object that holds concrete instances of
 	 * {@link UserToken} for the tests.
 	 */
-	protected static UserToken userTokenToUse = null;
+	protected E userTokenToUse = null;
 
-	@Mock
-	protected GenericHibernateDao<E, Integer> dao;
+	protected D dao;
 
 	@InjectMocks
-	protected AbstractUserTokenService<E> userTokenService;
+	protected S userTokenService;
 
 	@Before
 	public void setUp() {
+		// see here why we are mocking this way:
+		// http://stackoverflow.com/a/24302622
+		dao = mock(getDaoClass());
 		this.userTokenService = getUserTokenService();
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
@@ -68,7 +69,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 	 *
 	 * @return
 	 */
-	protected abstract AbstractUserTokenService<E> getUserTokenService();
+	protected abstract S getUserTokenService();
 
 	/**
 	 * Has to be implemented by subclasses and should return an expired token.
@@ -85,6 +86,14 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 	 */
 	protected abstract E getUserTokenWithoutUser();
 
+	/**
+	 * This method has to be implemented by subclasses to return the concrete
+	 * class of the dao.
+	 *
+	 * @return
+	 */
+	protected abstract Class<D> getDaoClass();
+
 	@After
 	public void tearDownAfterEachTest() throws Exception {
 		userTokenToUse = null;
@@ -95,7 +104,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 		User user = new User();
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn((E) userTokenToUse);
+		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(userTokenToUse);
 
 		E actualUserToken = userTokenService.findByUser(user);
 
@@ -182,6 +191,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getValidTokenForUser_shouldReturnNewTokenWithDefaultExpirationAsExpected()
 			throws NoSuchMethodException, SecurityException,
@@ -205,6 +215,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 		assertEquals(user, newUserToken.getUser());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getValidTokenForUser_shouldReturnNewTokenWithExplicitExpirationAsExpected()
 			throws NoSuchMethodException, SecurityException,
@@ -251,6 +262,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken> {
 		assertEquals(user, newUserToken.getUser());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getValidTokenForUser_shouldDeleteExpiredTokenAndReturnNewTokenAsExpected()
 			throws NoSuchMethodException, SecurityException,

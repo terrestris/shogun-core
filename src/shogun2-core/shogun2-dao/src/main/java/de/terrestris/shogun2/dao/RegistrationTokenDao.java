@@ -4,11 +4,25 @@ import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.token.RegistrationToken;
 
-@Repository
-public class RegistrationTokenDao extends GenericHibernateDao<RegistrationToken, Integer> {
+@Repository("registrationTokenDao")
+public class RegistrationTokenDao<E extends RegistrationToken> extends
+		AbstractUserTokenDao<E> {
 
-	protected RegistrationTokenDao() {
-		super(RegistrationToken.class);
+	/**
+	 * Public default constructor for this DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	public RegistrationTokenDao() {
+		super((Class<E>) RegistrationToken.class);
+	}
+
+	/**
+	 * Constructor that has to be called by subclasses.
+	 *
+	 * @param clazz
+	 */
+	protected RegistrationTokenDao(Class<E> clazz) {
+		super(clazz);
 	}
 
 }

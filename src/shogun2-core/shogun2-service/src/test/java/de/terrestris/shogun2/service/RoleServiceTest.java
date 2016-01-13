@@ -12,9 +12,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.SimpleExpression;
 import org.junit.Test;
 
+import de.terrestris.shogun2.dao.RoleDao;
 import de.terrestris.shogun2.model.Role;
 
-public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role> {
+public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role, RoleDao<Role>, RoleService<Role, RoleDao<Role>>> {
 
 	/**
 	 *
@@ -24,12 +25,9 @@ public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role> {
 		implToTest = new Role();
 	}
 
-	/**
-	 *
-	 */
 	@Override
-	protected AbstractExtDirectCrudService<Role> getCrudService() {
-		return new RoleService();
+	protected RoleService<Role, RoleDao<Role>> getCrudService() {
+		return new RoleService<Role, RoleDao<Role>>();
 	}
 
 	@Test
@@ -41,7 +39,7 @@ public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedRole);
 
-		Role actualRole = ((RoleService) crudService).findByRoleName(roleName);
+		Role actualRole = crudService.findByRoleName(roleName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -58,7 +56,7 @@ public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedRole);
 
-		Role actualRole = ((RoleService) crudService).findByRoleName(roleName);
+		Role actualRole = crudService.findByRoleName(roleName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -74,10 +72,16 @@ public class RoleServiceTest extends AbstractExtDirectCrudServiceTest<Role> {
 		doThrow(new HibernateException("errormsg"))
 			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
 
-		((RoleService) crudService).findByRoleName(roleName);
+		crudService.findByRoleName(roleName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<RoleDao<Role>> getDaoClass() {
+		return (Class<RoleDao<Role>>) new RoleDao<Role>().getClass();
 	}
 
 }

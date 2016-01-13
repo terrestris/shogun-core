@@ -1,34 +1,32 @@
 package de.terrestris.shogun2.web;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.dao.ModuleDao;
 import de.terrestris.shogun2.model.module.Module;
 import de.terrestris.shogun2.service.ModuleService;
 
 /**
  * @author Nils Bühner
- * 
+ *
  */
 @Controller
 @RequestMapping("/module")
-public class ModuleController {
+public class ModuleController<E extends Module, D extends ModuleDao<E>, S extends ModuleService<E, D>>
+		extends AbstractWebController<E, D, S> {
 
-	private static final Logger LOG = Logger.getLogger(ModuleController.class);
-
+	/**
+	 * We have to use {@link Qualifier} to define the correct service here.
+	 * Otherwise, spring can not decide which service has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
 	@Autowired
-	private ModuleService moduleService;
-
-	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
-	public @ResponseBody List<Module> findAllModules() {
-		LOG.info("Trying to find all modules.");
-
-		return moduleService.findAll();
+	@Qualifier("moduleService")
+	public void setService(S service) {
+		this.service = service;
 	}
 }

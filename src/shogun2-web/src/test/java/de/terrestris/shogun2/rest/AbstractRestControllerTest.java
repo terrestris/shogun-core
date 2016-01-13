@@ -3,8 +3,16 @@ package de.terrestris.shogun2.rest;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
 import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
@@ -68,8 +77,13 @@ public class AbstractRestControllerTest {
 	 */
 	@RestController
 	@RequestMapping("/tests")
-	private class TestModelRestController extends
-			AbstractRestController<TestModel> {
+	private class TestModelRestController<E extends TestModel, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
+			extends AbstractRestController<E, D, S> {
+
+		@Override
+		public void setService(S service) {
+			this.service = service;
+		}
 	}
 
 	/**
@@ -87,13 +101,13 @@ public class AbstractRestControllerTest {
 	 * controller to test.
 	 */
 	@Mock
-	private AbstractCrudService<TestModel> serviceMock;
+	private AbstractCrudService<TestModel, GenericHibernateDao<TestModel, Integer>> serviceMock;
 
 	/**
 	 * The controller that will be tested.
 	 */
 	@InjectMocks
-	private AbstractRestController<TestModel> restController;
+	private AbstractRestController<TestModel, GenericHibernateDao<TestModel,Integer>, AbstractCrudService<TestModel,GenericHibernateDao<TestModel,Integer>>> restController;
 
 	/**
 	 * Test setup and init of mocks.
@@ -101,7 +115,7 @@ public class AbstractRestControllerTest {
 	@Before
 	public void setUp() {
 
-		restController = new TestModelRestController();
+		restController = new TestModelRestController<TestModel, GenericHibernateDao<TestModel,Integer>, AbstractCrudService<TestModel,GenericHibernateDao<TestModel,Integer>>>();
 
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);

@@ -13,6 +13,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -33,7 +34,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -49,11 +49,11 @@ import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  * Test for the {@link AbstractExtDirectCrudService}.
- * 
+ *
  * @author Nils Bühner
- * 
+ *
  */
-public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObject> {
+public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractExtDirectCrudService<E, D>> {
 
 	/**
 	 * Static object that holds concrete implementations of
@@ -61,14 +61,16 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	 */
 	protected static PersistentObject implToTest = null;
 
-	@Mock
-	protected GenericHibernateDao<E, Integer> dao;
+	protected D dao;
 
 	@InjectMocks
-	protected AbstractExtDirectCrudService<E> crudService;
+	protected S crudService;
 
 	@Before
 	public void setUp() {
+		// see here why we are mocking this way:
+		// http://stackoverflow.com/a/24302622
+		dao = mock(getDaoClass());
 		this.crudService = getCrudService();
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
@@ -76,7 +78,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 
 	/**
 	 * This method has to be implemented by subclasses.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Before
@@ -85,10 +87,19 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	/**
 	 * This method has to be implemented by subclasses to return a concrete
 	 * implementation of the tested service.
-	 * 
+	 *
 	 * @return
 	 */
-	protected abstract AbstractExtDirectCrudService<E> getCrudService();
+	protected abstract S getCrudService();
+
+	/**
+	 * This method has to be implemented by subclasses to return the concrete
+	 * class of the dao.
+	 *
+	 * @return
+	 */
+	protected abstract Class<D> getDaoClass();
+
 
 	@After
 	public void tearDownAfterEachTest() throws Exception {
@@ -133,8 +144,8 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	 * Test whether
 	 * {@link ExtDirectAbstractCrudService#saveOrUpdate(PersistentObject)}
 	 * <i>updates</i> the modified value of a {@link PersistentObject}.
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 * @throws IllegalArgumentException
@@ -185,7 +196,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	/**
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
-	 * 
+	 *
 	 */
 	@Test
 	public void findById_shouldFindExistingId() throws NoSuchFieldException,
@@ -234,7 +245,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
 	 * @throws InstantiationException
-	 * 
+	 *
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@Test
@@ -277,7 +288,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	/**
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
@@ -301,7 +312,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	/**
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
-	 * 
+	 *
 	 */
 	@Test
 	public void formLoadById_shouldLoadExistingId()
@@ -327,7 +338,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	/**
 	 * @throws IllegalAccessException
 	 * @throws NoSuchFieldException
-	 * 
+	 *
 	 */
 	@Test
 	public void formLoadById_shouldReturnNullForNonExistingId()
@@ -352,7 +363,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 	 * @throws InvocationTargetException
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
-	 * 
+	 *
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@Test

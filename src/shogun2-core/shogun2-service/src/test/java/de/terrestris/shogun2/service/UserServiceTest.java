@@ -26,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import de.terrestris.shogun2.dao.RegistrationTokenDao;
+import de.terrestris.shogun2.dao.RoleDao;
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
@@ -33,13 +36,13 @@ import de.terrestris.shogun2.util.test.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
-public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
+public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User, UserDao<User>, UserService<User, UserDao<User>>> {
 
 	@Mock
-	private RegistrationTokenService registrationTokenService;
+	private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
 
 	@Mock
-	private RoleService roleService;
+	private RoleService<Role, RoleDao<Role>> roleService;
 
 	@Mock
 	private Role defaultUserRole;
@@ -56,7 +59,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		super.setUp();
 
 		// set the pw encoder
-		((UserService) crudService).setPasswordEncoder(passwordEncoder);
+		crudService.setPasswordEncoder(passwordEncoder);
 	}
 
 	/**
@@ -67,12 +70,15 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		implToTest = new User();
 	}
 
-	/**
-	 *
-	 */
 	@Override
-	protected AbstractExtDirectCrudService<User> getCrudService() {
-		return new UserService();
+	protected UserService<User, UserDao<User>> getCrudService() {
+		return new UserService<User, UserDao<User>>();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<UserDao<User>> getDaoClass() {
+		return (Class<UserDao<User>>) new UserDao<User>().getClass();
 	}
 
 	@Test
@@ -84,7 +90,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
 
-		User actualUser = ((UserService) crudService).findByAccountName(accountName);
+		User actualUser = crudService.findByAccountName(accountName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -101,7 +107,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
 
-		User actualUser = ((UserService) crudService).findByAccountName(accountName);
+		User actualUser = crudService.findByAccountName(accountName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -117,7 +123,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doThrow(new HibernateException("errormsg"))
 			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
 
-		((UserService) crudService).findByAccountName(accountName);
+		crudService.findByAccountName(accountName);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -133,7 +139,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
 
-		User actualUser = ((UserService) crudService).findByEmail(eMail);
+		User actualUser = crudService.findByEmail(eMail);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -150,7 +156,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
 
-		User actualUser = ((UserService) crudService).findByEmail(eMail);
+		User actualUser = crudService.findByEmail(eMail);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -166,7 +172,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doThrow(new HibernateException("errormsg"))
 			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
 
-		((UserService) crudService).findByEmail(email);
+		crudService.findByEmail(email);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -201,7 +207,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		user.setActive(isActive);
 
 		// finally call the method that is tested here
-		User registeredUser = ((UserService) crudService).registerUser(user, requestMock);
+		User registeredUser = crudService.registerUser(user, requestMock);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
@@ -241,7 +247,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 			user.setPassword(rawPassword);
 			user.setActive(isActive);
 
-			((UserService) crudService).registerUser(user, requestMock);
+			crudService.registerUser(user, requestMock);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String msg = e.getMessage();
@@ -281,7 +287,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		assertFalse(user.isActive());
 
 		// finally call the method that is tested here
-		((UserService) crudService).activateUser(tokenValue);
+		crudService.activateUser(tokenValue);
 
 		// check first if user is active now
 		assertTrue(user.isActive());
@@ -326,7 +332,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 
 		// finally call the method that is tested here
 		try {
-			((UserService) crudService).activateUser(tokenValue);
+			crudService.activateUser(tokenValue);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String actualErrorMsg = e.getMessage();
@@ -354,7 +360,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doNothing().when(dao).saveOrUpdate(any(User.class));
 
 		// finally call the method that is tested here
-		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
 		// verify method invocations
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
@@ -377,7 +383,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doNothing().when(dao).saveOrUpdate(any(User.class));
 
 		// finally call the method that is tested here
-		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
 		// verify method invocations
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
@@ -400,7 +406,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		TestUtil.setIdOnPersistentObject(unpersistedUser, userId);
 
 		// finally call the method that is tested here
-		User persistedUser = ((UserService) crudService).persistNewUser(unpersistedUser, encryptPassword);
+		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
 		// verify method invocations
 		verifyNoMoreInteractions(dao);
@@ -425,7 +431,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 		doNothing().when(dao).saveOrUpdate(any(User.class));
 
 		// finally call the method that is tested here
-		((UserService) crudService).updatePassword(user, newPassword);
+		crudService.updatePassword(user, newPassword);
 
 		// verify method invocations
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
@@ -448,7 +454,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User> {
 
 		// call the method that is tested here
 		try {
-			((UserService) crudService).updatePassword(user, newPassword);
+			crudService.updatePassword(user, newPassword);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 

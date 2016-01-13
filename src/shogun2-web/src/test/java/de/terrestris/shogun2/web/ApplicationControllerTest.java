@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.service.ApplicationService;
 import de.terrestris.shogun2.web.ApplicationController;
@@ -28,10 +29,10 @@ public class ApplicationControllerTest {
 	private MockMvc mockMvc;
 
 	@Mock
-	private ApplicationService applicationServiceMock;
+	private ApplicationService<Application, ApplicationDao<Application>> applicationServiceMock;
 
 	@InjectMocks
-	private ApplicationController applicationController;
+	private ApplicationController<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> applicationController;
 
 	@Before
 	public void setUp() {

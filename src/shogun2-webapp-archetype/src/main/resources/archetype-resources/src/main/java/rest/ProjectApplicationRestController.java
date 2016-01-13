@@ -1,32 +1,29 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-package ${package}.web;
+package ${package}.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import ${package}.model.ProjectApplication;
 import ${package}.dao.ProjectApplicationDao;
+import ${package}.model.ProjectApplication;
 import ${package}.service.ProjectApplicationService;
-import de.terrestris.shogun2.web.ApplicationController;
+import de.terrestris.shogun2.rest.ApplicationRestController;
 
 /**
- * This is a demo controller that demonstrates how a SHOGun2 controllers can be
- * extended.
- * 
+ * This is a demo controller that demonstrates how SHOGun2 REST controllers
+ * can be extended.
+ *
  * @author Nils Bühner
  *
- * @param <E>
- * @param <D>
- * @param <S>
  */
-@Controller
-@RequestMapping("/projectApplication")
-public class ProjectApplicationController<E extends ProjectApplication, D extends ProjectApplicationDao<E>, S extends ProjectApplicationService<E, D>>
-		extends ApplicationController<E, D, S> {
+@RestController
+@RequestMapping("/projectapplications")
+public class ProjectApplicationRestController<E extends ProjectApplication, D extends ProjectApplicationDao<E>, S extends ProjectApplicationService<E, D>>
+		extends ApplicationRestController<E, D, S> {
 
 	/**
 	 * We have to use {@link Qualifier} to define the correct service here.
@@ -37,6 +34,7 @@ public class ProjectApplicationController<E extends ProjectApplication, D extend
 	@Autowired
 	@Qualifier("projectApplicationService")
 	public void setService(S service) {
-		super.setService(service);
+		this.service = service;
 	}
+
 }

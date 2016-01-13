@@ -4,11 +4,24 @@ import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.User;
 
-@Repository
-public class UserDao extends GenericHibernateDao<User, Integer> {
+@Repository("userDao")
+public class UserDao<E extends User> extends PersonDao<E> {
 
-	protected UserDao() {
-		super(User.class);
+	/**
+	 * Public default constructor for this DAO.
+	 */
+	@SuppressWarnings("unchecked")
+	public UserDao() {
+		super((Class<E>) User.class);
+	}
+
+	/**
+	 * Constructor that has to be called by subclasses.
+	 *
+	 * @param clazz
+	 */
+	protected UserDao(Class<E> clazz) {
+		super(clazz);
 	}
 
 }
