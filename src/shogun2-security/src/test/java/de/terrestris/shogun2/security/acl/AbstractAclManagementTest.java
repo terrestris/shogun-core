@@ -23,6 +23,7 @@ import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.test.context.ContextConfiguration;
 
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.security.aspect.AclManagement;
 import de.terrestris.shogun2.service.AbstractCrudService;
@@ -36,7 +37,8 @@ import de.terrestris.shogun2.service.AbstractCrudService;
  */
 // The context defined here will extend (!) the context of the parent class!
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-context-acl-management.xml" })
-public abstract class AbstractAclManagementTest<E extends PersistentObject> extends AbstractAclTestBase {
+public abstract class AbstractAclManagementTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
+		extends AbstractAclTestBase {
 
 	/**
 	 * Object that holds a concrete implementation of
@@ -44,7 +46,7 @@ public abstract class AbstractAclManagementTest<E extends PersistentObject> exte
 	 */
 	protected E implToUse = null;
 
-	private AbstractCrudService<E> serviceToUse;
+	private AbstractCrudService<E, D> serviceToUse;
 
 	@Autowired
 	private MutableAclService aclService;
@@ -87,7 +89,7 @@ public abstract class AbstractAclManagementTest<E extends PersistentObject> exte
 	 *
 	 * @return
 	 */
-	protected abstract AbstractCrudService<E> getCrudService();
+	protected abstract AbstractCrudService<E, D> getCrudService();
 
 
 	/**

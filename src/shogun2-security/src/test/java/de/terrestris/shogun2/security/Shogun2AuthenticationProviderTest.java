@@ -35,6 +35,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
@@ -50,10 +52,10 @@ import de.terrestris.shogun2.service.UserService;
 public class Shogun2AuthenticationProviderTest {
 
 	@Mock
-	private UserService userService;
+	private UserService<User, UserDao<User>> userService;
 
 	@Mock
-	private UserGroupService userGroupService;
+	private UserGroupService<UserGroup, UserGroupDao<UserGroup>> userGroupService;
 
 	@Mock
 	private RoleHierarchyImpl roleHierarchy;

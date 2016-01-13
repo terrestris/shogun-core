@@ -5,6 +5,7 @@ package de.terrestris.shogun2.security.acl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.service.AbstractCrudService;
 import de.terrestris.shogun2.service.ApplicationService;
@@ -14,10 +15,10 @@ import de.terrestris.shogun2.service.ApplicationService;
  *
  */
 public class ApplicationAclManagementTest extends
-		AbstractAclManagementTest<Application> {
+		AbstractAclManagementTest<Application, ApplicationDao<Application>> {
 
 	@Autowired
-	private ApplicationService applicationService;
+	private ApplicationService<Application, ApplicationDao<Application>> applicationService;
 
 	@Override
 	protected Application getImplToUse() {
@@ -25,7 +26,7 @@ public class ApplicationAclManagementTest extends
 	}
 
 	@Override
-	protected AbstractCrudService<Application> getCrudService() {
+	protected AbstractCrudService<Application, ApplicationDao<Application>> getCrudService() {
 		return applicationService;
 	}
 
