@@ -1,54 +1,44 @@
 package de.terrestris.shogun2.web;
 
 import java.util.List;
-import java.util.Locale;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.service.ApplicationService;
 
 /**
  * @author Nils Bühner
- * 
+ *
  */
 @Controller
 @RequestMapping("/application")
-public class ApplicationController {
+public class ApplicationController<E extends Application, D extends ApplicationDao<E>, S extends ApplicationService<E, D>>
+		extends AbstractWebController<E, D, S> {
 
-	private static final Logger LOG = Logger.getLogger(ApplicationController.class);
-
+	/**
+	 * We have to use {@link Qualifier} to define the correct service here.
+	 * Otherwise, spring can not decide which service has to be autowired here
+	 * as there are multiple candidates.
+	 */
+	@Override
 	@Autowired
-	private ApplicationService applicationService;
-
-	@RequestMapping(value = "/create.action", method = RequestMethod.GET)
-	public @ResponseBody Application createApplication(String name, String description) {
-		LOG.info("Requested to create a new Application.");
-
-		Application application = new Application();
-		application.setName(name);
-		application.setDescription(description);
-		application.setLanguage(Locale.getDefault());
-
-		return applicationService.saveOrUpdate(application);
+	@Qualifier("applicationService")
+	public void setService(S service) {
+		this.service = service;
 	}
 
 	@RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
-	public @ResponseBody List<Application> findAllApplications() {
+	public @ResponseBody List<E> findAllApplications() {
 		LOG.info("Trying to find all Applications.");
 
-		return applicationService.findAll();
+		return service.findAll();
 	}
 
-	@RequestMapping(value = "/get.action", method = RequestMethod.GET)
-	public @ResponseBody Application get(Integer id) {
-		LOG.info("Trying to get application with ID " + id);
-
-		return applicationService.findById(id);
-	}
 }

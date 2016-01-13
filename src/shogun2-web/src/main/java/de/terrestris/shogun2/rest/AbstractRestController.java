@@ -3,8 +3,6 @@ package de.terrestris.shogun2.rest;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
+import de.terrestris.shogun2.web.AbstractWebController;
 
 /**
  * @author Kai Volland
@@ -22,16 +22,8 @@ import de.terrestris.shogun2.service.AbstractCrudService;
  *
  */
 @RequestMapping(value = "/rest")
-public abstract class AbstractRestController<E extends PersistentObject> {
-
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG = Logger
-			.getLogger(AbstractRestController.class);
-
-	@Autowired
-	private AbstractCrudService<E> service;
+public abstract class AbstractRestController<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
+		extends AbstractWebController<E, D, S> {
 
 	/**
 	 * Find all entities.
@@ -166,4 +158,5 @@ public abstract class AbstractRestController<E extends PersistentObject> {
 			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
 		}
 	}
+
 }
