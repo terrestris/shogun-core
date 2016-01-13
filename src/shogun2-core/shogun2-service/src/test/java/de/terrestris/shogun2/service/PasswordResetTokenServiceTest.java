@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import de.terrestris.shogun2.dao.PasswordResetTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
 
@@ -8,7 +9,7 @@ import de.terrestris.shogun2.model.token.PasswordResetToken;
  *
  */
 public class PasswordResetTokenServiceTest extends
-		AbstractUserTokenServiceTest<PasswordResetToken> {
+		AbstractUserTokenServiceTest<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>, PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>>> {
 
 	@Override
 	public void setUpUserTokenToUse() throws Exception {
@@ -16,8 +17,8 @@ public class PasswordResetTokenServiceTest extends
 	}
 
 	@Override
-	protected AbstractUserTokenService<PasswordResetToken> getUserTokenService() {
-		return new PasswordResetTokenService();
+	protected PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> getUserTokenService() {
+		return new PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>>();
 	}
 
 	@Override
@@ -28,6 +29,13 @@ public class PasswordResetTokenServiceTest extends
 	@Override
 	protected PasswordResetToken getUserTokenWithoutUser() {
 		return new PasswordResetToken(null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<PasswordResetTokenDao<PasswordResetToken>> getDaoClass() {
+		return (Class<PasswordResetTokenDao<PasswordResetToken>>) new PasswordResetTokenDao<PasswordResetToken>()
+				.getClass();
 	}
 
 }

@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import de.terrestris.shogun2.dao.RegistrationTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
 
@@ -8,7 +9,7 @@ import de.terrestris.shogun2.model.token.RegistrationToken;
  *
  */
 public class RegistrationTokenServiceTest extends
-		AbstractUserTokenServiceTest<RegistrationToken> {
+		AbstractUserTokenServiceTest<RegistrationToken, RegistrationTokenDao<RegistrationToken>, RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>>> {
 
 	@Override
 	public void setUpUserTokenToUse() throws Exception {
@@ -16,8 +17,8 @@ public class RegistrationTokenServiceTest extends
 	}
 
 	@Override
-	protected AbstractUserTokenService<RegistrationToken> getUserTokenService() {
-		return new RegistrationTokenService();
+	protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> getUserTokenService() {
+		return new RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>>();
 	}
 
 	@Override
@@ -30,4 +31,9 @@ public class RegistrationTokenServiceTest extends
 		return new RegistrationToken(null);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Class<RegistrationTokenDao<RegistrationToken>> getDaoClass() {
+		return (Class<RegistrationTokenDao<RegistrationToken>>) new RegistrationTokenDao<RegistrationToken>().getClass();
+	}
 }
