@@ -40,22 +40,22 @@ public class InitializationService {
 			.getLogger(InitializationService.class);
 
 	@Autowired
-	private RoleDao roleDao;
+	private RoleDao<Role> roleDao;
 
 	@Autowired
-	private UserDao userDao;
+	private UserDao<User> userDao;
 
 	@Autowired
-	private UserGroupDao userGroupDao;
+	private UserGroupDao<UserGroup> userGroupDao;
 
 	@Autowired
-	private LayoutDao layoutDao;
+	private LayoutDao<Layout> layoutDao;
 
 	@Autowired
-	private ModuleDao moduleDao;
+	private ModuleDao<Module> moduleDao;
 
 	@Autowired
-	private ApplicationDao applicationDao;
+	private ApplicationDao<Application> applicationDao;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
