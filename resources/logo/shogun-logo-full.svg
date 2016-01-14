@@ -2,73 +2,25 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.2"
    width="2336.8528"
    height="437.05774"
-   id="svg2"
-   version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="shog-log.svg">
+   id="svg2">
   <defs
      id="defs4">
     <linearGradient
-       id="linearGradient5430"
-       osb:paint="solid">
+       id="linearGradient5430">
       <stop
-         style="stop-color:#000000;stop-opacity:1;"
-         offset="0"
-         id="stop5432" />
+         id="stop5432"
+         style="stop-color:#000000;stop-opacity:1"
+         offset="0" />
     </linearGradient>
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.50000001"
-     inkscape:cx="861.37324"
-     inkscape:cy="123.17878"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1030"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     showguides="false"
-     inkscape:guide-bbox="true"
-     guidetolerance="1"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
-    <sodipodi:guide
-       orientation="1,0"
-       position="-7499.8661,-8635.0963"
-       id="guide4029" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="719.18853,437.03256"
-       id="guide3176" />
-    <sodipodi:guide
-       orientation="1,0"
-       position="719.06743,436.95056"
-       id="guide3185" />
-    <sodipodi:guide
-       orientation="0,1"
-       position="350.26428,89.328705"
-       id="guide3813" />
-  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -77,57 +29,51 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-102.99116,1141.6669)">
+     transform="translate(-102.99116,1141.6669)"
+     id="layer1">
     <flowRoot
-       xml:space="preserve"
        id="flowRoot3885"
+       xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
          id="flowRegion3887"><rect
-           id="rect3889"
            width="28.125"
            height="40.625"
            x="-5575"
-           y="2214.8623" /></flowRegion><flowPara
+           y="2214.8623"
+           id="rect3889" /></flowRegion><flowPara
          id="flowPara3891" /></flowRoot>    <flowRoot
-       xml:space="preserve"
        id="flowRoot4107"
+       xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
          id="flowRegion4109"><rect
-           id="rect4111"
            width="3509.0173"
            height="2633.9727"
            x="-141.42136"
-           y="237.07974" /></flowRegion><flowPara
+           y="237.07974"
+           id="rect4111" /></flowRegion><flowPara
          id="flowPara4113" /></flowRoot>    <text
-       xml:space="preserve"
-       style="font-size:633.71343994px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#59666c;fill-opacity:1;stroke:none;font-family:URW Palladio L;-inkscape-font-specification:URW Palladio L Bold Italic"
        x="835.03625"
        y="-804.44458"
        id="text4075-4-6-5"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4077-9-9-0"
+       xml:space="preserve"
+       style="font-size:633.71343994px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#59666c;fill-opacity:1;stroke:none;font-family:URW Palladio L;-inkscape-font-specification:URW Palladio L Bold Italic"><tspan
          x="835.03625"
          y="-804.44458"
-         style="font-size:495.54919434px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-27.94690895px;writing-mode:lr-tb;text-anchor:start;fill:#59666c;fill-opacity:1;font-family:Sansita;-inkscape-font-specification:Sansita Bold Italic"
-         dx="0">SHOGun</tspan></text>
+         dx="0"
+         id="tspan4077-9-9-0"
+         style="font-size:495.54919434px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-27.94690895px;writing-mode:lr-tb;text-anchor:start;fill:#59666c;fill-opacity:1;font-family:Sansita;-inkscape-font-specification:Sansita Bold Italic">SHOGun</tspan></text>
     <path
-       inkscape:connector-curvature="0"
-       style="fill:#70b3be;fill-opacity:1"
        d="m 822.00139,-1141.6669 -12.0625,11.7188 c -26.60445,25.8661 -64.41109,43.9762 -110.78123,53.0624 -33.11178,6.4885 -52.13694,7.8873 -109.21875,8 -2.53478,0.01 -5.03497,0.012 -7.53125,0.031 1.86754,2.6552 3.67495,5.371 5.375,8.1875 l -22.78125,25.1562 c 4.29036,7.6326 7.56148,15.6823 9.8125,24.125 l 32.09375,1.7813 c 2.0121,11.5385 2.584,23.2701 1.75,35.1563 l -30.65625,6.0315 c -0.57729,4.458 -1.39659,8.7885 -2.4375,13 -1.04096,4.2118 -2.34039,8.4118 -3.90625,12.625 l 24.28125,19.8125 c -4.7687,10.7825 -10.71946,20.8216 -17.875,30.0937 l -29.21875,-13.3437 c -5.92489,6.422 -12.58617,12.0589 -19.96875,16.9375 l 8.46875,32.65623 c -9.88642,5.9687 -20.24032,10.6288 -31.0625,14 l -17.34375,-30.3124 c -8.81614,1.6329 -17.58409,2.3173 -26.3125,2 l -13.375,33.3437 c -5.51022,-0.5735 -10.98739,-1.528 -16.4375,-2.875 -5.45134,-1.3473 -10.76398,-3.0347 -15.90625,-5.0937 l 3.71875,-35.7813 c -7.87093,-3.78533 -15.3355,-8.44833 -22.375,-14.00003 l -29.46875,18.75003 c -8.00601,-8.02493 -14.9999,-16.98773 -20.96875,-26.87503 l 22.75,-24.9375 c -4.29214,-7.6326 -7.56168,-15.7461 -9.78125,-24.3125 l -32.09375,-1.8125 c -2.01178,-11.5379 -2.58583,-23.1752 -1.78125,-34.9375 l 30.71875,-6.2187 c 0.57691,-4.4577 1.36529,-8.7884 2.40625,-13 1.04091,-4.2117 2.34084,-8.4114 3.90625,-12.625 l -7.3125,-5.9063 c -4.01411,2.0993 -7.94868,4.2604 -11.78125,6.5313 -31.02697,18.3847 -53.3115,41.215 -68.5625,70.1874 -7.82511,14.8657 -16.43103,48.2778 -13.8125,53.625 0.73969,1.5094 26.66785,-12.7926 35.625,-15.7187 9.35082,-3.0554 14.90087,-4.1917 16.375,-3.5625 1.47329,0.6292 -1.1343,3.0262 -8.1875,7.0625 -19.59854,11.2148 -134.47945,112.28613 -157.40625,139.65633 -3.83244,4.5756 -57.961616,73.3025 -43.40625,63.9687 l 73,-46.8125 7.65625,-14.625 c 9.94656,-19.0074 32.78878,-47.5309 56.0625,-69.9688 10.20329,-9.8361 19.44166,-18.2261 20.5,-18.6562 1.05898,-0.4303 6.66807,3.5161 12.46875,8.7812 23.54019,21.3651 64.07554,37.1372 122.90625,47.7813 93.80177,16.9721 178.88963,-8.4285 255.15625,-76.1875 61.45378,-54.59883 107.0241,-122.24203 149.90623,-222.43753 l 18.875,-44.0625 z"
-       id="path3784-6" />
+       id="path3784-6"
+       style="fill:#70b3be;fill-opacity:1" />
     <path
-       inkscape:connector-curvature="0"
-       style="fill:#59666c;fill-opacity:1"
        d="m 469.90766,-1052.2294 c -13.79187,-0.022 -27.02363,3.8194 -39.6875,11.5313 -18.3931,11.103 -30.16993,27.068 -35.3125,47.875 -5.11438,20.693 -2.13426,40.2321 8.96875,58.625 11.10189,18.3928 27.06785,30.17 47.875,35.3124 20.80629,5.1426 40.41929,2.1654 58.8125,-8.9374 18.39282,-11.1029 30.13562,-27.0258 35.25,-47.7188 5.14257,-20.8069 2.16523,-40.3882 -8.9375,-58.7812 -11.07492,-18.5073 -27.00619,-30.3264 -47.8125,-35.4688 -6.50223,-1.6071 -12.88722,-2.4275 -19.15625,-2.4375 z"
-       id="path4081-0-8" />
+       id="path4081-0-8"
+       style="fill:#59666c;fill-opacity:1" />
   </g>
 </svg>
