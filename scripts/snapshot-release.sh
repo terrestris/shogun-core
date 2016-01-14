@@ -18,8 +18,8 @@ if [ $TRAVIS_BRANCH != "master" ]; then
     exit 1
 fi
 
-if [ "$TRAVIS_JDK_VERSION" != "openjdk7" ]; then
-    # only proceed if the target JDK is openjdk7
+if [ "$TRAVIS_JDK_VERSION" != "oraclejdk7" ]; then
+    # only proceed if the target JDK is oraclejdk7
     exit 1
 fi
 
