@@ -116,6 +116,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <webapp-archetype-resource-pom>shogun2-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
+
         <tomcat.version>8.0.28</tomcat.version>
 
         <!-- Core -->
@@ -164,6 +166,8 @@
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
+        <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
 
         <!-- Other -->
         <ext-direct-spring.version>1.6.1</ext-direct-spring.version>
@@ -277,6 +281,25 @@
             </plugin>
 
             <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>${maven-replacer-plugin.version}</version>
+                <configuration>
+                    <file>${webapp-archetype-resource-pom}</file>
+                    <regex>true</regex>
+                    <regexFlags>
+                        <regexFlag>DOTALL</regexFlag>
+                    </regexFlags>
+                    <replacements>
+                       <replacement>
+                           <token>&lt;shogun2.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun2.version&gt;</token>
+                           <value>&lt;shogun2.version&gt;${newShogun2Version}&lt;/shogun2.version&gt;</value>
+                       </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
@@ -362,6 +385,12 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>${maven-scm-plugin.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven-release-plugin.version}</version>
                 <configuration>
@@ -373,6 +402,16 @@
                     <releaseProfiles>release-artifact</releaseProfiles>
                     <goals>deploy</goals>
                     <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                    <preparationGoals>
+                        clean
+                        verify
+                        replacer:replace -DnewShogun2Version=${releaseVersion}
+                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for release ${releaseVersion}"
+                    </preparationGoals>
+                    <completionGoals>
+                        replacer:replace -DnewShogun2Version=${developmentVersion}
+                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for next development iteration"
+                    </completionGoals>
                 </configuration>
             </plugin>
 
