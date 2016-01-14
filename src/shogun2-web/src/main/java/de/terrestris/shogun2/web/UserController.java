@@ -18,6 +18,7 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
 import de.terrestris.shogun2.service.PasswordResetTokenService;
 import de.terrestris.shogun2.service.UserService;
+import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
  *
@@ -70,12 +71,12 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 		try {
 			user = service.registerUser(user, request);
 
-			return this.getModelMapSuccess("You have been registered. "
+			return ResultSet.success("You have been registered. "
 					+ "Please check your mails (" + user.getEmail()
 					+ ") for further instructions.");
 		} catch(Exception e) {
 			LOG.error("Could not register a new user: " + e.getMessage());
-			return this.getModelMapError("Could not register a new user.");
+			return ResultSet.error("Could not register a new user.");
 		}
 	}
 
@@ -89,10 +90,10 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 
 		try {
 			service.activateUser(token);
-			return this.getModelMapSuccess("Your account has successfully been activated.");
+			return ResultSet.success("Your account has successfully been activated.");
 		} catch(Exception e) {
 			LOG.error("Account could not be activated: " + e.getMessage());
-			return this.getModelMapError("Account could not be activated.");
+			return ResultSet.error("Account could not be activated.");
 		}
 	}
 
@@ -109,11 +110,11 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 
 		try {
 			passwordResetTokenService.sendResetPasswordMail(request, email);
-			return this.getModelMapSuccess("Password reset has been requested. "
+			return ResultSet.success("Password reset has been requested. "
 					+ "Please check your mails!");
 		} catch (Exception e) {
 			LOG.error("Could not request a password reset: " + e.getMessage());
-			return this.getModelMapError("An error has occured during passwort reset request.");
+			return ResultSet.error("An error has occured during passwort reset request.");
 		}
 	}
 
@@ -132,11 +133,11 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 
 		try {
 			passwordResetTokenService.validateTokenAndUpdatePassword(password, token);
-			return this.getModelMapSuccess("Your password was changed successfully.");
+			return ResultSet.success("Your password was changed successfully.");
 
 		} catch (Exception e) {
 			LOG.error("Could not change the password: " + e.getMessage());
-			return this.getModelMapError("Could not change the password. "
+			return ResultSet.error("Could not change the password. "
 					+ "Please contact your administrator.");
 		}
 	}
@@ -151,9 +152,9 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 		LOG.debug("Requested to return the logged in user");
 
 		try {
-			return this.getModelMapSuccess(service.getUserBySession());
+			return ResultSet.success(service.getUserBySession());
 		} catch (Exception e) {
-			return this.getModelMapError("Could not obtain the user by "
+			return ResultSet.error("Could not obtain the user by "
 					+ "session: " + e.getMessage());
 		}
 	}
