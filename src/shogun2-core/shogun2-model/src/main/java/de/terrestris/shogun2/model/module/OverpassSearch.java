@@ -116,20 +116,6 @@ public class OverpassSearch extends Module {
 	private List<Integer> viewboxlbrt = new ArrayList<Integer>();
 
 	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public OverpassSearch() {
-	}
-
-	/**
-	 * @param groupHeaderTpl the groupHeaderTpl to set
-	 */
-	public void setGroupHeaderTpl(String groupHeaderTpl) {
-		this.groupHeaderTpl = groupHeaderTpl;
-	}
-
-	/**
 	 * Characters needed to send a request.
 	 */
 	private Integer minSearchTextChars;
@@ -144,6 +130,13 @@ public class OverpassSearch extends Module {
 	 * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
 	 */
 	private String groupHeaderTpl;
+
+	/**
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
+	 */
+	public OverpassSearch() {
+	}
 
 	/**
 	 * @return the format
@@ -223,6 +216,13 @@ public class OverpassSearch extends Module {
 	}
 
 	/**
+	 * @param groupHeaderTpl the groupHeaderTpl to set
+	 */
+	public void setGroupHeaderTpl(String groupHeaderTpl) {
+		this.groupHeaderTpl = groupHeaderTpl;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 *
 	 *      According to
@@ -267,8 +267,8 @@ public class OverpassSearch extends Module {
 				isEquals();
 	}
 
-	/**
-	 *
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
