@@ -127,9 +127,12 @@ public class User extends Person {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(23, 13).appendSuper(super.hashCode())
-				.append(getAccountName()).append(getPassword())
-				.append(isActive()).toHashCode();
+		return new HashCodeBuilder(23, 13).
+				appendSuper(super.hashCode()).
+				append(getAccountName()).
+				append(getPassword()).
+				append(isActive()).
+				toHashCode();
 	}
 
 	/**
@@ -146,10 +149,12 @@ public class User extends Person {
 			return false;
 		User other = (User) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getAccountName(), other.getAccountName())
-				.append(getPassword(), other.getPassword())
-				.append(isActive(), other.isActive()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getAccountName(), other.getAccountName()).
+				append(getPassword(), other.getPassword()).
+				append(isActive(), other.isActive()).
+				isEquals();
 	}
 
 	/**

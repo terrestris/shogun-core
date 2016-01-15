@@ -118,8 +118,11 @@ public abstract class PersistentObject implements Serializable {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(17, 43).appendSuper(super.hashCode())
-				.append(getCreated()).append(getModified()).toHashCode();
+		return new HashCodeBuilder(17, 43).
+				appendSuper(super.hashCode()).
+				append(getCreated()).
+				append(getModified()).
+				toHashCode();
 	}
 
 	/**
@@ -135,8 +138,10 @@ public abstract class PersistentObject implements Serializable {
 			return false;
 		PersistentObject other = (PersistentObject) obj;
 
-		return new EqualsBuilder().append(getCreated(), other.getCreated())
-				.append(getModified(), other.getModified()).isEquals();
+		return new EqualsBuilder().
+				append(getCreated(), other.getCreated()).
+				append(getModified(), other.getModified()).
+				isEquals();
 	}
 
 	/**

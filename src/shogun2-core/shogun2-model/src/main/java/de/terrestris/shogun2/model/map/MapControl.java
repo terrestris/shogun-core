@@ -113,11 +113,11 @@ public class MapControl extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(7, 13)
-				.appendSuper(super.hashCode())
-				.append(getMapControlName())
-				.append(getMapControlProperties())
-				.toHashCode();
+		return new HashCodeBuilder(7, 13).
+				appendSuper(super.hashCode()).
+				append(getMapControlName()).
+				append(getMapControlProperties()).
+				toHashCode();
 	}
 
 	/**

@@ -84,7 +84,10 @@ public class AbsoluteLayout extends Layout {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(11, 13).appendSuper(super.hashCode()).append(getCoords()).toHashCode();
+		return new HashCodeBuilder(11, 13).
+				appendSuper(super.hashCode()).
+				append(getCoords()).
+				toHashCode();
 	}
 
 	/**
@@ -100,7 +103,10 @@ public class AbsoluteLayout extends Layout {
 			return false;
 		AbsoluteLayout other = (AbsoluteLayout) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getCoords(), other.getCoords()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getCoords(), other.getCoords()).
+				isEquals();
 	}
 
 	/**

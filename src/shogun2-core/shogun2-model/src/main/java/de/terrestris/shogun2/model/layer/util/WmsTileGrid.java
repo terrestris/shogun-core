@@ -203,9 +203,9 @@ public class WmsTileGrid extends PersistentObject {
 		return new HashCodeBuilder(43, 13).
 				appendSuper(super.hashCode()).
 				append(getType()).
-				append(getTileSize()).
 				append(getTileGridOrigin()).
 				append(getTileGridExtent()).
+				append(getTileSize()).
 				append(getTileGridResolutions()).
 				toHashCode();
 	}
@@ -227,8 +227,8 @@ public class WmsTileGrid extends PersistentObject {
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
 				append(getType(), other.getType()).
-				append(getTileGridExtent(), other.getTileGridExtent()).
 				append(getTileGridOrigin(), other.getTileGridOrigin()).
+				append(getTileGridExtent(), other.getTileGridExtent()).
 				append(getTileSize(), other.getTileSize()).
 				append(getTileGridResolutions(), other.getTileGridResolutions()).
 				isEquals();

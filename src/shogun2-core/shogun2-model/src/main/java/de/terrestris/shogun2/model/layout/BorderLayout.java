@@ -83,7 +83,10 @@ public class BorderLayout extends Layout {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(53, 23).appendSuper(super.hashCode()).append(getRegions()).toHashCode();
+		return new HashCodeBuilder(53, 23).
+				appendSuper(super.hashCode()).
+				append(getRegions()).
+				toHashCode();
 	}
 
 	/**
@@ -99,7 +102,10 @@ public class BorderLayout extends Layout {
 			return false;
 		BorderLayout other = (BorderLayout) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getRegions(), other.getRegions()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getRegions(), other.getRegions()).
+				isEquals();
 	}
 
 	/**

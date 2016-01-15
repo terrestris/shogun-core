@@ -144,8 +144,8 @@ public class OverviewMap extends Module {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(47, 13).
 				appendSuper(super.hashCode()).
-				append(getMagnification()).
 				append(getOverviewMapLayers()).
+				append(getMagnification()).
 				toHashCode();
 	}
 
@@ -165,8 +165,8 @@ public class OverviewMap extends Module {
 
 		return new EqualsBuilder().
 				append(getMagnification(), other.getMagnification()).
-				append(getParentMapModule(), other.getParentMapModule()).
 				append(getOverviewMapLayers(), other.getOverviewMapLayers()).
+				append(getParentMapModule(), other.getParentMapModule()).
 				isEquals();
 	}
 

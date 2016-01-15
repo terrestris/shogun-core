@@ -131,11 +131,11 @@ public class Module extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(5, 7)
-				.appendSuper(super.hashCode())
-				.append(getName())
-				.append(getProperties())
-				.toHashCode();
+		return new HashCodeBuilder(5, 7).
+				appendSuper(super.hashCode()).
+				append(getName()).
+				append(getProperties()).
+				toHashCode();
 	}
 
 	/**
@@ -152,11 +152,11 @@ public class Module extends PersistentObject {
 			return false;
 		Module other = (Module) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName())
-				.append(getXtype(), other.getXtype())
-				.append(getProperties(), other.getProperties())
-				.isEquals();
+		return new EqualsBuilder().appendSuper(super.equals(other)).
+				append(getName(), other.getName()).
+				append(getXtype(), other.getXtype()).
+				append(getProperties(), other.getProperties()).
+				isEquals();
 	}
 
 	/**
