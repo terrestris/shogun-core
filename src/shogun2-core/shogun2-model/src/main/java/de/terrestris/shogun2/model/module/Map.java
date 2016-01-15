@@ -151,10 +151,9 @@ public class Map extends Module {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(47, 11).
 				appendSuper(super.hashCode()).
-				append(getName()).
-				append(getMapLayers()).
-				append(getMapControls()).
 				append(getMapConfig()).
+				append(getMapControls()).
+				append(getMapLayers()).
 				toHashCode();
 	}
 
@@ -173,7 +172,6 @@ public class Map extends Module {
 		Map other = (Map) obj;
 
 		return new EqualsBuilder().
-				append(getName(), other.getName()).
 				append(getMapConfig(), other.getMapConfig()).
 				append(getMapControls(), other.getMapControls()).
 				append(getMapLayers(), other.getMapLayers()).

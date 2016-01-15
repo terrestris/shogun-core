@@ -198,8 +198,9 @@ public class WfsSearch extends Module {
 				append(getWfsServerUrl()).
 				append(getMinSearchTextChars()).
 				append(getTypeDelay()).
-				append(getAllowedFeatureTypeDataTypes()).
 				append(getGroupHeaderTpl()).
+				append(getLayers()).
+				append(getAllowedFeatureTypeDataTypes()).
 				toHashCode();
 	}
 
@@ -221,8 +222,9 @@ public class WfsSearch extends Module {
 				append(getWfsServerUrl(), other.getWfsServerUrl()).
 				append(getMinSearchTextChars(), other.getMinSearchTextChars()).
 				append(getTypeDelay(), other.getTypeDelay()).
-				append(getAllowedFeatureTypeDataTypes(), other.getAllowedFeatureTypeDataTypes()).
 				append(getGroupHeaderTpl(), other.getGroupHeaderTpl()).
+				append(getLayers(), other.getLayers()).
+				append(getAllowedFeatureTypeDataTypes(), other.getAllowedFeatureTypeDataTypes()).
 				isEquals();
 	}
 
