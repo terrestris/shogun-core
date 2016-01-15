@@ -42,7 +42,9 @@ public class WmtsLayerDataSource extends LayerDataSource {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(11, 19).appendSuper(super.hashCode()).toHashCode();
+		return new HashCodeBuilder(11, 19).
+				appendSuper(super.hashCode()).
+				toHashCode();
 	}
 
 	/**
@@ -58,7 +60,9 @@ public class WmtsLayerDataSource extends LayerDataSource {
 			return false;
 		WmtsLayerDataSource other = (WmtsLayerDataSource) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				isEquals();
 	}
 
 	/* (non-Javadoc)

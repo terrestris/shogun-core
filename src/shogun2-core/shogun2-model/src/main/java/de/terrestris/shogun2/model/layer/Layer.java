@@ -138,8 +138,8 @@ public class Layer extends PersistentObject {
 				appendSuper(super.hashCode()).
 				append(getName()).
 				append(getType()).
-				append(getSource().hashCode()).
-				append(getAppearance().hashCode()).
+				append(getSource()).
+				append(getAppearance()).
 				toHashCode();
 	}
 

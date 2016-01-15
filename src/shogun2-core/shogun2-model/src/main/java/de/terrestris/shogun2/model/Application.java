@@ -186,8 +186,16 @@ public class Application extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(29, 11).appendSuper(super.hashCode()).append(getName()).append(getLanguage())
-				.append(getOpen()).append(getActive()).append(getUrl()).toHashCode();
+		return new HashCodeBuilder(29, 11).
+				appendSuper(super.hashCode()).
+				append(getName()).
+				append(getDescription()).
+				append(getLanguage()).
+				append(getOpen()).
+				append(getActive()).
+				append(getUrl()).
+				append(getViewport()).
+				toHashCode();
 	}
 
 	/**
@@ -202,9 +210,16 @@ public class Application extends PersistentObject {
 			return false;
 		Application other = (Application) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other)).append(getName(), other.getName())
-				.append(getLanguage(), other.getLanguage()).append(getOpen(), other.getOpen())
-				.append(getActive(), other.getActive()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getName(), other.getName()).
+				append(getDescription(), other.getDescription()).
+				append(getLanguage(), other.getLanguage()).
+				append(getOpen(), other.getOpen()).
+				append(getActive(), other.getActive()).
+				append(getUrl(), other.getUrl()).
+				append(getViewport(), other.getViewport()).
+				isEquals();
 	}
 
 	/**

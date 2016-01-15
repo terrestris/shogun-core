@@ -124,12 +124,13 @@ public class UserGroup extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(53, 19).appendSuper(super.hashCode())
-				.append(getName())
-				.append(getOwner())
-				.append(getMembers())
-				.append(getRoles())
-				.toHashCode();
+		return new HashCodeBuilder(53, 19).
+				appendSuper(super.hashCode()).
+				append(getName()).
+				append(getOwner()).
+				append(getMembers()).
+				append(getRoles()).
+				toHashCode();
 	}
 
 	/**
@@ -146,12 +147,13 @@ public class UserGroup extends PersistentObject {
 			return false;
 		UserGroup other = (UserGroup) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName())
-				.append(getOwner(), other.getOwner())
-				.append(getMembers(), other.getMembers())
-				.append(getRoles(), other.getRoles())
-				.isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getName(), other.getName()).
+				append(getOwner(), other.getOwner()).
+				append(getMembers(), other.getMembers()).
+				append(getRoles(), other.getRoles()).
+				isEquals();
 	}
 
 	/**

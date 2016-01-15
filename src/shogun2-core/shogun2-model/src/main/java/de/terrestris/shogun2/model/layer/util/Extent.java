@@ -21,14 +21,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- *
  * Util class representing the extent of a layer or a map.
- * The extent is modellesd by the lower left and the upper
+ * The extent is modelled by the lower left and the upper
  * right point of the bounding rectangle
  *
- * |--------o
- * |        |
- * o--------|
+ * <pre>
+ *                UR
+ *     +--------o
+ *     |        |
+ *     o--------+
+ *  LL
+ * </pre>
  *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG
@@ -73,6 +76,19 @@ public class Extent extends PersistentObject {
 		super();
 		this.lowerLeft = lowerLeft;
 		this.upperRight = upperRight;
+	}
+
+	/**
+	 * @param lowerLeftX
+	 * @param lowerLeftY
+	 * @param upperRightX
+	 * @param upperRightY
+	 */
+	public Extent(double lowerLeftX, double lowerLeftY,
+			double upperRightX, double upperRightY) {
+		super();
+		this.lowerLeft = new Double(lowerLeftX, lowerLeftY);
+		this.upperRight = new Double(upperRightX, upperRightY);;
 	}
 
 	/**

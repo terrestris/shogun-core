@@ -114,10 +114,14 @@ public class Person extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(19, 53).appendSuper(super.hashCode())
-				.append(getFirstName()).append(getLastName())
-				.append(getEmail()).append(getBirthday()).append(getLanguage())
-				.toHashCode();
+		return new HashCodeBuilder(19, 53).
+				appendSuper(super.hashCode()).
+				append(getFirstName()).
+				append(getLastName()).
+				append(getEmail()).
+				append(getBirthday()).
+				append(getLanguage()).
+				toHashCode();
 	}
 
 	/**
@@ -134,10 +138,14 @@ public class Person extends PersistentObject {
 			return false;
 		Person other = (Person) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getFirstName(), other.getFirstName())
-				.append(getLastName(), other.getLastName())
-				.append(getEmail(), other.getEmail()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getFirstName(), other.getFirstName()).
+				append(getLastName(), other.getLastName()).
+				append(getEmail(), other.getEmail()).
+				append(getBirthday(), other.getBirthday()).
+				append(getLanguage(), other.getLanguage()).
+				isEquals();
 	}
 
 	/**

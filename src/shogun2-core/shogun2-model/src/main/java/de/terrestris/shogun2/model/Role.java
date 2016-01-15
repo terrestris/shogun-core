@@ -77,10 +77,11 @@ public class Role extends PersistentObject {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(13, 53).appendSuper(super.hashCode())
-				.append(getName())
-				.append(getDescription())
-				.toHashCode();
+		return new HashCodeBuilder(13, 53).
+				appendSuper(super.hashCode()).
+				append(getName()).
+				append(getDescription()).
+				toHashCode();
 	}
 
 	/**
@@ -97,9 +98,11 @@ public class Role extends PersistentObject {
 			return false;
 		Role other = (Role) obj;
 
-		return new EqualsBuilder().appendSuper(super.equals(other))
-				.append(getName(), other.getName())
-				.append(getDescription(), other.getDescription()).isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getName(), other.getName()).
+				append(getDescription(), other.getDescription()).
+				isEquals();
 	}
 
 	/**

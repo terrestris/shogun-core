@@ -132,12 +132,12 @@ public class Layout extends PersistentObject {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(13, 7)
-				.appendSuper(super.hashCode())
-				.append(getType())
-				.append(getPropertyHints())
-				.append(getPropertyMusts())
-				.toHashCode();
+		return new HashCodeBuilder(13, 7).
+				appendSuper(super.hashCode()).
+				append(getType()).
+				append(getPropertyHints()).
+				append(getPropertyMusts()).
+				toHashCode();
 	}
 
 	/**
@@ -153,12 +153,12 @@ public class Layout extends PersistentObject {
 			return false;
 		Layout other = (Layout) obj;
 
-		return new EqualsBuilder()
-				.appendSuper(super.equals(other))
-				.append(getType(), other.getType())
-				.append(getPropertyHints(), other.getPropertyHints())
-				.append(getPropertyMusts(), other.getPropertyMusts())
-				.isEquals();
+		return new EqualsBuilder().
+				appendSuper(super.equals(other)).
+				append(getType(), other.getType()).
+				append(getPropertyHints(), other.getPropertyHints()).
+				append(getPropertyMusts(), other.getPropertyMusts()).
+				isEquals();
 	}
 
 	/**
