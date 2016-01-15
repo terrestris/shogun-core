@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +53,10 @@ public class UserControllerTest {
 	@Mock(name="service")
 	private UserService<User, UserDao<User>> userService;
 
-	@InjectMocks
-	private UserController<User, UserDao<User>, UserService<User, UserDao<User>>> UserController;
+	/**
+	 * The controller to test
+	 */
+	private UserController<User, UserDao<User>, UserService<User, UserDao<User>>> userController;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -66,8 +67,15 @@ public class UserControllerTest {
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
 
+		// init the controller to test. this is necessary as InjectMocks
+		// annotation will not work with the constructors of the controllers
+		// (entityClass). see https://goo.gl/jLbMZe
+		userController = new UserController<User, UserDao<User>, UserService<User, UserDao<User>>>();
+		userController.setService(userService);
+		userController.setPasswordResetTokenService(tokenService);
+
 		// Setup Spring test in standalone mode
-		this.mockMvc = MockMvcBuilders.standaloneSetup(UserController).build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 	}
 
 	@Test

@@ -1,15 +1,20 @@
 package de.terrestris.shogun2.web;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,7 +23,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.service.ApplicationService;
-import de.terrestris.shogun2.web.ApplicationController;
 
 /**
  * @author Nils Bühner
@@ -31,7 +35,9 @@ public class ApplicationControllerTest {
 	@Mock
 	private ApplicationService<Application, ApplicationDao<Application>> applicationServiceMock;
 
-	@InjectMocks
+	/**
+	 * The controller to test
+	 */
 	private ApplicationController<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> applicationController;
 
 	@Before
@@ -39,6 +45,12 @@ public class ApplicationControllerTest {
 
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
+
+		// init the controller to test. this is necessary as InjectMocks
+		// annotation will not work with the constructors of the controllers
+		// (entityClass). see https://goo.gl/jLbMZe
+		applicationController = new ApplicationController<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>>();
+		applicationController.setService(applicationServiceMock);
 
 		// Setup Spring test in standalone mode
 		this.mockMvc = MockMvcBuilders.standaloneSetup(applicationController)

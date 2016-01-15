@@ -26,6 +26,14 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 		extends AbstractWebController<E, D, S> {
 
 	/**
+	 * Constructor that sets the concrete entity class for the controller.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractRestController(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * Find all entities.
 	 *
 	 * @return
