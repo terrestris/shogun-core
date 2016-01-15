@@ -37,6 +37,22 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 	private PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> passwordResetTokenService;
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public UserController() {
+		this((Class<E>) User.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the controller.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected UserController(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct service here.
 	 * Otherwise, spring can not decide which service has to be autowired here
 	 * as there are multiple candidates.
@@ -54,21 +70,20 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 	 * @param password
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/register.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
 			@RequestParam String email,
 			@RequestParam String password) {
 
-		// build the user object that will be passed to the service method
-		E user = (E) new User();
-
-		user.setEmail(email);
-		user.setAccountName(email);
-		user.setPassword(password);
-		user.setActive(false);
-
 		try {
+			// build the user object that will be passed to the service method
+			E user = getEntityClass().newInstance();
+
+			user.setEmail(email);
+			user.setAccountName(email);
+			user.setPassword(password);
+			user.setActive(false);
+
 			user = service.registerUser(user, request);
 
 			return ResultSet.success("You have been registered. "
@@ -157,6 +172,21 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 			return ResultSet.error("Could not obtain the user by "
 					+ "session: " + e.getMessage());
 		}
+	}
+
+	/**
+	 * @return the passwordResetTokenService
+	 */
+	public PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> getPasswordResetTokenService() {
+		return passwordResetTokenService;
+	}
+
+	/**
+	 * @param passwordResetTokenService the passwordResetTokenService to set
+	 */
+	public void setPasswordResetTokenService(
+			PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> passwordResetTokenService) {
+		this.passwordResetTokenService = passwordResetTokenService;
 	}
 
 }

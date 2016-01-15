@@ -24,6 +24,20 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
 	protected final Logger LOG = Logger.getLogger(getClass());
 
 	/**
+	 * Provides the concrete entity class of the controller.
+	 * Based on the pattern propsed here: http://stackoverflow.com/a/3403987
+	 */
+	private final Class<E> entityClass;
+
+	/**
+	 * Constructor that sets the concrete entity class for the controller.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractWebController(Class<E> entityClass) {
+		this.entityClass = entityClass;
+	}
+
+	/**
 	 * The {@link AbstractCrudService} for this controller.
 	 */
 	protected S service;
@@ -42,6 +56,13 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
 	 */
 	public S getService() {
 		return service;
+	}
+
+	/**
+	 * @return the entityClass
+	 */
+	public Class<E> getEntityClass() {
+		return entityClass;
 	}
 
 }

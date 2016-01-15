@@ -23,6 +23,22 @@ public class ApplicationController<E extends Application, D extends ApplicationD
 		extends AbstractWebController<E, D, S> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public ApplicationController() {
+		this((Class<E>) Application.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the controller.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected ApplicationController(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct service here.
 	 * Otherwise, spring can not decide which service has to be autowired here
 	 * as there are multiple candidates.
