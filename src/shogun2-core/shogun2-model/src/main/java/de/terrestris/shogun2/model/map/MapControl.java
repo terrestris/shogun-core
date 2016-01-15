@@ -39,10 +39,13 @@ public class MapControl extends PersistentObject {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * String which represents the OL3 class name of the interaction, e.g.
-	 * ol.control.Zoom
-	 * ol.control.Rotate
-	 * ol.control.Attribution
-	 * ...
+	 *
+	 * <ul>
+	 *   <li>ol.control.Zoom</li>
+	 *   <li>ol.control.Rotate</li>
+	 *   <li>ol.control.Attribution</li>
+	 *   <li>...</li>
+	 * </ul>
 	 */
 	private String mapControlName;
 

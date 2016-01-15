@@ -21,14 +21,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- *
  * Util class representing the extent of a layer or a map.
- * The extent is modellesd by the lower left and the upper
+ * The extent is modelled by the lower left and the upper
  * right point of the bounding rectangle
  *
- * |--------o
- * |        |
- * o--------|
+ * <pre>
+ *                UR
+ *     +--------o
+ *     |        |
+ *     o--------+
+ *  LL
+ * </pre>
  *
  * @author Andre Henn
  * @author terrestris GmbH & Co. KG

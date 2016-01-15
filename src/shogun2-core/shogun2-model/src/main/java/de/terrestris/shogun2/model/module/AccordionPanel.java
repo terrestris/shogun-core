@@ -27,7 +27,7 @@ public class AccordionPanel extends CompositeModule {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Defines which of the contained Modules is initally expanded.
+	 * Defines which of the contained Modules is initially expanded.
 	 */
 	private Module expandedItem;
 

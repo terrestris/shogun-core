@@ -267,8 +267,8 @@ public class NominatimSearch extends Module {
 				isEquals();
 	}
 
-	/**
-	 *
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
