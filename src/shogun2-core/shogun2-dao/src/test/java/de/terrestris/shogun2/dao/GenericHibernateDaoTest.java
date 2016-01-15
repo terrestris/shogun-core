@@ -174,12 +174,11 @@ public class GenericHibernateDaoTest {
 
 			ReadableDateTime after = app.getModified();
 
-			// They should be different
-			assertNotEquals(before, after);
+			assertNotEquals("before and after should be different",
+					before, after);
 
-			// after should be greater than before
-			boolean isLater = before.compareTo(after) == -1;
-			assertTrue(isLater);
+			assertTrue("after should be greater than before",
+					after.isAfter(before));
 		} catch (InterruptedException e) {
 			fail("Caught exception while attempting to wait");
 			return;
