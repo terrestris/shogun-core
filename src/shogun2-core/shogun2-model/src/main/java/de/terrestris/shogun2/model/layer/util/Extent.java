@@ -79,6 +79,19 @@ public class Extent extends PersistentObject {
 	}
 
 	/**
+	 * @param lowerLeftX
+	 * @param lowerLeftY
+	 * @param upperRightX
+	 * @param upperRightY
+	 */
+	public Extent(double lowerLeftX, double lowerLeftY,
+			double upperRightX, double upperRightY) {
+		super();
+		this.lowerLeft = new Double(lowerLeftX, lowerLeftY);
+		this.upperRight = new Double(upperRightX, upperRightY);;
+	}
+
+	/**
 	 * @return the lowerLeft
 	 */
 	public Point2D.Double getLowerLeft() {
