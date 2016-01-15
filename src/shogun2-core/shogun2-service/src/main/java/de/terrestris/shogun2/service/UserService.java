@@ -32,19 +32,19 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * Registration token service
 	 */
 	@Autowired
-	private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
+	protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
 
 	/**
 	 * Role service
 	 */
 	@Autowired
-	private RoleService<Role, RoleDao<Role>> roleService;
+	protected RoleService<Role, RoleDao<Role>> roleService;
 
 	/**
 	 * The autowired PasswordEncoder
 	 */
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	protected PasswordEncoder passwordEncoder;
 
 	/**
 	 * The default user role that is assigned to a user if he activates his
