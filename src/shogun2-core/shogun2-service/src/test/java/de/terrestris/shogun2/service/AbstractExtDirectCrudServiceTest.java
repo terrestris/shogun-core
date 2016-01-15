@@ -56,10 +56,10 @@ import de.terrestris.shogun2.util.test.TestUtil;
 public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractExtDirectCrudService<E, D>> {
 
 	/**
-	 * Static object that holds concrete implementations of
-	 * {@link PersistentObject} for the tests.
+	 * Object that holds concrete implementations of {@link PersistentObject}
+	 * for the tests.
 	 */
-	protected static PersistentObject implToTest = null;
+	protected PersistentObject implToTest = null;
 
 	protected D dao;
 
