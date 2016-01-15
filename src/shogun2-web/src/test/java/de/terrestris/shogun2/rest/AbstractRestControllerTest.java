@@ -80,6 +80,11 @@ public class AbstractRestControllerTest {
 	private class TestModelRestController<E extends TestModel, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
 			extends AbstractRestController<E, D, S> {
 
+		@SuppressWarnings("unchecked")
+		public TestModelRestController() {
+			super((Class<E>) TestModel.class);
+		}
+
 		@Override
 		public void setService(S service) {
 			this.service = service;
