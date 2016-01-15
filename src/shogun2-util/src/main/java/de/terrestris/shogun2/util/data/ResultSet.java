@@ -18,7 +18,7 @@ public final class ResultSet {
 	public static final Map<String, Object> success(Collection<? extends Object> data) {
 
 		Map<String, Object> returnMap = new HashMap<String, Object>(3);
-		returnMap.put("total", data.size());
+		returnMap.put("total", data == null ? 0 : data.size());
 		returnMap.put("data", data);
 		returnMap.put("success", true);
 
@@ -33,7 +33,7 @@ public final class ResultSet {
 	public static final Map<String, Object> success(Object dataset) {
 
 		Map<String, Object> returnMap = new HashMap<String, Object>(3);
-		returnMap.put("total", 1);
+		returnMap.put("total", dataset == null ? 0 : 1);
 		returnMap.put("data", dataset);
 		returnMap.put("success", true);
 
