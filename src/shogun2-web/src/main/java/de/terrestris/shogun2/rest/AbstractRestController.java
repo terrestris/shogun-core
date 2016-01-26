@@ -1,6 +1,9 @@
 package de.terrestris.shogun2.rest;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -10,9 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
+import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 import de.terrestris.shogun2.web.AbstractWebController;
 
 /**
@@ -112,26 +118,24 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<E> update(@PathVariable int id, @RequestBody E entity) {
+	public ResponseEntity<E> update(@PathVariable int id, HttpServletRequest request) {
 
-		final String simpleClassName = entity.getClass().getSimpleName();
-		final Integer payloadId = entity.getId();
+		E entity = service.findById(id);
+		ObjectMapper om = new Shogun2JsonObjectMapper();
 
-		if (payloadId == id) {
-			try {
-				E updated = this.service.saveOrUpdate(entity);
-				LOG.trace("Updated " + simpleClassName + " with ID " + id);
-				return new ResponseEntity<E>(updated, HttpStatus.OK);
-			} catch (Exception e) {
-				LOG.error("Error updating " + simpleClassName + ":"
-						+ e.getMessage());
-				return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		try {
+			if(entity != null){
+				E updatedEntity = om.readerForUpdating(entity).readValue(request.getReader());
+				if(updatedEntity.getId() != id){
+					return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+				}
+				service.saveOrUpdate(updatedEntity);
+				return new ResponseEntity<E>(updatedEntity, HttpStatus.OK);
 			}
-		} else {
-			LOG.error("Error updating " + simpleClassName
-					+ ": Requested to update entity with ID " + id
-					+ ", but payload ID is " + payloadId);
-			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		} catch (IOException e) {
+			LOG.error("Error updating entity with ID " + id + ": " + e.getMessage());
+			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
 		}
 	}
 
