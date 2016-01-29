@@ -5,6 +5,8 @@ package de.terrestris.shogun2.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -23,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class File extends PersistentObject {
 
 	/**

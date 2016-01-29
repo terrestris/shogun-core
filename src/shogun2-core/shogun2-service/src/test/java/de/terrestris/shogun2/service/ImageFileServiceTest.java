@@ -19,37 +19,37 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import de.terrestris.shogun2.dao.ImageDao;
-import de.terrestris.shogun2.model.Image;
+import de.terrestris.shogun2.dao.ImageFileDao;
+import de.terrestris.shogun2.model.ImageFile;
 
-public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, ImageDao<Image>, ImageService<Image, ImageDao<Image>>> {
+public class ImageFileServiceTest extends AbstractExtDirectCrudServiceTest<ImageFile, ImageFileDao<ImageFile>, ImageFileService<ImageFile, ImageFileDao<ImageFile>>> {
 
 	/**
 	 *
 	 * @throws Exception
 	 */
 	public void setUpImplToTest() throws Exception {
-		implToTest = new Image();
+		implToTest = new ImageFile();
 	}
 
 	@Override
-	protected ImageService<Image, ImageDao<Image>> getCrudService() {
-		return new ImageService<Image, ImageDao<Image>>();
+	protected ImageFileService<ImageFile, ImageFileDao<ImageFile>> getCrudService() {
+		return new ImageFileService<ImageFile, ImageFileDao<ImageFile>>();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Class<ImageDao<Image>> getDaoClass() {
-		return (Class<ImageDao<Image>>) new ImageDao<Image>().getClass();
+	protected Class<ImageFileDao<ImageFile>> getDaoClass() {
+		return (Class<ImageFileDao<ImageFile>>) new ImageFileDao<ImageFile>().getClass();
 	}
 
 	@Test
 	public void upload_asExpected() throws Exception {
 
-		Image persistedImage = null;
-
+		ImageFile persistedImage = null;
+		Integer dimension = 500;
 		BufferedImage bimg = new BufferedImage(
-				500,500,BufferedImage.TYPE_3BYTE_BGR);
+				dimension,dimension,BufferedImage.TYPE_3BYTE_BGR);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write( bimg, "jpg", baos );
 		byte[] imageByteArray = baos.toByteArray();
@@ -60,20 +60,18 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 				"image/jpeg",
 				imageByteArray);
 
-		byte[] thumbnail = ImageService.scaleImage(
-				imageByteArray,
-				"jpg",
-				100);
+		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
 
-		doNothing().when(dao).saveOrUpdate(any(Image.class));
 
-		persistedImage = crudService.uploadImage(mockMultipartFile, true, 100);
+		persistedImage = crudService.uploadImage(
+				mockMultipartFile, false, dimension);
 
-		verify(dao, times(1)).saveOrUpdate(any(Image.class));
+		verify(dao, times(1)).saveOrUpdate(any(ImageFile.class));
 		verifyNoMoreInteractions(dao);
 
 		assertTrue(Arrays.equals(persistedImage.getFile(),imageByteArray));
-		assertTrue(Arrays.equals(persistedImage.getThumbnail(), thumbnail));
+		assertTrue(Arrays.equals(persistedImage.getThumbnail(), null));
+		assertEquals(persistedImage.getWidth(), dimension);
 		assertEquals(persistedImage.getFileName(), "fileName.jpg");
 		assertEquals(persistedImage.getFileType(), "image/jpeg");
 	}
@@ -87,7 +85,7 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 				"empty", mockupBytes);
 
 		doThrow(new Exception("errormsg"))
-			.when(dao).saveOrUpdate(any(Image.class));
+			.when(dao).saveOrUpdate(any(ImageFile.class));
 
 		crudService.uploadImage(emptyImage, false, 0);
 
@@ -102,7 +100,7 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 		ImageIO.write( bimg, "jpg", baos );
 		byte[] imageByteArray = baos.toByteArray();
 
-		Image persistedImage = null;
+		ImageFile persistedImage = null;
 
 		MockMultipartFile mockMultipartFile = new MockMultipartFile(
 			"fileData",
@@ -110,7 +108,7 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 			"image/jpeg",
 			imageByteArray);
 
-		doNothing().when(dao).saveOrUpdate(any(Image.class));
+		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
 
 		persistedImage = crudService.uploadImage(mockMultipartFile, false, 0);
 
@@ -118,7 +116,7 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 
 		when(dao.findById(imageId)).thenReturn(persistedImage);
 
-		Image retrievedImage = crudService.getImage(imageId);
+		ImageFile retrievedImage = crudService.getImage(imageId);
 
 		verify(dao, times(1)).findById(imageId);
 
@@ -135,12 +133,50 @@ public class ImageServiceTest extends AbstractExtDirectCrudServiceTest<Image, Im
 
 		when(crudService.findById(999)).thenReturn(null);
 
-		Image retrievedImage = crudService.getImage(id);
+		crudService.getImage(id);
 
 		verify(crudService, times(1)).getImage(id);
 		verifyNoMoreInteractions(crudService);
+	}
 
-		assertEquals(retrievedImage, null);
+	@Test
+	public void getThumbnail_asExpected() throws Exception {
+
+		BufferedImage bimg = new BufferedImage(
+				500,500,BufferedImage.TYPE_3BYTE_BGR);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write( bimg, "jpg", baos );
+		byte[] imageByteArray = baos.toByteArray();
+
+		ImageFile persistedImage = null;
+
+		MockMultipartFile mockMultipartFile = new MockMultipartFile(
+			"fileData",
+			"fileName.jpg",
+			"image/jpeg",
+			imageByteArray);
+
+		byte[] thumbnail = ImageFileService.scaleImage(
+				imageByteArray,
+				"jpg",
+				100);
+
+		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
+
+		persistedImage = crudService.uploadImage(
+				mockMultipartFile, true, 100);
+
+		Integer imageId = 998;
+
+		when(dao.findById(imageId)).thenReturn(persistedImage);
+
+		ImageFile retrievedImage = crudService.getImage(imageId);
+
+		verify(dao, times(1)).findById(imageId);
+
+		assertTrue(Arrays.equals(retrievedImage.getThumbnail(), thumbnail));
+		assertEquals(retrievedImage.getFileName(), "fileName.jpg");
+		assertEquals(retrievedImage.getFileType(), "image/jpeg");
 	}
 
 }

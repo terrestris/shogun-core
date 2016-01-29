@@ -3,7 +3,7 @@ package de.terrestris.shogun2.dao;
 import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.File;
-import de.terrestris.shogun2.model.Image;
+import de.terrestris.shogun2.model.ImageFile;
 
 
 /**
@@ -11,16 +11,16 @@ import de.terrestris.shogun2.model.Image;
  * @author Johannes Weskamm
  *
  */
-@Repository("imageDao")
-public class ImageDao<E extends File>
+@Repository("imageFileDao")
+public class ImageFileDao<E extends File>
 		extends FileDao<E> {
 
 	/**
 	 * Public default constructor for this DAO.
 	 */
 	@SuppressWarnings("unchecked")
-	public ImageDao() {
-		super((Class<E>) Image.class);
+	public ImageFileDao() {
+		super((Class<E>) ImageFile.class);
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class ImageDao<E extends File>
 	 *
 	 * @param clazz
 	 */
-	protected ImageDao(Class<E> clazz) {
+	protected ImageFileDao(Class<E> clazz) {
 		super(clazz);
 	}
 }

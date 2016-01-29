@@ -5,6 +5,8 @@ package de.terrestris.shogun2.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -23,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table
-public class Image extends File {
+public class ImageFile extends File {
 
 	/**
 	 *
@@ -116,9 +118,9 @@ public class Image extends File {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Image))
+		if (!(obj instanceof ImageFile))
 			return false;
-		Image other = (Image) obj;
+		ImageFile other = (ImageFile) obj;
 
 		return new EqualsBuilder().appendSuper(super.equals(other))
 				.append(getWidth(), other.getWidth())

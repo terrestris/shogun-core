@@ -15,18 +15,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.terrestris.shogun2.dao.ImageDao;
-import de.terrestris.shogun2.model.Image;
+import de.terrestris.shogun2.dao.ImageFileDao;
+import de.terrestris.shogun2.model.ImageFile;
 
 /**
- * Service class for the {@link Image} model.
+ * Service class for the {@link ImageFile} model.
  *
  * @author Daniel Koch
  * @author Johannes Weskamm
  *
  */
-@Service("imageService")
-public class ImageService<E extends Image, D extends ImageDao<E>>
+@Service("imageFileService")
+public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 		extends FileService<E, D> {
 
 	/**
@@ -36,7 +36,7 @@ public class ImageService<E extends Image, D extends ImageDao<E>>
 	 */
 	@Override
 	@Autowired
-	@Qualifier("imageDao")
+	@Qualifier("imageFileDao")
 	public void setDao(D dao) {
 		this.dao = dao;
 	}
@@ -51,14 +51,14 @@ public class ImageService<E extends Image, D extends ImageDao<E>>
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public Image uploadImage(MultipartFile file, boolean createThumbnail, Integer dimensions)
+	public ImageFile uploadImage(MultipartFile file, boolean createThumbnail, Integer dimensions)
 			throws Exception {
 
 		InputStream is = null;
 		ByteArrayInputStream bais = null;
 		byte[] imageByteArray = null;
 		byte[] thumbnail = null;
-		Image imageToPersist = new Image();
+		ImageFile imageToPersist = new ImageFile();
 
 		try {
 			is = file.getInputStream();
@@ -140,9 +140,9 @@ public class ImageService<E extends Image, D extends ImageDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
-	public Image getImage(Integer id) throws Exception {
+	public ImageFile getImage(Integer id) throws Exception {
 
-		Image persistedImage = null;
+		ImageFile persistedImage = null;
 
 		LOG.debug("Requested to return an image");
 

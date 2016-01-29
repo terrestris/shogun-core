@@ -19,9 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.terrestris.shogun2.dao.ImageDao;
-import de.terrestris.shogun2.model.Image;
-import de.terrestris.shogun2.service.ImageService;
+import de.terrestris.shogun2.dao.ImageFileDao;
+import de.terrestris.shogun2.model.ImageFile;
+import de.terrestris.shogun2.service.ImageFileService;
 import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
@@ -32,22 +32,22 @@ import de.terrestris.shogun2.util.data.ResultSet;
  */
 @Controller
 @RequestMapping("/image")
-public class ImageController<E extends Image, D extends ImageDao<E>, S extends ImageService<E, D>>
-		extends AbstractWebController<E, D, S> {
+public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>, S extends ImageFileService<E, D>>
+		extends FileController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public ImageController() {
-		this((Class<E>) Image.class);
+	public ImageFileController() {
+		this((Class<E>) ImageFile.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete entity class for the controller.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected ImageController(Class<E> entityClass) {
+	protected ImageFileController(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -58,7 +58,7 @@ public class ImageController<E extends Image, D extends ImageDao<E>, S extends I
 	 */
 	@Override
 	@Autowired
-	@Qualifier("imageService")
+	@Qualifier("imageFileService")
 	public void setService(S service) {
 		this.service = service;
 	}
@@ -104,7 +104,7 @@ public class ImageController<E extends Image, D extends ImageDao<E>, S extends I
 		}
 
 		try {
-			Image image = service.uploadImage(
+			ImageFile image = service.uploadImage(
 					uploadedImage, createThumbnail, thumbnailDimensions);
 			LOG.info("Successfully uploaded image " + image.getFileName());
 			responseMap = ResultSet.success(image);
@@ -134,34 +134,31 @@ public class ImageController<E extends Image, D extends ImageDao<E>, S extends I
 	 * @return
 	 * @throws SQLException
 	 */
-	@RequestMapping(value = "/get.action", method=RequestMethod.GET)
-	public ResponseEntity<?> getImage(@RequestParam Integer id, boolean thumb) {
+	@RequestMapping(value = "/getThumbnail.action", method=RequestMethod.GET)
+	public ResponseEntity<?> getThumbnail(@RequestParam Integer id) {
 
 		final HttpHeaders responseHeaders = new HttpHeaders();
 		Map<String, Object> responseMap = new HashMap<String, Object>();
 
 		try {
-			Image image = service.getImage(id);
+			ImageFile image = service.getImage(id);
 			byte[] imageBytes = null;
 
-			if (thumb) {
-				imageBytes = image.getThumbnail();
-			} else {
-				imageBytes = image.getFile();
-			}
+			imageBytes = image.getThumbnail();
 
 			responseHeaders.setContentType(
 					MediaType.parseMediaType(image.getFileType()));
 
-			LOG.info("Successfully got the image " + image.getFileName());
+			LOG.info("Successfully got the image thumbnail " +
+					image.getFileName());
 
 			responseMap = ResultSet.success(image);
 			return new ResponseEntity<byte[]>(
 					imageBytes, responseHeaders, HttpStatus.OK);
 		} catch (Exception e) {
-			LOG.error("Could not get the file: " + e.getMessage());
-			responseMap = ResultSet.error("Could not get the image: " +
-					e.getMessage());
+			LOG.error("Could not get the image thumbnail: " + e.getMessage());
+			responseMap = ResultSet.error(
+					"Could not get the image thumbnail: " + e.getMessage());
 
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
