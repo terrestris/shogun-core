@@ -1,22 +1,11 @@
 package de.terrestris.shogun2.init;
 
-import java.sql.SQLException;
 import java.util.Set;
-
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.jdbc.datasource.init.ScriptException;
-import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.Role;
@@ -24,7 +13,6 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.layout.Layout;
 import de.terrestris.shogun2.model.module.Module;
-import de.terrestris.shogun2.security.acl.AclUtil;
 import de.terrestris.shogun2.service.InitializationService;
 
 /**
@@ -46,21 +34,6 @@ public class ContentInitializer {
 	@Autowired
 	@Qualifier("shogunInitEnabled")
 	private Boolean shogunInitEnabled;
-
-	/**
-	 * Flag symbolizing if the ACL data should be cleaned up on startup. This
-	 * will only happen if {@link #shogunInitEnabled} is true.
-	 */
-	@Autowired
-	@Qualifier("cleanupAclTables")
-	private Boolean cleanupAclTables;
-
-	/**
-	 * The path to the acl cleanup script.
-	 */
-	@Autowired
-	@Qualifier("cleanupAclTablesScriptPath")
-	private String cleanupAclTablesScriptPath;
 
 	/**
 	 * Flag symbolizing if a set of default {@link Role}s should be created
@@ -116,19 +89,6 @@ public class ContentInitializer {
 	 */
 	@Autowired
 	protected InitializationService initService;
-
-	/**
-	 * The aclDataSource, which is needed to clean up the ACL data.
-	 */
-	@Autowired
-	@Qualifier("aclDataSource")
-	protected DataSource aclDataSource;
-
-	/**
-	 * The AclSecurityUtil to add/delete permissions.
-	 */
-	@Autowired
-	protected AclUtil aclSecurityUtil;
 
 	/**
 	 * We use the authenticationProvider to login with the admin user, that will
@@ -196,22 +156,6 @@ public class ContentInitializer {
 
 			LOG.info("Initializing SHOGun2 content");
 
-			// TODO: get smarter here
-			// determine the admin and remember the rawPassword because this
-			// is needed for later authentication of the admin user
-			User adminUser = null;
-			String rawAdminPassword = null;
-			for (User user : defaultUsers) {
-				if(user.getAccountName().equals("admin")) {
-					adminUser = user;
-					rawAdminPassword = user.getPassword();
-				}
-			}
-
-			if(cleanupAclTables) {
-				cleanupAclTables();
-			}
-
 			if(createDefaultRoles) {
 				createDefaultRoles();
 			}
@@ -234,20 +178,6 @@ public class ContentInitializer {
 
 			if(createDefaultApplications) {
 				createDefaultApplications();
-			}
-
-			// MANAGE SECURITY/ACL
-			if(adminUser != null) {
-
-				logInUser(adminUser, rawAdminPassword);
-
-				for (Application application : defaultApplications) {
-					aclSecurityUtil.addPermission(application, adminUser, BasePermission.READ);
-				}
-
-				LOG.info("Managed security/ACL");
-
-				logoutUser();
 			}
 
 		} else {
@@ -333,43 +263,4 @@ public class ContentInitializer {
 		LOG.info("Created a total of " + defaultApplications.size() + " default applications.");
 	}
 
-	/**
-	 * This method logs in the passed user. (The ACL system requires an
-	 * authenticated user with a satisfying authority (based on the config of
-	 * the {@link AclAuthorizationStrategyImpl}) to write ACL entries to the
-	 * database.
-	 *
-	 * @param user
-	 * @param rawPassword
-	 */
-	private void logInUser(User user, String rawPassword) {
-		Authentication authRequest = new UsernamePasswordAuthenticationToken(user.getAccountName(), rawPassword);
-
-		Authentication authResult = authenticationProvider.authenticate(authRequest);
-		SecurityContextHolder.getContext().setAuthentication(authResult);
-	}
-
-	/**
-	 * Logs out the current user
-	 */
-	private void logoutUser() {
-		SecurityContextHolder.clearContext();
-	}
-
-	/**
-	 * Calls a SQL script that deletes all entries from the four ACL tables.
-	 */
-	private void cleanupAclTables() {
-		final ResourceDatabasePopulator rdp = new ResourceDatabasePopulator(
-				new ClassPathResource(cleanupAclTablesScriptPath));
-
-		LOG.info("Trying to clean up ACL tables.");
-
-		try {
-			rdp.populate(aclDataSource.getConnection());
-			LOG.info("Cleaned up ACL tables.");
-		} catch (ScriptException | SQLException e) {
-			LOG.error("Could not clean up ACL tables: " + e.getMessage());
-		}
-	}
 }
