@@ -35,7 +35,7 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	/**
 	 * Represents the class of the entity
 	 */
-	private Class<E> clazz;
+	private final Class<E> clazz;
 
 	/**
 	 * Constructor
