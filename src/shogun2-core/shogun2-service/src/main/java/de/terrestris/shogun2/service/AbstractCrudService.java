@@ -37,7 +37,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @param id
 	 * @return
 	 */
-	@PostAuthorize("hasPermission(returnObject, 'READ')")
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
 	public E findById(Integer id) {
 		return dao.findById(id);
 	}
@@ -50,7 +50,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @param id
 	 * @return
 	 */
-	@PostAuthorize("hasPermission(returnObject, 'READ')")
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
 	public E loadById(int id) {
 		return dao.loadById(id);
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 *
 	 * @return
 	 */
-	@PostFilter("hasPermission(filterObject, 'READ')")
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	public List<E> findAll() {
 		return dao.findAll();
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 *
 	 * @param e
 	 */
-	@PreAuthorize("hasPermission(#e, 'DELETE')")
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#e, 'DELETE')")
 	public void delete(E e) {
 		dao.delete(e);
 	}
