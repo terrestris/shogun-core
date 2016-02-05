@@ -2,16 +2,19 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
@@ -24,12 +27,23 @@ import ch.rasc.extclassgenerator.Model;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
+@AssociationOverrides({
+	@AssociationOverride(
+			name="userPermissions",
+			joinTable=@JoinTable(name="PERSONS_USERPERMISSIONS",
+			joinColumns = @JoinColumn(name = "PERSON_ID"))),
+
+	@AssociationOverride(
+			name="groupPermissions",
+			joinTable=@JoinTable(name="PERSONS_GROUPPERMISSIONS",
+			joinColumns = @JoinColumn(name = "PERSON_ID")))
+})
 @Model(value = "shogun2.model.Person",
 	readMethod = "personService.findWithSortingAndPagingExtDirect",
 	createMethod = "personService.saveOrUpdateCollection",
 	updateMethod = "personService.saveOrUpdateCollection",
 	destroyMethod = "personService.deleteCollection")
-public class Person extends PersistentObject {
+public class Person extends SecuredPersistentObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -152,6 +166,13 @@ public class Person extends PersistentObject {
 	 *
 	 */
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
+		return new ToStringBuilder(this)
+			.appendSuper(super.toString())
+			.append("firstName", getFirstName())
+			.append("lastName", getLastName())
+			.append("eMail", getEmail())
+			.append("birthday", getBirthday())
+			.append("language", getLanguage())
+			.toString();
 	}
 }
