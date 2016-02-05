@@ -12,11 +12,11 @@
 
     <!-- Define roles -->
     <bean id="adminRole" class="de.terrestris.shogun2.model.Role">
-        <property name="name" value="ROLE_ADMIN"/>
+        <property name="name" value="${symbol_dollar}{role.superAdminRoleName}"/>
         <property name="description" value="Administrator Role"/>
     </bean>
     <bean id="userRole" class="de.terrestris.shogun2.model.Role">
-        <property name="name" value="ROLE_USER"/>
+        <property name="name" value="${symbol_dollar}{role.defaultUserRoleName}"/>
         <property name="description" value="User Role"/>
     </bean>
 
@@ -28,8 +28,8 @@
 
     <!-- Define users -->
     <bean id="adminUser" class="de.terrestris.shogun2.model.User">
-        <property name="firstName" value="First Name"/>
-        <property name="lastName" value="Last Name"/>
+        <property name="firstName" value="Admins first name"/>
+        <property name="lastName" value="Admins last name"/>
         <property name="accountName" value="admin"/>
         <!-- This will be encrypted when the init service saves the user. -->
         <property name="password" value="shogun2"/>
@@ -40,10 +40,24 @@
             </util:set>
         </property>
     </bean>
+    <bean id="defaultUser" class="de.terrestris.shogun2.model.User">
+        <property name="firstName" value="Users first name"/>
+        <property name="lastName" value="Users last name"/>
+        <property name="accountName" value="user"/>
+        <!-- This will be encrypted when the init service saves the user. -->
+        <property name="password" value="shogun2"/>
+        <property name="active" value="true"/>
+        <property name="roles">
+            <util:set id="defaultUserRoles">
+                <ref bean="userRole"/>
+            </util:set>
+        </property>
+    </bean>
 
     <!-- The Set<User> of defaultUsers -->
     <util:set id="defaultUsers" value-type="de.terrestris.shogun2.model.User">
         <ref bean="adminUser" />
+        <ref bean="defaultUser" />
     </util:set>
 
     <!-- Define userGroups -->
@@ -66,7 +80,7 @@
         <property name="owner" ref="adminUser"/>
         <property name="members">
             <util:set id="defaultUserGroupMembers">
-                <ref bean="adminUser"/>
+                <ref bean="defaultUser"/>
             </util:set>
         </property>
         <property name="roles">
@@ -498,11 +512,25 @@
         <ref bean="viewportModule" />
     </util:set>
 
+    <bean id="defaultUserPermissionCollection" class="de.terrestris.shogun2.model.security.PermissionCollection">
+        <property name="permissions">
+            <util:set>
+                <value>READ</value>
+            </util:set>
+        </property>
+    </bean>
+
     <!-- Define applications -->
     <bean id="defaultApplication" class="de.terrestris.shogun2.model.Application">
         <property name="name" value="Default Application" />
         <property name="description" value="Default Application" />
         <property name="viewport" ref="viewportModule" />
+        <property name="userPermissions">
+            <!-- Allow that the default user to READ this application -->
+            <util:map>
+                <entry key-ref="defaultUser" value-ref="defaultUserPermissionCollection" />
+            </util:map>
+        </property>
     </bean>
 
     <!-- The Set<Application> of defaultApplications -->
