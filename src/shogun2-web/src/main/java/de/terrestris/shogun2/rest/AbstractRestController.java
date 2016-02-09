@@ -1,14 +1,22 @@
 package de.terrestris.shogun2.rest;
 
+import java.io.Reader;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
@@ -32,6 +40,12 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	protected AbstractRestController(Class<E> entityClass) {
 		super(entityClass);
 	}
+
+	/**
+	 *
+	 */
+	@Autowired
+	protected ObjectMapper objectMapper;
 
 	/**
 	 * Find all entities.
@@ -112,26 +126,48 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<E> update(@PathVariable int id, @RequestBody E entity) {
+	public ResponseEntity<E> update(@PathVariable int id, HttpServletRequest request) {
 
-		final String simpleClassName = entity.getClass().getSimpleName();
-		final Integer payloadId = entity.getId();
+		String errorPrefix = "Error updating "
+				+ getEntityClass().getSimpleName() + " with ID " + id + ": ";
 
-		if (payloadId == id) {
-			try {
-				E updated = this.service.saveOrUpdate(entity);
-				LOG.trace("Updated " + simpleClassName + " with ID " + id);
-				return new ResponseEntity<E>(updated, HttpStatus.OK);
-			} catch (Exception e) {
-				LOG.error("Error updating " + simpleClassName + ":"
-						+ e.getMessage());
-				return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		Reader reader = null;
+
+		try {
+			// read and parse the json request body
+			reader = request.getReader();
+			JsonNode jsonObject = objectMapper.readTree(reader);
+
+			// validate json object
+			if(jsonObject == null || !jsonObject.has("id")) {
+				LOG.error(errorPrefix
+						+ "The JSON body is empty or has no 'id' property.");
+				return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
 			}
-		} else {
-			LOG.error("Error updating " + simpleClassName
-					+ ": Requested to update entity with ID " + id
-					+ ", but payload ID is " + payloadId);
-			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+
+			// assure that the path variable id equals the payload id
+			final int payloadId = jsonObject.get("id").asInt();
+			if(payloadId != id) {
+				LOG.error(errorPrefix + "Requested to update entity with ID "
+						+ id + ", but payload ID is " + payloadId);
+				return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+			}
+
+			// get the persisted entity
+			E entity = service.findById(id);
+
+			if(entity != null){
+				// update "partially". credits go to http://stackoverflow.com/a/15145480
+				entity = objectMapper.readerForUpdating(entity).readValue(jsonObject);
+				service.saveOrUpdate(entity);
+				return new ResponseEntity<E>(entity, HttpStatus.OK);
+			}
+			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			LOG.error(errorPrefix + e.getMessage());
+			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
+		} finally {
+			IOUtils.closeQuietly(reader);
 		}
 	}
 

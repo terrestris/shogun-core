@@ -22,6 +22,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
         <!-- Hamcrest -->
         <dependency>
             <groupId>org.hamcrest</groupId>

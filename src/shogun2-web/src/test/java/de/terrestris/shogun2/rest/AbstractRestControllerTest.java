@@ -122,6 +122,8 @@ public class AbstractRestControllerTest {
 
 		restController = new TestModelRestController<TestModel, GenericHibernateDao<TestModel,Integer>, AbstractCrudService<TestModel,GenericHibernateDao<TestModel,Integer>>>();
 
+		restController.objectMapper = objectMapper;
+
 		// Process mock annotations
 		MockitoAnnotations.initMocks(this);
 
@@ -302,11 +304,15 @@ public class AbstractRestControllerTest {
 	@Test
 	public void update_shouldReturn_EntityAndOK() throws Exception {
 		int id = 42;
+		String originalValue = "original value";
 		String updatedValue = "updated value";
 
+		TestModel originalObject = buildTestInstanceWithIdAndValue(id,
+				originalValue);
 		TestModel updatedObject = buildTestInstanceWithIdAndValue(id,
 				updatedValue);
 
+		when(serviceMock.findById(id)).thenReturn(originalObject);
 		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenReturn(
 				updatedObject);
 
@@ -320,6 +326,7 @@ public class AbstractRestControllerTest {
 				.andExpect(jsonPath("$.id", is(id)))
 				.andExpect(jsonPath("$.testValue", is(updatedValue)));
 
+		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).saveOrUpdate(any(TestModel.class));
 		verifyNoMoreInteractions(serviceMock);
 	}
@@ -364,10 +371,15 @@ public class AbstractRestControllerTest {
 	public void update_shouldReturn_NotFoundDueToRuntimeException()
 			throws Exception {
 		int id = 42;
+		String originalValue = "original value";
 		String updatedValue = "updated value";
 
+		TestModel originalObject = buildTestInstanceWithIdAndValue(id,
+				originalValue);
 		TestModel updatedObject = buildTestInstanceWithIdAndValue(id,
 				updatedValue);
+
+		when(serviceMock.findById(id)).thenReturn(originalObject);
 
 		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenThrow(
 				new RuntimeException());
@@ -378,6 +390,7 @@ public class AbstractRestControllerTest {
 						.content(asJson(updatedObject))).andExpect(
 				status().isNotFound());
 
+		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).saveOrUpdate(any(TestModel.class));
 		verifyNoMoreInteractions(serviceMock);
 	}
