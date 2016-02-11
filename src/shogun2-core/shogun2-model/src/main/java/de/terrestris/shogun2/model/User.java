@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ch.rasc.extclassgenerator.Model;
 
@@ -162,6 +161,10 @@ public class User extends Person {
 	 */
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
+		return new ToStringBuilder(this)
+			.appendSuper(super.toString())
+			.append("accountName", getAccountName())
+			.append("isActive", isActive())
+			.toString();
 	}
 }

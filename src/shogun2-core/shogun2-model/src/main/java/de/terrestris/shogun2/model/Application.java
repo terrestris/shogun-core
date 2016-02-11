@@ -2,10 +2,14 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,9 +21,10 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.joda.time.ReadableDateTime;
 
+import ch.rasc.extclassgenerator.Model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import ch.rasc.extclassgenerator.Model;
 import de.terrestris.shogun2.model.module.CompositeModule;
 
 /**
@@ -32,8 +37,23 @@ import de.terrestris.shogun2.model.module.CompositeModule;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Model(value = "shogun2.model.Application", readMethod = "applicationService.findWithSortingAndPagingExtDirect", createMethod = "applicationService.saveOrUpdateCollection", updateMethod = "applicationService.saveOrUpdateCollection", destroyMethod = "applicationService.deleteCollection")
-public class Application extends PersistentObject {
+@AssociationOverrides({
+	@AssociationOverride(
+			name="userPermissions",
+			joinTable=@JoinTable(name="APPLICATIONS_USERPERMISSIONS",
+			joinColumns = @JoinColumn(name = "APPLICATION_ID"))),
+
+	@AssociationOverride(
+			name="groupPermissions",
+			joinTable=@JoinTable(name="APPLICATIONS_GROUPPERMISSIONS",
+			joinColumns = @JoinColumn(name = "APPLICATION_ID")))
+})
+@Model(value = "shogun2.model.Application",
+	readMethod = "applicationService.findWithSortingAndPagingExtDirect",
+	createMethod = "applicationService.saveOrUpdateCollection",
+	updateMethod = "applicationService.saveOrUpdateCollection",
+	destroyMethod = "applicationService.deleteCollection")
+public class Application extends SecuredPersistentObject {
 
 	private static final long serialVersionUID = 1L;
 

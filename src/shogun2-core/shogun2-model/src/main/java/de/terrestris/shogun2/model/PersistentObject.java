@@ -15,14 +15,13 @@ import javax.persistence.MappedSuperclass;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import ch.rasc.extclassgenerator.ModelField;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * This class represents the abstract superclass for all entities that are
@@ -119,7 +118,6 @@ public abstract class PersistentObject implements Serializable {
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(17, 43).
-				appendSuper(super.hashCode()).
 				append(getCreated()).
 				append(getModified()).
 				toHashCode();
@@ -148,7 +146,11 @@ public abstract class PersistentObject implements Serializable {
 	 *
 	 */
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
+		return new ToStringBuilder(this)
+			.append("id", getId())
+			.append("created", getCreated())
+			.append("modified", getModified())
+			.toString();
 	}
 
 }

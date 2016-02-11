@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -47,9 +46,6 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private RoleHierarchyImpl roleHierarchy;
 
 	/**
 	 *
@@ -121,17 +117,12 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			LOG.warn("The user '" + accountName + "' has no authorities and will thereby NOT be authenticated.");
 			authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword);
 		} else {
-			// Add all reachable authorities from our role hierarchy. This is
-			// necessary to make use of one of these roles when configuring the
-			// AclAuthorizationStrategyImpl
-			grantedAuthorities.addAll(roleHierarchy.getReachableGrantedAuthorities(grantedAuthorities));
-
 			// if we pass some grantedAuthorities, isAuthenticated() of
 			// authenticationToken will return true afterwards
 			authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword, grantedAuthorities);
 
 			LOG.debug("The user '" + accountName
-					+ "' got the following roles: "
+					+ "' got the following (explicit) roles: "
 					+ StringUtils.join(getRawRoleNames(grantedAuthorities), ", "));
 		}
 

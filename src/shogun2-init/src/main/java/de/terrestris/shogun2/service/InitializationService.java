@@ -22,9 +22,7 @@ import de.terrestris.shogun2.model.module.Module;
 
 /**
  * This service class will be used by the {@link ContentInitializer} to create content
- * on initialization. The methods of this service are not secured, which is
- * required, because the ACL mechanism would deny access to the
- * secured methods of the {@link AbstractCrudService}.
+ * on initialization.
  *
  * @author Nils Bühner
  *
