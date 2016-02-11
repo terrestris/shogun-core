@@ -15,7 +15,7 @@ public class UserPermissionEvaluator<E extends User> extends
 	 */
 	@SuppressWarnings("unchecked")
 	public UserPermissionEvaluator() {
-		super((Class<E>) User.class);
+		this((Class<E>) User.class);
 	}
 
 	/**
