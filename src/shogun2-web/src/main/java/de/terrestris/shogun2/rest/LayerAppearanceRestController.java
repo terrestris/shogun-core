@@ -6,11 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.dao.LayerAppearanceDao;
-import de.terrestris.shogun2.dao.LayerDao;
-import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
 import de.terrestris.shogun2.service.LayerAppearanceService;
-import de.terrestris.shogun2.service.LayerService;
 
 /**
  * @author Kai Volland
