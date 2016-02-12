@@ -20,12 +20,6 @@
         <property name="description" value="User Role"/>
     </bean>
 
-    <!-- The Set<Role> of defaultRoles -->
-    <util:set id="defaultRoles" value-type="de.terrestris.shogun2.model.Role">
-        <ref bean="adminRole" />
-        <ref bean="userRole" />
-    </util:set>
-
     <!-- Define users -->
     <bean id="adminUser" class="de.terrestris.shogun2.model.User">
         <property name="firstName" value="Admins first name"/>
@@ -53,12 +47,6 @@
             </util:set>
         </property>
     </bean>
-
-    <!-- The Set<User> of defaultUsers -->
-    <util:set id="defaultUsers" value-type="de.terrestris.shogun2.model.User">
-        <ref bean="adminUser" />
-        <ref bean="defaultUser" />
-    </util:set>
 
     <!-- Define userGroups -->
     <bean id="adminUserGroup" class="de.terrestris.shogun2.model.UserGroup">
@@ -89,12 +77,6 @@
             </util:set>
         </property>
     </bean>
-
-    <!-- The Set<UserGroup> of defaultUserGroups -->
-    <util:set id="defaultUserGroups" value-type="de.terrestris.shogun2.model.UserGroup">
-        <ref bean="adminUserGroup" />
-        <ref bean="defaultUserGroup" />
-    </util:set>
 
     <!-- The Border layout -->
     <bean id="borderLayout" class="de.terrestris.shogun2.model.layout.BorderLayout">
@@ -144,13 +126,6 @@
             </util:set>
         </property>
     </bean>
-
-    <!-- The Set<Layout> of defaultLayouts -->
-    <util:set id="defaultLayouts" value-type="de.terrestris.shogun2.model.layout.Layout">
-        <ref bean="borderLayout" />
-        <ref bean="absoluteLayout" />
-        <ref bean="hboxLayout" />
-    </util:set>
 
     <!-- The Resolutions -->
     <bean id="res01" class="de.terrestris.shogun2.model.layer.util.Resolution">
@@ -507,11 +482,6 @@
         </property>
     </bean>
 
-    <!-- The Set<Module> of defaultModules -->
-    <util:set id="defaultModules" value-type="de.terrestris.shogun2.model.module.Module">
-        <ref bean="viewportModule" />
-    </util:set>
-
     <bean id="defaultUserPermissionCollection" class="de.terrestris.shogun2.model.security.PermissionCollection">
         <property name="permissions">
             <util:set>
@@ -532,10 +502,5 @@
             </util:map>
         </property>
     </bean>
-
-    <!-- The Set<Application> of defaultApplications -->
-    <util:set id="defaultApplications" value-type="de.terrestris.shogun2.model.Application">
-        <ref bean="defaultApplication" />
-    </util:set>
 
 </beans>
