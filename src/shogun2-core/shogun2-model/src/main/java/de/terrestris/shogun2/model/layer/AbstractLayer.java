@@ -1,16 +1,14 @@
 package de.terrestris.shogun2.model.layer;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
+import de.terrestris.shogun2.model.SecuredPersistentObject;
 import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
 import de.terrestris.shogun2.model.layer.source.LayerDataSource;
 
@@ -25,25 +23,23 @@ import de.terrestris.shogun2.model.layer.source.LayerDataSource;
  */
 @Entity
 @Table
-public class Layer extends AbstractLayer {
+public abstract class AbstractLayer extends SecuredPersistentObject {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private LayerDataSource source;
-
-	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private LayerAppearance appearance;
+	/**
+	 *
+	 */
+	private String name;
+	private String type;
 
 	/**
 	 *
 	 */
-	public Layer() {
+	public AbstractLayer() {
 		super();
 	}
 
@@ -53,39 +49,40 @@ public class Layer extends AbstractLayer {
 	 * @param source The data source of the layer
 	 * @param appearance The appearance configuration of the layer
 	 */
-	public Layer(String name, String type, LayerDataSource source, LayerAppearance appearance) {
+	public AbstractLayer(String name, String type, LayerDataSource source, LayerAppearance appearance) {
 		super();
-		this.source = source;
-		this.appearance = appearance;
+		this.name = name;
+		this.type = type;
 	}
 
 	/**
-	 * @return the source
+	 * @return the name
 	 */
-	public LayerDataSource getSource() {
-		return source;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param source the source to set
+	 * @param name the name to set
 	 */
-	public void setSource(LayerDataSource source) {
-		this.source = source;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * @return the appearance
+	 * @return the type
 	 */
-	public LayerAppearance getAppearance() {
-		return appearance;
+	public String getType() {
+		return type;
 	}
 
 	/**
-	 * @param appearance the appearance to set
+	 * @param type the type to set
 	 */
-	public void setAppearance(LayerAppearance appearance) {
-		this.appearance = appearance;
+	public void setType(String type) {
+		this.type = type;
 	}
+
 
 	/**
 	 * @see java.lang.Object#hashCode()
@@ -100,8 +97,8 @@ public class Layer extends AbstractLayer {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(29, 13).
 				appendSuper(super.hashCode()).
-				append(getSource()).
-				append(getAppearance()).
+				append(getName()).
+				append(getType()).
 				toHashCode();
 	}
 
@@ -115,14 +112,14 @@ public class Layer extends AbstractLayer {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Layer))
+		if (!(obj instanceof AbstractLayer))
 			return false;
-		Layer other = (Layer) obj;
+		AbstractLayer other = (AbstractLayer) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
-				append(getSource(), other.getSource()).
-				append(getAppearance(), other.getAppearance()).
+				append(getName(), other.getName()).
+				append(getType(), other.getType()).
 				isEquals();
 	}
 

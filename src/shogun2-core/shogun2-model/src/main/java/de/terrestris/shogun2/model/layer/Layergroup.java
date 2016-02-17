@@ -1,7 +1,13 @@
 package de.terrestris.shogun2.model.layer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,80 +17,73 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
-import de.terrestris.shogun2.model.layer.source.LayerDataSource;
-
 /**
  *
  * Representation of a layer which consists a corresponding data source
  * and an appearance
  *
- * @author Andre Henn
+ * @author Kai Volland
  * @author terrestris GmbH & Co. KG
  *
  */
 @Entity
 @Table
-public class Layer extends AbstractLayer {
+public class Layergroup extends AbstractLayer {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private LayerDataSource source;
-
-	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private LayerAppearance appearance;
+	/**
+	 * 
+	 */
+	public Layergroup() {
+		super();
+		this.setType("Group");
+	}
 
 	/**
 	 *
 	 */
-	public Layer() {
-		super();
+	@ManyToMany
+	@Cascade(CascadeType.SAVE_UPDATE)
+	@JoinTable(
+		name = "LAYERGROUP_LAYERS",
+		joinColumns = { @JoinColumn(name = "LAYERGROUP_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
+	)
+	@OrderColumn(name = "IDX")
+	private List<AbstractLayer> layers = new ArrayList<AbstractLayer>();
+
+	/**
+	 *
+	 * @param module
+	 */
+	public void addLayer(AbstractLayer layer) {
+		this.layers.add(layer);
 	}
 
 	/**
-	 * @param name Layer name
-	 * @param type Layer type
-	 * @param source The data source of the layer
-	 * @param appearance The appearance configuration of the layer
+	 *
+	 * @param module
 	 */
-	public Layer(String name, String type, LayerDataSource source, LayerAppearance appearance) {
-		super();
-		this.source = source;
-		this.appearance = appearance;
+	public void remove(AbstractLayer layer) {
+		this.layers.remove(layer);
 	}
 
 	/**
-	 * @return the source
+	 * @return the layers
 	 */
-	public LayerDataSource getSource() {
-		return source;
+	public List<AbstractLayer> getLayers() {
+		return layers;
 	}
 
 	/**
-	 * @param source the source to set
+	 * @param layers the layers to set
 	 */
-	public void setSource(LayerDataSource source) {
-		this.source = source;
-	}
-
-	/**
-	 * @return the appearance
-	 */
-	public LayerAppearance getAppearance() {
-		return appearance;
-	}
-
-	/**
-	 * @param appearance the appearance to set
-	 */
-	public void setAppearance(LayerAppearance appearance) {
-		this.appearance = appearance;
+	public void setLayers(List<AbstractLayer> layers) {
+		this.layers = layers;
 	}
 
 	/**
@@ -100,8 +99,7 @@ public class Layer extends AbstractLayer {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(29, 13).
 				appendSuper(super.hashCode()).
-				append(getSource()).
-				append(getAppearance()).
+				append(getLayers()).
 				toHashCode();
 	}
 
@@ -115,14 +113,13 @@ public class Layer extends AbstractLayer {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Layer))
+		if (!(obj instanceof Layergroup))
 			return false;
-		Layer other = (Layer) obj;
+		Layergroup other = (Layergroup) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
-				append(getSource(), other.getSource()).
-				append(getAppearance(), other.getAppearance()).
+				append(getLayers(), other.getLayers()).
 				isEquals();
 	}
 

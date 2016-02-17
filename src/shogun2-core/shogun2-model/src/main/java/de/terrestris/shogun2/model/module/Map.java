@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import de.terrestris.shogun2.model.layer.Layer;
+import de.terrestris.shogun2.model.layer.AbstractLayer;
 import de.terrestris.shogun2.model.map.MapConfig;
 import de.terrestris.shogun2.model.map.MapControl;
 
@@ -75,7 +75,7 @@ public class Map extends Module {
 	)
 	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
-	private List<Layer> mapLayers = new ArrayList<Layer>();
+	private List<AbstractLayer> mapLayers = new ArrayList<AbstractLayer>();
 
 	/**
 	 * default constructor
@@ -90,7 +90,7 @@ public class Map extends Module {
 	 * @param mapConfig
 	 * @param mapLayers
 	 */
-	public Map(String name, MapConfig mapConfig, List<Layer> mapLayers) {
+	public Map(String name, MapConfig mapConfig, List<AbstractLayer> mapLayers) {
 		super();
 		this.mapConfig = mapConfig;
 		this.mapLayers = mapLayers;
@@ -127,14 +127,14 @@ public class Map extends Module {
 	/**
 	 * @return the mapLayers
 	 */
-	public List<Layer> getMapLayers() {
+	public List<AbstractLayer> getMapLayers() {
 		return mapLayers;
 	}
 
 	/**
 	 * @param mapLayers the mapLayers to set
 	 */
-	public void setMapLayers(List<Layer> mapLayers) {
+	public void setMapLayers(List<AbstractLayer> mapLayers) {
 		this.mapLayers = mapLayers;
 	}
 
