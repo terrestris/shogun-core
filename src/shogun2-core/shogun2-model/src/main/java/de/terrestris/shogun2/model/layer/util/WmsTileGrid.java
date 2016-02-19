@@ -23,8 +23,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -72,7 +70,6 @@ public class WmsTileGrid extends PersistentObject {
 	 * the origin will be set to the top-left corner of the extent.
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent tileGridExtent;
 
 	/**
@@ -84,7 +81,6 @@ public class WmsTileGrid extends PersistentObject {
 	 * The tileGrid resolutions.
 	 */
 	@ManyToMany
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "WMSTILEGRID_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }

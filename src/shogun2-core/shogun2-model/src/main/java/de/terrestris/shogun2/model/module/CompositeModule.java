@@ -18,8 +18,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layout.Layout;
 
@@ -45,14 +43,12 @@ public class CompositeModule extends Module {
 	 * {@link CompositeModule}.
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private Layout layout;
 
 	/**
 	 *
 	 */
 	@ManyToMany
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 		name = "MODULES_SUBMODULES",
 		joinColumns = { @JoinColumn(name = "MODULE_ID") },

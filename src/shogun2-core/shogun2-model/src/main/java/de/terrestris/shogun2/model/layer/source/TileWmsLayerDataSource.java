@@ -14,8 +14,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -51,7 +49,6 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 		inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
 	)
 	@OrderColumn(name = "IDX")
-	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerNames will be serialized (JSON) as an array of
 	// simple layerName string values
 	@JsonIdentityInfo(
@@ -68,7 +65,6 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 		inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
 	)
 	@OrderColumn(name = "IDX")
-	@Cascade(CascadeType.SAVE_UPDATE)
 	// The List of layerStyles will be serialized (JSON) as an array of
 	// simple layerStyle string values
 	@JsonIdentityInfo(
@@ -79,7 +75,6 @@ public class TileWmsLayerDataSource extends LayerDataSource {
 	private List<GeoWebServiceLayerStyle> layerStyles;
 
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private WmsTileGrid tileGrid;
 
 	/**
