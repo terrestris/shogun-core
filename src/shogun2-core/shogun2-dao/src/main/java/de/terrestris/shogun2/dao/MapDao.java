@@ -9,17 +9,18 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.module.Map;
 
-@Repository("abstractLayerDao")
-public class AbstractLayerDao<E extends AbstractLayer> extends
-		GenericHibernateDao<E, Integer> {
+@Repository("mapDao")
+public class MapDao<E extends Map> extends
+		ModuleDao<E> {
 
 	/**
 	 * Public default constructor for this DAO.
 	 */
 	@SuppressWarnings("unchecked")
-	public AbstractLayerDao() {
-		super((Class<E>) AbstractLayer.class);
+	public MapDao() {
+		super((Class<E>) Map.class);
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class AbstractLayerDao<E extends AbstractLayer> extends
 	 *
 	 * @param clazz
 	 */
-	protected AbstractLayerDao(Class<E> clazz) {
+	protected MapDao(Class<E> clazz) {
 		super(clazz);
 	}
 
@@ -35,12 +36,13 @@ public class AbstractLayerDao<E extends AbstractLayer> extends
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<E> findLayerGroupsOfAbstractLayer(AbstractLayer abstractLayer) throws HibernateException {
+	public Set<E> findMapsWithLayer(AbstractLayer layer) throws HibernateException {
 		Criteria criteria = createDistinctRootEntityCriteria();
 
-		criteria.createAlias("layers", "lyr");
-		criteria.add(Restrictions.eq("lyr.id", abstractLayer.getId()));
+		criteria.createAlias("mapLayers", "ml");
+		criteria.add(Restrictions.eq("ml.id", layer.getId()));
 
 		return new HashSet<E>(criteria.list());
 	}
+
 }

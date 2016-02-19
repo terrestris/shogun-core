@@ -28,7 +28,7 @@ import org.hibernate.annotations.CascadeType;
  */
 @Entity
 @Table
-public class Layergroup extends AbstractLayer {
+public class LayerGroup extends AbstractLayer {
 
 	/**
 	 *
@@ -38,7 +38,7 @@ public class Layergroup extends AbstractLayer {
 	/**
 	 * 
 	 */
-	public Layergroup() {
+	public LayerGroup() {
 		super();
 		this.setType("Group");
 	}
@@ -113,9 +113,9 @@ public class Layergroup extends AbstractLayer {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Layergroup))
+		if (!(obj instanceof LayerGroup))
 			return false;
-		Layergroup other = (Layergroup) obj;
+		LayerGroup other = (LayerGroup) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
