@@ -19,6 +19,22 @@ public class PersonService<E extends Person, D extends PersonDao<E>> extends
 		AbstractExtDirectCrudService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public PersonService() {
+		this((Class<E>) Person.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected PersonService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
 	 * as there are multiple candidates.

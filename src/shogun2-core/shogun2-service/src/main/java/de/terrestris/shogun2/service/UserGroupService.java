@@ -21,6 +21,22 @@ import de.terrestris.shogun2.model.UserGroup;
 public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
 		extends AbstractCrudService<E, D> {
 
+	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public UserGroupService() {
+		this((Class<E>) UserGroup.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected UserGroupService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
 	public Set<E> findGroupsOfUser(User user) {
 		return dao.findGroupsOfUser(user);
 	}

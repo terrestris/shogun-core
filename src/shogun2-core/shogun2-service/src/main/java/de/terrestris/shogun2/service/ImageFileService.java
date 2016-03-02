@@ -30,6 +30,22 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 		extends FileService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public ImageFileService() {
+		this((Class<E>) ImageFile.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected ImageFileService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
 	 * as there are multiple candidates.
@@ -50,15 +66,14 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public ImageFile uploadImage(MultipartFile file, boolean createThumbnail, Integer dimensions)
+	public E uploadImage(MultipartFile file, boolean createThumbnail, Integer dimensions)
 			throws Exception {
 
 		InputStream is = null;
 		ByteArrayInputStream bais = null;
 		byte[] imageByteArray = null;
 		byte[] thumbnail = null;
-		ImageFile imageToPersist = new ImageFile();
+		E imageToPersist = getEntityClass().newInstance();
 
 		try {
 			is = file.getInputStream();
@@ -140,9 +155,9 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
-	public ImageFile getImage(Integer id) throws Exception {
+	public E getImage(Integer id) throws Exception {
 
-		ImageFile persistedImage = null;
+		E persistedImage = null;
 
 		LOG.debug("Requested to return an image");
 

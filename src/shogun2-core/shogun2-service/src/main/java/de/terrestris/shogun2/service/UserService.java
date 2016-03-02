@@ -29,6 +29,22 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 		PersonService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public UserService() {
+		this((Class<E>) User.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected UserService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * Registration token service
 	 */
 	@Autowired

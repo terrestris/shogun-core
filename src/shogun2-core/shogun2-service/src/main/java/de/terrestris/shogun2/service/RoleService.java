@@ -21,6 +21,22 @@ public class RoleService<E extends Role, D extends RoleDao<E>> extends
 		AbstractExtDirectCrudService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public RoleService() {
+		this((Class<E>) Role.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected RoleService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * Returns the role for the given (unique) role name.
 	 * If no role was found, null will be returned.
 	 *

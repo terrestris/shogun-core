@@ -34,6 +34,22 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
 		extends AbstractUserTokenService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public PasswordResetTokenService() {
+		this((Class<E>) PasswordResetToken.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected PasswordResetTokenService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 *
 	 */
 	@Autowired
