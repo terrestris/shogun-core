@@ -46,12 +46,12 @@ import de.terrestris.shogun2.model.Response;
  * @author danielkoch
  *
  */
-public class HTTPUtil {
+public class HttpUtil {
 
 	/**
 	 * The Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(HTTPUtil.class);
+	private static final Logger LOG = Logger.getLogger(HttpUtil.class);
 
 	/**
 	 *
