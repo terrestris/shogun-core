@@ -1,4 +1,4 @@
-package de.terrestris.shogun2.model;
+package de.terrestris.shogun2.util.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpHeaders;

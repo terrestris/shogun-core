@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.terrestris.shogun2.model.Response;
+import de.terrestris.shogun2.util.model.Response;
 
 /**
  *

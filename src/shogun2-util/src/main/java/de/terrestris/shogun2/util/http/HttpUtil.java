@@ -39,7 +39,7 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import de.terrestris.shogun2.model.Response;
+import de.terrestris.shogun2.util.model.Response;
 
 /**
  *
