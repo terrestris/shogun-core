@@ -59,12 +59,11 @@ public class FileService<E extends File, D extends FileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public File uploadFile(MultipartFile file) throws Exception {
+	public E uploadFile(MultipartFile file) throws Exception {
 
 		InputStream is = null;
 		byte[] fileByteArray = null;
-		File fileToPersist = getEntityClass().newInstance();
+		E fileToPersist = getEntityClass().newInstance();
 
 		try {
 			is = file.getInputStream();
