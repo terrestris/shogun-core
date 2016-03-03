@@ -25,7 +25,7 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
 
 	/**
 	 * Provides the concrete entity class of the controller.
-	 * Based on the pattern propsed here: http://stackoverflow.com/a/3403987
+	 * Based on the pattern proposed here: http://stackoverflow.com/a/3403987
 	 */
 	private final Class<E> entityClass;
 
