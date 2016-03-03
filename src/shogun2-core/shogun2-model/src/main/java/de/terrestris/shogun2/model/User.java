@@ -8,16 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import ch.rasc.extclassgenerator.Model;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import ch.rasc.extclassgenerator.Model;
 
 /**
  * @author Nils Bühner
@@ -50,6 +54,20 @@ public class User extends Person {
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }
 	)
 	private Set<Role> roles = new HashSet<Role>();
+
+	@ManyToMany
+	@JoinTable(
+		name = "user_usergroup",
+		joinColumns = { @JoinColumn(name = "USER_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "USERGROUP_ID") }
+	)
+	@OrderColumn(name = "IDX")
+	@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
 	/**
 	 * Default constructor
@@ -113,6 +131,20 @@ public class User extends Person {
 	 */
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	/**
+	 * @return the userGroups
+	 */
+	public Set<UserGroup> getUserGroups() {
+		return userGroups;
+	}
+
+	/**
+	 * @param userGroups the userGroups to set
+	 */
+	public void setUserGroups(Set<UserGroup> userGroups) {
+		this.userGroups = userGroups;
 	}
 
 	/**

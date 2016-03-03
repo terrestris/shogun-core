@@ -37,6 +37,7 @@ public class UserGroup extends PersistentObject {
 
 	@ManyToMany
 	@JoinTable(
+		name = "user_usergroup",
 		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "USER_ID") }
 	)
