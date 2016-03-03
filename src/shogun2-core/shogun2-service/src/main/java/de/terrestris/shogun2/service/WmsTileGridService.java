@@ -20,6 +20,22 @@ public class WmsTileGridService<E extends WmsTileGrid, D extends WmsTileGridDao<
 		AbstractCrudService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public WmsTileGridService() {
+		this((Class<E>) WmsTileGrid.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected WmsTileGridService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
 	 * as there are multiple candidates.

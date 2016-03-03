@@ -17,6 +17,22 @@ public abstract class AbstractTokenService<E extends Token, D extends AbstractTo
 		extends AbstractCrudService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public AbstractTokenService() {
+		this((Class<E>) Token.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractTokenService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 *
 	 * @return
 	 */

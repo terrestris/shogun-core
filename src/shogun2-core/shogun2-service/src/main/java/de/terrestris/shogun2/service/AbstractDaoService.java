@@ -24,6 +24,20 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
 	protected final Logger LOG = Logger.getLogger(getClass());
 
 	/**
+	 * Provides the concrete entity class of the controller.
+	 * Based on the pattern proposed here: http://stackoverflow.com/a/3403987
+	 */
+	private final Class<E> entityClass;
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractDaoService(Class<E> entityClass) {
+		this.entityClass = entityClass;
+	}
+
+	/**
 	 * The data access object
 	 */
 	protected D dao;
@@ -44,6 +58,13 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
 	 */
 	public D getDao() {
 		return dao;
+	}
+
+	/**
+	 * @return the entityClass
+	 */
+	public Class<E> getEntityClass() {
+		return entityClass;
 	}
 
 }

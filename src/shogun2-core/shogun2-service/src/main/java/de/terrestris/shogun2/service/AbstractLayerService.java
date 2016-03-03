@@ -26,6 +26,22 @@ import de.terrestris.shogun2.model.module.Module;
 public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLayerDao<E>> extends
 		AbstractCrudService<E, D> {
 
+	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public AbstractLayerService() {
+		this((Class<E>) AbstractLayer.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractLayerService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
 	@Autowired
 	@Qualifier("mapDao")
 	MapDao<Map> mapDao;

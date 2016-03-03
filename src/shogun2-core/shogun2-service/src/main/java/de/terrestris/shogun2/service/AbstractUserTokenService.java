@@ -20,6 +20,22 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
 		extends AbstractTokenService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public AbstractUserTokenService() {
+		this((Class<E>) UserToken.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractUserTokenService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * An expiry threshold in minutes for the creation of a new
 	 * {@link PasswordResetToken}. I.e. if a token is requested for a
 	 * {@link User} and an there is an existing token that expires within the

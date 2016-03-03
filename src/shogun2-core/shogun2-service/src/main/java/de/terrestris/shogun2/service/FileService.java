@@ -23,6 +23,22 @@ public class FileService<E extends File, D extends FileDao<E>>
 		extends AbstractExtDirectCrudService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public FileService() {
+		this((Class<E>) File.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected FileService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
 	 * as there are multiple candidates.
@@ -43,12 +59,11 @@ public class FileService<E extends File, D extends FileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public File uploadFile(MultipartFile file) throws Exception {
+	public E uploadFile(MultipartFile file) throws Exception {
 
 		InputStream is = null;
 		byte[] fileByteArray = null;
-		File fileToPersist = new File();
+		E fileToPersist = getEntityClass().newInstance();
 
 		try {
 			is = file.getInputStream();

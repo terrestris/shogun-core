@@ -27,6 +27,23 @@ import de.terrestris.shogun2.paging.PagingResult;
 public abstract class AbstractExtDirectCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
 		extends AbstractCrudService<E, D> {
 
+
+	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public AbstractExtDirectCrudService() {
+		this((Class<E>) PersistentObject.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected AbstractExtDirectCrudService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
 	/**
 	 * Just calls the parent method, but is annotated with
 	 * {@link ExtDirectMethod}.

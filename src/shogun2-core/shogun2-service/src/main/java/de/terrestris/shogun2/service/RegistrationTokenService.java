@@ -33,6 +33,22 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 		extends AbstractUserTokenService<E, D> {
 
 	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public RegistrationTokenService() {
+		this((Class<E>) RegistrationToken.class);
+	}
+
+	/**
+	 * Constructor that sets the concrete entity class for the service.
+	 * Subclasses MUST call this constructor.
+	 */
+	protected RegistrationTokenService(Class<E> entityClass) {
+		super(entityClass);
+	}
+
+	/**
 	 * The relative path for the SHOGun2 user activation interface.
 	 */
 	@Value("${login.accountActivationPath}")
