@@ -22,6 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -463,6 +466,40 @@ public class UserServiceTest extends AbstractCrudServiceTest<User, UserDao<User>
 			// verify method invocations
 			verifyNoMoreInteractions(dao);
 		}
+	}
+
+	@Test
+	public void getUserBySession_shouldReturnUserFromSession() throws NoSuchFieldException, IllegalAccessException {
+
+		// mock a user for the security context
+		User incompleteSecurityContextUser = new User();
+		Integer userId = 42;
+		TestUtil.setIdOnPersistentObject(incompleteSecurityContextUser, userId);
+
+		// mock a "complete" user equivalent coming from db
+		String accountName = "someUser";
+		String firstName = "John";
+		User completeUserFromDatabase = new User();
+		TestUtil.setIdOnPersistentObject(completeUserFromDatabase, userId);
+		completeUserFromDatabase.setAccountName(accountName);
+		completeUserFromDatabase.setFirstName(firstName);
+
+		// mock the security context
+		Authentication authentication = new UsernamePasswordAuthenticationToken(incompleteSecurityContextUser, "somePw");
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		// mock the dao
+		when(dao.findById(userId)).thenReturn(completeUserFromDatabase);
+
+		// finally test/call the method
+		User fullUserBySession = crudService.getUserBySession();
+
+		assertEquals(userId, fullUserBySession.getId());
+		assertEquals(accountName, fullUserBySession.getAccountName());
+		assertEquals(firstName, fullUserBySession.getFirstName());
+
+		verify(dao, times(1)).findById(userId);
+		verifyNoMoreInteractions(dao);
 	}
 
 }
