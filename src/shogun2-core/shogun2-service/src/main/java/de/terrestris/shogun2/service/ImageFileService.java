@@ -71,33 +71,41 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 
 		InputStream is = null;
 		ByteArrayInputStream bais = null;
-		byte[] imageByteArray = null;
-		byte[] thumbnail = null;
-		E imageToPersist = getEntityClass().newInstance();
+		E imageToPersist = null;
 
 		try {
 			is = file.getInputStream();
-			imageByteArray = IOUtils.toByteArray(is);
+			byte[] imageByteArray = IOUtils.toByteArray(is);
+
+			// create a new instance (generic)
+			imageToPersist = getEntityClass().newInstance();
 
 			// create a thumbnail if requested
 			if (createThumbnail) {
-				thumbnail = scaleImage(
+				byte[] thumbnail = scaleImage(
 					imageByteArray,
 					FilenameUtils.getExtension(file.getOriginalFilename()),
 					dimensions);
 				imageToPersist.setThumbnail(thumbnail);
 			}
+
+			// set binary image data
 			imageToPersist.setFile(imageByteArray);
 
-			//detect dimensions
+			// detect dimensions
 			bais = new ByteArrayInputStream(imageByteArray);
+
 			BufferedImage bimg = ImageIO.read(bais);
+
+			// set basic image properties
 			imageToPersist.setWidth(bimg.getWidth());
 			imageToPersist.setHeight(bimg.getHeight());
-
 			imageToPersist.setFileType(file.getContentType());
 			imageToPersist.setFileName(file.getOriginalFilename());
+
+			// persist the image
 			dao.saveOrUpdate((E) imageToPersist);
+
 		} catch(Exception e) {
 			throw new Exception("Could not create the Image in DB: "
 					+ e.getMessage());
@@ -123,7 +131,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 
 		InputStream is = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		byte[] imageInByte = null;
+		byte[] imageInBytes = null;
 		BufferedImage image = null;
 		BufferedImage resizedImage = null;
 
@@ -132,7 +140,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 			image = ImageIO.read(is);
 			resizedImage = Scalr.resize(image, outputSize);
 			ImageIO.write(resizedImage, outputFormat, baos);
-			imageInByte = baos.toByteArray();
+			imageInBytes = baos.toByteArray();
 		} catch(Exception e) {
 			throw new Exception("Error on resizing an image: " + e.getMessage());
 		} finally {
@@ -145,38 +153,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 				resizedImage.flush();
 			}
 		}
-		return imageInByte;
-	}
-
-	/**
-	 * Method gets a persisted image by the given id
-	 *
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	public E getImage(Integer id) throws Exception {
-
-		E persistedImage = null;
-
-		LOG.debug("Requested to return an image");
-
-		try {
-			// get the file entity
-			persistedImage = this.findById(id);
-
-			if (persistedImage != null) {
-				LOG.debug("Successfully returned an image");
-			} else {
-				throw new Exception("Could not find the image with id " + id);
-			}
-
-		} catch (Exception e) {
-			LOG.error("Could not return the requested image: " +
-					e.getMessage());
-			throw new Exception("Could not return the image with id " + id);
-		}
-		return persistedImage;
+		return imageInBytes;
 	}
 
 }

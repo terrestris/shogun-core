@@ -116,7 +116,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 
 		when(dao.findById(imageId)).thenReturn(persistedImage);
 
-		ImageFile retrievedImage = crudService.getImage(imageId);
+		ImageFile retrievedImage = crudService.findById(imageId);
 
 		verify(dao, times(1)).findById(imageId);
 
@@ -124,19 +124,6 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 		assertTrue(retrievedImage.getThumbnail() == null);
 		assertEquals(retrievedImage.getFileName(), "fileName.jpg");
 		assertEquals(retrievedImage.getFileType(), "image/jpeg");
-	}
-
-	@Test(expected=Exception.class)
-	public void get_notFound() throws Exception {
-
-		Integer id = 999;
-
-		when(crudService.findById(999)).thenReturn(null);
-
-		crudService.getImage(id);
-
-		verify(crudService, times(1)).getImage(id);
-		verifyNoMoreInteractions(crudService);
 	}
 
 	@Test
@@ -170,7 +157,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 
 		when(dao.findById(imageId)).thenReturn(persistedImage);
 
-		ImageFile retrievedImage = crudService.getImage(imageId);
+		ImageFile retrievedImage = crudService.findById(imageId);
 
 		verify(dao, times(1)).findById(imageId);
 

@@ -141,7 +141,12 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 		Map<String, Object> responseMap = new HashMap<String, Object>();
 
 		try {
-			ImageFile image = service.getImage(id);
+			// try to get the image
+			ImageFile image = service.findById(id);
+			if(image == null) {
+				throw new Exception("Could not find the image with id " + id);
+			}
+
 			byte[] imageBytes = null;
 
 			imageBytes = image.getThumbnail();
@@ -152,13 +157,14 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 			LOG.info("Successfully got the image thumbnail " +
 					image.getFileName());
 
-			responseMap = ResultSet.success(image);
 			return new ResponseEntity<byte[]>(
 					imageBytes, responseHeaders, HttpStatus.OK);
 		} catch (Exception e) {
-			LOG.error("Could not get the image thumbnail: " + e.getMessage());
-			responseMap = ResultSet.error(
-					"Could not get the image thumbnail: " + e.getMessage());
+			final String errorMessage = "Could not get the image thumbnail: "
+					+ e.getMessage();
+
+			LOG.error(errorMessage);
+			responseMap = ResultSet.error(errorMessage);
 
 			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
