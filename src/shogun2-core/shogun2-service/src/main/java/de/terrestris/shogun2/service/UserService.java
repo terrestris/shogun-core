@@ -172,7 +172,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 		user.setActive(true);
 
 		// get the persisted default user role
-		final String defaultRoleName = defaultUserRole.getName();
+		final String defaultRoleName = getDefaultUserRole().getName();
 		Role persistedDefaultUserRole = roleService
 				.findByRoleName(defaultRoleName);
 
