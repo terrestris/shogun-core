@@ -183,6 +183,9 @@
         <!-- Apache HTTP Client -->
         <apache-httpclient.version>4.5.2</apache-httpclient.version>
 
+        <!-- Java XML Parser -->
+        <jaxp-api.version>1.4.5</jaxp-api.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -727,6 +730,12 @@
                 <groupId>com.icegreen</groupId>
                 <artifactId>greenmail</artifactId>
                 <version>${greenmail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxp-api</artifactId>
+                <version>${jaxp-api.version}</version>
             </dependency>
 
         </dependencies>
