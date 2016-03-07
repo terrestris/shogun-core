@@ -75,14 +75,14 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<AbstractLayer> setLayersForMap (Integer mapModuleId, List<String> abstractLayerIds) throws Exception{
+	public List<AbstractLayer> setLayersForMap (Integer mapModuleId, List<Integer> abstractLayerIds) throws Exception{
 		E module = this.findById(mapModuleId);
 		List<AbstractLayer> layers = new ArrayList<AbstractLayer>();
 
 		if(module instanceof Map) {
 			Map mapModule = (Map) module;
-			for (String id : abstractLayerIds) {
-				PersistentObject entity = this.abstractLayerService.findById(Integer.parseInt(id));
+			for (Integer id : abstractLayerIds) {
+				PersistentObject entity = this.abstractLayerService.findById(id);
 				if(entity instanceof AbstractLayer){
 					AbstractLayer layer = (AbstractLayer) entity;
 					if(layer != null){

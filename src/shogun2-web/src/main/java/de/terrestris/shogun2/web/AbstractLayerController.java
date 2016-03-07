@@ -83,7 +83,7 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	 */
 	@RequestMapping(value = "/setLayersForLayerGroup.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> setLayersForLayerGroup(
-			Integer layerGroupId, @RequestParam("abstractLayerIds") List<String> abstractLayerIds) {
+			Integer layerGroupId, @RequestParam("abstractLayerIds") List<Integer> abstractLayerIds) {
 
 		try {
 			List<AbstractLayer> layers = this.service.setLayersForLayerGroup(layerGroupId, abstractLayerIds);

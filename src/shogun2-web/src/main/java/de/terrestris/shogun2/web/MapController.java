@@ -65,7 +65,7 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
 	 */
 	@RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
 	public @ResponseBody java.util.Map<String, Object> setLayersForMap(
-			Integer mapModuleId, @RequestParam("abstractLayerIds") List<String> abstractLayerIds) {
+			Integer mapModuleId, @RequestParam("abstractLayerIds") List<Integer> abstractLayerIds) {
 
 		try {
 			List<AbstractLayer> layers = this.service.setLayersForMap(mapModuleId, abstractLayerIds);
