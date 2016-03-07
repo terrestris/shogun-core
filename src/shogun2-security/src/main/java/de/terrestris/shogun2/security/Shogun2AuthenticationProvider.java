@@ -89,8 +89,8 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			// check if rawPassword matches the hash from db
 			if(passwordEncoder.matches(rawPassword, encryptedPassword)) {
 
-				// collect all roles of the user
-				Set<UserGroup> userGroups = userGroupService.findGroupsOfUser(user);
+				// collect all roles and groups of the user
+				Set<UserGroup> userGroups = user.getUserGroups();
 
 				Set<Role> allUserRoles = getAllUserRoles(user, userGroups);
 

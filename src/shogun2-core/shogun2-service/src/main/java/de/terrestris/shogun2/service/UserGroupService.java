@@ -1,13 +1,10 @@
 package de.terrestris.shogun2.service;
 
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.UserGroupDao;
-import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 
 /**
@@ -35,10 +32,6 @@ public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
 	 */
 	protected UserGroupService(Class<E> entityClass) {
 		super(entityClass);
-	}
-
-	public Set<E> findGroupsOfUser(User user) {
-		return dao.findGroupsOfUser(user);
 	}
 
 	/**

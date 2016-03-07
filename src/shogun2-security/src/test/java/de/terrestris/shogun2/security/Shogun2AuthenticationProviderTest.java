@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyCollectionOf;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,8 +19,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -89,11 +86,19 @@ public class Shogun2AuthenticationProviderTest {
 		final Role adminRole = new Role("ROLE_ADMIN");
 		final Role userRole = new Role("ROLE_USER");
 
+		final UserGroup userGroup = new UserGroup();
+
 		// set user as active
 		userToAuth.setActive(true);
 
 		// grant admin role to the user
 		userToAuth.getRoles().add(adminRole);
+
+		// add role to group and groups to user
+		Set<UserGroup> userGroups = new HashSet<UserGroup>();
+		userGroup.getRoles().add(userRole);
+		userGroups.add(userGroup);
+		userToAuth.setUserGroups(userGroups);
 
 		Authentication authRequest = mock(Authentication.class);
 		when(authRequest.getName()).thenReturn(shogun2UserName);
@@ -102,36 +107,16 @@ public class Shogun2AuthenticationProviderTest {
 		// 2. Mock the userService
 		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
 
-		// 3. Mock the userGroupService
-		doAnswer(new Answer<Set<UserGroup>>() {
-
-			public Set<UserGroup> answer(InvocationOnMock invocation)
-					throws NoSuchFieldException, SecurityException,
-					IllegalArgumentException, IllegalAccessException {
-
-				Set<UserGroup> userGroups = new HashSet<UserGroup>();
-
-				UserGroup defaultUserGroup = new UserGroup();
-
-				// add ROLE_USER to the group
-				defaultUserGroup.getRoles().add(userRole);
-
-				userGroups.add(defaultUserGroup);
-
-				return userGroups;
-			}
-		}).when(userGroupService).findGroupsOfUser(userToAuth);
-
-		// 4. Mock the roleHierarchy (return empty collection)
+		// 3. Mock the roleHierarchy (return empty collection)
 		when(
 			roleHierarchy
 					.getReachableGrantedAuthorities(anyCollectionOf(GrantedAuthority.class)))
 			.thenReturn(new HashSet<GrantedAuthority>());
 
-		// 5. Call the authenticate method with the mocked object
+		// 4. Call the authenticate method with the mocked object
 		Authentication authResult = authProvider.authenticate(authRequest);
 
-		// 6. Assert that the authResult is valid
+		// 5. Assert that the authResult is valid
 		assertNotNull(authResult);
 		assertThat(authResult, instanceOf(UsernamePasswordAuthenticationToken.class));
 		assertTrue(authResult.isAuthenticated());
