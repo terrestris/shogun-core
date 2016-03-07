@@ -44,7 +44,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 	}
 
 	@Test
-	public void upload_asExpected() throws Exception {
+	public void save_asExpected() throws Exception {
 
 		ImageFile persistedImage = null;
 		Integer dimension = 500;
@@ -63,7 +63,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
 
 
-		persistedImage = crudService.uploadImage(
+		persistedImage = crudService.saveImage(
 				mockMultipartFile, false, dimension);
 
 		verify(dao, times(1)).saveOrUpdate(any(ImageFile.class));
@@ -77,7 +77,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 	}
 
 	@Test(expected=Exception.class)
-	public void upload_emptyFile() throws Exception {
+	public void save_emptyFile() throws Exception {
 
 		byte[] mockupBytes = null;
 
@@ -87,7 +87,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 		doThrow(new Exception("errormsg"))
 			.when(dao).saveOrUpdate(any(ImageFile.class));
 
-		crudService.uploadImage(emptyImage, false, 0);
+		crudService.saveImage(emptyImage, false, 0);
 
 	}
 
@@ -110,7 +110,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 
 		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
 
-		persistedImage = crudService.uploadImage(mockMultipartFile, false, 0);
+		persistedImage = crudService.saveImage(mockMultipartFile, false, 0);
 
 		Integer imageId = 998;
 
@@ -150,7 +150,7 @@ public class ImageFileServiceTest extends AbstractCrudServiceTest<ImageFile, Ima
 
 		doNothing().when(dao).saveOrUpdate(any(ImageFile.class));
 
-		persistedImage = crudService.uploadImage(
+		persistedImage = crudService.saveImage(
 				mockMultipartFile, true, 100);
 
 		Integer imageId = 998;

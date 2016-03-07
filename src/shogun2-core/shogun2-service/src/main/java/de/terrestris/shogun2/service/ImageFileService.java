@@ -58,15 +58,40 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	}
 
 	/**
-	 * Method persists a given Image as a bytearray in the database
-	 *
-	 * @param file
-	 * @param resize
-	 * @param imageSize
+	 * The default value used for the creation of thumbnails in pixels
+	 */
+	private final Integer DEFAULT_THUMBNAIL_SIZE = 100;
+
+	/**
+	 * @param uploadedImage
 	 * @return
 	 * @throws Exception
 	 */
-	public E uploadImage(MultipartFile file, boolean createThumbnail, Integer dimensions)
+	public ImageFile uploadImageFile(MultipartFile uploadedImage) throws Exception {
+
+		if (uploadedImage == null || uploadedImage.isEmpty()) {
+			final String errMsg = "Upload failed. Image " + uploadedImage + " is empty.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		}
+
+		// persist the image file
+		ImageFile image = this.saveImage(uploadedImage, true, DEFAULT_THUMBNAIL_SIZE);
+		LOG.info("Successfully uploaded image " + image.getFileName());
+
+		return image;
+	}
+
+	/**
+	 * Method persists a given Image as a bytearray in the database
+	 *
+	 * @param file
+	 * @param createThumbnail
+	 * @param thumbnailTargetSize
+	 * @return
+	 * @throws Exception
+	 */
+	public E saveImage(MultipartFile file, boolean createThumbnail, Integer thumbnailTargetSize)
 			throws Exception {
 
 		InputStream is = null;
@@ -85,7 +110,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 				byte[] thumbnail = scaleImage(
 					imageByteArray,
 					FilenameUtils.getExtension(file.getOriginalFilename()),
-					dimensions);
+					thumbnailTargetSize);
 				imageToPersist.setThumbnail(thumbnail);
 			}
 
@@ -104,7 +129,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 			imageToPersist.setFileName(file.getOriginalFilename());
 
 			// persist the image
-			dao.saveOrUpdate((E) imageToPersist);
+			dao.saveOrUpdate(imageToPersist);
 
 		} catch(Exception e) {
 			throw new Exception("Could not create the Image in DB: "
@@ -122,12 +147,12 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 *
 	 * @param is
 	 * @param outputFormat
-	 * @param outputSize
+	 * @param targetSize width/height in px (square)
 	 * @return
 	 * @throws Exception
 	 */
 	public static byte[] scaleImage(byte[] imageBytes, String outputFormat,
-			Integer outputSize) throws Exception {
+			Integer targetSize) throws Exception {
 
 		InputStream is = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -138,7 +163,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 		try {
 			is = new ByteArrayInputStream(imageBytes);
 			image = ImageIO.read(is);
-			resizedImage = Scalr.resize(image, outputSize);
+			resizedImage = Scalr.resize(image, targetSize);
 			ImageIO.write(resizedImage, outputFormat, baos);
 			imageInBytes = baos.toByteArray();
 		} catch(Exception e) {

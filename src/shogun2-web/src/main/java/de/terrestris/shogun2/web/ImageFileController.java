@@ -23,6 +23,7 @@ import de.terrestris.shogun2.dao.ImageFileDao;
 import de.terrestris.shogun2.model.ImageFile;
 import de.terrestris.shogun2.service.ImageFileService;
 import de.terrestris.shogun2.util.data.ResultSet;
+import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 
 /**
  *
@@ -64,14 +65,12 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 	}
 
 	/**
-	 * Set this flag to false to avoid creating thumbnails for uploaded images
+	 * Use the object mapper from the spring context, if available (e.g.
+	 * {@link Shogun2JsonObjectMapper}). If not available, the default
+	 * implementation will be used.
 	 */
-	private boolean createThumbnail = true;
-
-	/**
-	 * The default value used for the creation of thumbnails in pixels
-	 */
-	private Integer thumbnailDimensions = 100;
+	@Autowired(required = false)
+	private ObjectMapper objectMapper;
 
 	/**
 	 * Persists an image as bytearray in the database
@@ -85,47 +84,37 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 
 		LOG.debug("Requested to upload an image");
 
+		// build response map
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		final HttpHeaders responseHeaders = new HttpHeaders();
-		HttpStatus responseStatus = HttpStatus.OK;
-		String responseMapAsString = null;
-		ObjectMapper mapper = new ObjectMapper();
+		try {
+			ImageFile imageFile = service.uploadImageFile(uploadedImage);
+			responseMap = ResultSet.success(imageFile);
+		} catch (Exception e) {
+			responseMap = ResultSet.error(e.getMessage());
+		}
 
 		// we have to return the response-Map as String to be browser conform.
 		// as this controller is typically being called by a form.submit() the
 		// browser expects a response with the Content-Type header set to
 		// "text/html".
+		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.TEXT_HTML);
 
-		if (uploadedImage.isEmpty()) {
-			LOG.error("Upload failed. Image " + uploadedImage + " is empty.");
-			responseMap = ResultSet.error("Upload failed. Image " +
-					uploadedImage.getOriginalFilename() + " is empty.");
-		}
-
+		// rewrite the response map as String
+		String responseMapAsString = null;
 		try {
-			ImageFile image = service.uploadImage(
-					uploadedImage, createThumbnail, thumbnailDimensions);
-			LOG.info("Successfully uploaded image " + image.getFileName());
-			responseMap = ResultSet.success(image);
-		} catch (Exception e) {
-			LOG.error("Could not upload the image: " + e.getMessage());
-			responseMap = ResultSet.error("Could not upload the image: " +
-					e.getMessage());
-		}
-
-		// rewrite the response-Map as String
-		try {
-			responseMapAsString = mapper.writeValueAsString(responseMap);
+			// try to use autowired object mapper from spring context
+			ObjectMapper om = (objectMapper != null) ? objectMapper : new ObjectMapper();
+			responseMapAsString = om.writeValueAsString(responseMap);
 		} catch (JsonProcessingException e) {
-			LOG.error("Error while rewriting the response Map to a String" +
-					e.getMessage());
-			responseMap = ResultSet.error("Error while rewriting the " +
-					"response Map to a String" + e.getMessage());
+			String errMsg = "Error while rewriting the response Map to a String: " + e.getMessage();
+			LOG.error(errMsg);
+
+			// use errorMsg if serialization as json failed
+			responseMapAsString = errMsg;
 		}
 
-		return new ResponseEntity<String>(responseMapAsString, responseHeaders,
-				responseStatus);
+		return new ResponseEntity<String>(responseMapAsString, responseHeaders, HttpStatus.OK);
 	}
 
 	/**
@@ -171,5 +160,19 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 			return new ResponseEntity<Map<String, Object>>(
 					responseMap, responseHeaders, HttpStatus.OK);
 		}
+	}
+
+	/**
+	 * @return the objectMapper
+	 */
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
+	/**
+	 * @param objectMapper the objectMapper to set
+	 */
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 }
