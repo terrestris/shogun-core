@@ -37,9 +37,6 @@ public class InitializationService {
 	@Qualifier("genericDao")
 	private GenericHibernateDao<PersistentObject, Integer> dao;
 
-	/**
-	 * The password encoder that is used to encode the password of a user.
-	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
