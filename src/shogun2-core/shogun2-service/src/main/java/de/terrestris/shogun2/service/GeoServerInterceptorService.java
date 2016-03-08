@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -95,9 +96,11 @@ public class GeoServerInterceptorService {
 	 * @throws InterceptorException
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	public Response interceptGeoServerRequest(HttpServletRequest request)
-			throws InterceptorException, URISyntaxException, UnsupportedEncodingException {
+			throws InterceptorException, URISyntaxException,
+			UnsupportedEncodingException, HttpException {
 
 		// wrap the request, we want to manipulate it
 		MutableHttpServletRequest mutableRequest =
@@ -451,9 +454,10 @@ public class GeoServerInterceptorService {
 	 * @param request
 	 * @return
 	 * @throws InterceptorException
+	 * @throws HttpException
 	 */
 	private static Response sendRequest(MutableHttpServletRequest request)
-			throws InterceptorException {
+			throws InterceptorException, HttpException {
 
 		Response httpResponse = new Response();
 
@@ -524,6 +528,11 @@ public class GeoServerInterceptorService {
 			throws UnsupportedEncodingException {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
+
+		if (headers == null) {
+			LOG.debug("No headers found to forward!");
+			return responseHeaders;
+		}
 
 		LOG.debug("Requested to filter the Headers to respond with:");
 
