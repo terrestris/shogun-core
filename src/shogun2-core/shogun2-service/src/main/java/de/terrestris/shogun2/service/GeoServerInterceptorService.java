@@ -188,7 +188,7 @@ public class GeoServerInterceptorService {
 				StringUtils.isEmpty(requestOperation) &&
 				StringUtils.isEmpty(requestLayer)) {
 			throw new InterceptorException("Couldn't find all required OGC " +
-					"parameters (SERVICE, REQUEST, LAYER). Please check the" +
+					"parameters (SERVICE, REQUEST, LAYER). Please check the " +
 					"validity of the request.");
 		}
 
