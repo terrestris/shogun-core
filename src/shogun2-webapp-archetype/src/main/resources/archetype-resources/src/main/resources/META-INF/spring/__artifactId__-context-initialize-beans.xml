@@ -72,6 +72,14 @@
         <!-- Permissions -->
         <ref bean="defaultUserPermissionCollection" />
 
+        <!-- GeoServer Interceptor Rules -->
+        <ref bean="defaultWMSRequestInterceptorRule" />
+        <ref bean="defaultWMSResponseInterceptorRule" />
+        <ref bean="defaultWFSRequestInterceptorRule" />
+        <ref bean="defaultWFSResponseInterceptorRule" />
+        <ref bean="defaultWCSRequestInterceptorRule" />
+        <ref bean="defaultWCSResponseInterceptorRule" />
+
         <!-- Applications -->
         <ref bean="defaultApplication"/>
     </util:list>
