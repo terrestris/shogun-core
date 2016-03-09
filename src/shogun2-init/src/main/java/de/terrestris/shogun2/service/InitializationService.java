@@ -2,23 +2,15 @@ package de.terrestris.shogun2.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shogun2.dao.ApplicationDao;
-import de.terrestris.shogun2.dao.LayoutDao;
-import de.terrestris.shogun2.dao.ModuleDao;
-import de.terrestris.shogun2.dao.RoleDao;
-import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.dao.UserGroupDao;
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.init.ContentInitializer;
-import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.model.Role;
+import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.model.layout.Layout;
-import de.terrestris.shogun2.model.module.Module;
 
 /**
  * This service class will be used by the {@link ContentInitializer} to create content
@@ -37,98 +29,45 @@ public class InitializationService {
 	private static final Logger LOG = Logger
 			.getLogger(InitializationService.class);
 
+	/**
+	 * A generic dao that can easily be used for any entity that extends
+	 * {@link PersistentObject}.
+	 */
 	@Autowired
-	private RoleDao<Role> roleDao;
+	@Qualifier("genericDao")
+	private GenericHibernateDao<PersistentObject, Integer> dao;
 
-	@Autowired
-	private UserDao<User> userDao;
-
-	@Autowired
-	private UserGroupDao<UserGroup> userGroupDao;
-
-	@Autowired
-	private LayoutDao<Layout> layoutDao;
-
-	@Autowired
-	private ModuleDao<Module> moduleDao;
-
-	@Autowired
-	private ApplicationDao<Application> applicationDao;
-
+	/**
+	 * The password encoder that is used to encode the password of a user.
+	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	/**
-	 * Used to create a role.
+	 * A "generic" method to save an arbitrary {@link PersistentObject}.
 	 *
-	 * @param role
-	 * @return
+	 * @param object
 	 */
-	public Role createRole(Role role) {
-		roleDao.saveOrUpdate(role);
-		LOG.trace("Created the role " + role);
-		return role;
+	public void savePersistentObject(PersistentObject object) {
+		final String type = object.getClass().getSimpleName();
+		LOG.trace("Trying to create a new " + type);
+		dao.saveOrUpdate(object);
+		LOG.info("Created the " + type + " with id " + object.getId());
 	}
 
 	/**
-	 * Used to create a user.
+	 * Used to create a user. Implements special logic by encoding the password.
 	 *
 	 * @param user
 	 * @return
 	 */
-	public User createUser(User user) {
+	public void saveUser(User user) {
+		LOG.trace("Trying to create a new user");
 		// encode the raw password using bcrypt
 		final String pwHash = passwordEncoder.encode(user.getPassword());
 		user.setPassword(pwHash);
-		userDao.saveOrUpdate(user);
-		LOG.trace("Created the user " + user);
-		return user;
-	}
-
-	/**
-	 * Used to create a user.
-	 *
-	 * @param userGroup
-	 * @return
-	 */
-	public UserGroup createUserGroup(UserGroup userGroup) {
-		userGroupDao.saveOrUpdate(userGroup);
-		LOG.trace("Created the user group " + userGroup);
-		return userGroup;
-	}
-
-	/**
-	 * Used to create a layout.
-	 *
-	 * @param layout
-	 */
-	public Layout createLayout(Layout layout) {
-		layoutDao.saveOrUpdate(layout);
-		LOG.trace("Created the layout " + layout);
-		return layout;
-	}
-
-	/**
-	 * Used to create a module.
-	 *
-	 * @param module
-	 */
-	public Module createModule(Module module) {
-		moduleDao.saveOrUpdate(module);
-		LOG.trace("Created the module " + module);
-		return module;
-	}
-
-	/**
-	 * Used to create an application.
-	 *
-	 * @param application
-	 * @return
-	 */
-	public Application createApplication(Application application) {
-		applicationDao.saveOrUpdate(application);
-		LOG.trace("Created the application " + application);
-		return application;
+		dao.saveOrUpdate(user);
+		LOG.info("Created the user " + user.getAccountName());
 	}
 
 }

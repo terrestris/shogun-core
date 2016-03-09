@@ -17,8 +17,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.joda.time.ReadableDateTime;
 
 import ch.rasc.extclassgenerator.Model;
@@ -99,7 +97,6 @@ public class Application extends SecuredPersistentObject {
 	 *
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private CompositeModule viewport;
 
 	/**

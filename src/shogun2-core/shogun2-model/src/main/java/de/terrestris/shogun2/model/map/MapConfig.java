@@ -19,8 +19,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -67,14 +65,12 @@ public class MapConfig extends PersistentObject{
 	 *
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private Extent extent;
 
 	/**
 	 *
 	 */
 	@ManyToMany
-	@Cascade(CascadeType.SAVE_UPDATE)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
@@ -98,7 +94,6 @@ public class MapConfig extends PersistentObject{
 	 *
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	// The maxResolution will be serialized (JSON)
 	// as the simple resolution value
 	@JsonIdentityInfo(
@@ -112,7 +107,6 @@ public class MapConfig extends PersistentObject{
 	 *
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	// The minResolution will be serialized (JSON)
 	// as the simple resolution value
 	@JsonIdentityInfo(

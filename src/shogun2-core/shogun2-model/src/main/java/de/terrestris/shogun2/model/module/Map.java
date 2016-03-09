@@ -20,8 +20,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layer.AbstractLayer;
 import de.terrestris.shogun2.model.map.MapConfig;
@@ -51,7 +49,6 @@ public class Map extends Module {
 	 * or overview maps.
 	 */
 	@ManyToOne
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private MapConfig mapConfig;
 
 	/**
@@ -62,7 +59,6 @@ public class Map extends Module {
 		joinColumns = { @JoinColumn(name = "MAP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
 	)
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private Set<MapControl> mapControls = new HashSet<MapControl>();
 
 	/**
@@ -74,7 +70,6 @@ public class Map extends Module {
 		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private List<AbstractLayer> mapLayers = new ArrayList<AbstractLayer>();
 
 	/**

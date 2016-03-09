@@ -10,6 +10,96 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!--
+      The list of objects that shall be persisted.
+
+      The order of the objects is important here (as one object may require
+      that another object has been created before to avoid errors like 'object
+      references an unsaved transient instance save the transient instance
+      before flushing').
+    -->
+    <util:list id="objectsToCreate">
+
+        <!-- Roles -->
+        <ref bean="adminRole"/>
+        <ref bean="userRole"/>
+
+        <!-- Users -->
+        <ref bean="adminUser"/>
+        <ref bean="defaultUser"/>
+
+        <!-- UserGroups -->
+        <ref bean="adminUserGroup"/>
+        <ref bean="defaultUserGroup"/>
+
+        <!-- Layouts -->
+        <ref bean="borderLayout"/>
+        <ref bean="absoluteLayout"/>
+        <ref bean="hboxLayout"/>
+
+        <!-- Resolutions -->
+        <ref bean="res01" />
+        <ref bean="res02" />
+        <ref bean="res03" />
+        <ref bean="res04" />
+        <ref bean="res05" />
+        <ref bean="res06" />
+        <ref bean="res07" />
+        <ref bean="res08" />
+        <ref bean="res09" />
+        <ref bean="res10" />
+        <ref bean="res11" />
+        <ref bean="res12" />
+        <ref bean="res13" />
+        <ref bean="res14" />
+        <ref bean="res15" />
+        <ref bean="res16" />
+        <ref bean="res17" />
+        <ref bean="res18" />
+        <ref bean="res19" />
+
+        <!-- Layer sources/appearance -->
+        <ref bean="osmWmsLayerTileGridExtent" />
+
+        <ref bean="osmWmsLayerTileGrid" />
+
+        <ref bean="osmWmsLayerName" />
+        <ref bean="osmWmsLayerStyle" />
+
+        <ref bean="osmWmsLayerDataSource" />
+        <ref bean="osmWmsLayerGrayDataSource" />
+        <ref bean="osmWmsLayerAppearance" />
+
+        <!-- Layers -->
+        <ref bean="osmWmsLayer" />
+        <ref bean="osmWmsLayerGray" />
+
+        <!-- Controls -->
+        <ref bean="controlAttribution" />
+        <ref bean="controlZoom" />
+        <ref bean="controlRotate" />
+        <ref bean="controlZoomSlider" />
+        <ref bean="controlScaleLine" />
+
+        <!-- Map config -->
+        <ref bean="mapConfigExtent" />
+        <ref bean="mapConfig" />
+
+        <!-- Modules -->
+        <ref bean="headerLogoModule" />
+        <ref bean="headerTitleModule" />
+        <ref bean="headerModule" />
+        <ref bean="layerTreeModule" />
+        <ref bean="mapModule" />
+        <ref bean="viewportModule" />
+
+        <!-- Permissions -->
+        <ref bean="defaultUserPermissionCollection" />
+
+        <!-- Applications -->
+        <ref bean="defaultApplication"/>
+    </util:list>
+
     <!-- Define roles -->
     <bean id="adminRole" class="de.terrestris.shogun2.model.Role">
         <property name="name" value="${symbol_dollar}{role.superAdminRoleName}"/>
@@ -186,8 +276,24 @@
         <property name="resolution" value="0.5971642833948135" />
     </bean>
 
+    <!-- Default extent -->
+    <bean id="mapConfigExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
+        <property name="lowerLeft">
+            <bean class="java.awt.geom.Point2D$Double">
+                <constructor-arg index="0" value="-20026376.39" />
+                <constructor-arg index="1" value="-20048966.10" />
+            </bean>
+        </property>
+        <property name="upperRight">
+            <bean class="java.awt.geom.Point2D$Double">
+                <constructor-arg index="0" value="20026376.39" />
+                <constructor-arg index="1" value="20048966.10" />
+            </bean>
+        </property>
+    </bean>
+
     <!-- Define the MapConfig -->
-    <bean id="mapConfigModule" class="de.terrestris.shogun2.model.map.MapConfig">
+    <bean id="mapConfig" class="de.terrestris.shogun2.model.map.MapConfig">
         <property name="name" value="default" />
         <property name="center">
             <bean class="java.awt.geom.Point2D$Double">
@@ -221,20 +327,7 @@
             </util:list>
         </property>
         <property name="extent">
-            <bean class="de.terrestris.shogun2.model.layer.util.Extent">
-                <property name="lowerLeft">
-                    <bean class="java.awt.geom.Point2D$Double">
-                        <constructor-arg index="0" value="-20026376.39" />
-                        <constructor-arg index="1" value="-20048966.10" />
-                    </bean>
-                </property>
-                <property name="upperRight">
-                    <bean class="java.awt.geom.Point2D$Double">
-                        <constructor-arg index="0" value="20026376.39" />
-                        <constructor-arg index="1" value="20048966.10" />
-                    </bean>
-                </property>
-            </bean>
+            <ref bean="mapConfigExtent" />
         </property>
         <property name="projection" value="3857" />
         <property name="rotation" value="0" />
@@ -283,14 +376,14 @@
         </property>
     </bean>
 
-    <bean id="osmWmsLayerTileGridOrigin" class="java.awt.geom.Point2D$Double">
-        <constructor-arg index="0" value="0" />
-        <constructor-arg index="1" value="0" />
-    </bean>
-
     <bean id="osmWmsLayerTileGrid" class="de.terrestris.shogun2.model.layer.util.WmsTileGrid">
         <property name="type" value="TileGrid" />
-        <property name="tileGridOrigin" ref="osmWmsLayerTileGridOrigin" />
+        <property name="tileGridOrigin">
+            <bean class="java.awt.geom.Point2D$Double">
+                <constructor-arg index="0" value="0" />
+                <constructor-arg index="1" value="0" />
+            </bean>
+        </property>
         <property name="tileGridExtent" ref="osmWmsLayerTileGridExtent" />
         <property name="tileSize" value="256" />
         <property name="tileGridResolutions">
@@ -388,7 +481,7 @@
     <bean id="mapModule" class="de.terrestris.shogun2.model.module.Map">
         <property name="name" value="Main Map" />
         <property name="xtype" value="shogun-component-map" />
-        <property name="mapConfig" ref="mapConfigModule" />
+        <property name="mapConfig" ref="mapConfig" />
         <property name="mapLayers">
             <util:list>
                 <ref bean="osmWmsLayer" />

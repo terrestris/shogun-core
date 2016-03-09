@@ -14,6 +14,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
@@ -25,7 +26,8 @@ import de.terrestris.shogun2.paging.PagingResult;
  * @author Nils Bühner
  *
  */
-public abstract class GenericHibernateDao<E extends PersistentObject, ID extends Serializable> {
+@Repository("genericDao")
+public class GenericHibernateDao<E extends PersistentObject, ID extends Serializable> {
 
 	/**
 	 * The LOGGER instance (that will be available in all subclasses)
@@ -36,6 +38,14 @@ public abstract class GenericHibernateDao<E extends PersistentObject, ID extends
 	 * Represents the class of the entity
 	 */
 	private final Class<E> clazz;
+
+	/**
+	 * Default constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public GenericHibernateDao() {
+		this((Class<E>) PersistentObject.class);
+	}
 
 	/**
 	 * Constructor
