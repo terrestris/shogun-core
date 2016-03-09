@@ -3,8 +3,8 @@ package de.terrestris.shogun2.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,11 +26,11 @@ public abstract class SecuredPersistentObject extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 
-	@OneToMany
+	@ManyToMany
 	@JsonIgnore
 	private Map<User, PermissionCollection> userPermissions = new HashMap<User, PermissionCollection>();
 
-	@OneToMany
+	@ManyToMany
 	@JsonIgnore
 	private Map<UserGroup, PermissionCollection> groupPermissions = new HashMap<UserGroup, PermissionCollection>();
 
