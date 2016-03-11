@@ -304,13 +304,13 @@ public class GeoServerInterceptorService {
 
 		if (!queryParams.isEmpty()) {
 
-			TreeMap<String, String[]> params = new TreeMap<String, String[]>(
+			Map<String, String[]> params = new TreeMap<String, String[]>(
 					String.CASE_INSENSITIVE_ORDER);
 
 			params.putAll(queryParams);
 
 			if (params.containsKey(key)) {
-				value = StringUtils.join(params.get(key), ";");
+				value = StringUtils.join(params.get(key), ",");
 			}
 
 		} else {
