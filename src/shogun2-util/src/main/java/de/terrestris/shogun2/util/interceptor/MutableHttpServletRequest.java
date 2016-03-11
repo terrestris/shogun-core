@@ -18,9 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * An implementation of HttpServletRequestWrapper.
  *
+ * @see http://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
+ *
  * @author Daniel Koch
  *
- * See: http://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
  */
 public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
