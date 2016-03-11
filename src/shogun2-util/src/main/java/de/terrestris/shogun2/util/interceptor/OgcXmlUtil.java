@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.nio.charset.Charset;
 
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,11 +37,16 @@ public class OgcXmlUtil {
 	private static final Logger LOG = Logger.getLogger(OgcXmlUtil.class);
 
 	/**
+	 * The default charset.
+	 */
+	private static final String DEFAULT_CHARSET = "UTF-8";
+
+	/**
 	 *
 	 * @param request
 	 * @return
 	 */
-	public static String getRequestBody(MutableHttpServletRequest request){
+	public static String getRequestBody(HttpServletRequest request){
 
 		ServletInputStream in = null;
 		String body = null;
@@ -53,7 +59,7 @@ public class OgcXmlUtil {
 			if (!StringUtils.isEmpty(encoding)) {
 				charset = Charset.forName(encoding);
 			} else {
-				charset = Charset.forName("UTF-8");
+				charset = Charset.forName(DEFAULT_CHARSET);
 			}
 			body = StreamUtils.copyToString(in, charset);
 		} catch (IOException e) {
