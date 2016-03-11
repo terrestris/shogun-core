@@ -77,12 +77,9 @@ public class OgcXmlUtil {
 	 *
 	 * @param xml
 	 * @return
-	 * @throws InterceptorException
 	 * @throws IOException
-	 * @throws SAXException
-	 * @throws ParserConfigurationException
 	 */
-	public static Document getDocumentFromString(String xml) throws InterceptorException {
+	public static Document getDocumentFromString(String xml) throws IOException {
 
 		Document document = null;
 
@@ -92,7 +89,7 @@ public class OgcXmlUtil {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(source);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new InterceptorException("Could not parse input body " +
+			throw new IOException("Could not parse input body " +
 					"as XML: " + e.getMessage());
 		}
 
