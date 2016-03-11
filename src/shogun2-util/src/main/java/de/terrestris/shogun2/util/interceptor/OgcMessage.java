@@ -12,27 +12,34 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class OgcMessage {
 
 	/**
-	 * E.g. 'WMS'
+	 * The OGC service type, e.g. WMS, WFS or WCS.
 	 */
 	private String service;
 
 	/**
-	 * E.g. 'GetMap'
+	 * The OGC operation type, e.g. GetMap.
 	 */
 	private String operation;
 
 	/**
-	 * E.g. 'workspace:layername'
+	 * The OGC/GeoServer endPoint (a generalization for layer, featureType,
+	 * coverage or namespace), e.g. SHOGUN:SHINJI.
 	 */
 	private String endPoint;
 
 	/**
-	 *
+	 * The rule type for this request, possible rules are:
+	 *   * ALLOW
+	 *   * DENY
+	 *   * MODIFY
 	 */
 	private String requestRule;
 
 	/**
-	 *
+	 * The rule type for this response, possible rules are:
+	 *   * ALLOW
+	 *   * DENY
+	 *   * MODIFY
 	 */
 	private String responseRule;
 
@@ -137,8 +144,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWms() {
-		return (this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WMS)) ?
-				true : false;
+		return this.getService() != null &&
+				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WMS);
 	}
 
 	/**
@@ -146,8 +153,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfs() {
-		return (this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WFS)) ?
-				true : false;
+		return this.getService() != null &&
+				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WFS);
 	}
 
 	/**
@@ -155,8 +162,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWcs() {
-		return (this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WCS)) ?
-				true : false;
+		return this.getService() != null &&
+				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WCS);
 	}
 
 	/**
@@ -164,9 +171,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsGetCapabilities() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
 	}
 
 	/**
@@ -174,9 +181,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsGetMap() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_MAP)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_MAP);
 	}
 
 	/**
@@ -184,9 +191,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsGetFeatureInfo() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE_INFO)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE_INFO);
 	}
 
 	/**
@@ -194,9 +201,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsDescribeLayer() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_LAYER)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_LAYER);
 	}
 
 	/**
@@ -204,9 +211,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsGetLegendGraphic() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_LEGEND_GRAPHIC)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_LEGEND_GRAPHIC);
 	}
 
 	/**
@@ -214,9 +221,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWmsGetStyles() {
-		return (this.isWms() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_STYLES)) ?
-				true : false;
+		return this.isWms() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_STYLES);
 	}
 
 	/**
@@ -224,9 +231,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfsGetCapabilities() {
-		return (this.isWfs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES)) ?
-				true : false;
+		return this.isWfs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
 	}
 
 	/**
@@ -234,9 +241,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfsDescribeFeatureType() {
-		return (this.isWfs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_FEATURE_TYPE)) ?
-				true : false;
+		return this.isWfs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_FEATURE_TYPE);
 	}
 
 	/**
@@ -244,9 +251,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfsGetFeature() {
-		return (this.isWfs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE)) ?
-				true : false;
+		return this.isWfs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE);
 	}
 
 	/**
@@ -254,9 +261,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfsLockFeature() {
-		return (this.isWfs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_LOCK_FEATURE)) ?
-				true : false;
+		return this.isWfs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_LOCK_FEATURE);
 	}
 
 	/**
@@ -264,9 +271,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWfsTransaction() {
-		return (this.isWfs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_TRANSACTION)) ?
-				true : false;
+		return this.isWfs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_TRANSACTION);
 	}
 
 	/**
@@ -274,9 +281,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWcsGetCapabilities() {
-		return (this.isWcs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES)) ?
-				true : false;
+		return this.isWcs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
 	}
 
 	/**
@@ -284,9 +291,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWcsDescribeCoverage() {
-		return (this.isWcs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_COVERAGE)) ?
-				true : false;
+		return this.isWcs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_COVERAGE);
 	}
 
 	/**
@@ -294,9 +301,9 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isWcsGetCoverage() {
-		return (this.isWcs() &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_COVERAGE)) ?
-				true : false;
+		return this.isWcs() &&
+				this.getOperation() != null &&
+				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_COVERAGE);
 	}
 
 	/**
@@ -304,7 +311,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isRequestAllowed() {
-		return this.getRequestRule().equalsIgnoreCase("ALLOW");
+		return this.getRequestRule() != null &&
+				this.getRequestRule().equalsIgnoreCase("ALLOW");
 	}
 
 	/**
@@ -312,7 +320,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isResponseAllowed() {
-		return this.getResponseRule().equalsIgnoreCase("ALLOW");
+		return this.getResponseRule() != null &&
+				this.getResponseRule().equalsIgnoreCase("ALLOW");
 	}
 
 	/**
@@ -320,7 +329,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isRequestDenied() {
-		return this.getRequestRule().equalsIgnoreCase("DENY");
+		return this.getRequestRule() != null &&
+				this.getRequestRule().equalsIgnoreCase("DENY");
 	}
 
 	/**
@@ -328,7 +338,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isResponseDenied() {
-		return this.getResponseRule().equalsIgnoreCase("DENY");
+		return this.getResponseRule() != null &&
+				this.getResponseRule().equalsIgnoreCase("DENY");
 	}
 
 	/**
@@ -336,7 +347,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isRequestModified() {
-		return this.getRequestRule().equalsIgnoreCase("MODIFY");
+		return this.getRequestRule() != null &&
+				this.getRequestRule().equalsIgnoreCase("MODIFY");
 	}
 
 	/**
@@ -344,7 +356,8 @@ public class OgcMessage {
 	 * @return
 	 */
 	public boolean isResponseModified() {
-		return this.getResponseRule().equalsIgnoreCase("MODIFY");
+		return this.getResponseRule() != null &&
+				this.getResponseRule().equalsIgnoreCase("MODIFY");
 	}
 
 	/**
@@ -357,10 +370,11 @@ public class OgcMessage {
 		OgcMessage other = (OgcMessage) obj;
 
 		return new EqualsBuilder()
-				.appendSuper(super.equals(other))
 				.append(getService(), other.getService())
 				.append(getOperation(), other.getOperation())
 				.append(getEndPoint(), other.getEndPoint())
+				.append(getRequestRule(), other.getRequestRule())
+				.append(getResponseRule(), other.getResponseRule())
 				.isEquals();
 	}
 
@@ -370,7 +384,6 @@ public class OgcMessage {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-				.appendSuper(super.toString())
 				.append("service", getService())
 				.append("operation", getOperation())
 				.append("endPoint", getEndPoint())
