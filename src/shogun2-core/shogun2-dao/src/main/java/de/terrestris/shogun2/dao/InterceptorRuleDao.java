@@ -51,8 +51,9 @@ public class InterceptorRuleDao<E extends InterceptorRule>
 		Criteria criteria = createDistinctRootEntityCriteria();
 
 		for (Entry<String, String> filter : filterMap.entrySet()) {
-			if (StringUtils.isNoneEmpty(filter.getValue())) {
-				criteria.add(Restrictions.like(filter.getKey(), filter.getValue()));
+			if (StringUtils.isNotEmpty(filter.getValue())) {
+				criteria.add(Restrictions.eq(filter.getKey(),
+						filter.getValue()).ignoreCase());
 			} else {
 				criteria.add(Restrictions.isNull(filter.getKey()));
 			}
