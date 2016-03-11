@@ -150,27 +150,27 @@ public class GeoServerInterceptorService {
 				mutableRequest, OgcNaming.PARAMETER_SERVICE);
 		String requestOperation = getRequestParameterValue(
 				mutableRequest, OgcNaming.PARAMETER_OPERATION);
-		String requestLayer = getRequestParameterValue(
+		String requestEndPoint = getRequestParameterValue(
 				mutableRequest, OgcNaming.PARAMETER_ENDPOINT);
 		InterceptorRule mostSpecificRequestRule = getMostSpecificRule(requestService,
-				requestOperation, requestLayer, "REQUEST");
+				requestOperation, requestEndPoint, "REQUEST");
 		InterceptorRule mostSpecificResponseRule = getMostSpecificRule(requestService,
-				requestOperation, requestLayer, "RESPONSE");
+				requestOperation, requestEndPoint, "RESPONSE");
 
-		if (StringUtils.isNoneEmpty(requestService)) {
+		if (StringUtils.isNotEmpty(requestService)) {
 			ogcRequest.setService(requestService);
 		} else {
 			LOG.debug("No service found.");
 		}
 
-		if (StringUtils.isNoneEmpty(requestOperation)) {
+		if (StringUtils.isNotEmpty(requestOperation)) {
 			ogcRequest.setOperation(requestOperation);
 		} else {
 			LOG.debug("No operation found.");
 		}
 
-		if (StringUtils.isNoneEmpty(requestLayer)) {
-			ogcRequest.setEndPoint(requestLayer);
+		if (StringUtils.isNotEmpty(requestEndPoint)) {
+			ogcRequest.setEndPoint(requestEndPoint);
 		} else {
 			LOG.debug("No endPoint found.");
 		}
@@ -189,9 +189,9 @@ public class GeoServerInterceptorService {
 
 		if (StringUtils.isEmpty(requestService) &&
 				StringUtils.isEmpty(requestOperation) &&
-				StringUtils.isEmpty(requestLayer)) {
+				StringUtils.isEmpty(requestEndPoint)) {
 			throw new InterceptorException("Couldn't find all required OGC " +
-					"parameters (SERVICE, REQUEST, LAYER). Please check the " +
+					"parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
 					"validity of the request.");
 		}
 
