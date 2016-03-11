@@ -71,6 +71,7 @@ public class GeoServerInterceptorService {
 	private static final String[] FORWARD_HEADER_KEYS = new String[] {
 		"Content-Type",
 		"Content-Disposition",
+		"Content-Language",
 		"geowebcache-cache-result",
 		"geowebcache-crs",
 		"geowebcache-gridset",
