@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -95,12 +96,12 @@ public class GeoServerInterceptorService {
 	 * @return
 	 * @throws InterceptorException
 	 * @throws URISyntaxException
-	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
+	 * @throws IOException
 	 */
 	public Response interceptGeoServerRequest(HttpServletRequest request)
 			throws InterceptorException, URISyntaxException,
-			UnsupportedEncodingException, HttpException {
+			HttpException, IOException {
 
 		// wrap the request, we want to manipulate it
 		MutableHttpServletRequest mutableRequest =
@@ -140,9 +141,10 @@ public class GeoServerInterceptorService {
 	 * @param mutableRequest
 	 * @return
 	 * @throws InterceptorException
+	 * @throws IOException
 	 */
 	private OgcMessage getOgcRequest(MutableHttpServletRequest mutableRequest)
-			throws InterceptorException {
+			throws InterceptorException, IOException {
 
 		OgcMessage ogcRequest = new OgcMessage();
 
@@ -267,16 +269,17 @@ public class GeoServerInterceptorService {
 	 * @param key
 	 * @return
 	 * @throws InterceptorException
+	 * @throws IOException
 	 */
 	private static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
-			String[] keys) throws InterceptorException {
+			String[] keys) throws InterceptorException, IOException {
 
 		String value = StringUtils.EMPTY;
 
 		for (String key : keys) {
 			value = getRequestParameterValue(mutableRequest, key);
 
-			if (StringUtils.isNoneEmpty(value)) {
+			if (StringUtils.isNotEmpty(value)) {
 				break;
 			}
 		}
@@ -290,9 +293,10 @@ public class GeoServerInterceptorService {
 	 * @param key
 	 * @return
 	 * @throws InterceptorException
+	 * @throws IOException
 	 */
 	private static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
-			String key) throws InterceptorException {
+			String key) throws InterceptorException, IOException {
 
 		if (StringUtils.isEmpty(key)) {
 			throw new InterceptorException("Missing parameter key");
