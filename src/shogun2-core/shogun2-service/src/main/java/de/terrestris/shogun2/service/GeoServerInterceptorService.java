@@ -125,7 +125,7 @@ public class GeoServerInterceptorService {
 
 		// intercept the response (if needed)
 		Response interceptedResponse = ogcMessageDistributor
-				.distributeToResponeInterceptor(response, message);
+				.distributeToResponseInterceptor(response, message);
 
 		// finally filter the white-listed response headers
 		// TODO: Move to global proxy class

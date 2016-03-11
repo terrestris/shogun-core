@@ -59,6 +59,12 @@ public class OgcMessageDistributor {
 	/**
 	 *
 	 */
+	private static final String RESPONSE_NOT_SUPPORTED_MSG = "The response type " +
+			"{0} is not supported";
+
+	/**
+	 *
+	 */
 	@Autowired(required = false)
 	@Qualifier("wmsRequestInterceptor")
 	private WmsRequestInterceptorInterface wmsRequestInterceptor;
@@ -163,6 +169,7 @@ public class OgcMessageDistributor {
 
 			LOG.debug(infoMsg);
 
+			// Note: WFS 2.0.0 operations are not supported yet!
 			if (message.isWfsGetCapabilities()) {
 				request = this.wfsRequestInterceptor.interceptGetCapabilities(request);
 			} else if (message.isWfsGetFeature()) {
@@ -217,25 +224,25 @@ public class OgcMessageDistributor {
 	 * @return
 	 * @throws InterceptorException
 	 */
-	public Response distributeToResponeInterceptor(Response response,
+	public Response distributeToResponseInterceptor(Response response,
 			OgcMessage message) throws InterceptorException {
 
 		if (message.isResponseAllowed()) {
 			LOG.debug("Response is ALLOWED, not intercepting the response.");
 			return response;
 		} else if (message.isResponseDenied()) {
-			throw new InterceptorException("Request is DENIED, blocking the response.");
+			throw new InterceptorException("Response is DENIED, blocking the response.");
 		} else if (message.isResponseModified()) {
 			LOG.debug("Response is to be MODIFIED, intercepting the response.");
 		}
 
-		String implErrMsg = MessageFormat.format(REQUEST_IMPLEMENTATION_NOT_FOUND_MSG,
+		String implErrMsg = MessageFormat.format(RESPONSE_IMPLEMENTATION_NOT_FOUND_MSG,
 				message.getService(), message.getOperation());
 		String infoMsg = MessageFormat.format(MODIFYING_RESPONSE_MSG,
 				message.getService(), message.getOperation());
-		String serviceErrMsg = MessageFormat.format(REQUEST_NOT_SUPPORTED_MSG,
+		String serviceErrMsg = MessageFormat.format(RESPONSE_NOT_SUPPORTED_MSG,
 				message.getService());
-		String operationErrMsg = MessageFormat.format(REQUEST_NOT_SUPPORTED_MSG,
+		String operationErrMsg = MessageFormat.format(RESPONSE_NOT_SUPPORTED_MSG,
 				message.getOperation());
 
 		if (message.isWms()) {
@@ -274,6 +281,7 @@ public class OgcMessageDistributor {
 
 			LOG.debug(infoMsg);
 
+			// Note: WFS 2.0.0 operations are not supported yet!
 			if (message.isWfsGetCapabilities()) {
 				response = this.wfsResponseInterceptor.interceptGetCapabilities(response);
 			} else if (message.isWfsGetFeature()) {
@@ -314,7 +322,7 @@ public class OgcMessageDistributor {
 
 		if (response == null) {
 			throw new InterceptorException("The response object is null. " +
-					"Please check your RequestInterceptor implementation.");
+					"Please check your ResponseInterceptor implementation.");
 		}
 
 		return response;
