@@ -9,9 +9,9 @@ package de.terrestris.shogun2.util.interceptor;
 public class InterceptorException extends Exception {
 
 	/**
-	 *
+	 * 
 	 */
-	private static final long serialVersionUID = -125687480423577256L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 *
