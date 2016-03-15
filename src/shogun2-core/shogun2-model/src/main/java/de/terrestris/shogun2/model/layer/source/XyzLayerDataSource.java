@@ -7,12 +7,14 @@ import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -21,7 +23,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.layer.util.Extent;
-import de.terrestris.shogun2.model.layer.util.Resolution;
 
 /**
  *
@@ -51,9 +52,13 @@ public class XyzLayerDataSource extends LayerDataSource {
 	@OneToOne
 	private Extent extent;
 
-	@OneToMany
-	@JoinTable(name = "XYZLAYERDATASRC_RESOLUTIONS")
-	private List<Resolution> resolutions = new ArrayList<Resolution>();
+	@ElementCollection
+	@CollectionTable(
+		name = "XYZLAYERDATASRC_RESOLUTION",
+		joinColumns = @JoinColumn(name = "XYZLAYERDATASRC_ID") )
+	@Column(name = "RESOLUTION")
+	@OrderColumn(name = "IDX")
+	private List<Double> resolutions = new ArrayList<Double>();
 
 	private Integer tileSize;
 
@@ -74,7 +79,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	 * @param tileSize
 	 */
 	public XyzLayerDataSource(String name, String type, String url, Double center, Extent extent,
-			List<Resolution> resolutions, Integer tileSize) {
+			List<Double> resolutions, Integer tileSize) {
 		super(name, type, url);
 		this.center = center;
 		this.extent = extent;
@@ -113,14 +118,14 @@ public class XyzLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the resolutions
 	 */
-	public List<Resolution> getResolutions() {
+	public List<Double> getResolutions() {
 		return resolutions;
 	}
 
 	/**
 	 * @param resolutions the resolutions to set
 	 */
-	public void setResolutions(List<Resolution> resolutions) {
+	public void setResolutions(List<Double> resolutions) {
 		this.resolutions = resolutions;
 	}
 
@@ -146,6 +151,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(59, 13).
@@ -165,6 +171,7 @@ public class XyzLayerDataSource extends LayerDataSource {
 	 *      -and-hashcode-in-java it is recommended only to use getter-methods
 	 *      when using ORM like Hibernate
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof XyzLayerDataSource))
 			return false;
