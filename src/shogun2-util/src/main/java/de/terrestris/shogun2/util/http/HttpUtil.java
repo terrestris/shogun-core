@@ -128,8 +128,10 @@ public class HttpUtil {
 	/**
 	 * Performs an HTTP POST on the given URL.
 	 *
-	 * @param url
-	 * @return
+	 * @param url The URL to connect to.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
@@ -144,10 +146,12 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both username and pw are not null.
 	 *
-	 * @param url
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param url The URL to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
@@ -161,8 +165,10 @@ public class HttpUtil {
 	/**
 	 * Performs an HTTP POST on the given URI.
 	 *
-	 * @param uri
-	 * @return
+	 * @param uri The URI to connect to.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
@@ -177,10 +183,12 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URI.
 	 * Basic auth is used if both username and pw are not null.
 	 *
-	 * @param uri
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param uri The URI to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
@@ -195,7 +203,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param queryParams
+	 * @param queryParams The list of NameValuePairs.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -212,7 +220,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param queryParams
+	 * @param queryParams The list of NameValuePairs.
 	 * @param username The Basic authentication username.
 	 * @param password The Basic authentication password.
 	 *
@@ -232,7 +240,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URI.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param queryParams
+	 * @param queryParams The list of NameValuePairs.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -249,7 +257,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URI.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param queryParams
+	 * @param queryParams The list of NameValuePairs.
 	 * @param username The Basic authentication username.
 	 * @param password The Basic authentication password.
 	 *
@@ -269,8 +277,8 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param body
-	 * @param contentType
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -286,8 +294,8 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param body
-	 * @param contentType
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body.
 	 * @param username The Basic authentication username.
 	 * @param password The Basic authentication password.
 	 *
@@ -305,7 +313,8 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param queryParams
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -322,8 +331,8 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param body
-	 * @param contentType
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body.
 	 * @param username The Basic authentication username.
 	 * @param password The Basic authentication password.
 	 *
@@ -340,9 +349,11 @@ public class HttpUtil {
 	/**
 	 * Performs an HTTP POST on the given URL.
 	 *
-	 * @param url
-	 * @param file
-	 * @return
+	 * @param url The URL to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
@@ -355,11 +366,13 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both username and password are not null.
 	 *
-	 * @param url
-	 * @param file
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param url The URL to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
@@ -371,9 +384,11 @@ public class HttpUtil {
 	/**
 	 * Performs an HTTP POST on the given URL.
 	 *
-	 * @param uri
-	 * @param file
-	 * @return
+	 * @param uri The URI to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
@@ -385,11 +400,13 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both username and password are not null.
 	 *
-	 * @param uri
-	 * @param file
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param uri The URI to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
@@ -404,7 +421,9 @@ public class HttpUtil {
 	 * @param file
 	 * @param username
 	 * @param password
-	 * @return
+	 *
+	 * @return The HTTP response as Response object.
+	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
@@ -467,10 +486,10 @@ public class HttpUtil {
 	}
 
 	/**
-	 * Performs an HTTP operation on the given URL. <BR>
+	 * Performs an HTTP operation on the given URL.
 	 * Basic auth is used if both username and pw are not null.
 	 *
-	 * @param url The URL to connect to.
+	 * @param httpRequest The HttpRequest to connect to.
 	 * @param username The Basic authentication username. No basic auth if null.
 	 * @param password The Basic authentication password. No basic auth if null.
 	 *
