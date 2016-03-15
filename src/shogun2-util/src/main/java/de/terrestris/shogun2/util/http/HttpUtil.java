@@ -427,7 +427,7 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response postMultiPart(HttpPost httpRequest, FileBody file,
+	private static Response postMultiPart(HttpPost httpRequest, FileBody file,
 			String username, String password) throws URISyntaxException, HttpException {
 
 		HttpEntity multiPartEntity = MultipartEntityBuilder.create()
