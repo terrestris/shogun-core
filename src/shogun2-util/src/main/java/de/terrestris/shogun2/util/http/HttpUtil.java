@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.util.http;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -31,6 +32,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -332,6 +335,88 @@ public class HttpUtil {
 	public static Response post(URI uri, String body, ContentType contentType,
 			String username, String password) throws URISyntaxException, HttpException {
 		return postBody(new HttpPost(uri), body, contentType, username, password);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 *
+	 * @param url
+	 * @param file
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, File file) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(url), new FileBody(file), null, null);
+	}
+
+	/**
+	 *
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if both username and password are not null.
+	 *
+	 * @param url
+	 * @param file
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, File file, String username,
+			String password) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(url), new FileBody(file), username, password);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 *
+	 * @param uri
+	 * @param file
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, File file) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(uri), new FileBody(file), null, null);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if both username and password are not null.
+	 *
+	 * @param uri
+	 * @param file
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, File file, String username,
+			String password) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(uri), new FileBody(file), username, password);
+	}
+
+	/**
+	 *
+	 * @param httpRequest
+	 * @param file
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response postMultiPart(HttpPost httpRequest, FileBody file,
+			String username, String password) throws URISyntaxException, HttpException {
+
+		HttpEntity multiPartEntity = MultipartEntityBuilder.create()
+				.addPart("file", file)
+				.build();
+		httpRequest.setEntity(multiPartEntity);
+
+		return send(httpRequest, username, password);
 	}
 
 	/**

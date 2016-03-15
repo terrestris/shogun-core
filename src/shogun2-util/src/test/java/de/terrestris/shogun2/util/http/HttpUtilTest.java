@@ -2,6 +2,7 @@ package de.terrestris.shogun2.util.http;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -247,6 +248,37 @@ public class HttpUtilTest {
 	public void post_uri_body_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
 		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_multipart() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile());
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_multipart_auth() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile(), USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_multipart() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile());
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_multipart_auth() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile(), USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	private File getTestFile() {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource(
+				"META-INF/logo.png").getFile());
+		return file;
 	}
 
 }
