@@ -288,7 +288,7 @@ public class HttpUtil {
 		stringEntity.setChunked(true);
 		httpRequest.setEntity(stringEntity);
 
-		return send(httpRequest, null, null);
+		return send(httpRequest, username, password);
 	}
 
 	/**
