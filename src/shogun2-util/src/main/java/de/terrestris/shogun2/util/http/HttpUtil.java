@@ -43,7 +43,8 @@ import de.terrestris.shogun2.util.model.Response;
 
 /**
  *
- * @author danielkoch
+ * @author Daniel Koch
+ * @author terrestris GmbH & Co. KG
  *
  */
 public class HttpUtil {
@@ -456,7 +457,6 @@ public class HttpUtil {
 
 			}
 		}
-
 
 		return systemProxy;
 	}
