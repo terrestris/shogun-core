@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
@@ -67,8 +68,9 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
-	public static Response get(String url) throws URISyntaxException {
+	public static Response get(String url) throws URISyntaxException, HttpException {
 		return send(new HttpGet(url), null, null);
 	}
 
@@ -80,9 +82,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	public static Response get(String url, String username, String password)
-			throws URISyntaxException {
+			throws URISyntaxException, HttpException {
 		return send(new HttpGet(url), username, password);
 	}
 
@@ -94,8 +97,9 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
-	public static Response get(URI uri) throws URISyntaxException {
+	public static Response get(URI uri) throws URISyntaxException, HttpException {
 		return send(new HttpGet(uri), null, null);
 	}
 
@@ -110,9 +114,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	public static Response get(URI uri, String username, String password)
-			throws URISyntaxException {
+			throws URISyntaxException, HttpException {
 		return send(new HttpGet(uri), username, password);
 	}
 
@@ -126,9 +131,10 @@ public class HttpUtil {
 	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	public static Response post(String url, List<NameValuePair> queryParams)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		return postParams(new HttpPost(url), queryParams, null, null);
 	}
 
@@ -144,10 +150,11 @@ public class HttpUtil {
 	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	public static Response post(String url, List<NameValuePair> queryParams,
 			String username, String password) throws URISyntaxException,
-			UnsupportedEncodingException {
+			UnsupportedEncodingException, HttpException {
 		return postParams(new HttpPost(url), queryParams, username, password);
 	}
 
@@ -161,9 +168,10 @@ public class HttpUtil {
 	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	public static Response post(URI uri, List<NameValuePair> queryParams)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		return postParams(new HttpPost(uri), queryParams, null, null);
 	}
 
@@ -179,10 +187,11 @@ public class HttpUtil {
 	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	public static Response post(URI uri, List<NameValuePair> queryParams,
 			String username, String password) throws URISyntaxException,
-			UnsupportedEncodingException {
+			UnsupportedEncodingException, HttpException {
 		return postParams(new HttpPost(uri), queryParams, username, password);
 	}
 
@@ -196,9 +205,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	public static Response post(String url, String body, ContentType contentType)
-			throws URISyntaxException {
+			throws URISyntaxException, HttpException {
 		return postBody(new HttpPost(url), body, contentType, null, null);
 	}
 
@@ -214,9 +224,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	public static Response post(String url, String body, ContentType contentType,
-			String username, String password) throws URISyntaxException {
+			String username, String password) throws URISyntaxException, HttpException {
 		return postBody(new HttpPost(url), body, contentType, username, password);
 	}
 
@@ -229,10 +240,11 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 * @throws UnsupportedEncodingException
 	 */
 	public static Response post(URI uri, String body, ContentType contentType)
-			throws URISyntaxException {
+			throws URISyntaxException, HttpException {
 		return postBody(new HttpPost(uri), body, contentType, null, null);
 	}
 
@@ -248,9 +260,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	public static Response post(URI uri, String body, ContentType contentType,
-			String username, String password) throws URISyntaxException {
+			String username, String password) throws URISyntaxException, HttpException {
 		return postBody(new HttpPost(uri), body, contentType, username, password);
 	}
 
@@ -265,10 +278,11 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	private static Response postBody(HttpPost httpRequest, String body,
 			ContentType contentType, String username, String password)
-			throws URISyntaxException {
+			throws URISyntaxException, HttpException {
 
 		StringEntity stringEntity = new StringEntity(body, contentType);
 		stringEntity.setChunked(true);
@@ -288,10 +302,11 @@ public class HttpUtil {
 	 *
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
 	 */
 	private static Response postParams(HttpPost httpRequest,
 			List<NameValuePair> queryParams, String username, String password)
-			throws URISyntaxException, UnsupportedEncodingException {
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 
 		HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
 		httpRequest.setEntity(httpEntity);
@@ -310,9 +325,10 @@ public class HttpUtil {
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
+	 * @throws HttpException
 	 */
 	private static Response send(HttpRequestBase httpRequest, String username,
-			String password) throws URISyntaxException {
+			String password) throws URISyntaxException, HttpException {
 
 		CloseableHttpClient httpClient = null;
 		CloseableHttpResponse httpResponse = null;
@@ -365,34 +381,31 @@ public class HttpUtil {
 
 		try {
 
+			HttpHeaders headersMap = new HttpHeaders();
+
 			httpRequest.setConfig(requestConfig);
 
 			httpResponse = httpClient.execute(httpRequest, httpContext);
+
 			HttpStatus httpStatus = HttpStatus.valueOf(
 					httpResponse.getStatusLine().getStatusCode());
-			String statusText = httpResponse.getStatusLine().getReasonPhrase();
+			Header[] headers = httpResponse.getAllHeaders();
+			HttpEntity httpResponseEntity = httpResponse.getEntity();
 
-			if (httpStatus == HttpStatus.OK) {
+			response.setStatusCode(httpStatus);
 
-				response.setStatusCode(httpStatus);
-
-				Header[] headers = httpResponse.getAllHeaders();
-				HttpHeaders headersMap = new HttpHeaders();
-				for (Header header : headers) {
-					headersMap.set(header.getName(), header.getValue());
-				}
-				response.setHeaders(headersMap);
-
-				response.setBody(EntityUtils.toByteArray(httpResponse.getEntity()));
-
-			} else {
-				LOG.info("GET-Request returned not with 200 OK: " +
-						"  * URL: " + uri +
-						"  * Status Code: " + httpStatus +
-						"  * Reason Phrase: " + statusText);
+			for (Header header : headers) {
+				headersMap.set(header.getName(), header.getValue());
 			}
+			response.setHeaders(headersMap);
+
+			if (httpResponseEntity != null) {
+				response.setBody(EntityUtils.toByteArray(httpResponseEntity));
+			}
+
 		} catch (IOException e) {
-			LOG.error("Couldn't connect to " + uri + ": " + e.getMessage());
+			throw new HttpException("Error while getting a response from " + uri +
+					": " + e.getMessage());
 		} finally {
 
 			// cleanup
