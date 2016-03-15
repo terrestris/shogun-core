@@ -9,6 +9,7 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -119,6 +120,72 @@ public class HttpUtil {
 	public static Response get(URI uri, String username, String password)
 			throws URISyntaxException, HttpException {
 		return send(new HttpGet(uri), username, password);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 *
+	 * @param url
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(String url)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(),
+				null, null);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if both username and pw are not null.
+	 *
+	 * @param url
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, String username, String password)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(),
+				username, password);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URI.
+	 *
+	 * @param uri
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(),
+				null, null);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URI.
+	 * Basic auth is used if both username and pw are not null.
+	 *
+	 * @param uri
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, String username, String password)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(),
+				username, password);
 	}
 
 	/**

@@ -178,6 +178,30 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_empty() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_url_kvp() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS);
 		assertNotNull(response);
