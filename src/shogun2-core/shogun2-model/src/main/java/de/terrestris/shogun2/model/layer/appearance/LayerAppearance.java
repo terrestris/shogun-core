@@ -1,7 +1,6 @@
 package de.terrestris.shogun2.model.layer.appearance;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,13 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.layer.util.Resolution;
 
 /**
  *
@@ -47,28 +41,12 @@ public class LayerAppearance extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToOne
-	// The maxResolution will be serialized (JSON)
-	// as the simple resolution value
-	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private Resolution maxResolution;
+	private Double maxResolution;
 
 	/**
 	 *
 	 */
-	@ManyToOne
-	// The maxResolution will be serialized (JSON)
-	// as the simple resolution value
-	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private Resolution minResolution;
+	private Double minResolution;
 
 	/**
 	 *
@@ -96,8 +74,8 @@ public class LayerAppearance extends PersistentObject{
 	 * @param opacity
 	 * @param visible
 	 */
-	public LayerAppearance(String attribution, String name, Resolution maxResolution,
-			Resolution minResolution, Double opacity, Boolean visible) {
+	public LayerAppearance(String attribution, String name, Double maxResolution,
+			Double minResolution, Double opacity, Boolean visible) {
 		super();
 		this.attribution = attribution;
 		this.name = name;
@@ -138,28 +116,28 @@ public class LayerAppearance extends PersistentObject{
 	/**
 	 * @return the maxResolution
 	 */
-	public Resolution getMaxResolution() {
+	public Double getMaxResolution() {
 		return maxResolution;
 	}
 
 	/**
 	 * @param maxResolution the maxResolution to set
 	 */
-	public void setMaxResolution(Resolution maxResolution) {
+	public void setMaxResolution(Double maxResolution) {
 		this.maxResolution = maxResolution;
 	}
 
 	/**
 	 * @return the minResolution
 	 */
-	public Resolution getMinResolution() {
+	public Double getMinResolution() {
 		return minResolution;
 	}
 
 	/**
 	 * @param minResolution the minResolution to set
 	 */
-	public void setMinResolution(Resolution minResolution) {
+	public void setMinResolution(Double minResolution) {
 		this.minResolution = minResolution;
 	}
 

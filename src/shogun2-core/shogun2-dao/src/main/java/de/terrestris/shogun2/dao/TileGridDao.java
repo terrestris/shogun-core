@@ -2,18 +2,18 @@ package de.terrestris.shogun2.dao;
 
 import org.springframework.stereotype.Repository;
 
-import de.terrestris.shogun2.model.layer.util.WmsTileGrid;
+import de.terrestris.shogun2.model.layer.util.TileGrid;
 
-@Repository("wmsTileGridDao")
-public class WmsTileGridDao<E extends WmsTileGrid> extends
+@Repository("tileGridDao")
+public class TileGridDao<E extends TileGrid> extends
 		GenericHibernateDao<E, Integer> {
 
 	/**
 	 * Public default constructor for this DAO.
 	 */
 	@SuppressWarnings("unchecked")
-	public WmsTileGridDao() {
-		super((Class<E>) WmsTileGrid.class);
+	public TileGridDao() {
+		super((Class<E>) TileGrid.class);
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class WmsTileGridDao<E extends WmsTileGrid> extends
 	 *
 	 * @param clazz
 	 */
-	protected WmsTileGridDao(Class<E> clazz) {
+	protected TileGridDao(Class<E> clazz) {
 		super(clazz);
 	}
 

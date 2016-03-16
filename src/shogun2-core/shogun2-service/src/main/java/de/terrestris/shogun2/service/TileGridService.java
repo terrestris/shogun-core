@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.dao.WmsTileGridDao;
-import de.terrestris.shogun2.model.layer.util.WmsTileGrid;
+import de.terrestris.shogun2.dao.TileGridDao;
+import de.terrestris.shogun2.model.layer.util.TileGrid;
 import de.terrestris.shogun2.model.module.Module;
 
 /**
@@ -15,23 +15,23 @@ import de.terrestris.shogun2.model.module.Module;
  * @see AbstractCrudService
  *
  */
-@Service("wmsTileGridService")
-public class WmsTileGridService<E extends WmsTileGrid, D extends WmsTileGridDao<E>> extends
+@Service("tileGridService")
+public class TileGridService<E extends TileGrid, D extends TileGridDao<E>> extends
 		AbstractCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public WmsTileGridService() {
-		this((Class<E>) WmsTileGrid.class);
+	public TileGridService() {
+		this((Class<E>) TileGrid.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected WmsTileGridService(Class<E> entityClass) {
+	protected TileGridService(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -42,7 +42,7 @@ public class WmsTileGridService<E extends WmsTileGrid, D extends WmsTileGridDao<
 	 */
 	@Override
 	@Autowired
-	@Qualifier("wmsTileGridDao")
+	@Qualifier("tileGridDao")
 	public void setDao(D dao) {
 		this.dao = dao;
 	}

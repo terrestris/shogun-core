@@ -1,25 +1,12 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerName;
-import de.terrestris.shogun2.model.layer.util.GeoWebServiceLayerStyle;
 
 /**
  * Class representing a layer data source for WMS servers providing single,
@@ -40,37 +27,15 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	private int height;
 	private String version;
 
-	@ManyToMany
-	@JoinTable(
-		name = "IMAGEWMSLAYERDATASRC_LAYERNAME",
-		joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "LAYERNAME_ID") }
-	)
-	@OrderColumn(name = "IDX")
-	// The List of layerNames will be serialized (JSON) as an array of
-	// simple layerName string values
-	@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "layerName"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<GeoWebServiceLayerName> layerNames;
+	/**
+	 *
+	 */
+	private String layerNames;
 
-	@ManyToMany
-	@JoinTable(
-		name = "IMAGEWMSLAYERDATASOURCE_STYLE",
-		joinColumns = { @JoinColumn(name = "IMAGEWMSLAYERDATASOURCE_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "STYLE_ID") }
-	)
-	@OrderColumn(name = "IDX")
-	// The List of layerStyles will be serialized (JSON) as an array of
-	// simple layerStyle string values
-	@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "styleName"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<GeoWebServiceLayerStyle> layerStyles;
+	/**
+	 *
+	 */
+	private String layerStyles;
 
 	/**
 	 *
@@ -89,9 +54,8 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	 * @param layers List of layer names (instance if {@link GeoWebServiceLayerName}
 	 * @param styles List of layer styles (instance if {@link GeoWebServiceLayerStyle}
 	 */
-	public ImageWmsLayerDataSource(String name, String type, String url, int width, int height, String version,
-			List<GeoWebServiceLayerName> layerNames,
-			List<GeoWebServiceLayerStyle> layerStyles) {
+	public ImageWmsLayerDataSource(String name, String type, String url, int width,
+			int height, String version, String layerNames, String layerStyles) {
 		super(name, type, url);
 		this.width = width;
 		this.height = height;
@@ -145,7 +109,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @return the layerNames
 	 */
-	public List<GeoWebServiceLayerName> getLayerNames() {
+	public String getLayerNames() {
 		return layerNames;
 	}
 
@@ -153,21 +117,21 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
 	/**
 	 * @param layerNames the layerNames to set
 	 */
-	public void setLayerNames(List<GeoWebServiceLayerName> layerNames) {
+	public void setLayerNames(String layerNames) {
 		this.layerNames = layerNames;
 	}
 
 	/**
 	 * @return the layerStyles
 	 */
-	public List<GeoWebServiceLayerStyle> getLayerStyles() {
+	public String getLayerStyles() {
 		return layerStyles;
 	}
 
 	/**
 	 * @param layerStyles the layerStyles to set
 	 */
-	public void setLayerStyles(List<GeoWebServiceLayerStyle> layerStyles) {
+	public void setLayerStyles(String layerStyles) {
 		this.layerStyles = layerStyles;
 	}
 

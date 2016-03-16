@@ -4,17 +4,16 @@
 package de.terrestris.shogun2.model.layer.util;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -23,10 +22,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
@@ -40,7 +35,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Table
-public class WmsTileGrid extends PersistentObject {
+public class TileGrid extends PersistentObject {
 
 	/**
 	 *
@@ -80,25 +75,18 @@ public class WmsTileGrid extends PersistentObject {
 	/**
 	 * The tileGrid resolutions.
 	 */
-	@ManyToMany
-	@JoinTable(
-		joinColumns = { @JoinColumn(name = "WMSTILEGRID_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
-	)
+	@ElementCollection
+	@CollectionTable(
+		name = "TILEGRID_RESOLUTION",
+		joinColumns = @JoinColumn(name = "TILEGRID_ID") )
+	@Column(name = "RESOLUTION")
 	@OrderColumn(name = "IDX")
-	// The List of resolutions will be serialized (JSON) as an array of resolution
-	// values
-	@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<Resolution> tileGridResolutions;
+	private List<Double> tileGridResolutions;
 
 	/**
 	 *
 	 */
-	public WmsTileGrid() {
+	public TileGrid() {
 		super();
 		tileSize = new Integer(256);
 	}
@@ -108,7 +96,7 @@ public class WmsTileGrid extends PersistentObject {
 	 * @param tileGridExtent
 	 * @param tileSize
 	 */
-	public WmsTileGrid(Double tileGridOrigin, Extent tileGridExtent, Integer tileSize) {
+	public TileGrid(Point2D.Double tileGridOrigin, Extent tileGridExtent, Integer tileSize) {
 		super();
 		this.tileGridOrigin = tileGridOrigin;
 		this.tileGridExtent = tileGridExtent;
@@ -174,14 +162,14 @@ public class WmsTileGrid extends PersistentObject {
 	/**
 	 * @return the tileGridResolutions
 	 */
-	public List<Resolution> getTileGridResolutions() {
+	public List<Double> getTileGridResolutions() {
 		return tileGridResolutions;
 	}
 
 	/**
 	 * @param tileGridResolutions the tileGridResolutions to set
 	 */
-	public void setTileGridResolutions(List<Resolution> tileGridResolutions) {
+	public void setTileGridResolutions(List<Double> tileGridResolutions) {
 		this.tileGridResolutions = tileGridResolutions;
 	}
 
@@ -216,9 +204,9 @@ public class WmsTileGrid extends PersistentObject {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof WmsTileGrid))
+		if (!(obj instanceof TileGrid))
 			return false;
-		WmsTileGrid other = (WmsTileGrid) obj;
+		TileGrid other = (TileGrid) obj;
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).

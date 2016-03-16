@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.terrestris.shogun2.dao.WmsTileGridDao;
-import de.terrestris.shogun2.model.layer.util.WmsTileGrid;
-import de.terrestris.shogun2.service.WmsTileGridService;
+import de.terrestris.shogun2.dao.TileGridDao;
+import de.terrestris.shogun2.model.layer.util.TileGrid;
+import de.terrestris.shogun2.service.TileGridService;
 
 /**
  * @author Kai Volland
@@ -15,23 +15,23 @@ import de.terrestris.shogun2.service.WmsTileGridService;
  *
  */
 @RestController
-@RequestMapping("/wmstilegrids")
-public class WmsTileGridRestController<E extends WmsTileGrid, D extends WmsTileGridDao<E>, S extends WmsTileGridService<E, D>>
+@RequestMapping("/tilegrids")
+public class TileGridRestController<E extends TileGrid, D extends TileGridDao<E>, S extends TileGridService<E, D>>
 		extends AbstractRestController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public WmsTileGridRestController() {
-		this((Class<E>) WmsTileGrid.class);
+	public TileGridRestController() {
+		this((Class<E>) TileGrid.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete entity class for the controller.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected WmsTileGridRestController(Class<E> entityClass) {
+	protected TileGridRestController(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -42,7 +42,7 @@ public class WmsTileGridRestController<E extends WmsTileGrid, D extends WmsTileG
 	 */
 	@Override
 	@Autowired
-	@Qualifier("wmsTileGridService")
+	@Qualifier("tileGridService")
 	public void setService(S service) {
 		this.service = service;
 	}

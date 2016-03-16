@@ -5,12 +5,12 @@ import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -20,13 +20,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.util.Extent;
-import de.terrestris.shogun2.model.layer.util.Resolution;
 
 /**
  * The <i>MapConfig</i> is backend representation for an
@@ -70,20 +65,13 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToMany
-	@JoinTable(
-		joinColumns = { @JoinColumn(name = "MAPCONFIG_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "RESOLUTION_ID") }
-	)
+	@ElementCollection
+	@CollectionTable(
+		name = "MAPCONFIG_RESOLUTION",
+		joinColumns = @JoinColumn(name = "MAPCONFIG_ID") )
+	@Column(name = "RESOLUTION")
 	@OrderColumn(name = "IDX")
-	// The List of resolutions will be serialized (JSON) as an array of resolution
-	// values
-	@JsonIdentityInfo(
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private List<Resolution> resolutions;
+	private List<Double> resolutions;
 
 	/**
 	 *
@@ -93,28 +81,12 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
-	@ManyToOne
-	// The maxResolution will be serialized (JSON)
-	// as the simple resolution value
-	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private Resolution maxResolution;
+	private Double maxResolution;
 
 	/**
 	 *
 	 */
-	@ManyToOne
-	// The minResolution will be serialized (JSON)
-	// as the simple resolution value
-	@JsonIdentityInfo(
-			generator = ObjectIdGenerators.PropertyGenerator.class,
-			property = "resolution"
-	)
-	@JsonIdentityReference(alwaysAsId = true)
-	private Resolution minResolution;
+	private Double minResolution;
 
 	/**
 	 *
@@ -145,8 +117,8 @@ public class MapConfig extends PersistentObject{
 	 * @param rotation
 	 * @param projection
 	 */
-	public MapConfig(String name, Point2D.Double center, Extent extent, List<Resolution> resolutions, Integer zoom,
-			Resolution maxResolution, Resolution minResolution, Double rotation, String projection) {
+	public MapConfig(String name, Point2D.Double center, Extent extent, List<Double> resolutions, Integer zoom,
+			Double maxResolution, Double minResolution, Double rotation, String projection) {
 		super();
 		this.name = name;
 		this.center = center;
@@ -204,14 +176,14 @@ public class MapConfig extends PersistentObject{
 	/**
 	 * @return the resolutions
 	 */
-	public List<Resolution> getResolutions() {
+	public List<Double> getResolutions() {
 		return resolutions;
 	}
 
 	/**
 	 * @param resolutions the resolutions to set
 	 */
-	public void setResolutions(List<Resolution> resolutions) {
+	public void setResolutions(List<Double> resolutions) {
 		this.resolutions = resolutions;
 	}
 
@@ -232,28 +204,28 @@ public class MapConfig extends PersistentObject{
 	/**
 	 * @return the maxResolution
 	 */
-	public Resolution getMaxResolution() {
+	public Double getMaxResolution() {
 		return maxResolution;
 	}
 
 	/**
 	 * @param maxResolution the maxResolution to set
 	 */
-	public void setMaxResolution(Resolution maxResolution) {
+	public void setMaxResolution(Double maxResolution) {
 		this.maxResolution = maxResolution;
 	}
 
 	/**
 	 * @return the minResolution
 	 */
-	public Resolution getMinResolution() {
+	public Double getMinResolution() {
 		return minResolution;
 	}
 
 	/**
 	 * @param minResolution the minResolution to set
 	 */
-	public void setMinResolution(Resolution minResolution) {
+	public void setMinResolution(Double minResolution) {
 		this.minResolution = minResolution;
 	}
 
