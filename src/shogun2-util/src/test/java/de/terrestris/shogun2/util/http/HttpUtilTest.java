@@ -2,6 +2,7 @@ package de.terrestris.shogun2.util.http;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
@@ -153,75 +155,130 @@ public class HttpUtilTest {
 	}
 
 	@Test
-	public void get_url() throws URISyntaxException {
+	public void get_url() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URL);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void get_uri() throws URISyntaxException {
+	public void get_uri() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URI);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void get_url_auth() throws URISyntaxException {
+	public void get_url_auth() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URL, USERNAME, PASSWORD);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void get_uri_auth() throws URISyntaxException {
+	public void get_uri_auth() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URI, USERNAME, PASSWORD);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_url_kvp() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_url_empty() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_kvp() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_url_kvp_auth() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_url_kvp_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_uri_kvp() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_uri_kvp() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_uri_kvp_auth() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_uri_kvp_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_url_body() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_url_body() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_url_body_auth() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_url_body_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_uri_body() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_uri_body() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
 		assertNotNull(response);
 	}
 
 	@Test
-	public void post_uri_body_auth() throws URISyntaxException, UnsupportedEncodingException {
+	public void post_uri_body_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
 		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_multipart() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile());
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_multipart_auth() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile(), USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_multipart() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile());
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_multipart_auth() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile(), USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	private File getTestFile() {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource(
+				"META-INF/logo.png").getFile());
+		return file;
 	}
 
 }

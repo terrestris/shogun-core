@@ -92,6 +92,11 @@
             <artifactId>httpclient</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+        </dependency>
+
         <!-- BeanUtils -->
         <dependency>
             <groupId>commons-beanutils</groupId>
