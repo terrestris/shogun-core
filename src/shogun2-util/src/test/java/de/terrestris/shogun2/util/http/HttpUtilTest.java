@@ -23,7 +23,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import de.terrestris.shogun2.util.model.Response;
 
@@ -34,12 +33,6 @@ import de.terrestris.shogun2.util.model.Response;
  */
 @SuppressWarnings("static-method")
 public class HttpUtilTest {
-
-	/**
-	 * The class to test.
-	 */
-	@Autowired
-	private HttpUtil httpUtil;
 
 	/**
 	 *
