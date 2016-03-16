@@ -12,9 +12,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
-import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  * @author Nils Bühner
@@ -34,7 +34,7 @@ public class UserPermissionEvaluatorTest extends
 		// prepare a user that
 		User user = new User();
 		final int userId = 42;
-		TestUtil.setIdOnPersistentObject(user, userId);
+		IdHelper.setIdOnPersistentObject(user, userId);
 
 		// we do not add any permissions to the user, but expect that he is allowed to READ himself
 		// call method to test
@@ -50,7 +50,7 @@ public class UserPermissionEvaluatorTest extends
 		// prepare a user that
 		User user = new User();
 		final int userId = 42;
-		TestUtil.setIdOnPersistentObject(user, userId);
+		IdHelper.setIdOnPersistentObject(user, userId);
 
 		Set<Permission> permissions = new HashSet<Permission>(Arrays.asList(Permission.values()));
 		permissions.remove(Permission.READ); // everything but READ

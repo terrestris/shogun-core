@@ -43,9 +43,9 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.bean.SortDirection;
 import ch.ralscha.extdirectspring.bean.SortInfo;
 import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
-import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  * Test for the {@link AbstractExtDirectCrudService}.
@@ -121,7 +121,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
-				TestUtil.setIdOnPersistentObject(po, 1);
+				IdHelper.setIdOnPersistentObject(po, 1);
 
 				return po;
 			}
@@ -162,7 +162,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 		ReadableDateTime created = implToTest.getCreated();
 		ReadableDateTime modified = implToTest.getModified();
 
-		TestUtil.setIdOnPersistentObject(implToTest, id);
+		IdHelper.setIdOnPersistentObject(implToTest, id);
 
 		doAnswer(new Answer<E>() {
 			public E answer(InvocationOnMock invocation)
@@ -204,7 +204,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 
 		Integer existingId = 17;
 
-		TestUtil.setIdOnPersistentObject(implToTest, existingId);
+		IdHelper.setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
 		doReturn(implToTest).when(dao).findById(existingId);
@@ -260,8 +260,8 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 		E obj1 = (E) implToTest;
 		E obj2 = (E) BeanUtils.cloneBean(obj1);
 
-		TestUtil.setIdOnPersistentObject(obj1, id1);
-		TestUtil.setIdOnPersistentObject(obj2, id2);
+		IdHelper.setIdOnPersistentObject(obj1, id1);
+		IdHelper.setIdOnPersistentObject(obj2, id2);
 
 		persistedObjectList.add((E) obj1);
 		persistedObjectList.add((E) obj2);
@@ -320,7 +320,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 
 		Integer existingId = 17;
 
-		TestUtil.setIdOnPersistentObject(implToTest, existingId);
+		IdHelper.setIdOnPersistentObject(implToTest, existingId);
 
 		// mock dao behavior
 		doReturn(implToTest).when(dao).findById(existingId);
@@ -383,7 +383,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 				E po = (E) invocation.getArguments()[0];
 
 				// set id like the dao does
-				TestUtil.setIdOnPersistentObject(po, nextId);
+				IdHelper.setIdOnPersistentObject(po, nextId);
 				nextId++;
 
 				return po;
@@ -537,7 +537,7 @@ public abstract class AbstractExtDirectCrudServiceTest<E extends PersistentObjec
 			InvocationTargetException, NoSuchMethodException {
 		@SuppressWarnings("unchecked")
 		E obj = (E) BeanUtils.cloneBean(implToTest);
-		TestUtil.setIdOnPersistentObject(obj, id);
+		IdHelper.setIdOnPersistentObject(obj, id);
 		return obj;
 	}
 

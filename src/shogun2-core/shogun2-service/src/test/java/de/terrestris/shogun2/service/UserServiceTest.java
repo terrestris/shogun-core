@@ -29,10 +29,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import de.terrestris.shogun2.dao.RegistrationTokenDao;
 import de.terrestris.shogun2.dao.RoleDao;
 import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
-import de.terrestris.shogun2.util.test.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
@@ -403,7 +403,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User, User
 		User unpersistedUser = new User("Dummy", "User", "dummyuser");
 		unpersistedUser.setPassword(rawPassword);
 
-		TestUtil.setIdOnPersistentObject(unpersistedUser, userId);
+		IdHelper.setIdOnPersistentObject(unpersistedUser, userId);
 
 		// finally call the method that is tested here
 		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
@@ -425,7 +425,7 @@ public class UserServiceTest extends AbstractExtDirectCrudServiceTest<User, User
 		User user = new User();
 		user.setPassword(oldPassword);
 
-		TestUtil.setIdOnPersistentObject(user, userId );
+		IdHelper.setIdOnPersistentObject(user, userId );
 
 		// mock the dao
 		doNothing().when(dao).saveOrUpdate(any(User.class));

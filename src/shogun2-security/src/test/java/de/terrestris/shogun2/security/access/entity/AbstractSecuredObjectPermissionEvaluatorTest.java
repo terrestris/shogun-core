@@ -11,12 +11,12 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.SecuredPersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.model.security.PermissionCollection;
-import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  * @author Nils Bühner
@@ -69,7 +69,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// prepare a user that gets permissions
 		User user = new User();
 		final int userId = 42;
-		TestUtil.setIdOnPersistentObject(user, userId);
+		IdHelper.setIdOnPersistentObject(user, userId);
 
 		// prepare permission collection/map
 		Map<User, PermissionCollection> userPermissionsMap = new HashMap<User, PermissionCollection>();
@@ -96,7 +96,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// prepare a user
 		User user = new User();
 		final int userId = 42;
-		TestUtil.setIdOnPersistentObject(user, userId);
+		IdHelper.setIdOnPersistentObject(user, userId);
 
 		// add user to a group
 		UserGroup group = new UserGroup();
@@ -132,7 +132,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 			// prepare a user that gets permissions
 			User user = new User();
 			final int userId = 42;
-			TestUtil.setIdOnPersistentObject(user, userId);
+			IdHelper.setIdOnPersistentObject(user, userId);
 
 			// prepare permission collection/map
 			Map<User, PermissionCollection> userPermissionsMap = new HashMap<User, PermissionCollection>();
@@ -167,7 +167,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// prepare a user
 		User user = new User();
 		final int userId = 42;
-		TestUtil.setIdOnPersistentObject(user, userId);
+		IdHelper.setIdOnPersistentObject(user, userId);
 
 		// add user to group
 		UserGroup group = new UserGroup();

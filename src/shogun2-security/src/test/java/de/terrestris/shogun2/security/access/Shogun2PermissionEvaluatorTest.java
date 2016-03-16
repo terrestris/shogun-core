@@ -21,7 +21,7 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.security.access.entity.PersistentObjectPermissionEvaluator;
 import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFactory;
-import de.terrestris.shogun2.util.test.TestUtil;
+import de.terrestris.shogun2.helper.IdHelper;
 
 /**
  * @author Nils Bühner
@@ -157,7 +157,7 @@ public class Shogun2PermissionEvaluatorTest {
 		// mock auth object with user
 		Authentication authenticationMock = mock(Authentication.class);
 		final User user = new User("First name", "Last Name", "accountName");
-		TestUtil.setIdOnPersistentObject(user, 42);
+		IdHelper.setIdOnPersistentObject(user, 42);
 		final Integer userId = user.getId();
 		when(authenticationMock.getPrincipal()).thenReturn(user);
 
@@ -203,7 +203,7 @@ public class Shogun2PermissionEvaluatorTest {
 		// mock auth object with user
 		Authentication authenticationMock = mock(Authentication.class);
 		final User user = new User("First name", "Last Name", "accountName");
-		TestUtil.setIdOnPersistentObject(user, 42);
+		IdHelper.setIdOnPersistentObject(user, 42);
 		final Integer userId = user.getId();
 		when(authenticationMock.getPrincipal()).thenReturn(user);
 
