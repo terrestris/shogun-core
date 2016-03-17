@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.terrestris.shogun2.dao.AbstractLayerDao;
@@ -58,7 +59,7 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	}
 
 	/**
-	 * 
+	 *
 	 * @param abstractLayerId
 	 * @return
 	 */
@@ -75,14 +76,15 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	}
 
 	/**
-	 * 
+	 *
 	 * @param moduleId
 	 * @param toolIds
 	 * @return
 	 */
 	@RequestMapping(value = "/setLayersForLayerGroup.action", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> setLayersForLayerGroup(
-			Integer layerGroupId, List<Integer> abstractLayerIds) {
+			@RequestParam("layerGroupId") Integer layerGroupId,
+			@RequestParam("abstractLayerIds") List<Integer> abstractLayerIds) {
 
 		try {
 			List<AbstractLayer> layers = this.service.setLayersForLayerGroup(layerGroupId, abstractLayerIds);
@@ -91,5 +93,5 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 			return ResultSet.error("Could not set Layers for LayerGroup");
 		}
 	}
-	
+
 }
