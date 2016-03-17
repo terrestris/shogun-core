@@ -75,14 +75,14 @@ public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLay
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<AbstractLayer> setLayersForLayerGroup (Integer layerGroupId, List<String> abstractLayerIds) throws Exception{
+	public List<AbstractLayer> setLayersForLayerGroup (Integer layerGroupId, List<Integer> abstractLayerIds) throws Exception{
 		E abstractlayer = this.findById(layerGroupId);
 		List<AbstractLayer> layers = new ArrayList<AbstractLayer>();
 
 		if(abstractlayer instanceof LayerGroup) {
 			LayerGroup layerGroup = (LayerGroup) abstractlayer;
-			for (String id : abstractLayerIds) {
-				AbstractLayer layer = this.findById(Integer.parseInt(id));
+			for (Integer id : abstractLayerIds) {
+				AbstractLayer layer = this.findById(id);
 				if(layer != null){
 					layers.add(layer);
 				}

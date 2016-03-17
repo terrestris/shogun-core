@@ -4,8 +4,6 @@
 package de.terrestris.shogun2.web;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.dao.AbstractLayerDao;
+import de.terrestris.shogun2.dao.MapDao;
 import de.terrestris.shogun2.model.layer.AbstractLayer;
-import de.terrestris.shogun2.service.AbstractLayerService;
+import de.terrestris.shogun2.model.module.Map;
+import de.terrestris.shogun2.service.MapService;
 import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
@@ -26,8 +25,8 @@ import de.terrestris.shogun2.util.data.ResultSet;
  *
  */
 @Controller
-@RequestMapping("/abstractlayers")
-public class AbstractLayerController<E extends AbstractLayer, D extends AbstractLayerDao<E>, S extends AbstractLayerService<E, D>>{
+@RequestMapping("/maps")
+public class MapController<E extends Map, D extends MapDao<E>, S extends MapService<E, D>>{
 
 	protected S service;
 
@@ -37,7 +36,7 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	 * as there are multiple candidates.
 	 */
 	@Autowired
-	@Qualifier("abstractLayerService")
+	@Qualifier("mapService")
 	public void setService(S service) {
 		this.service = service;
 	}
@@ -46,33 +45,16 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public AbstractLayerController() {
-		this((Class<E>) AbstractLayer.class);
+	public MapController() {
+		this((Class<E>) Map.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete type for this controller.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected AbstractLayerController(Class<E> type) {
+	protected MapController(Class<E> type) {
 		super();
-	}
-
-	/**
-	 *
-	 * @param abstractLayerId
-	 * @return
-	 */
-	@RequestMapping(value = "/getLayerGroupsOfLayer.action", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> getLayerGroupsOfLayer(Integer abstractLayerId) {
-
-		AbstractLayer abstractLayer = this.service.findById(abstractLayerId);
-		try {
-			 Set<E> layergroups = this.service.findLayerGroupsOfAbstractLayer(abstractLayer);
-			return ResultSet.success(layergroups);
-		} catch (Exception e) {
-			return ResultSet.error("Could not get Layergroups of layer " + abstractLayer.getName() + ".");
-		}
 	}
 
 	/**
@@ -81,16 +63,16 @@ public class AbstractLayerController<E extends AbstractLayer, D extends Abstract
 	 * @param toolIds
 	 * @return
 	 */
-	@RequestMapping(value = "/setLayersForLayerGroup.action", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> setLayersForLayerGroup(
-			@RequestParam("layerGroupId") Integer layerGroupId,
+	@RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
+	public @ResponseBody java.util.Map<String, Object> setLayersForMap(
+			@RequestParam("mapModuleId") Integer mapModuleId,
 			@RequestParam("abstractLayerIds") List<Integer> abstractLayerIds) {
 
 		try {
-			List<AbstractLayer> layers = this.service.setLayersForLayerGroup(layerGroupId, abstractLayerIds);
+			List<AbstractLayer> layers = this.service.setLayersForMap(mapModuleId, abstractLayerIds);
 			return ResultSet.success(layers);
 		} catch (Exception e) {
-			return ResultSet.error("Could not set Layers for LayerGroup");
+			return ResultSet.error("Could not set Layers for Map");
 		}
 	}
 
