@@ -94,7 +94,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 			this.saveOrUpdate((E) mapModule);
 			return layers;
 		} else {
-			throw new Exception("Layer of with given Id is not a LayerGroup.");
+			throw new Exception("Can't find mapModule with id " + mapModuleId.toString());
 		}
 
 	}
