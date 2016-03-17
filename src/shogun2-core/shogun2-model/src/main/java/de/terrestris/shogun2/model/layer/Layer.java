@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
 import de.terrestris.shogun2.model.layer.source.LayerDataSource;
@@ -31,9 +33,11 @@ public class Layer extends AbstractLayer {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerDataSource source;
 
 	@ManyToOne
+	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerAppearance appearance;
 
 	/**
