@@ -108,7 +108,7 @@ public class OgcXmlUtil {
 			throws InterceptorException {
 
 		if (document == null) {
-			throw new InterceptorException("document may not be null");
+			throw new InterceptorException("Document may not be null");
 		}
 
 		if (StringUtils.isEmpty(path)) {
@@ -123,7 +123,8 @@ public class OgcXmlUtil {
 			XPathExpression expr = xpath.compile(path);
 			result = expr.evaluate(document, XPathConstants.STRING).toString();
 		} catch (XPathExpressionException e) {
-			throw new InterceptorException("Could not : " + e.getMessage());
+			throw new InterceptorException("Error while selecting document " +
+					"element with XPath: " + e.getMessage());
 		}
 
 		return result;
