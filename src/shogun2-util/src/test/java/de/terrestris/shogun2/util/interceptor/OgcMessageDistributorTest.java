@@ -1,0 +1,108 @@
+package de.terrestris.shogun2.util.interceptor;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import de.terrestris.shogun2.util.model.Response;
+
+public class OgcMessageDistributorTest {
+
+	@Autowired
+	private OgcMessageDistributor distributor;
+
+	public static final String ENDPOINT = "Shinji:Kagawa";
+
+	public static final String SERVICE_WMS = "WMS";
+
+	public static final String OPERATION_GET_MAP = "GetMap";
+
+	public static final String RULE_ALLOW = "ALLOW";
+	public static final String RULE_DENY = "DENY";
+	public static final String RULE_MODIFY = "MODIFY";
+
+	@Before
+	public void set_up() {
+		distributor = new OgcMessageDistributor();
+	}
+
+	@Test
+	public void intercept_request_allowed() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(null, null, null, RULE_ALLOW, null);
+
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
+
+		MutableHttpServletRequest returnedRequest =
+				distributor.distributeToRequestInterceptor(mutableRequest, message);
+
+		assertNotNull(returnedRequest);
+	}
+
+	@Test(expected=InterceptorException.class)
+	public void intercept_request_denied() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(null, null, null, RULE_DENY, null);
+
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
+
+		distributor.distributeToRequestInterceptor(mutableRequest, message);
+	}
+
+	@Test
+	public void intercept_request_modified_no_implementation() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(SERVICE_WMS, OPERATION_GET_MAP, ENDPOINT, RULE_MODIFY, null);
+
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
+
+		MutableHttpServletRequest returnedRequest =
+				distributor.distributeToRequestInterceptor(mutableRequest, message);
+
+		assertNotNull(returnedRequest);
+	}
+
+	@Test
+	public void intercept_response_allowed() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(null, null, null, null, RULE_ALLOW);
+
+		Response response = new Response();
+
+		Response returnedRequest =
+				distributor.distributeToResponseInterceptor(response, message);
+
+		assertNotNull(returnedRequest);
+	}
+
+	@Test(expected=InterceptorException.class)
+	public void intercept_response_denied() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(null, null, null, null, RULE_DENY);
+
+		Response response = new Response();
+
+		distributor.distributeToResponseInterceptor(response, message);
+	}
+
+	@Test
+	public void intercept_response_modified_no_implementation() throws InterceptorException {
+
+		OgcMessage message = new OgcMessage(SERVICE_WMS, OPERATION_GET_MAP, ENDPOINT, null, RULE_MODIFY);
+
+		Response response = new Response();
+
+		Response returnedResponse =
+				distributor.distributeToResponseInterceptor(response, message);
+
+		assertNotNull(returnedResponse);
+	}
+
+
+}
