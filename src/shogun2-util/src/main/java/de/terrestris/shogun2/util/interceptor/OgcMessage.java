@@ -109,8 +109,6 @@ public class OgcMessage {
 		this.endPoint = endPoint;
 	}
 
-
-
 	/**
 	 * @return the requestRule
 	 */
