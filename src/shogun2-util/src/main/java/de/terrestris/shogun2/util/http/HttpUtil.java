@@ -135,7 +135,6 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
-<<<<<<< HEAD
 	 */
 	public static Response post(String url)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
@@ -211,8 +210,6 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
-=======
->>>>>>> Throw exception if server doesn't respond with 200 OK
 	 */
 	public static Response post(String url, List<NameValuePair> queryParams)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
