@@ -133,7 +133,12 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 		Map<String, Object> responseMap = new HashMap<String, Object>();
 
 		try {
-			File file = service.getFile(id);
+			File file = service.findById(id);
+
+			if(file == null) {
+				throw new Exception("Could not find the file with id " + id);
+			}
+
 			byte[] fileBytes = file.getFile();
 
 			responseHeaders.setContentType(
