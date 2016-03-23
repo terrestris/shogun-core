@@ -14,12 +14,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpRequestHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -121,10 +126,22 @@ public class HttpUtilTest {
 	@BeforeClass
 	public static void setUp() throws IOException, URISyntaxException {
 
+		// simple implementation of the HttpRequestHandler
+		class TestRequestHandler implements HttpRequestHandler {
+			@Override
+			public void handle(HttpRequest request, HttpResponse response,
+					HttpContext context) throws HttpException, IOException {
+				response.setEntity(new StringEntity("SHOGun2 rocks!", "UTF-8"));
+			}
+		};
+
+		TestRequestHandler handler = new TestRequestHandler();
+
 		HttpUtilTest.server = ServerBootstrap.bootstrap()
 				.setLocalAddress(InetAddress.getByName(TEST_SERVER_HOST))
 				.setListenerPort(TEST_SERVER_PORT)
 				.setServerInfo(TEST_SERVER_INFO)
+				.registerHandler("/", handler)
 				.create();
 
 		HttpUtilTest.server.start();

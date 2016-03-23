@@ -25,6 +25,9 @@ ${shogun2-parent-package}.*.web" )
 			serialization -->
 		<mvc:message-converters>
 			<beans:bean
+				class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
+			</beans:bean>
+			<beans:bean
 				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 				<beans:property name="objectMapper" ref="jacksonObjectMapper" />
 			</beans:bean>

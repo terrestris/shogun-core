@@ -183,6 +183,12 @@
         <!-- Apache HTTP Client -->
         <apache-httpclient.version>4.5.2</apache-httpclient.version>
 
+        <!-- Java XML Parser -->
+        <jaxp-api.version>1.4.5</jaxp-api.version>
+
+        <!-- Powermock -->
+        <powermock.version>1.6.4</powermock.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -577,6 +583,19 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                  <scope>test</scope>
+            </dependency>
 
             <!-- JsonPath -->
             <dependency>
@@ -727,6 +746,12 @@
                 <groupId>com.icegreen</groupId>
                 <artifactId>greenmail</artifactId>
                 <version>${greenmail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxp-api</artifactId>
+                <version>${jaxp-api.version}</version>
             </dependency>
 
         </dependencies>

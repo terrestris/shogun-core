@@ -72,6 +72,14 @@
         <!-- Permissions -->
         <ref bean="defaultUserPermissionCollection" />
 
+        <!-- GeoServer Interceptor Rules -->
+        <ref bean="defaultWMSRequestInterceptorRule" />
+        <ref bean="defaultWMSResponseInterceptorRule" />
+        <ref bean="defaultWFSRequestInterceptorRule" />
+        <ref bean="defaultWFSResponseInterceptorRule" />
+        <ref bean="defaultWCSRequestInterceptorRule" />
+        <ref bean="defaultWCSResponseInterceptorRule" />
+
         <!-- Applications -->
         <ref bean="defaultApplication"/>
     </util:list>
@@ -546,6 +554,43 @@
                 <entry key-ref="defaultUser" value-ref="defaultUserPermissionCollection" />
             </util:map>
         </property>
+    </bean>
+
+    <!-- The default interceptor roles -->
+    <bean id="defaultWMSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="REQUEST"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WMS"/>
+    </bean>
+
+    <bean id="defaultWMSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="RESPONSE"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WMS"/>
+    </bean>
+
+    <bean id="defaultWFSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="REQUEST"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WFS"/>
+    </bean>
+
+    <bean id="defaultWFSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="RESPONSE"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WFS"/>
+    </bean>
+
+    <bean id="defaultWCSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="REQUEST"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WCS"/>
+    </bean>
+
+    <bean id="defaultWCSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+        <property name="event" value="RESPONSE"/>
+        <property name="rule" value="ALLOW"/>
+        <property name="service" value="WCS"/>
     </bean>
 
 </beans>
