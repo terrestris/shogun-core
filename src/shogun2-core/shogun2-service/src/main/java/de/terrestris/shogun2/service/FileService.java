@@ -61,6 +61,16 @@ public class FileService<E extends File, D extends FileDao<E>>
 	 */
 	public E uploadFile(MultipartFile file) throws Exception {
 
+		if (file == null) {
+			final String errMsg = "Upload failed. File is null.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		} else if (file.isEmpty()) {
+			final String errMsg = "Upload failed. File " + file + " is empty.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		}
+
 		InputStream is = null;
 		byte[] fileByteArray = null;
 		E fileToPersist = getEntityClass().newInstance();
@@ -78,7 +88,7 @@ public class FileService<E extends File, D extends FileDao<E>>
 		fileToPersist.setFileType(file.getContentType());
 		fileToPersist.setFileName(file.getOriginalFilename());
 
-		dao.saveOrUpdate((E) fileToPersist);
+		dao.saveOrUpdate(fileToPersist);
 
 		return fileToPersist;
 	}

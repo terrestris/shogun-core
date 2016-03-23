@@ -63,24 +63,25 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	private final Integer DEFAULT_THUMBNAIL_SIZE = 100;
 
 	/**
-	 * @param uploadedImage
+	 * @param file
 	 * @return
 	 * @throws Exception
 	 */
-	public ImageFile uploadImageFile(MultipartFile uploadedImage) throws Exception {
+	@Override
+	public E uploadFile(MultipartFile file) throws Exception {
 
-		if (uploadedImage == null) {
+		if (file == null) {
 			final String errMsg = "Upload failed. Image is null.";
 			LOG.error(errMsg);
 			throw new Exception(errMsg);
-		} else if (uploadedImage.isEmpty()) {
-			final String errMsg = "Upload failed. Image " + uploadedImage + " is empty.";
+		} else if (file.isEmpty()) {
+			final String errMsg = "Upload failed. Image " + file + " is empty.";
 			LOG.error(errMsg);
 			throw new Exception(errMsg);
 		}
 
 		// persist the image file
-		ImageFile image = this.saveImage(uploadedImage, true, DEFAULT_THUMBNAIL_SIZE);
+		E image = this.saveImage(file, true, DEFAULT_THUMBNAIL_SIZE);
 		LOG.info("Successfully uploaded image " + image.getFileName());
 
 		return image;

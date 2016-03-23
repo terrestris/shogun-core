@@ -23,6 +23,7 @@ import de.terrestris.shogun2.dao.FileDao;
 import de.terrestris.shogun2.model.File;
 import de.terrestris.shogun2.service.FileService;
 import de.terrestris.shogun2.util.data.ResultSet;
+import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 
 /**
  *
@@ -64,6 +65,14 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 	}
 
 	/**
+	 * Use the object mapper from the spring context, if available (e.g.
+	 * {@link Shogun2JsonObjectMapper}). If not available, the default
+	 * implementation will be used.
+	 */
+	@Autowired(required = false)
+	private ObjectMapper objectMapper;
+
+	/**
 	 * Persists a file as bytearray in the database
 	 *
 	 * @param uploadedFile
@@ -75,26 +84,10 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 
 		LOG.debug("Requested to upload a multipart-file");
 
+		// build response map
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		final HttpHeaders responseHeaders = new HttpHeaders();
-		HttpStatus responseStatus = HttpStatus.OK;
-		String responseMapAsString = null;
-		ObjectMapper mapper = new ObjectMapper();
-
-		// we have to return the response-Map as String to be browser conform.
-		// as this controller is typically being called by a form.submit() the
-		// browser expects a response with the Content-Type header set to
-		// "text/html".
-		responseHeaders.setContentType(MediaType.TEXT_HTML);
-
-		if (uploadedFile.isEmpty()) {
-			LOG.error("Upload failed. File " + uploadedFile + " is empty.");
-			responseMap = ResultSet.error("Upload failed. File " +
-					uploadedFile.getOriginalFilename() + " is empty.");
-		}
-
 		try {
-			File file = service.uploadFile(uploadedFile);
+			E file = service.uploadFile(uploadedFile);
 			LOG.info("Successfully uploaded file " + file.getFileName());
 			responseMap = ResultSet.success(file);
 		} catch (Exception e) {
@@ -103,18 +96,28 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 					e.getMessage());
 		}
 
+		// we have to return the response-Map as String to be browser conform.
+		// as this controller is typically being called by a form.submit() the
+		// browser expects a response with the Content-Type header set to
+		// "text/html".
+		final HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.TEXT_HTML);
+
 		// rewrite the response-Map as String
+		String responseMapAsString = null;
 		try {
-			responseMapAsString = mapper.writeValueAsString(responseMap);
+			// try to use autowired object mapper from spring context
+			ObjectMapper om = (objectMapper != null) ? objectMapper : new ObjectMapper();
+			responseMapAsString = om.writeValueAsString(responseMap);
 		} catch (JsonProcessingException e) {
-			LOG.error("Error while rewriting the response Map to a String" +
-					e.getMessage());
-			responseMap = ResultSet.error("Error while rewriting the " +
-					"response Map to a String" + e.getMessage());
+			String errMsg = "Error while rewriting the response Map to a String: " + e.getMessage();
+			LOG.error(errMsg);
+
+			// use errorMsg if serialization as json failed
+			responseMapAsString = errMsg;
 		}
 
-		return new ResponseEntity<String>(responseMapAsString, responseHeaders,
-				responseStatus);
+		return new ResponseEntity<String>(responseMapAsString, responseHeaders, HttpStatus.OK);
 	}
 
 	/**
