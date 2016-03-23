@@ -474,13 +474,13 @@ public class UserServiceTest extends AbstractCrudServiceTest<User, UserDao<User>
 		// mock a user for the security context
 		User incompleteSecurityContextUser = new User();
 		Integer userId = 42;
-		TestUtil.setIdOnPersistentObject(incompleteSecurityContextUser, userId);
+		IdHelper.setIdOnPersistentObject(incompleteSecurityContextUser, userId);
 
 		// mock a "complete" user equivalent coming from db
 		String accountName = "someUser";
 		String firstName = "John";
 		User completeUserFromDatabase = new User();
-		TestUtil.setIdOnPersistentObject(completeUserFromDatabase, userId);
+		IdHelper.setIdOnPersistentObject(completeUserFromDatabase, userId);
 		completeUserFromDatabase.setAccountName(accountName);
 		completeUserFromDatabase.setFirstName(firstName);
 
