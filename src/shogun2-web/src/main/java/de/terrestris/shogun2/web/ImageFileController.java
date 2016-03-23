@@ -78,6 +78,7 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 	 * @param uploadedImage
 	 * @return
 	 */
+	@Override
 	@RequestMapping(value = "/upload.action", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadFile(
 			@RequestParam("file") MultipartFile uploadedImage) {
