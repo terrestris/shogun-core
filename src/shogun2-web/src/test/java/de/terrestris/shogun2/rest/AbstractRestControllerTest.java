@@ -34,10 +34,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
 import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
-import de.terrestris.shogun2.util.test.TestUtil;
 
 /**
  *
@@ -176,7 +176,7 @@ public class AbstractRestControllerTest {
 
 		TestModel testInstance = buildTestInstanceWithValue(value);
 
-		TestUtil.setIdOnPersistentObject(testInstance, id);
+		IdHelper.setIdOnPersistentObject(testInstance, id);
 
 		when(serviceMock.findById(id)).thenReturn(testInstance);
 
@@ -473,7 +473,7 @@ public class AbstractRestControllerTest {
 			throws Exception {
 		TestModel tm = buildTestInstanceWithValue(value);
 
-		TestUtil.setIdOnPersistentObject(tm, id);
+		IdHelper.setIdOnPersistentObject(tm, id);
 
 		return tm;
 	}

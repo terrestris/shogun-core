@@ -19,11 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.service.UserGroupService;
 import de.terrestris.shogun2.service.UserService;
 
 /**
@@ -40,9 +38,6 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private UserService<User, UserDao<User>> userService;
-
-	@Autowired
-	private UserGroupService<UserGroup, UserGroupDao<UserGroup>> userGroupService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;

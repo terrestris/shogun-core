@@ -1,10 +1,10 @@
-package de.terrestris.shogun2.util.test;
+package de.terrestris.shogun2.helper;
 
 import java.lang.reflect.Field;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
-public class TestUtil {
+public class IdHelper {
 
 	/**
 	 * Helper method that uses reflection to set the (inaccessible) id field of

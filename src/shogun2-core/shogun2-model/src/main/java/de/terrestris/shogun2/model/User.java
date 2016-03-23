@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import ch.rasc.extclassgenerator.Model;
+import de.terrestris.shogun2.converter.UserGroupIdResolver;
 
 /**
  * @author Nils Bühner
@@ -64,7 +65,8 @@ public class User extends Person {
 	@OrderColumn(name = "IDX")
 	@JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id"
+		property = "id",
+		resolver = UserGroupIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	private Set<UserGroup> userGroups = new HashSet<UserGroup>();
