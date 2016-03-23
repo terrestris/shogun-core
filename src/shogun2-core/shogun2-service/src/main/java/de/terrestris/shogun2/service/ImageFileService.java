@@ -69,7 +69,11 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 */
 	public ImageFile uploadImageFile(MultipartFile uploadedImage) throws Exception {
 
-		if (uploadedImage == null || uploadedImage.isEmpty()) {
+		if (uploadedImage == null) {
+			final String errMsg = "Upload failed. Image is null.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		} else if (uploadedImage.isEmpty()) {
 			final String errMsg = "Upload failed. Image " + uploadedImage + " is empty.";
 			LOG.error(errMsg);
 			throw new Exception(errMsg);
