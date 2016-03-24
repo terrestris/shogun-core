@@ -1,16 +1,21 @@
 package de.terrestris.shogun2.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.UserGroupDao;
+import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 
 /**
  * Service class for the {@link UserGroup} model.
  *
  * @author Nils Bühner
+ * @author Johannes Weskamm
  * @see AbstractCrudService
  *
  */
@@ -44,6 +49,26 @@ public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
 	@Qualifier("userGroupDao")
 	public void setDao(D dao) {
 		this.dao = dao;
+	}
+
+	/**
+	 *
+	 * @param groupId
+	 * @return
+	 * @throws Exception
+	 */
+	public Set<User> getUsersOfGroup(Integer groupId) throws Exception {
+
+		Set<User> groupUsersSet = new HashSet<User>();
+		UserGroup userGroup = this.findById(groupId);
+		if (userGroup != null) {
+			LOG.trace("Found group with ID " + userGroup.getId());
+			groupUsersSet = userGroup.getMembers();
+		} else {
+			throw new Exception("The group with id " + groupId + " could not be found");
+		}
+
+		return groupUsersSet;
 	}
 
 }
