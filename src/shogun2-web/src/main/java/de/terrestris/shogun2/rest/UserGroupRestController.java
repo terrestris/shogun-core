@@ -1,21 +1,20 @@
 package de.terrestris.shogun2.rest;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.service.UserGroupService;
-import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
  * @author Johannes Weskamm
@@ -24,14 +23,14 @@ import de.terrestris.shogun2.util.data.ResultSet;
  */
 @RestController
 @RequestMapping("/groups")
-public class GroupRestController<E extends UserGroup, D extends UserGroupDao<E>, S extends UserGroupService<E, D>>
+public class UserGroupRestController<E extends UserGroup, D extends UserGroupDao<E>, S extends UserGroupService<E, D>>
 		extends AbstractRestController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public GroupRestController() {
+	public UserGroupRestController() {
 		this((Class<E>) UserGroup.class);
 	}
 
@@ -39,7 +38,7 @@ public class GroupRestController<E extends UserGroup, D extends UserGroupDao<E>,
 	 * Constructor that sets the concrete entity class for the controller.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected GroupRestController(Class<E> entityClass) {
+	protected UserGroupRestController(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -62,15 +61,15 @@ public class GroupRestController<E extends UserGroup, D extends UserGroupDao<E>,
 	 * @return
 	 */
 	@RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> findUsersOfGroup(@PathVariable Integer groupId) {
+	public ResponseEntity<Set<User>> findUsersOfGroup(@PathVariable Integer groupId) {
 
 		try {
 			Set<User> groupUsersSet = this.service.getUsersOfGroup(groupId);
-			return ResultSet.success(groupUsersSet);
+			return new ResponseEntity<Set<User>>(groupUsersSet, HttpStatus.OK);
 		} catch (Exception e) {
 			LOG.error("Error finding group with id " + groupId + ": "
 					+ e.getMessage());
-			return ResultSet.error("Error finding group with id " + groupId);
+			return new ResponseEntity<Set<User>>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

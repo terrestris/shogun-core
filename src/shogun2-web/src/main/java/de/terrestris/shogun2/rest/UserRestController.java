@@ -1,21 +1,20 @@
 package de.terrestris.shogun2.rest;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.service.UserService;
-import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
  * @author Kai Volland
@@ -62,15 +61,15 @@ public class UserRestController<E extends User, D extends UserDao<E>, S extends 
 	 * @return
 	 */
 	@RequestMapping(value = "/{userId}/userGroups", method = RequestMethod.GET)
-	public @ResponseBody Map<String, Object> findGroupsOfUser(@PathVariable Integer userId) {
+	public ResponseEntity<Set<UserGroup>> findGroupsOfUser(@PathVariable Integer userId) {
 
 		try {
 			Set<UserGroup> userGroupsSet = this.service.getGroupsOfUser(userId);
-			return ResultSet.success(userGroupsSet);
+			return new ResponseEntity<Set<UserGroup>>(userGroupsSet, HttpStatus.OK);
 		} catch (Exception e) {
 			LOG.error("Error finding user with id " + userId + ": "
 					+ e.getMessage());
-			return ResultSet.error("Error finding user with id " + userId);
+			return new ResponseEntity<Set<UserGroup>>(HttpStatus.NOT_FOUND);
 		}
 	}
 }
