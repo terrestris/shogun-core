@@ -11,34 +11,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.service.UserService;
+import de.terrestris.shogun2.service.UserGroupService;
 
 /**
- * @author Kai Volland
+ * @author Johannes Weskamm
  * @author Nils Bühner
  *
  */
 @RestController
-@RequestMapping("/users")
-public class UserRestController<E extends User, D extends UserDao<E>, S extends UserService<E, D>>
+@RequestMapping("/groups")
+public class UserGroupRestController<E extends UserGroup, D extends UserGroupDao<E>, S extends UserGroupService<E, D>>
 		extends AbstractRestController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public UserRestController() {
-		this((Class<E>) User.class);
+	public UserGroupRestController() {
+		this((Class<E>) UserGroup.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete entity class for the controller.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected UserRestController(Class<E> entityClass) {
+	protected UserGroupRestController(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -49,27 +49,27 @@ public class UserRestController<E extends User, D extends UserDao<E>, S extends 
 	 */
 	@Override
 	@Autowired
-	@Qualifier("userService")
+	@Qualifier("userGroupService")
 	public void setService(S service) {
 		this.service = service;
 	}
 
 	/**
-	 * Get the groups of a specific user.
+	 * Get the users of a specific group.
 	 *
-	 * @param userId
+	 * @param groupId
 	 * @return
 	 */
-	@RequestMapping(value = "/{userId}/userGroups", method = RequestMethod.GET)
-	public ResponseEntity<Set<UserGroup>> findGroupsOfUser(@PathVariable Integer userId) {
+	@RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
+	public ResponseEntity<Set<User>> findUsersOfGroup(@PathVariable Integer groupId) {
 
 		try {
-			Set<UserGroup> userGroupsSet = this.service.getGroupsOfUser(userId);
-			return new ResponseEntity<Set<UserGroup>>(userGroupsSet, HttpStatus.OK);
+			Set<User> groupUsersSet = this.service.getUsersOfGroup(groupId);
+			return new ResponseEntity<Set<User>>(groupUsersSet, HttpStatus.OK);
 		} catch (Exception e) {
-			LOG.error("Error finding user with id " + userId + ": "
+			LOG.error("Error finding group with id " + groupId + ": "
 					+ e.getMessage());
-			return new ResponseEntity<Set<UserGroup>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Set<User>>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

@@ -1,5 +1,8 @@
 package de.terrestris.shogun2.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.criterion.Restrictions;
@@ -15,6 +18,7 @@ import de.terrestris.shogun2.dao.RoleDao;
 import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.token.RegistrationToken;
 
 /**
@@ -247,6 +251,26 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 		Integer id = loggedInUser.getId();
 
 		return dao.findById(id);
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
+
+		Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
+		User user = this.findById(userId);
+		if (user != null) {
+			LOG.trace("Found user with ID " + user.getId());
+			userGroupsSet = user.getUserGroups();
+		} else {
+			throw new Exception("The user with id " + userId + " could not be found");
+		}
+
+		return userGroupsSet;
 	}
 
 	/**
