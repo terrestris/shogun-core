@@ -1,7 +1,13 @@
 package de.terrestris.shogun2.util.interceptor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
 
 /**
  *
@@ -12,14 +18,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class OgcMessage {
 
 	/**
-	 * The OGC service type, e.g. WMS, WFS or WCS.
+	 * The OGC service type, possible rules are:
+	 *   * WMS
+	 *   * WFS
+	 *   * WCS
 	 */
-	private String service;
+	@Enumerated(EnumType.STRING)
+	private OgcEnum.ServiceType service;
 
 	/**
 	 * The OGC operation type, e.g. GetMap.
 	 */
-	private String operation;
+	@Enumerated(EnumType.STRING)
+	private OgcEnum.OperationType operation;
 
 	/**
 	 * The OGC/GeoServer endPoint (a generalization for layer, featureType,
@@ -33,7 +44,8 @@ public class OgcMessage {
 	 *   * DENY
 	 *   * MODIFY
 	 */
-	private String requestRule;
+	@Enumerated(EnumType.STRING)
+	private InterceptorEnum.RuleType requestRule;
 
 	/**
 	 * The rule type for this response, possible rules are:
@@ -41,14 +53,14 @@ public class OgcMessage {
 	 *   * DENY
 	 *   * MODIFY
 	 */
-	private String responseRule;
+	@Enumerated(EnumType.STRING)
+	private InterceptorEnum.RuleType responseRule;
 
 	/**
 	 * Default constructor
 	 */
 	public OgcMessage() {
 	}
-
 
 	/**
 	 *
@@ -58,8 +70,9 @@ public class OgcMessage {
 	 * @param requestRule
 	 * @param responseRule
 	 */
-	public OgcMessage(String service, String operation, String endPoint,
-			String requestRule, String responseRule) {
+	public OgcMessage(OgcEnum.ServiceType service, OgcEnum.OperationType operation,
+			String endPoint, InterceptorEnum.RuleType requestRule,
+			InterceptorEnum.RuleType responseRule) {
 		this.service = service;
 		this.operation = operation;
 		this.endPoint = endPoint;
@@ -70,28 +83,28 @@ public class OgcMessage {
 	/**
 	 * @return the service
 	 */
-	public String getService() {
+	public OgcEnum.ServiceType getService() {
 		return service;
 	}
 
 	/**
 	 * @param service the service to set
 	 */
-	public void setService(String service) {
+	public void setService(OgcEnum.ServiceType service) {
 		this.service = service;
 	}
 
 	/**
 	 * @return the operation
 	 */
-	public String getOperation() {
+	public OgcEnum.OperationType getOperation() {
 		return operation;
 	}
 
 	/**
 	 * @param operation the operation to set
 	 */
-	public void setOperation(String operation) {
+	public void setOperation(OgcEnum.OperationType operation) {
 		this.operation = operation;
 	}
 
@@ -112,28 +125,28 @@ public class OgcMessage {
 	/**
 	 * @return the requestRule
 	 */
-	public String getRequestRule() {
+	public InterceptorEnum.RuleType getRequestRule() {
 		return requestRule;
 	}
 
 	/**
 	 * @param requestRule the requestRule to set
 	 */
-	public void setRequestRule(String requestRule) {
+	public void setRequestRule(InterceptorEnum.RuleType requestRule) {
 		this.requestRule = requestRule;
 	}
 
 	/**
 	 * @return the responseRule
 	 */
-	public String getResponseRule() {
+	public InterceptorEnum.RuleType getResponseRule() {
 		return responseRule;
 	}
 
 	/**
 	 * @param responseRule the responseRule to set
 	 */
-	public void setResponseRule(String responseRule) {
+	public void setResponseRule(InterceptorEnum.RuleType responseRule) {
 		this.responseRule = responseRule;
 	}
 
@@ -143,7 +156,7 @@ public class OgcMessage {
 	 */
 	public boolean isWms() {
 		return this.getService() != null &&
-				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WMS);
+				this.getService().equals(OgcEnum.ServiceType.WMS);
 	}
 
 	/**
@@ -152,7 +165,7 @@ public class OgcMessage {
 	 */
 	public boolean isWfs() {
 		return this.getService() != null &&
-				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WFS);
+				this.getService().equals(OgcEnum.ServiceType.WFS);
 	}
 
 	/**
@@ -161,7 +174,7 @@ public class OgcMessage {
 	 */
 	public boolean isWcs() {
 		return this.getService() != null &&
-				this.getService().equalsIgnoreCase(OgcNaming.SERVICE_WCS);
+				this.getService().equals(OgcEnum.ServiceType.WCS);
 	}
 
 	/**
@@ -171,7 +184,7 @@ public class OgcMessage {
 	public boolean isWmsGetCapabilities() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
+				this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
 	}
 
 	/**
@@ -181,7 +194,7 @@ public class OgcMessage {
 	public boolean isWmsGetMap() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_MAP);
+				this.getOperation().equals(OgcEnum.OperationType.GET_MAP);
 	}
 
 	/**
@@ -191,7 +204,7 @@ public class OgcMessage {
 	public boolean isWmsGetFeatureInfo() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE_INFO);
+				this.getOperation().equals(OgcEnum.OperationType.GET_FEATURE_INFO);
 	}
 
 	/**
@@ -201,7 +214,7 @@ public class OgcMessage {
 	public boolean isWmsDescribeLayer() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_LAYER);
+				this.getOperation().equals(OgcEnum.OperationType.DESCRIBE_LAYER);
 	}
 
 	/**
@@ -211,7 +224,7 @@ public class OgcMessage {
 	public boolean isWmsGetLegendGraphic() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_LEGEND_GRAPHIC);
+				this.getOperation().equals(OgcEnum.OperationType.GET_LEGEND_GRAPHIC);
 	}
 
 	/**
@@ -221,7 +234,7 @@ public class OgcMessage {
 	public boolean isWmsGetStyles() {
 		return this.isWms() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_STYLES);
+				this.getOperation().equals(OgcEnum.OperationType.GET_STYLES);
 	}
 
 	/**
@@ -231,7 +244,7 @@ public class OgcMessage {
 	public boolean isWfsGetCapabilities() {
 		return this.isWfs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
+				this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
 	}
 
 	/**
@@ -241,7 +254,7 @@ public class OgcMessage {
 	public boolean isWfsDescribeFeatureType() {
 		return this.isWfs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_FEATURE_TYPE);
+				this.getOperation().equals(OgcEnum.OperationType.DESCRIBE_FEATURE_TYPE);
 	}
 
 	/**
@@ -251,7 +264,7 @@ public class OgcMessage {
 	public boolean isWfsGetFeature() {
 		return this.isWfs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_FEATURE);
+				this.getOperation().equals(OgcEnum.OperationType.GET_FEATURE);
 	}
 
 	/**
@@ -261,7 +274,7 @@ public class OgcMessage {
 	public boolean isWfsLockFeature() {
 		return this.isWfs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_LOCK_FEATURE);
+				this.getOperation().equals(OgcEnum.OperationType.LOCK_FEATURE);
 	}
 
 	/**
@@ -271,7 +284,7 @@ public class OgcMessage {
 	public boolean isWfsTransaction() {
 		return this.isWfs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_TRANSACTION);
+				this.getOperation().equals(OgcEnum.OperationType.TRANSACTION);
 	}
 
 	/**
@@ -281,7 +294,7 @@ public class OgcMessage {
 	public boolean isWcsGetCapabilities() {
 		return this.isWcs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_CAPABILITIES);
+				this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
 	}
 
 	/**
@@ -291,7 +304,7 @@ public class OgcMessage {
 	public boolean isWcsDescribeCoverage() {
 		return this.isWcs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_DESCRIBE_COVERAGE);
+				this.getOperation().equals(OgcEnum.OperationType.DESCRIBE_COVERAGE);
 	}
 
 	/**
@@ -301,7 +314,7 @@ public class OgcMessage {
 	public boolean isWcsGetCoverage() {
 		return this.isWcs() &&
 				this.getOperation() != null &&
-				this.getOperation().equalsIgnoreCase(OgcNaming.OPERATION_GET_COVERAGE);
+				this.getOperation().equals(OgcEnum.OperationType.GET_COVERAGE);
 	}
 
 	/**
@@ -310,7 +323,7 @@ public class OgcMessage {
 	 */
 	public boolean isRequestAllowed() {
 		return this.getRequestRule() != null &&
-				this.getRequestRule().equalsIgnoreCase("ALLOW");
+				this.getRequestRule().equals(InterceptorEnum.RuleType.ALLOW);
 	}
 
 	/**
@@ -319,7 +332,7 @@ public class OgcMessage {
 	 */
 	public boolean isResponseAllowed() {
 		return this.getResponseRule() != null &&
-				this.getResponseRule().equalsIgnoreCase("ALLOW");
+				this.getResponseRule().equals(InterceptorEnum.RuleType.ALLOW);
 	}
 
 	/**
@@ -328,7 +341,7 @@ public class OgcMessage {
 	 */
 	public boolean isRequestDenied() {
 		return this.getRequestRule() != null &&
-				this.getRequestRule().equalsIgnoreCase("DENY");
+				this.getRequestRule().equals(InterceptorEnum.RuleType.DENY);
 	}
 
 	/**
@@ -337,7 +350,7 @@ public class OgcMessage {
 	 */
 	public boolean isResponseDenied() {
 		return this.getResponseRule() != null &&
-				this.getResponseRule().equalsIgnoreCase("DENY");
+				this.getResponseRule().equals(InterceptorEnum.RuleType.DENY);
 	}
 
 	/**
@@ -346,7 +359,7 @@ public class OgcMessage {
 	 */
 	public boolean isRequestModified() {
 		return this.getRequestRule() != null &&
-				this.getRequestRule().equalsIgnoreCase("MODIFY");
+				this.getRequestRule().equals(InterceptorEnum.RuleType.MODIFY);
 	}
 
 	/**
@@ -355,7 +368,7 @@ public class OgcMessage {
 	 */
 	public boolean isResponseModified() {
 		return this.getResponseRule() != null &&
-				this.getResponseRule().equalsIgnoreCase("MODIFY");
+				this.getResponseRule().equals(InterceptorEnum.RuleType.MODIFY);
 	}
 
 	/**

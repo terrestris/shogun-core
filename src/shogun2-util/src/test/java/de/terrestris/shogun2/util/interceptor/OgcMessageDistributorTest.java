@@ -1,12 +1,14 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
 import de.terrestris.shogun2.util.model.Response;
 
 public class OgcMessageDistributorTest {
@@ -14,15 +16,7 @@ public class OgcMessageDistributorTest {
 	@Autowired
 	private OgcMessageDistributor distributor;
 
-	public static final String ENDPOINT = "Shinji:Kagawa";
-
-	public static final String SERVICE_WMS = "WMS";
-
-	public static final String OPERATION_GET_MAP = "GetMap";
-
-	public static final String RULE_ALLOW = "ALLOW";
-	public static final String RULE_DENY = "DENY";
-	public static final String RULE_MODIFY = "MODIFY";
+	public static final String ENDPOINT = "bvb:shinji";
 
 	@Before
 	public void set_up() {
@@ -32,7 +26,7 @@ public class OgcMessageDistributorTest {
 	@Test
 	public void intercept_request_allowed() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(null, null, null, RULE_ALLOW, null);
+		OgcMessage message = new OgcMessage(null, null, null, InterceptorEnum.RuleType.ALLOW, null);
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
@@ -46,7 +40,7 @@ public class OgcMessageDistributorTest {
 	@Test(expected=InterceptorException.class)
 	public void intercept_request_denied() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(null, null, null, RULE_DENY, null);
+		OgcMessage message = new OgcMessage(null, null, null, InterceptorEnum.RuleType.DENY, null);
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
@@ -57,7 +51,8 @@ public class OgcMessageDistributorTest {
 	@Test
 	public void intercept_request_modified_no_implementation() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(SERVICE_WMS, OPERATION_GET_MAP, ENDPOINT, RULE_MODIFY, null);
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WMS, OgcEnum.OperationType.GET_MAP,
+				ENDPOINT, InterceptorEnum.RuleType.MODIFY, null);
 
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
@@ -71,7 +66,7 @@ public class OgcMessageDistributorTest {
 	@Test
 	public void intercept_response_allowed() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(null, null, null, null, RULE_ALLOW);
+		OgcMessage message = new OgcMessage(null, null, null, null, InterceptorEnum.RuleType.ALLOW);
 
 		Response response = new Response();
 
@@ -84,7 +79,7 @@ public class OgcMessageDistributorTest {
 	@Test(expected=InterceptorException.class)
 	public void intercept_response_denied() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(null, null, null, null, RULE_DENY);
+		OgcMessage message = new OgcMessage(null, null, null, null, InterceptorEnum.RuleType.DENY);
 
 		Response response = new Response();
 
@@ -94,7 +89,8 @@ public class OgcMessageDistributorTest {
 	@Test
 	public void intercept_response_modified_no_implementation() throws InterceptorException {
 
-		OgcMessage message = new OgcMessage(SERVICE_WMS, OPERATION_GET_MAP, ENDPOINT, null, RULE_MODIFY);
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WMS, OgcEnum.OperationType.GET_MAP,
+				ENDPOINT, null, InterceptorEnum.RuleType.MODIFY);
 
 		Response response = new Response();
 
@@ -103,6 +99,5 @@ public class OgcMessageDistributorTest {
 
 		assertNotNull(returnedResponse);
 	}
-
 
 }

@@ -2,6 +2,8 @@ package de.terrestris.shogun2.model.interceptor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -9,7 +11,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.terrestris.shogun2.model.PersistentObject;
-
+import de.terrestris.shogun2.util.enumeration.HttpEnum;
+import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
 /**
  * The model representing the rules for the GeoServer Interceptor class.
  *
@@ -43,7 +47,8 @@ public class InterceptorRule extends PersistentObject {
 	 *   * RESPONSE
 	 */
 	@Column(nullable = false)
-	private String event;
+	@Enumerated(EnumType.STRING)
+	private HttpEnum.EventType event;
 
 	/**
 	 * The rule type for this rule, possible rules are:
@@ -52,18 +57,24 @@ public class InterceptorRule extends PersistentObject {
 	 *   * MODIFY
 	 */
 	@Column(nullable = false)
-	private String rule;
+	@Enumerated(EnumType.STRING)
+	private InterceptorEnum.RuleType rule;
 
 	/**
-	 * The OGC service type, e.g. WMS, WFS or WCS.
+	 * The OGC service type, possible rules are:
+	 *   * WMS
+	 *   * WFS
+	 *   * WCS
 	 */
 	@Column(nullable = false)
-	private String service;
+	@Enumerated(EnumType.STRING)
+	private OgcEnum.ServiceType service;
 
 	/**
 	 * The OGC operation type, e.g. GetMap.
 	 */
-	private String operation;
+	@Enumerated(EnumType.STRING)
+	private OgcEnum.OperationType operation;
 
 	/**
 	 * The OGC/GeoServer endPoint (a generalization for layer, featureType,
@@ -84,8 +95,8 @@ public class InterceptorRule extends PersistentObject {
 	 * @param operation
 	 * @param endPoint
 	 */
-	public InterceptorRule(String event, String rule, String service,
-			String operation, String endPoint) {
+	public InterceptorRule(HttpEnum.EventType event, InterceptorEnum.RuleType rule,
+			OgcEnum.ServiceType service, OgcEnum.OperationType operation, String endPoint) {
 		this.event = event;
 		this.rule = rule;
 		this.service = service;
@@ -96,56 +107,56 @@ public class InterceptorRule extends PersistentObject {
 	/**
 	 * @return the event
 	 */
-	public String getEvent() {
+	public HttpEnum.EventType getEvent() {
 		return event;
 	}
 
 	/**
 	 * @param event the event to set
 	 */
-	public void setEvent(String event) {
+	public void setEvent(HttpEnum.EventType event) {
 		this.event = event;
 	}
 
 	/**
 	 * @return the rule
 	 */
-	public String getRule() {
+	public InterceptorEnum.RuleType getRule() {
 		return rule;
 	}
 
 	/**
 	 * @param rule the rule to set
 	 */
-	public void setRule(String rule) {
+	public void setRule(InterceptorEnum.RuleType rule) {
 		this.rule = rule;
 	}
 
 	/**
 	 * @return the service
 	 */
-	public String getService() {
+	public OgcEnum.ServiceType getService() {
 		return service;
 	}
 
 	/**
 	 * @param service the service to set
 	 */
-	public void setService(String service) {
+	public void setService(OgcEnum.ServiceType service) {
 		this.service = service;
 	}
 
 	/**
 	 * @return the operation
 	 */
-	public String getOperation() {
+	public OgcEnum.OperationType getOperation() {
 		return operation;
 	}
 
 	/**
 	 * @param operation the operation to set
 	 */
-	public void setOperation(String operation) {
+	public void setOperation(OgcEnum.OperationType operation) {
 		this.operation = operation;
 	}
 
