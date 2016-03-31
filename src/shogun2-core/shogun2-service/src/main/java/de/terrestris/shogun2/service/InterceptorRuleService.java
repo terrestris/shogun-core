@@ -1,7 +1,6 @@
 package de.terrestris.shogun2.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,12 +39,13 @@ public class InterceptorRuleService<E extends InterceptorRule, D extends Interce
 	}
 
 	/**
-	 * 
-	 * @param filterMap
+	 *
+	 * @param service
+	 * @param event
 	 * @return
 	 */
-	public List<E> findSpecificRule(Map<String, String> filterMap) {
-		return this.dao.findSpecificRule(filterMap);
+	public List<E> findAllRulesForServiceAndEvent(String service, String event) {
+		return this.dao.findAllRulesForServiceAndEvent(service, event);
 	}
 
 	/**

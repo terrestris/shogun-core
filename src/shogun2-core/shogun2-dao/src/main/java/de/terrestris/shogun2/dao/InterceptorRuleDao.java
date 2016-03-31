@@ -1,15 +1,15 @@
 package de.terrestris.shogun2.dao;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.interceptor.InterceptorRule;
+import de.terrestris.shogun2.util.enumeration.HttpEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
 
 /**
  *
@@ -39,25 +39,27 @@ public class InterceptorRuleDao<E extends InterceptorRule>
 	protected InterceptorRuleDao(Class<E> clazz) {
 		super(clazz);
 	}
-
 	/**
 	 *
-	 * @param filterMap
+	 * @param service
+	 * @param event
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<E> findSpecificRule(Map<String, String> filterMap) {
+	public List<E> findAllRulesForServiceAndEvent(String service, String event) {
 
 		Criteria criteria = createDistinctRootEntityCriteria();
 
-		for (Entry<String, String> filter : filterMap.entrySet()) {
-			if (StringUtils.isNotEmpty(filter.getValue())) {
-				criteria.add(Restrictions.eq(filter.getKey(),
-						filter.getValue()).ignoreCase());
-			} else {
-				criteria.add(Restrictions.isNull(filter.getKey()));
-			}
-		}
+		criteria.add(Restrictions.eq("service",
+				OgcEnum.ServiceType.fromString(service)));
+		criteria.add(Restrictions.eq("event",
+				HttpEnum.EventType.fromString(event)));
+
+		// order descending by endPoint and operation, so the more specific
+		// rules will be listed first (this could make the following evaluation
+		// easier)
+		criteria.addOrder(Order.desc("endPoint"));
+		criteria.addOrder(Order.desc("operation"));
 
 		List<E> result = criteria.list();
 
