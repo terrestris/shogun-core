@@ -64,11 +64,15 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
 
 		try {
 
+			LOG.debug("Trying to intercept a GeoServer resource.");
+
 			httpResponse = this.service.interceptGeoServerRequest(request);
 
 			responseStatus = httpResponse.getStatusCode();
 			responseBody = httpResponse.getBody();
 			responseHeaders = httpResponse.getHeaders();
+
+			LOG.debug("Successfully intercepted a GeoServer resource.");
 
 			return new ResponseEntity<byte[]>(responseBody,
 					responseHeaders, responseStatus);
