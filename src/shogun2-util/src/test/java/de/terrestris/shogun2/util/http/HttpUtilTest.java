@@ -284,6 +284,54 @@ public class HttpUtilTest {
 		assertNotNull(response);
 	}
 
+	@Test
+	public void put_uri_empty() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_empty() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_uri_empty_auth() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_empty_auth() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_uri_body() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_uri_body_auth() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_body() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_body_auth() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
 	private File getTestFile() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource(

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -28,6 +29,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
@@ -481,6 +483,142 @@ public class HttpUtil {
 
 		HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
 		httpRequest.setEntity(httpEntity);
+
+		return send(httpRequest, username, password);
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uri
+	 * @return
+	 * @throws HttpException
+	 * @throws URISyntaxException
+	 */
+	public static Response put(URI uri) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uri), null, null, null, null);
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uriString
+	 * @return
+	 * @throws HttpException
+	 * @throws URISyntaxException
+	 */
+	public static Response put(String uriString) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uriString), null, null, null, null);
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uri
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(URI uri, String username, String password) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uri), null, null, username, password);
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uriString
+	 * @return
+	 * @throws HttpException
+	 * @throws URISyntaxException
+	 */
+	public static Response put(String uriString, String username, String password) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uriString), null, null, username, password);
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 * (without BasicAuth)
+	 *
+	 * @param uriString
+	 * @param body
+	 * @param contentType
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(String uriString, String body, ContentType contentType) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uriString), body, contentType, null, null);
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 *
+	 * @param uriString
+	 * @param body
+	 * @param contentType
+	 * @param username The Basic authentication username. No basic auth if null.
+	 * @param password The Basic authentication password. No basic auth if null.
+	 *
+	 * @return The HTTP response as Response object.
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(String uriString, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uriString), body, contentType, username, password);
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 * without BasicAuth
+	 *
+	 * @param uri
+	 * @param body
+	 * @param contentType
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(URI uri, String body, ContentType contentType) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uri), body, contentType, null, null);
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 *
+	 * @param uri
+	 * @param body
+	 * @param contentType
+	 * @param username The Basic authentication username. No basic auth if null.
+	 * @param password The Basic authentication password. No basic auth if null.
+	 *
+	 * @return The HTTP response as Response object.
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(URI uri, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uri), body, contentType, username, password);
+	}
+
+	/**
+	 *
+	 * @param httpRequest
+	 * @param body
+	 * @param contentType
+	 * @param username
+	 * @param password
+	 * @return The HTTP response as Response object.
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	private static Response putBody(HttpPut httpRequest, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException {
+
+		if (contentType != null && !StringUtils.isEmpty(body)) {
+			StringEntity stringEntity = new StringEntity(body, contentType);
+			stringEntity.setChunked(true);
+			httpRequest.setEntity(stringEntity);
+		}
 
 		return send(httpRequest, username, password);
 	}
