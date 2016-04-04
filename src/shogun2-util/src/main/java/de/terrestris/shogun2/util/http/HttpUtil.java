@@ -496,7 +496,7 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 */
 	public static Response put(URI uri) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uri), StringUtils.EMPTY, ContentType.APPLICATION_JSON, null, null);
+		return putBody(new HttpPut(uri), null, null, null, null);
 	}
 
 	/**
@@ -508,7 +508,7 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 */
 	public static Response put(String uriString) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uriString), StringUtils.EMPTY, ContentType.APPLICATION_JSON, null, null);
+		return putBody(new HttpPut(uriString), null, null, null, null);
 	}
 
 	/**
