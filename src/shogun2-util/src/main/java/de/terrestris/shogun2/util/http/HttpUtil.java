@@ -522,7 +522,7 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response put(URI uri, String username, String password) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uri), StringUtils.EMPTY, ContentType.APPLICATION_JSON, username, password);
+		return putBody(new HttpPut(uri), null, null, username, password);
 	}
 
 	/**
@@ -534,7 +534,7 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 */
 	public static Response put(String uriString, String username, String password) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uriString), StringUtils.EMPTY, ContentType.APPLICATION_JSON, username, password);
+		return putBody(new HttpPut(uriString), null, null, username, password);
 	}
 
 	/**
@@ -613,9 +613,13 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	private static Response putBody(HttpPut httpRequest, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException {
-		StringEntity stringEntity = new StringEntity(body, contentType);
-		stringEntity.setChunked(true);
-		httpRequest.setEntity(stringEntity);
+
+		if (contentType != null && !StringUtils.isEmpty(body)) {
+			StringEntity stringEntity = new StringEntity(body, contentType);
+			stringEntity.setChunked(true);
+			httpRequest.setEntity(stringEntity);
+		}
+
 		return send(httpRequest, username, password);
 	}
 
