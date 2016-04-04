@@ -6,10 +6,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -17,12 +17,16 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,12 +35,15 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import de.terrestris.shogun2.model.interceptor.InterceptorRule;
+import de.terrestris.shogun2.util.enumeration.HttpEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum.OperationType;
+import de.terrestris.shogun2.util.enumeration.OgcEnum.ServiceType;
 import de.terrestris.shogun2.util.http.HttpUtil;
 import de.terrestris.shogun2.util.interceptor.InterceptorException;
 import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.interceptor.OgcMessage;
 import de.terrestris.shogun2.util.interceptor.OgcMessageDistributor;
-import de.terrestris.shogun2.util.interceptor.OgcNaming;
 import de.terrestris.shogun2.util.interceptor.OgcXmlUtil;
 import de.terrestris.shogun2.util.model.Response;
 
@@ -108,8 +115,8 @@ public class GeoServerInterceptorService {
 		MutableHttpServletRequest mutableRequest =
 				new MutableHttpServletRequest(request);
 
-		// get the OGC request information (service, request, endPoint)
-		OgcMessage message = getOgcRequest(mutableRequest);
+		// get the OGC message information (service, request, endPoint)
+		OgcMessage message = getOgcMessage(mutableRequest);
 
 		// get the GeoServer base URI by the provided request
 		URI geoServerBaseUri = getGeoServerBaseURI(message);
@@ -144,124 +151,169 @@ public class GeoServerInterceptorService {
 	 * @throws InterceptorException
 	 * @throws IOException
 	 */
-	private OgcMessage getOgcRequest(MutableHttpServletRequest mutableRequest)
+	private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest)
 			throws InterceptorException, IOException {
 
-		OgcMessage ogcRequest = new OgcMessage();
+		LOG.debug("Building the OGC message from the given request.");
+
+		OgcMessage ogcMessage = new OgcMessage();
 
 		String requestService = getRequestParameterValue(
-				mutableRequest, OgcNaming.PARAMETER_SERVICE);
+				mutableRequest, OgcEnum.Service.SERVICE.toString());
 		String requestOperation = getRequestParameterValue(
-				mutableRequest, OgcNaming.PARAMETER_OPERATION);
+				mutableRequest, OgcEnum.Operation.OPERATION.toString());
 		String requestEndPoint = getRequestParameterValue(
-				mutableRequest, OgcNaming.PARAMETER_ENDPOINT);
-		InterceptorRule mostSpecificRequestRule = getMostSpecificRule(requestService,
-				requestOperation, requestEndPoint, "REQUEST");
-		InterceptorRule mostSpecificResponseRule = getMostSpecificRule(requestService,
-				requestOperation, requestEndPoint, "RESPONSE");
+				mutableRequest, OgcEnum.EndPoint.getAllValues());
 
-		if (StringUtils.isNotEmpty(requestService)) {
-			ogcRequest.setService(requestService);
-		} else {
-			LOG.debug("No service found.");
-		}
-
-		if (StringUtils.isNotEmpty(requestOperation)) {
-			ogcRequest.setOperation(requestOperation);
-		} else {
-			LOG.debug("No operation found.");
-		}
-
-		if (StringUtils.isNotEmpty(requestEndPoint)) {
-			ogcRequest.setEndPoint(requestEndPoint);
-		} else {
-			LOG.debug("No endPoint found.");
-		}
-
-		if (mostSpecificRequestRule != null) {
-			ogcRequest.setRequestRule(mostSpecificRequestRule.getRule());
-		} else {
-			LOG.debug("No interceptor rule found for the request.");
-		}
-
-		if (mostSpecificResponseRule != null) {
-			ogcRequest.setResponseRule(mostSpecificResponseRule.getRule());
-		} else {
-			LOG.debug("No interceptor rule found for the response.");
-		}
-
-		if (StringUtils.isEmpty(requestService) &&
-				StringUtils.isEmpty(requestOperation) &&
+		if (StringUtils.isEmpty(requestService) ||
+				StringUtils.isEmpty(requestOperation) ||
 				StringUtils.isEmpty(requestEndPoint)) {
 			throw new InterceptorException("Couldn't find all required OGC " +
 					"parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
 					"validity of the request.");
 		}
 
-		return ogcRequest;
+		if (StringUtils.isNotEmpty(requestService)) {
+			ogcMessage.setService(OgcEnum.ServiceType.fromString(requestService));
+			LOG.trace("Successfully set the service: " +
+					OgcEnum.ServiceType.fromString(requestService));
+		} else {
+			LOG.debug("No service found.");
+		}
+
+		if (StringUtils.isNotEmpty(requestOperation)) {
+			ogcMessage.setOperation(OgcEnum.OperationType.fromString(requestOperation));
+			LOG.trace("Successfully set the operation: " +
+					OgcEnum.OperationType.fromString(requestOperation));
+		} else {
+			LOG.debug("No operation found.");
+		}
+
+		if (StringUtils.isNotEmpty(requestEndPoint)) {
+			ogcMessage.setEndPoint(requestEndPoint);
+			LOG.trace("Successfully set the endPoint: " + requestEndPoint);
+		} else {
+			LOG.debug("No endPoint found.");
+		}
+
+		InterceptorRule mostSpecificRequestRule = getMostSpecificRule(requestService,
+				requestOperation, requestEndPoint, HttpEnum.EventType.REQUEST.toString());
+		InterceptorRule mostSpecificResponseRule = getMostSpecificRule(requestService,
+				requestOperation, requestEndPoint, HttpEnum.EventType.RESPONSE.toString());
+
+		if (mostSpecificRequestRule != null) {
+			ogcMessage.setRequestRule(mostSpecificRequestRule.getRule());
+			LOG.trace("Successfully set the requestRule: " +
+					mostSpecificRequestRule.getRule());
+		} else {
+			LOG.debug("No interceptor rule found for the request.");
+		}
+
+		if (mostSpecificResponseRule != null) {
+			ogcMessage.setResponseRule(mostSpecificResponseRule.getRule());
+			LOG.trace("Successfully set the responseRule: " +
+					mostSpecificResponseRule.getRule());
+		} else {
+			LOG.debug("No interceptor rule found for the response.");
+		}
+
+		LOG.debug("Successfully build the OGC message: " + ogcMessage);
+
+		return ogcMessage;
 	}
 
 	/**
 	 *
 	 * @param requestService
 	 * @param requestOperation
-	 * @param requestLayer
+	 * @param requestEndPoint
+	 * @param ruleEvent
 	 * @return
+	 * @throws InterceptorException
 	 */
 	private InterceptorRule getMostSpecificRule(String requestService,
-			String requestOperation, String requestEndPoint, String ruleEvent) {
+			String requestOperation, String requestEndPoint,
+			String ruleEvent) throws InterceptorException {
 
-		List<InterceptorRule> result;
+		final ServiceType service = OgcEnum.ServiceType.fromString(
+				requestService);
+		final OperationType operation = OgcEnum.OperationType.fromString(
+				requestOperation);
+		final String endPoint = requestEndPoint;
 
-		Map<String, String> filterMap = new HashMap<String, String>();
+		LOG.trace("Finding the most specific interceptor rule for: \n" +
+				"  * Event: " + ruleEvent + "\n" +
+				"  * Service: " + service + "\n" +
+				"  * Operation: " + operation + "\n" +
+				"  * EndPoint: " + endPoint
+		);
 
-		filterMap.put("event", ruleEvent);
+		// get all persisted rules for the given service and event
+		List<InterceptorRule> interceptorRules = this.interceptorRuleService
+				.findAllRulesForServiceAndEvent(requestService, ruleEvent);
 
-		filterMap.put("service", requestService);
-		filterMap.put("operation", requestOperation);
-		filterMap.put("endPoint", requestEndPoint);
+		LOG.debug("Got " + interceptorRules.size() + " rule(s) from database.");
 
-		result = this.interceptorRuleService.findSpecificRule(filterMap);
-
-		if (!result.isEmpty()) {
-			LOG.debug(ruleEvent + ": Found Service, Operation and EndPoint " +
-					"set in interceptor rule");
-			return result.get(0);
+		if (LogManager.getRootLogger().getLevel().equals(Level.TRACE)) {
+			for (InterceptorRule interceptorRule : interceptorRules) {
+				LOG.trace("Returned rule is: " + interceptorRule);
+			}
 		}
 
-		filterMap.put("operation", null);
+		LOG.trace("Evaluating the given rules for the most specific one:");
 
-		result = this.interceptorRuleService.findSpecificRule(filterMap);
+		// create the predicate for finding the most specific rule out of
+		// the given rules (conditions in descending specific order).
+		// note: we don't need to check for request event (request/response)
+		// and the service type at all as the rule candidates are filtered by
+		// the DAO method already. the last check for service specificity found
+		// here is a fallback only.
+		Predicate<InterceptorRule> condition = new Predicate<InterceptorRule>() {
+			@Override
+			public boolean evaluate(InterceptorRule rule) {
+				// most specific: we have a rule with a matching endPoint
+				//                and operation
+				if (Objects.equals(rule.getEndPoint(), endPoint) &&
+						Objects.equals(rule.getOperation(), operation)) {
+					LOG.trace("  * " + rule + " is endPoint and operation specific.");
+					return true;
+				// operation specific: if we have a rule with no matching
+				//                     endPoint, but a matching operation
+				} else if (Objects.equals(rule.getEndPoint(), null) &&
+						Objects.equals(rule.getOperation(), operation)) {
+					LOG.trace("  * " + rule + " is operation specific.");
+					return true;
+				// service specific: if we have a rule with neither a matching
+				//                   endPoint and service, but a matching service
+				} else if (Objects.equals(rule.getEndPoint(), null) &&
+						Objects.equals(rule.getOperation(), null) &&
+						Objects.equals(rule.getService(), service)) {
+					LOG.trace("  * " + rule + " rule is service specific.");
+					return true;
+				// no match at all
+				} else {
+					LOG.trace("  * " + rule + " has no match.");
+					return false;
+				}
+			}
+		};
 
-		if (!result.isEmpty()) {
-			LOG.debug(ruleEvent + ": Found Service and EndPoint set in " +
-					"interceptor rule");
-			return result.get(0);
+		// filter the input rules to get the most specific one
+		InterceptorRule mostSpecificRule = IterableUtils.find(
+				interceptorRules, condition);
+
+		if (interceptorRules.size() == 0) {
+			LOG.error("Got no interceptor rules for this request/response. " +
+					"Usually this should not happen as one has to define at " +
+					"least the basic sets of rules (e.g. ALLOW all WMS " +
+					"requests) when using the interceptor.");
+			throw new InterceptorException("No interceptor rule found.");
+		} else {
+			LOG.debug("Identified the following rule as most the specific " +
+					"one: " + mostSpecificRule);
 		}
 
-		filterMap.put("operation", requestOperation);
-		filterMap.put("endPoint", null);
-
-		result = this.interceptorRuleService.findSpecificRule(filterMap);
-
-		if (!result.isEmpty()) {
-			LOG.debug(ruleEvent + ": Found Service and Operation set in " +
-					"interceptor rule");
-			return result.get(0);
-		}
-
-		filterMap.put("operation", null);
-		filterMap.put("endPoint", null);
-
-		result = this.interceptorRuleService.findSpecificRule(filterMap);
-
-		if (!result.isEmpty()) {
-			LOG.debug(ruleEvent + ": Found Service set in interceptor rule");
-			return result.get(0);
-		}
-
-		return null;
-
+		return mostSpecificRule;
 	}
 
 	/**
@@ -278,6 +330,7 @@ public class GeoServerInterceptorService {
 		String value = StringUtils.EMPTY;
 
 		for (String key : keys) {
+
 			value = getRequestParameterValue(mutableRequest, key);
 
 			if (StringUtils.isNotEmpty(value)) {
@@ -291,17 +344,15 @@ public class GeoServerInterceptorService {
 	/**
 	 *
 	 * @param mutableRequest
-	 * @param key
+	 * @param parameter
 	 * @return
 	 * @throws InterceptorException
 	 * @throws IOException
 	 */
 	private static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
-			String key) throws InterceptorException, IOException {
+			String parameter) throws InterceptorException, IOException {
 
-		if (StringUtils.isEmpty(key)) {
-			throw new InterceptorException("Missing parameter key");
-		}
+		LOG.debug("Finding the request parameter [" + parameter + "]");
 
 		String value = StringUtils.EMPTY;
 
@@ -309,13 +360,15 @@ public class GeoServerInterceptorService {
 
 		if (!queryParams.isEmpty()) {
 
+			LOG.trace("The request contains query parameters (GET or POST).");
+
 			Map<String, String[]> params = new TreeMap<String, String[]>(
 					String.CASE_INSENSITIVE_ORDER);
 
 			params.putAll(queryParams);
 
-			if (params.containsKey(key)) {
-				value = StringUtils.join(params.get(key), ",");
+			if (params.containsKey(parameter)) {
+				value = StringUtils.join(params.get(parameter), ",");
 			}
 
 		} else {
@@ -324,12 +377,14 @@ public class GeoServerInterceptorService {
 
 			if (!StringUtils.isEmpty(xml)) {
 
+				LOG.trace("The request contains a POST body.");
+
 				Document document = OgcXmlUtil.getDocumentFromString(xml);
 
-				if (key.equalsIgnoreCase(OgcNaming.PARAMETER_SERVICE)) {
+				if (parameter.equalsIgnoreCase(OgcEnum.Service.SERVICE.toString())) {
 					value = OgcXmlUtil.getPathInDocument(
 							document, "/*/@service");
-				} else if (key.equalsIgnoreCase(OgcNaming.PARAMETER_OPERATION)) {
+				} else if (parameter.equalsIgnoreCase(OgcEnum.Operation.OPERATION.toString())) {
 					value = OgcXmlUtil.getPathInDocument(
 							document, "name(/*)");
 
@@ -337,7 +392,7 @@ public class GeoServerInterceptorService {
 						value = value.split(":")[1];
 					}
 
-				} else if (Arrays.asList(OgcNaming.PARAMETER_ENDPOINT).contains(key)) {
+				} else if (Arrays.asList(OgcEnum.EndPoint.getAllValues()).contains(parameter)) {
 					value = OgcXmlUtil.getPathInDocument(
 							document, "//TypeName/text()");
 					if (StringUtils.isEmpty(value)) {
@@ -347,12 +402,13 @@ public class GeoServerInterceptorService {
 				}
 
 			} else {
-				LOG.error("No body found");
+				LOG.error("No body found in the request.");
 			}
 		}
 
-		return value;
+		LOG.debug("Found the request parameter value: " + value);
 
+		return value;
 	}
 
 	/**
@@ -427,11 +483,19 @@ public class GeoServerInterceptorService {
 	private URI getGeoServerBaseURI(OgcMessage message) throws URISyntaxException,
 			InterceptorException {
 
-		// get the namespace from the qualified endpoint name
+		LOG.debug("Finding the GeoServer base URI by the provided EndPoint: " +
+				message.getEndPoint());
+
+		// get the namespace from the qualified endPoint name
 		String geoServerNamespace = getGeoServerNameSpace(message.getEndPoint());
+
+		LOG.debug("Found the following GeoServer namespace set in the "
+				+ "EndPoint: " + geoServerNamespace);
 
 		// set the GeoServer base URL
 		URI geoServerBaseUri = getGeoServerBaseURIFromNameSpace(geoServerNamespace);
+
+		LOG.debug("The corresponding GeoServer base URI is: " + geoServerBaseUri);
 
 		return geoServerBaseUri;
 	}
@@ -521,7 +585,6 @@ public class GeoServerInterceptorService {
 		}
 
 		return httpResponse;
-
 	}
 
 	/**
