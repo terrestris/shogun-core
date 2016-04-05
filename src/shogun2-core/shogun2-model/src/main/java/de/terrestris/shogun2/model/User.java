@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import ch.rasc.extclassgenerator.Model;
 import de.terrestris.shogun2.converter.UserGroupIdResolver;
 
 /**
@@ -30,11 +29,6 @@ import de.terrestris.shogun2.converter.UserGroupIdResolver;
  */
 @Entity
 @Table
-@Model(value = "shogun2.model.User",
-	readMethod = "userService.findWithSortingAndPagingExtDirect",
-	createMethod = "userService.saveOrUpdateCollection",
-	updateMethod = "userService.saveOrUpdateCollection",
-	destroyMethod = "userService.deleteCollection")
 public class User extends Person {
 
 	private static final long serialVersionUID = 1L;

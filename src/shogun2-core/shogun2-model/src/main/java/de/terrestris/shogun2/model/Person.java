@@ -18,8 +18,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import ch.rasc.extclassgenerator.Model;
-
 /**
  * @author Nils Bühner
  *
@@ -38,11 +36,6 @@ import ch.rasc.extclassgenerator.Model;
 			joinTable=@JoinTable(name="PERSONS_GROUPPERMISSIONS",
 			joinColumns = @JoinColumn(name = "PERSON_ID")))
 })
-@Model(value = "shogun2.model.Person",
-	readMethod = "personService.findWithSortingAndPagingExtDirect",
-	createMethod = "personService.saveOrUpdateCollection",
-	updateMethod = "personService.saveOrUpdateCollection",
-	destroyMethod = "personService.deleteCollection")
 public class Person extends SecuredPersistentObject {
 
 	private static final long serialVersionUID = 1L;
