@@ -22,19 +22,10 @@
 
     <context:property-placeholder location="classpath*:META-INF/*.properties" />
 
-    <context:component-scan base-package="${base_packages_to_scan}, ch.ralscha.extdirectspring">
+    <context:component-scan base-package="${base_packages_to_scan}">
         <context:exclude-filter
             expression="org.springframework.stereotype.Controller" type="annotation" />
     </context:component-scan>
-
-    <bean id="modelPackageCandidates" class="java.util.ArrayList">
-        <constructor-arg>
-            <list>
-                <value type="java.lang.String">${shogun2-parent-package}.shogun2.model</value>
-                <value type="java.lang.String">${package}.model</value>
-            </list>
-        </constructor-arg>
-    </bean>
 
     <!-- The mailSender configuration -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

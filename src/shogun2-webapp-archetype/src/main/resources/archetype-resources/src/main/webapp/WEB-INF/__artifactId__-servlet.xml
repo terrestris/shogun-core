@@ -51,10 +51,8 @@ ${shogun2-parent-package}.*.web" )
 	<beans:bean id="jacksonObjectMapper"
 		class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
 
-	<component-scan base-package="${web_packages_to_scan}, ch.ralscha.extdirectspring"
-		use-default-filters="false">
-		<include-filter expression="org.springframework.stereotype.Controller"
-			type="annotation" />
+	<component-scan base-package="${web_packages_to_scan}" use-default-filters="false">
+		<include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
 	</component-scan>
 
 </beans:beans>
