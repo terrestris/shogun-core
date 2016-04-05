@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.Application;
  */
 @Service("applicationService")
 public class ApplicationService<E extends Application, D extends ApplicationDao<E>>
-		extends AbstractExtDirectCrudService<E, D> {
+		extends AbstractCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

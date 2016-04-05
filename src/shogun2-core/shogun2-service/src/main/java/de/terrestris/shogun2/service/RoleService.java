@@ -13,12 +13,11 @@ import de.terrestris.shogun2.model.Role;
  * Service class for the {@link Role} model.
  *
  * @author Nils Bühner
- * @see AbstractExtDirectCrudService
  *
  */
 @Service("roleService")
 public class RoleService<E extends Role, D extends RoleDao<E>> extends
-		AbstractExtDirectCrudService<E, D> {
+		AbstractCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
