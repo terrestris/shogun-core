@@ -2,6 +2,8 @@ package de.terrestris.shogun2.paging;
 
 import java.util.List;
 
+import de.terrestris.shogun2.model.PersistentObject;
+
 /**
  * The Result of a paging request. Contains a list with returned objects and the
  * totalCount of available database entries.
@@ -9,7 +11,7 @@ import java.util.List;
  * @author Nils Bühner
  * 
  */
-public class PagingResult<E> {
+public class PagingResult<E extends PersistentObject> {
 
 	private List<E> resultList;
 
