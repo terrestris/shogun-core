@@ -12,12 +12,7 @@ public class PasswordResetTokenServiceTest extends
 		AbstractUserTokenServiceTest<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>, PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>>> {
 
 	@Override
-	public void setUpUserTokenToUse() throws Exception {
-		userTokenToUse = new PasswordResetToken(new User());
-	}
-
-	@Override
-	protected PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> getUserTokenService() {
+	protected PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> getCrudService() {
 		return new PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>>();
 	}
 
@@ -36,6 +31,11 @@ public class PasswordResetTokenServiceTest extends
 	protected Class<PasswordResetTokenDao<PasswordResetToken>> getDaoClass() {
 		return (Class<PasswordResetTokenDao<PasswordResetToken>>) new PasswordResetTokenDao<PasswordResetToken>()
 				.getClass();
+	}
+
+	@Override
+	public void setUpImplToTest() throws Exception {
+		implToTest = new PasswordResetToken(new User());
 	}
 
 }

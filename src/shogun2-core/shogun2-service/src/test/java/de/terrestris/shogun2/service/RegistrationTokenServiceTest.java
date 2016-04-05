@@ -12,12 +12,7 @@ public class RegistrationTokenServiceTest extends
 		AbstractUserTokenServiceTest<RegistrationToken, RegistrationTokenDao<RegistrationToken>, RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>>> {
 
 	@Override
-	public void setUpUserTokenToUse() throws Exception {
-		userTokenToUse = new RegistrationToken(new User());
-	}
-
-	@Override
-	protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> getUserTokenService() {
+	protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> getCrudService() {
 		return new RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>>();
 	}
 
@@ -36,4 +31,10 @@ public class RegistrationTokenServiceTest extends
 	protected Class<RegistrationTokenDao<RegistrationToken>> getDaoClass() {
 		return (Class<RegistrationTokenDao<RegistrationToken>>) new RegistrationTokenDao<RegistrationToken>().getClass();
 	}
+
+	@Override
+	public void setUpImplToTest() throws Exception {
+		implToTest = new RegistrationToken(new User());
+	}
+
 }

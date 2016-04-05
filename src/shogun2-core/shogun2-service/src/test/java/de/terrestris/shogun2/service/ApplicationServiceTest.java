@@ -4,12 +4,13 @@ import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 
 public class ApplicationServiceTest extends
-		AbstractExtDirectCrudServiceTest<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> {
+		AbstractCrudServiceTest<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> {
 
 	/**
 	 *
 	 * @throws Exception
 	 */
+	@Override
 	public void setUpImplToTest() throws Exception {
 		implToTest = new Application();
 	}
