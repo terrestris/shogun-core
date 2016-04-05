@@ -168,8 +168,6 @@
         <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
 
         <!-- Other -->
-        <ext-direct-spring.version>1.6.1</ext-direct-spring.version>
-        <ext-class-generator.version>1.0.8</ext-class-generator.version>
         <imgscalr.version>4.2</imgscalr.version>
 
         <!-- Java Mail API -->
@@ -514,19 +512,6 @@
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
-            </dependency>
-
-            <!-- ExtDirectSpring -->
-            <dependency>
-                <groupId>ch.ralscha</groupId>
-                <artifactId>extdirectspring</artifactId>
-                <version>${ext-direct-spring.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.rasc</groupId>
-                <artifactId>extclassgenerator</artifactId>
-                <version>${ext-class-generator.version}</version>
             </dependency>
 
             <!-- Spring Security -->
