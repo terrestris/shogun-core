@@ -9,3 +9,4 @@
   * In the file `src/main/webapp/WEB-INF/{{your-project}}-servlet.xml`, the package `ch.ralscha.extdirectspring` can be removed from the `<component-scan>` element.
   * In the file `src/main/webapp/WEB-INF/log4j.properties`, the config for `log4j.logger.ch.ralscha.extdirectspring` can be removed
   * In the file `src/main/webapp/WEB-INF/web.xml`, the `<servlet-mapping>` with `<url-pattern>/action/*</url-pattern>` can be removed
+* Existing projects should (once) boot with the `hibernate.hbm2ddl.auto` property set to `UPDATE` or `CREATE` to make use of the new tables `ABSTR_LAYERS_USERPERMISSIONS` and `ABSTR_LAYERS_GROUPPERMISSIONS` ([#155](https://github.com/terrestris/shogun2/pull/155)).
