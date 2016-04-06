@@ -1,12 +1,12 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletInputStream;
 
@@ -91,13 +91,15 @@ public class MutableHttpServletRequestTest {
 		Map<String, String[]> params = mutableRequest.getParameterMap();
 		assertNotNull(params.get(DEFAULT_REQUEST_PARAMETER_KEY));
 	}
-	
+
 	@Test
 	public void get_rereadable_input_stream() throws IOException {
 		ServletInputStream is = mutableRequest.getInputStream();
 		assertNotNull(is);
+		is.close();
 		ServletInputStream is_again = mutableRequest.getInputStream();
 		assertNotNull(is_again);
+		is_again.close();
 	}
 
 }

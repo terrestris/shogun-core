@@ -84,10 +84,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			// check if rawPassword matches the hash from db
 			if(passwordEncoder.matches(rawPassword, encryptedPassword)) {
 
-				// collect all roles and groups of the user
-				Set<UserGroup> userGroups = user.getUserGroups();
-
-				Set<Role> allUserRoles = getAllUserRoles(user, userGroups);
+				Set<Role> allUserRoles = getAllUserRoles(user);
 
 				// create granted authorities for the security context
 				for (Role role : allUserRoles) {
@@ -144,7 +141,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 	 * @param userGroups
 	 * @return
 	 */
-	private Set<Role> getAllUserRoles(User user, Set<UserGroup> userGroups) {
+	private Set<Role> getAllUserRoles(User user) {
 		Set<Role> allUserRoles = new HashSet<Role>();
 
 		// user roles
@@ -152,6 +149,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			allUserRoles.addAll(user.getRoles());
 		}
 
+		Set<UserGroup> userGroups = user.getUserGroups();
 		// userGroup roles
 		if(userGroups != null) {
 			for (UserGroup userGroup : userGroups) {

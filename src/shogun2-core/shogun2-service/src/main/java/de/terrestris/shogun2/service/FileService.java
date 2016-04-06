@@ -61,6 +61,16 @@ public class FileService<E extends File, D extends FileDao<E>>
 	 */
 	public E uploadFile(MultipartFile file) throws Exception {
 
+		if (file == null) {
+			final String errMsg = "Upload failed. File is null.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		} else if (file.isEmpty()) {
+			final String errMsg = "Upload failed. File is empty.";
+			LOG.error(errMsg);
+			throw new Exception(errMsg);
+		}
+
 		InputStream is = null;
 		byte[] fileByteArray = null;
 		E fileToPersist = getEntityClass().newInstance();
@@ -78,39 +88,9 @@ public class FileService<E extends File, D extends FileDao<E>>
 		fileToPersist.setFileType(file.getContentType());
 		fileToPersist.setFileName(file.getOriginalFilename());
 
-		dao.saveOrUpdate((E) fileToPersist);
+		dao.saveOrUpdate(fileToPersist);
 
 		return fileToPersist;
-	}
-
-	/**
-	 * Method gets a persisted file by the given id
-	 *
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	public File getFile(Integer id) throws Exception {
-
-		File persistedFile = null;
-
-		LOG.debug("Requested to return a file");
-
-		try {
-			// get the file entity
-			persistedFile = this.findById(id);
-
-			if (persistedFile != null) {
-				LOG.debug("Successfully returned a file");
-			} else {
-				throw new Exception("Could not find the file with id " + id);
-			}
-
-		} catch (Exception e) {
-			LOG.error("Could not return the requested file: " +
-					e.getMessage());
-		}
-		return persistedFile;
 	}
 
 }
