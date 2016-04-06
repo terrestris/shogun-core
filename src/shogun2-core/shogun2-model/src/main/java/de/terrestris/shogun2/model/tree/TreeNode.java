@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * The TreePanel contains a treeConfig
+ * The TreeNode is an abstract class which is the granular part of an tree.
  *
  * @author Kai Volland
  * @author Daniel Koch

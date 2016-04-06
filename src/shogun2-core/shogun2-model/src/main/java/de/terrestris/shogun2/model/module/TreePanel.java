@@ -16,7 +16,7 @@ import org.hibernate.annotations.CascadeType;
 import de.terrestris.shogun2.model.tree.TreeFolder;
 
 /**
- * The TreePanel contains a treeConfig
+ * The TreePanel module contains a RootNodeConfig which contains a TreeFolder.
  *
  * @author Kai Volland
  * @author Daniel Koch
@@ -36,21 +36,21 @@ public class TreePanel extends Module {
 	 */
 	@OneToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
-	private TreeFolder rootNode;
+	private TreeFolder rootNodeConfig;
 
 
 	/**
-	 * @return the rootNode
+	 * @return the rootNodeConfig
 	 */
-	public TreeFolder getRootNode() {
-		return rootNode;
+	public TreeFolder getRootNodeConfig() {
+		return rootNodeConfig;
 	}
 
 	/**
-	 * @param rootNode the rootNode to set
+	 * @param rootNodeConfig the rootNodeConfig to set
 	 */
-	public void setRootNode(TreeFolder rootNode) {
-		this.rootNode = rootNode;
+	public void setRootNodeConfig(TreeFolder rootNodeConfig) {
+		this.rootNodeConfig = rootNodeConfig;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class TreePanel extends Module {
 		// two randomly chosen prime numbers
 		return new HashCodeBuilder(9, 89).
 				appendSuper(super.hashCode())
-				.append(getRootNode())
+				.append(getRootNodeConfig())
 				.toHashCode();
 	}
 
@@ -84,7 +84,7 @@ public class TreePanel extends Module {
 
 		return new EqualsBuilder().
 				appendSuper(super.equals(other))
-				.append(getRootNode(), other.getRootNode())
+				.append(getRootNodeConfig(), other.getRootNodeConfig())
 				.isEquals();
 	}
 
@@ -95,7 +95,7 @@ public class TreePanel extends Module {
 	public String toString() {
 		return new ToStringBuilder(this)
 				.appendSuper(super.toString())
-				.append("treeConfig", getRootNode())
+				.append("treeConfig", getRootNodeConfig())
 				.toString();
 	}
 

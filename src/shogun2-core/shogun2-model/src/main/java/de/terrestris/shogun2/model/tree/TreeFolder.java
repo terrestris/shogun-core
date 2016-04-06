@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,8 +16,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import de.terrestris.shogun2.model.layer.LayerGroup;
+
 /**
- * The TreePanel contains a treeConfig
+ * The TreeFolder extends the TreeNode and contains n TreeNodes as children.
  *
  * @author Kai Volland
  * @author Daniel Koch
@@ -34,6 +41,17 @@ public class TreeFolder extends TreeNode {
 	 * 
 	 */
 	private boolean expanded;
+
+	/**
+	 * 
+	 */
+	@ManyToOne
+	@JsonIdentityInfo(
+			generator=ObjectIdGenerators.PropertyGenerator.class,
+			property="id"
+	)
+	@JsonIdentityReference(alwaysAsId=true)
+	private LayerGroup layerGroup;
 
 	/**
 	 * 
@@ -81,7 +99,21 @@ public class TreeFolder extends TreeNode {
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
 	}
-	
+
+	/**
+	 * @return the layerGroup
+	 */
+	public LayerGroup getLayerGroup() {
+		return layerGroup;
+	}
+
+	/**
+	 * @param layerGroup the layerGroup to set
+	 */
+	public void setLayerGroup(LayerGroup layerGroup) {
+		this.layerGroup = layerGroup;
+	}
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *

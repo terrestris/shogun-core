@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import de.terrestris.shogun2.model.layer.AbstractLayer;
 
 /**
- * The TreePanel contains a treeConfig
+ * The TreeLeaf extends the TreeNode and has an associated layer.
  *
  * @author Kai Volland
  * @author Daniel Koch
