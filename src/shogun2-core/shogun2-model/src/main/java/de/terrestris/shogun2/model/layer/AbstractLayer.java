@@ -1,7 +1,12 @@
 package de.terrestris.shogun2.model.layer;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,12 +22,24 @@ import de.terrestris.shogun2.model.layer.source.LayerDataSource;
  * Representation of a layer which consists a corresponding data source
  * and an appearance
  *
- * @author Andre Henn
+ * @author Kai Volland
+ * @author Nils Bühner
  * @author terrestris GmbH & Co. KG
  *
  */
 @Entity
-@Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@AssociationOverrides({
+	@AssociationOverride(
+			name="userPermissions",
+			joinTable=@JoinTable(name="ABSTR_LAYERS_USERPERMISSIONS",
+			joinColumns = @JoinColumn(name = "LAYER_ID"))),
+
+	@AssociationOverride(
+			name="groupPermissions",
+			joinTable=@JoinTable(name="ABSTR_LAYERS_GROUPPERMISSIONS",
+			joinColumns = @JoinColumn(name = "LAYER_ID")))
+})
 public abstract class AbstractLayer extends SecuredPersistentObject {
 
 	/**
