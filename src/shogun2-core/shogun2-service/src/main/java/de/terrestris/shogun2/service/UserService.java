@@ -129,13 +129,12 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public E registerUser(E user, HttpServletRequest request) throws Exception {
 
 		String email = user.getEmail();
 
 		// check if a user with the email already exists
-		User existingUser = this.findByEmail(email);
+		E existingUser = this.findByEmail(email);
 
 		if(existingUser != null) {
 			final String errorMessage = "User with eMail '" + email + "' already exists.";
@@ -200,8 +199,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 *
 	 * @return The persisted user object (incl. ID value)
 	 */
-	@SuppressWarnings("unchecked")
-	public User persistNewUser(User user, boolean encryptPassword) {
+	public E persistNewUser(E user, boolean encryptPassword) {
 
 		if(user.getId() != null) {
 			// to be sure that we are in the
@@ -213,7 +211,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 
-		dao.saveOrUpdate((E) user);
+		dao.saveOrUpdate(user);
 
 		return user;
 	}
@@ -224,15 +222,14 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param rawPassword
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	public void updatePassword(User user, String rawPassword) throws Exception {
+	public void updatePassword(E user, String rawPassword) throws Exception {
 
 		if(user.getId() == null) {
 			throw new Exception("The ID of the user object is null.");
 		}
 
 		user.setPassword(passwordEncoder.encode(rawPassword));
-		dao.saveOrUpdate((E) user);
+		dao.saveOrUpdate(user);
 	}
 
 	/**
@@ -240,9 +237,10 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param request
 	 * @throws Exception
 	 */
-	public User getUserBySession() {
+	public E getUserBySession() {
 
-		User loggedInUser = (User) SecurityContextHolder.getContext()
+		@SuppressWarnings("unchecked")
+		E loggedInUser = (E) SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
 
 		// The SecurityContextHolder holds a static copy of the user from
@@ -262,7 +260,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
 
 		Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
-		User user = this.findById(userId);
+		E user = this.findById(userId);
 		if (user != null) {
 			LOG.trace("Found user with ID " + user.getId());
 			userGroupsSet = user.getUserGroups();
