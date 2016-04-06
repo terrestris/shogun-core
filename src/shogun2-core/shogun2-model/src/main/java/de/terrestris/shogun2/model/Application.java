@@ -19,8 +19,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.ReadableDateTime;
 
-import ch.rasc.extclassgenerator.Model;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.terrestris.shogun2.model.module.CompositeModule;
@@ -46,11 +44,6 @@ import de.terrestris.shogun2.model.module.CompositeModule;
 			joinTable=@JoinTable(name="APPLICATIONS_GROUPPERMISSIONS",
 			joinColumns = @JoinColumn(name = "APPLICATION_ID")))
 })
-@Model(value = "shogun2.model.Application",
-	readMethod = "applicationService.findWithSortingAndPagingExtDirect",
-	createMethod = "applicationService.saveOrUpdateCollection",
-	updateMethod = "applicationService.saveOrUpdateCollection",
-	destroyMethod = "applicationService.deleteCollection")
 public class Application extends SecuredPersistentObject {
 
 	private static final long serialVersionUID = 1L;

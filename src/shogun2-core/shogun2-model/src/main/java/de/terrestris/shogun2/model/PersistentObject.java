@@ -19,8 +19,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
-import ch.rasc.extclassgenerator.ModelField;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -40,15 +38,9 @@ public abstract class PersistentObject implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-
 	// The column annotation is used by hibernate for the column creation, e.g.
 	// to build constraints like nullable
 	@Column(updatable = false, nullable = false)
-
-	// We set this value to true, so that the default id-value of newly
-	// created EXT records will be null. Otherwise the saveOrUpdate() method
-	// would not work.
-	@ModelField(useNull = true)
 	private final Integer id = null;
 
 	/**

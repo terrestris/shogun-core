@@ -69,12 +69,6 @@
             <artifactId>powermock-api-mockito</artifactId>
         </dependency>
 
-        <!-- ExtDirectSpring -->
-        <dependency>
-            <groupId>ch.ralscha</groupId>
-            <artifactId>extdirectspring</artifactId>
-        </dependency>
-
         <!-- BeanUtils -->
         <dependency>
             <groupId>commons-beanutils</groupId>

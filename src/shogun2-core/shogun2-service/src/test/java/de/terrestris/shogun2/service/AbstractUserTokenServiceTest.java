@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -16,60 +15,20 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.SimpleExpression;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 import de.terrestris.shogun2.dao.AbstractUserTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.UserToken;
 
 /**
- * Test for the {@link AbstractExtDirectCrudService}.
+ * Test for the {@link AbstractUserTokenService}.
  *
  * @author Nils Bühner
  *
  */
-public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extends AbstractUserTokenDao<E>, S extends AbstractUserTokenService<E, D>> {
-
-	/**
-	 * Static object that holds concrete instances of
-	 * {@link UserToken} for the tests.
-	 */
-	protected E userTokenToUse = null;
-
-	protected D dao;
-
-	@InjectMocks
-	protected S userTokenService;
-
-	@Before
-	public void setUp() {
-		// see here why we are mocking this way:
-		// http://stackoverflow.com/a/24302622
-		dao = mock(getDaoClass());
-		this.userTokenService = getUserTokenService();
-		// Process mock annotations
-		MockitoAnnotations.initMocks(this);
-	}
-
-	/**
-	 * This method has to be implemented by subclasses.
-	 *
-	 * @throws Exception
-	 */
-	@Before
-	public abstract void setUpUserTokenToUse() throws Exception;
-
-	/**
-	 * This method has to be implemented by subclasses to return a concrete
-	 * implementation of the tested service.
-	 *
-	 * @return
-	 */
-	protected abstract S getUserTokenService();
+public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extends AbstractUserTokenDao<E>, S extends AbstractUserTokenService<E, D>>
+		extends AbstractCrudServiceTest<E, D, S> {
 
 	/**
 	 * Has to be implemented by subclasses and should return an expired token.
@@ -94,24 +53,19 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 	 */
 	protected abstract Class<D> getDaoClass();
 
-	@After
-	public void tearDownAfterEachTest() throws Exception {
-		userTokenToUse = null;
-	}
-
 	@Test
 	public void findByUser_shouldFindUserToken() {
 		User user = new User();
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(userTokenToUse);
+		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(implToTest);
 
-		E actualUserToken = userTokenService.findByUser(user);
+		E actualUserToken = crudService.findByUser(user);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
 
-		assertEquals(actualUserToken, userTokenToUse);
+		assertEquals(actualUserToken, implToTest);
 	}
 
 	@Test
@@ -121,7 +75,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 		// mock the dao
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(null);
 
-		E actualUserToken = userTokenService.findByUser(userWithoutToken);
+		E actualUserToken = crudService.findByUser(userWithoutToken);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -137,7 +91,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 		doThrow(new HibernateException("errormsg"))
 			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
 
-		userTokenService.findByUser(userThatThrowsException);
+		crudService.findByUser(userThatThrowsException);
 
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
 		verifyNoMoreInteractions(dao);
@@ -145,14 +99,14 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 
 	@Test
 	public void validateToken_shouldSuccessfullyValidate() throws Exception {
-		userTokenService.validateToken(userTokenToUse);
-		assertNotNull(userTokenToUse);
+		crudService.validateToken(implToTest);
+		assertNotNull(implToTest);
 	}
 
 	@Test
 	public void validateToken_shouldThrowIfTokenIsNull() {
 		try {
-			userTokenService.validateToken(null);
+			crudService.validateToken(null);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String msg = e.getMessage();
@@ -167,7 +121,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 
 		// mock an expired token
 		try {
-			userTokenService.validateToken(expiredUserToken);
+			crudService.validateToken(expiredUserToken);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String msg = e.getMessage();
@@ -183,7 +137,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 
 		// mock an expired token
 		try {
-			userTokenService.validateToken(expiredUserToken);
+			crudService.validateToken(expiredUserToken);
 			fail("Should have thrown Exception, but did not!");
 		} catch (Exception e) {
 			final String msg = e.getMessage();
@@ -198,14 +152,14 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 			InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		User user = userTokenToUse.getUser();
+		User user = implToTest.getUser();
 
 		// mock the dao
 		// will be called by findByUser -> return null, i.e. there is no
 		// existing token for the user
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(null);
 
-		E newUserToken = userTokenService.getValidTokenForUser(user, null);
+		E newUserToken = crudService.getValidTokenForUser(user, null);
 
 		// verify dao invocations
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
@@ -222,7 +176,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 			InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		User user = userTokenToUse.getUser();
+		User user = implToTest.getUser();
 
 		// mock the dao
 		// will be called by findByUser -> return null, i.e. there is no
@@ -230,7 +184,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(null);
 
 		Integer expirationInMinutes = 120;
-		E newUserToken = userTokenService.getValidTokenForUser(user, expirationInMinutes);
+		E newUserToken = crudService.getValidTokenForUser(user, expirationInMinutes);
 
 		// verify dao invocations
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
@@ -246,14 +200,14 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 			InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		User user = userTokenToUse.getUser();
+		User user = implToTest.getUser();
 
 		// mock the dao
 		// will be called by findByUser -> return null, i.e. there is no
 		// existing token for the user
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn((E) userTokenToUse);
+		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(implToTest);
 
-		E newUserToken = userTokenService.getValidTokenForUser(user, null);
+		E newUserToken = crudService.getValidTokenForUser(user, null);
 
 		// verify dao invocations
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
@@ -277,7 +231,7 @@ public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extend
 		// existing token for the user
 		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn((E) expiredToken);
 
-		E newUserToken = userTokenService.getValidTokenForUser(user, null);
+		E newUserToken = crudService.getValidTokenForUser(user, null);
 
 		// verify dao invocations
 		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));

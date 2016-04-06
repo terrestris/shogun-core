@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.Person;
  */
 @Service("personService")
 public class PersonService<E extends Person, D extends PersonDao<E>> extends
-		AbstractExtDirectCrudService<E, D> {
+		AbstractCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
