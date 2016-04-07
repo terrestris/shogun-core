@@ -106,10 +106,6 @@
 
     <modules>
         <module>shogun2-core</module>
-        <module>shogun2-init</module>
-        <module>shogun2-util</module>
-        <module>shogun2-web</module>
-        <module>shogun2-security</module>
         <module>shogun2-webapp-archetype</module>
     </modules>
 
