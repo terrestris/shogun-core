@@ -163,13 +163,7 @@
 
         <dependency>
             <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-init</artifactId>
-            <version>${shogun2.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-web</artifactId>
+            <artifactId>shogun2-core</artifactId>
             <version>${shogun2.version}</version>
         </dependency>
 
