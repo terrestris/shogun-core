@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.0.6 (2016-XX-XX)
+## 0.0.6 (2016-04-06)
 * All EXT-Direct related stuff has been removed. Existing projects (that were possibly created with an old version of the webapp archetype) need adaptions regarding the following points:
   * Remove all annotations of type `ch.rasc.extclassgenerator.Model`
   * In the file `src/main/resources/META-INF/spring/{{your-project}}-context.xml`:
