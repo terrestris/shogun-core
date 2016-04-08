@@ -3,10 +3,14 @@
  */
 package de.terrestris.shogun2.model;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -26,7 +30,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class File extends PersistentObject {
+@AssociationOverrides({
+	@AssociationOverride(
+			name="userPermissions",
+			joinTable=@JoinTable(name="FILES_USERPERMISSIONS",
+			joinColumns = @JoinColumn(name = "FILE_ID"))),
+
+	@AssociationOverride(
+			name="groupPermissions",
+			joinTable=@JoinTable(name="FILES_GROUPPERMISSIONS",
+			joinColumns = @JoinColumn(name = "FILE_ID")))
+})
+public class File extends SecuredPersistentObject {
 
 	/**
 	 *
