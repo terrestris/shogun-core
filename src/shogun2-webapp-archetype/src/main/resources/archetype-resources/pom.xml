@@ -19,7 +19,7 @@
         <shogun2.version>0.1.0-SNAPSHOT</shogun2.version>
 
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-scm-plugin.version>1.9.4</maven-scm-plugin.version>
 
@@ -163,13 +163,7 @@
 
         <dependency>
             <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-init</artifactId>
-            <version>${shogun2.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-web</artifactId>
+            <artifactId>shogun2-core</artifactId>
             <version>${shogun2.version}</version>
         </dependency>
 
