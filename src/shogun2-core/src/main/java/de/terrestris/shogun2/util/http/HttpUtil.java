@@ -758,7 +758,16 @@ public class HttpUtil {
 	 */
 	private static HttpHost getSystemProxy(URI uri) throws UnknownHostException {
 
-		System.setProperty("java.net.useSystemProxies", "true");
+		// We do not set the java.net.useSystemProxies property here as it may
+		// lead to problems in certain scenarios, e.g. when testing with OpenJDK
+		// on VMs with an insufficient dependency management (see the failing
+		// builds from https://github.com/terrestris/shogun2/pull/157)
+
+		// If it is necessary that this property is set to true, it should be
+		// configured on the JVM via -Djava.net.useSystemProxies=true
+
+		//	System.setProperty("java.net.useSystemProxies", "true");
+
 		HttpHost systemProxy = null;
 
 		List<Proxy> proxyList = ProxySelector.getDefault().select(uri);
