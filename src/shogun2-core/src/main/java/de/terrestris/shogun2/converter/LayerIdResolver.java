@@ -1,30 +1,25 @@
 package de.terrestris.shogun2.converter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import de.terrestris.shogun2.dao.LayerDao;
 import de.terrestris.shogun2.model.layer.Layer;
+import de.terrestris.shogun2.service.LayerService;
 
 /**
  *
  * @author Nils Buehner
  *
  */
-public class LayerIdResolver<E extends Layer> extends
-		PersistentObjectIdResolver<Layer> {
+public class LayerIdResolver<E extends Layer, D extends LayerDao<E>, S extends LayerService<E, D>> extends
+		PersistentObjectIdResolver<E, D, S> {
 
-	/**
-	 * Default Constructor
-	 */
-	public LayerIdResolver() {
-		super(Layer.class);
-	}
-
-	/**
-	 * Constructor that has to be called by subclasses.
-	 *
-	 * @param entityClass
-	 */
-	@SuppressWarnings("unchecked")
-	protected LayerIdResolver(Class<E> entityClass) {
-		super((Class<Layer>) entityClass);
+	@Override
+	@Autowired
+	@Qualifier("layerService")
+	public void setService(S service) {
+		this.service = service;
 	}
 
 }
