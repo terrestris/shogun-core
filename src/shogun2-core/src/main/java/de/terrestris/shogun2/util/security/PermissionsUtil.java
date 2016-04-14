@@ -15,11 +15,11 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
 import de.terrestris.shogun2.service.PermissionCollectionService;
 
 /**
-*
-* @author Johannes Weskamm
-* @author terrestris GmbH & Co. KG
-*
-*/
+ *
+ * @author Johannes Weskamm
+ * @author terrestris GmbH & Co. KG
+ *
+ */
 @Component
 public class PermissionsUtil {
 
