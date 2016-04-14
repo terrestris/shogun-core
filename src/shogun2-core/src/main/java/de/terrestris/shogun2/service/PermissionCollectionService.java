@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
-import de.terrestris.shogun2.model.module.Module;
 import de.terrestris.shogun2.model.security.PermissionCollection;
 
 /**
- * Service class for the {@link Module} model.
+ * Service class for the {@link PermissionCollection} model.
  *
  * @author Nils Bühner
  * @author Johannes Weskamm
