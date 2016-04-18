@@ -4,7 +4,7 @@ import de.terrestris.shogun2.dao.PersonDao;
 import de.terrestris.shogun2.model.Person;
 
 public class PersonServiceTest extends
-		AbstractCrudServiceTest<Person, PersonDao<Person>, PersonService<Person, PersonDao<Person>>> {
+		AbstractSecuredPersistentObjectServiceTest<Person, PersonDao<Person>, PersonService<Person, PersonDao<Person>>> {
 
 	/**
 	 *
