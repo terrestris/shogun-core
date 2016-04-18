@@ -23,8 +23,8 @@ import de.terrestris.shogun2.model.module.Module;
  *
  */
 @Service("abstractLayerService")
-public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLayerDao<E>> extends
-		AbstractCrudService<E, D> {
+public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLayerDao<E>>
+		extends AbstractSecuredPersistentObjectService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
@@ -59,16 +59,16 @@ public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLay
 	}
 
 	/**
-	 * 
+	 *
 	 * @param abstractLayer
 	 * @return
 	 */
 	public Set<E> findLayerGroupsOfAbstractLayer(AbstractLayer abstractLayer) {
 		return dao.findLayerGroupsOfAbstractLayer(abstractLayer);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param layerGroupId
 	 * @param abstractLayerIds
 	 * @return
@@ -96,10 +96,11 @@ public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLay
 
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public void delete (E layer) {
-		LOG.info("OVERRIDE DELETE OF LAYER");
-
 		// get all maps that contain the layer
 		Set<Map> maps = mapDao.findMapsWithLayer(layer);
 
