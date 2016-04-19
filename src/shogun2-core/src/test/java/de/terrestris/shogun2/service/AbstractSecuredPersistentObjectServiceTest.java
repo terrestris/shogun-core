@@ -293,7 +293,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 
 		assertEquals(1, implToTest.getUserPermissions().keySet().size());
 	}
-	
+
 	/**
 	 *
 	 */
@@ -449,6 +449,95 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 
 		// assert that we have set the correct number of permissions
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeGroupPermissions_shouldDoNothingWhenPassedEntityIsNull() {
+
+		Permission permissions = Permission.ADMIN;
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		crudService.removeGroupPermissions(null, userGroup , permissions);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(any(getCrudService().getEntityClass()));
+
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeGroupPermissions_shouldDoNothingWhenNoPermissionsHaveBeenPassed() {
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		crudService.removeGroupPermissions(implToTest, userGroup);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeGroupPermissions_shouldDoNothingWhenNoPermissionsExist() {
+
+		final Permission writePermission = Permission.WRITE;
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		crudService.removeGroupPermissions(implToTest, userGroup, writePermission);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertEquals(0, implToTest.getGroupPermissions().keySet().size());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeGroupPermissions_shouldRemoveExistingPermission() {
+
+		final Permission readPermission = Permission.READ;
+		final Permission writePermission = Permission.WRITE;
+
+		PermissionCollection existingPermissionCollection = new PermissionCollection();
+
+		existingPermissionCollection.getPermissions().add(readPermission);
+		existingPermissionCollection.getPermissions().add(writePermission);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		Map<UserGroup, PermissionCollection> existingGroupPermissionsMap = new HashMap<UserGroup, PermissionCollection>();
+		existingGroupPermissionsMap.put(userGroup, existingPermissionCollection);
+
+		implToTest.setGroupPermissions(existingGroupPermissionsMap);
+
+		crudService.removeGroupPermissions(implToTest, userGroup, writePermission);
+
+		// be sure that the permission collection has been updated
+		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
 	}
 
 }
