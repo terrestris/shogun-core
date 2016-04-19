@@ -209,4 +209,88 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getUserPermissions().get(user).getPermissions().size());
 	}
 
+	/**
+	 *
+	 */
+	@Test
+	public void removeUserPermissions_shouldDoNothingWhenPassedEntityIsNull() {
+
+		Permission permissions = Permission.ADMIN;
+		User user = new User("Dummy", "Dummy", "dummy");
+
+		crudService.removeUserPermissions(null, user , permissions);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(any(getCrudService().getEntityClass()));
+
+		assertTrue(implToTest.getUserPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeUserPermissions_shouldDoNothingWhenNoPermissionsHaveBeenPassed() {
+
+		User user = new User("Dummy", "Dummy", "dummy");
+
+		crudService.removeUserPermissions(implToTest, user);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertTrue(implToTest.getUserPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeUserPermissions_shouldDoNothingWhenNoPermissionsExist() {
+
+		final Permission writePermission = Permission.WRITE;
+
+		User user = new User("Dummy", "Dummy", "dummy");
+
+		crudService.removeUserPermissions(implToTest, user, writePermission);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertEquals(0, implToTest.getUserPermissions().keySet().size());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void removeUserPermissions_shouldRemoveExistingPermission() {
+
+		final Permission readPermission = Permission.READ;
+		final Permission writePermission = Permission.WRITE;
+
+		PermissionCollection existingPermissionCollection = new PermissionCollection();
+
+		existingPermissionCollection.getPermissions().add(readPermission);
+		existingPermissionCollection.getPermissions().add(writePermission);
+
+		User user = new User("Dummy", "Dummy", "dummy");
+
+		Map<User, PermissionCollection> existingUserPermissionsMap = new HashMap<User, PermissionCollection>();
+		existingUserPermissionsMap.put(user, existingPermissionCollection);
+
+		implToTest.setUserPermissions(existingUserPermissionsMap);
+
+		crudService.removeUserPermissions(implToTest, user, writePermission);
+
+		// be sure that the permission collection has been updated
+		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertEquals(1, implToTest.getUserPermissions().keySet().size());
+	}
+
 }
