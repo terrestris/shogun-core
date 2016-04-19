@@ -1,6 +1,10 @@
 # Release Notes
 
 ## 0.1.0 (not finally released yet)
+
+* New features:
+  * An `AbstractSecuredPersistentObjectService` has been introduced. This service provides useful methods to add and remove permissions for certain objects. `PermissionCollection`s will be persisted in the database when using these methods. All services of entities that extend `SecuredPersistentObject` should extend the abstract service mentioned above.
+
 Existing projects (that were possibly created with an old version of the webapp archetype) need adaptions regarding the following points:
 * Adapt the ``pom.xml`` of your existing SHOGun2 project
   * Remove the dependency with the artifactID ``shogun2-web``
