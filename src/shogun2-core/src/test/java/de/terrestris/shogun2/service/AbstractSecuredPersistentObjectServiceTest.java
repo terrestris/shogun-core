@@ -19,6 +19,7 @@ import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
 import de.terrestris.shogun2.model.SecuredPersistentObject;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.model.security.PermissionCollection;
 
@@ -291,6 +292,163 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		verify(dao, times(0)).saveOrUpdate(implToTest);
 
 		assertEquals(1, implToTest.getUserPermissions().keySet().size());
+	}
+	
+	/**
+	 *
+	 */
+	@Test
+	public void addGroupPermissions_shouldDoNothingWhenPassedEntityIsNull() {
+
+		Permission permissions = Permission.ADMIN;
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		crudService.addGroupPermissions(null, userGroup , permissions);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(any(getCrudService().getEntityClass()));
+
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void addGroupPermissions_shouldDoNothingWhenNoPermissionsHaveBeenPassed() {
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		crudService.addGroupPermissions(implToTest, userGroup);
+
+		// be sure that nothing happened
+		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void addGroupPermissions_shouldCreateNewPermissionCollectionWithOneElement() {
+
+		final Permission adminPermission = Permission.ADMIN;
+		PermissionCollection permissionCollection = new PermissionCollection();
+		permissionCollection.getPermissions().add(adminPermission);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		// be sure that no user permissions are set
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+
+		// mock
+		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		doNothing().when(dao).saveOrUpdate(implToTest);
+
+		// invoke method to test
+		crudService.addGroupPermissions(implToTest, userGroup, adminPermission);
+
+		// be sure that the permission collection as well as the entity have been saved
+		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(1)).saveOrUpdate(implToTest);
+
+		// assert that we have permission for exactly one user
+		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
+
+		// assert that we have set the correct number of permissions
+		assertEquals(permissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void addGroupPermissions_shouldCreateNewPermissionCollectionWithMultipleElements() {
+
+		final Permission readPermission = Permission.READ;
+		final Permission writePermission = Permission.WRITE;
+		final Permission deletePermission = Permission.DELETE;
+
+		PermissionCollection permissionCollection = new PermissionCollection();
+		permissionCollection.getPermissions().add(readPermission);
+		permissionCollection.getPermissions().add(writePermission);
+		permissionCollection.getPermissions().add(deletePermission);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		// be sure that no user permissions are set
+		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
+
+		// mock
+		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		doNothing().when(dao).saveOrUpdate(implToTest);
+
+		// invoke method to test
+		crudService.addGroupPermissions(implToTest, userGroup, readPermission, writePermission, deletePermission);
+
+		// be sure that the permission collection as well as the entity have been saved
+		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(1)).saveOrUpdate(implToTest);
+
+		// assert that we have exactly one permission set
+		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
+
+		// assert that we have set the correct number of permissions
+		assertEquals(permissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void addGroupPermissions_shouldAddPermissionToExistingPermissionCollection() {
+
+		final Permission existingPermission = Permission.READ;
+		final Permission newPermission = Permission.WRITE;
+
+		PermissionCollection existingPermissionCollection = new PermissionCollection();
+		PermissionCollection newPermissionCollection = new PermissionCollection();
+
+		existingPermissionCollection.getPermissions().add(existingPermission);
+
+		newPermissionCollection.getPermissions().add(existingPermission);
+		newPermissionCollection.getPermissions().add(newPermission);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setName("test");
+
+		Map<UserGroup, PermissionCollection> existingGroupPermissionsMap = new HashMap<UserGroup, PermissionCollection>();
+		existingGroupPermissionsMap.put(userGroup, existingPermissionCollection);
+
+		// set existing permissions
+		implToTest.setGroupPermissions(existingGroupPermissionsMap);
+
+		// be sure that our user permission is set
+		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
+		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
+
+		// mock
+		doReturn(newPermissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+
+		// invoke method to test
+		crudService.addGroupPermissions(implToTest, userGroup, newPermission);
+
+		// be sure that the permission collection, BUT NOT the entity have been saved
+		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
+		verify(dao, times(0)).saveOrUpdate(implToTest);
+
+		// assert that we have permission for exactly one user
+		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
+
+		// assert that we have set the correct number of permissions
+		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
 	}
 
 }
