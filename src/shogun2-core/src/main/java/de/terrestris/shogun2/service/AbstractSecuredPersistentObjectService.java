@@ -74,7 +74,8 @@ public abstract class AbstractSecuredPersistentObjectService<E extends SecuredPe
 
 				if(userPermissionCollection == null) {
 					// create a new user permission collection and attach it to the user
-					entity.getUserPermissions().put(user, new PermissionCollection(permissionsSet));
+					userPermissionCollection = new PermissionCollection(permissionsSet);
+					entity.getUserPermissions().put(user, userPermissionCollection);
 					LOG.debug("Attached a new permission collection for a user: " + permissionsSet);
 
 					// persist permission collection and the entity as a new permission
@@ -193,7 +194,9 @@ public abstract class AbstractSecuredPersistentObjectService<E extends SecuredPe
 
 				if(groupPermissionCollection == null) {
 					// create a new user permission collection and attach it to the user
-					entity.getGroupPermissions().put(userGroup, new PermissionCollection(permissionsSet));
+					groupPermissionCollection = new PermissionCollection(permissionsSet);
+
+					entity.getGroupPermissions().put(userGroup, groupPermissionCollection);
 					LOG.debug("Attached a new permission collection for a group: " + permissionsSet);
 
 					// persist permission collection and the entity as a new permission
