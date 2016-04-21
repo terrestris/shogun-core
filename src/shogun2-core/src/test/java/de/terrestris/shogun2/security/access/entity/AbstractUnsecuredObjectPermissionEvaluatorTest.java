@@ -10,8 +10,10 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.SecuredPersistentObject;
+import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
 
 /**
@@ -29,10 +31,12 @@ public abstract class AbstractUnsecuredObjectPermissionEvaluatorTest<E extends P
 	}
 
 	/**
+	 * @throws IllegalAccessException 
+	 * @throws NoSuchFieldException 
 	 *
 	 */
 	@Test
-	public void hasPermission_shouldAlwaysGrantRead() {
+	public void hasPermission_shouldAlwaysGrantRead() throws NoSuchFieldException, IllegalAccessException {
 		final boolean isSecuredObject = SecuredPersistentObject.class.isAssignableFrom(entityClass);
 
 		// test only for unsecured objects
@@ -41,20 +45,23 @@ public abstract class AbstractUnsecuredObjectPermissionEvaluatorTest<E extends P
 		} else {
 			Permission readPermission = Permission.READ;
 
-			Integer userId = 42;
+			final User user = new User("First name", "Last Name", "accountName");
+			IdHelper.setIdOnPersistentObject(user, 42);
 
 			// call method to test
-			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, readPermission);
+			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, readPermission);
 
 			assertThat(permissionResult, equalTo(true));
 		}
 	}
 
 	/**
+	 * @throws IllegalAccessException 
+	 * @throws NoSuchFieldException 
 	 *
 	 */
 	@Test
-	public void hasPermission_shouldNeverGrantAdminDeleteOrWrite() {
+	public void hasPermission_shouldNeverGrantAdminDeleteOrWrite() throws NoSuchFieldException, IllegalAccessException {
 		final boolean isSecuredObject = SecuredPersistentObject.class.isAssignableFrom(entityClass);
 
 		// test only for unsecured objects
@@ -66,10 +73,11 @@ public abstract class AbstractUnsecuredObjectPermissionEvaluatorTest<E extends P
 
 			// assert that these permissions will never be granted on unsecured objects
 			for (Permission permission : permissions) {
-				Integer userId = 42;
+				final User user = new User("First name", "Last Name", "accountName");
+				IdHelper.setIdOnPersistentObject(user, 42);
 
 				// call method to test
-				boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, permission);
+				boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user, entityToCheck, permission);
 
 				assertThat(permissionResult, equalTo(false));
 			}
