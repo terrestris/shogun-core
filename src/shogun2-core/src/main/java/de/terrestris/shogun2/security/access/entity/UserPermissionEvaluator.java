@@ -32,17 +32,17 @@ public class UserPermissionEvaluator<E extends User> extends
 	 * user. Uses default implementation otherwise.
 	 */
 	@Override
-	public boolean hasPermission(Integer userId, E entity, Permission permission) {
+	public boolean hasPermission(User user, E entity, Permission permission) {
 
 		// always grant READ access to own user object (of the logged in user)
-		if (userId != null && userId.equals(entity.getId())
+		if (user != null && user.equals(entity)
 				&& permission.equals(Permission.READ)) {
 			LOG.trace("Granting READ access on own user object");
 			return true;
 		}
 
 		// call parent implementation
-		return super.hasPermission(userId, entity, permission);
+		return super.hasPermission(user, entity, permission);
 	}
 
 }
