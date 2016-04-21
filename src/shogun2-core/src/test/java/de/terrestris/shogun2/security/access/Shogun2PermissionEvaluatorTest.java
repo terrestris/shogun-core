@@ -15,13 +15,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.security.access.entity.PersistentObjectPermissionEvaluator;
 import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFactory;
-import de.terrestris.shogun2.helper.IdHelper;
 
 /**
  * @author Nils Bühner
@@ -33,6 +34,9 @@ public class Shogun2PermissionEvaluatorTest {
 	@Mock
 	private EntityPermissionEvaluatorFactory permissionEvaluatorFactoryMock;
 
+	@Mock
+	private UserDao<User> userDao;
+
 	@InjectMocks
 	private Shogun2PermissionEvaluator permissionEvaluator;
 
@@ -43,7 +47,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfAuthenticationIsNull() {
@@ -59,7 +63,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfPrinicipalIsNotAUser() {
@@ -80,7 +84,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNull() {
@@ -102,7 +106,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNotAPersistentObject() {
@@ -124,7 +128,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfPermissionObjectIsNotAString() {
@@ -146,7 +150,7 @@ public class Shogun2PermissionEvaluatorTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
@@ -159,6 +163,7 @@ public class Shogun2PermissionEvaluatorTest {
 		final User user = new User("First name", "Last Name", "accountName");
 		IdHelper.setIdOnPersistentObject(user, 42);
 		final Integer userId = user.getId();
+
 		when(authenticationMock.getPrincipal()).thenReturn(user);
 
 		PersistentObject targetDomainObject = new Application("Test", "Test");
@@ -170,10 +175,13 @@ public class Shogun2PermissionEvaluatorTest {
 		// mock evaluator for persistent object
 		final boolean expectedPermission = false;
 		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(userId, targetDomainObject, permission)).thenReturn(expectedPermission);
+		when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
 
 		// mock factory (with previously mocked evaluator)
 		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
+
+		// mock user service
+		when(userDao.findById(userId)).thenReturn(user);
 
 		// execute method that is tested here
 		boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
@@ -181,18 +189,21 @@ public class Shogun2PermissionEvaluatorTest {
 		// verify
 		assertEquals(expectedPermission, permissionResult);
 
-		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(userId, targetDomainObject, permission);
+		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
 		verifyNoMoreInteractions(persistentObjectEvaluatorMock);
 
 		verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
 		verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
+
+		verify(userDao, times(1)).findById(userId);
+		verifyNoMoreInteractions(userDao);
 
 		verify(authenticationMock, times(2)).getPrincipal();
 		verifyNoMoreInteractions(authenticationMock);
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
@@ -205,6 +216,7 @@ public class Shogun2PermissionEvaluatorTest {
 		final User user = new User("First name", "Last Name", "accountName");
 		IdHelper.setIdOnPersistentObject(user, 42);
 		final Integer userId = user.getId();
+
 		when(authenticationMock.getPrincipal()).thenReturn(user);
 
 		PersistentObject targetDomainObject = new Application("Test", "Test");
@@ -216,10 +228,13 @@ public class Shogun2PermissionEvaluatorTest {
 		// mock evaluator for persistent object
 		final boolean expectedPermission = true;
 		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(userId, targetDomainObject, permission)).thenReturn(expectedPermission);
+		when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
 
 		// mock factory (with previously mocked evaluator)
 		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
+
+		// mock user service
+		when(userDao.findById(userId)).thenReturn(user);
 
 		// execute method that is tested here
 		boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
@@ -227,11 +242,14 @@ public class Shogun2PermissionEvaluatorTest {
 		// verify
 		assertEquals(expectedPermission, permissionResult);
 
-		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(userId, targetDomainObject, permission);
+		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
 		verifyNoMoreInteractions(persistentObjectEvaluatorMock);
 
 		verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
 		verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
+
+		verify(userDao, times(1)).findById(userId);
+		verifyNoMoreInteractions(userDao);
 
 		verify(authenticationMock, times(2)).getPrincipal();
 		verifyNoMoreInteractions(authenticationMock);

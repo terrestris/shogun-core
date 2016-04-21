@@ -40,19 +40,22 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 	}
 
 	/**
+	 * @throws IllegalAccessException 
+	 * @throws NoSuchFieldException 
 	 *
 	 */
 	@Test
-	public void hasPermission_shouldNeverGrantAnythingWithoutPermissions() {
+	public void hasPermission_shouldNeverGrantAnythingWithoutPermissions() throws NoSuchFieldException, IllegalAccessException {
 		Set<Permission> allPermissions = new HashSet<Permission>(Arrays.asList(Permission.values()));
 
 		// assert that no permission will ever be granted on secured objects
 		// if no permissions are set
 		for (Permission permission : allPermissions) {
-			Integer userId = 42;
+			final User user = new User("First name", "Last Name", "accountName");
+			IdHelper.setIdOnPersistentObject(user, 42);
 
 			// call method to test
-			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, permission);
+			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, permission);
 
 			assertThat(permissionResult, equalTo(false));
 
@@ -67,9 +70,8 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 	@Test
 	public void hasPermission_shouldGrantPermissionOnSecuredObjectWithCorrectUserPermission() throws NoSuchFieldException, IllegalAccessException {
 		// prepare a user that gets permissions
-		User user = new User();
-		final int userId = 42;
-		IdHelper.setIdOnPersistentObject(user, userId);
+		final User user = new User("First name", "Last Name", "accountName");
+		IdHelper.setIdOnPersistentObject(user, 42);
 
 		// prepare permission collection/map
 		Map<User, PermissionCollection> userPermissionsMap = new HashMap<User, PermissionCollection>();
@@ -81,7 +83,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		entityToCheck.setUserPermissions(userPermissionsMap);
 
 		// call method to test
-		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, writePermission);
+		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, writePermission);
 
 		assertThat(permissionResult, equalTo(true));
 	}
@@ -94,9 +96,8 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 	@Test
 	public void hasPermission_shouldGrantPermissionOnSecuredObjectWithCorrectGroupPermission() throws NoSuchFieldException, IllegalAccessException {
 		// prepare a user
-		User user = new User();
-		final int userId = 42;
-		IdHelper.setIdOnPersistentObject(user, userId);
+		final User user = new User("First name", "Last Name", "accountName");
+		IdHelper.setIdOnPersistentObject(user, 42);
 
 		// add user to a group
 		UserGroup group = new UserGroup();
@@ -112,7 +113,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		entityToCheck.setGroupPermissions(userGroupPermissionsMap);
 
 		// call method to test
-		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, writePermission);
+		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, writePermission);
 
 		assertThat(permissionResult, equalTo(true));
 	}
@@ -130,9 +131,8 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		if(isSecuredObject == true) {
 
 			// prepare a user that gets permissions
-			User user = new User();
-			final int userId = 42;
-			IdHelper.setIdOnPersistentObject(user, userId);
+			final User user = new User("First name", "Last Name", "accountName");
+			IdHelper.setIdOnPersistentObject(user, 42);
 
 			// prepare permission collection/map
 			Map<User, PermissionCollection> userPermissionsMap = new HashMap<User, PermissionCollection>();
@@ -148,7 +148,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 			// check that the ADMIN permission allows the user to to everything
 			for (Permission permission : allPermissions) {
 				// call method to test
-				boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, permission);
+				boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, permission);
 
 				assertThat(permissionResult, equalTo(true));
 			}
@@ -165,9 +165,8 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 	public void hasPermission_shouldGrantAnyPermissionOnSecuredObjectWithUserGroupAdminPermission() throws NoSuchFieldException, IllegalAccessException {
 
 		// prepare a user
-		User user = new User();
-		final int userId = 42;
-		IdHelper.setIdOnPersistentObject(user, userId);
+		final User user = new User("First name", "Last Name", "accountName");
+		IdHelper.setIdOnPersistentObject(user, 42);
 
 		// add user to group
 		UserGroup group = new UserGroup();
@@ -187,7 +186,7 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// check that the ADMIN permission allows the user to to everything
 		for (Permission permission : allPermissions) {
 			// call method to test
-			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(userId , entityToCheck, permission);
+			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, permission);
 
 			assertThat(permissionResult, equalTo(true));
 		}
