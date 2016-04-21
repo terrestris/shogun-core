@@ -33,21 +33,17 @@ public class UserGroupPermissionEvaluator<E extends UserGroup> extends
 	 * Uses default implementation otherwise.
 	 */
 	@Override
-	public boolean hasPermission(Integer userId, E userGroup, Permission permission) {
+	public boolean hasPermission(User user, E userGroup, Permission permission) {
 
 		// always grant READ access to groups in which the user itself is a member
-		if (userId != null && permission.equals(Permission.READ)) {
-
-			for (User member : userGroup.getMembers()) {
-				if(userId.equals(member.getId())) {
-					LOG.trace("Granting READ access on group where the user is member.");
-					return true;
-				}
-			}
+		if (user != null && permission.equals(Permission.READ)
+				&& userGroup.getMembers().contains(user)) {
+			LOG.trace("Granting READ access on group where the user is member.");
+			return true;
 		}
 
 		// call parent implementation
-		return super.hasPermission(userId, userGroup, permission);
+		return super.hasPermission(user, userGroup, permission);
 	}
 
 }
