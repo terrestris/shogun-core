@@ -54,7 +54,7 @@ public class Layer extends AbstractLayer {
 	 * @param appearance The appearance configuration of the layer
 	 */
 	public Layer(String name, String type, LayerDataSource source, LayerAppearance appearance) {
-		super();
+		super(name, type);
 		this.source = source;
 		this.appearance = appearance;
 	}
