@@ -86,7 +86,7 @@ public class Map extends Module {
 	 * @param mapLayers
 	 */
 	public Map(String name, MapConfig mapConfig, List<AbstractLayer> mapLayers) {
-		super();
+		super(name);
 		this.mapConfig = mapConfig;
 		this.mapLayers = mapLayers;
 	}
