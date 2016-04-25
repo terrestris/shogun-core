@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.AbstractLayerDao;
@@ -64,7 +64,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 	 * @param user
 	 * @return
 	 */
-	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#e, 'READ')")
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'READ')")
 	public Set<E> findMapsWithLayer(AbstractLayer layer) {
 		return dao.findMapsWithLayer(layer);
 	}
