@@ -76,6 +76,13 @@ public class Module extends PersistentObject {
 	}
 
 	/**
+	 * 
+	 */
+	public Module(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {

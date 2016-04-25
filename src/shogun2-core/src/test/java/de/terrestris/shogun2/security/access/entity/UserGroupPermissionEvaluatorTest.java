@@ -14,30 +14,38 @@ import org.junit.Test;
 
 import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 
 /**
  * @author Nils Bühner
  *
  */
-public class UserPermissionEvaluatorTest extends
-	AbstractSecuredObjectPermissionEvaluatorTest<User> {
+public class UserGroupPermissionEvaluatorTest extends
+	AbstractSecuredObjectPermissionEvaluatorTest<UserGroup> {
 
-	public UserPermissionEvaluatorTest() {
-		super(User.class, new UserPermissionEvaluator<>(), new User());
+	public UserGroupPermissionEvaluatorTest() {
+		super(UserGroup.class, new UserGroupPermissionEvaluator<>(), new UserGroup());
 	}
 
 	@Test
-	public void hasPermission_shouldAlwaysGrantReadOnOwnUserObject() throws NoSuchFieldException, IllegalAccessException {
+	public void hasPermission_shouldAlwaysGrantReadOnGroupsWhereUserIsMember() throws NoSuchFieldException, IllegalAccessException {
 		Permission readPermission = Permission.READ;
 
-		// prepare a user that
+		// prepare a user that is member of the group
 		final User user = new User("First name", "Last Name", "accountName");
 		IdHelper.setIdOnPersistentObject(user, 42);
 
+		// prepare a secured group
+		UserGroup userGroup = new UserGroup();
+		IdHelper.setIdOnPersistentObject(user, 17);
+
+		// add the user to the group
+		userGroup.getMembers().add(user);
+
 		// we do not add any permissions to the user, but expect that he is allowed to READ himself
 		// call method to test
-		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , user, readPermission);
+		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , userGroup, readPermission);
 
 		assertThat(permissionResult, equalTo(true));
 
@@ -50,12 +58,19 @@ public class UserPermissionEvaluatorTest extends
 		final User user = new User("First name", "Last Name", "accountName");
 		IdHelper.setIdOnPersistentObject(user, 42);
 
+		// prepare a secured group
+		UserGroup userGroup = new UserGroup();
+		IdHelper.setIdOnPersistentObject(user, 17);
+
+		// add the user to the group
+		userGroup.getMembers().add(user);
+
 		Set<Permission> permissions = new HashSet<Permission>(Arrays.asList(Permission.values()));
 		permissions.remove(Permission.READ); // everything but READ
 
 		for (Permission permission : permissions) {
 			// call method to test
-			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , user, permission);
+			boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user, userGroup, permission);
 
 			assertThat(permissionResult, equalTo(false));
 		}

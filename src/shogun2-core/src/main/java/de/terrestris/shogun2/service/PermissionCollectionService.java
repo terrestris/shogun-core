@@ -4,34 +4,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.dao.LayerDao;
-import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.module.Module;
+import de.terrestris.shogun2.dao.PermissionCollectionDao;
+import de.terrestris.shogun2.model.security.PermissionCollection;
 
 /**
- * Service class for the {@link Module} model.
+ * Service class for the {@link PermissionCollection} model.
  *
  * @author Nils Bühner
+ * @author Johannes Weskamm
  * @see AbstractCrudService
  *
  */
-@Service("layerService")
-public class LayerService<E extends Layer, D extends LayerDao<E>> extends
-		AbstractLayerService<E, D> {
+@Service("permissionCollectionService")
+public class PermissionCollectionService<E extends PermissionCollection, D extends PermissionCollectionDao<E>> extends
+		AbstractCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public LayerService() {
-		this((Class<E>) Layer.class);
+	public PermissionCollectionService() {
+		this((Class<E>) PermissionCollection.class);
 	}
 
 	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected LayerService(Class<E> entityClass) {
+	protected PermissionCollectionService(Class<E> entityClass) {
 		super(entityClass);
 	}
 
@@ -42,7 +42,7 @@ public class LayerService<E extends Layer, D extends LayerDao<E>> extends
 	 */
 	@Override
 	@Autowired
-	@Qualifier("layerDao")
+	@Qualifier("permissionCollectionDao")
 	public void setDao(D dao) {
 		this.dao = dao;
 	}

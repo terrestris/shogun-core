@@ -20,7 +20,7 @@ import de.terrestris.shogun2.model.File;
  */
 @Service("fileService")
 public class FileService<E extends File, D extends FileDao<E>>
-		extends AbstractCrudService<E, D> {
+		extends AbstractSecuredPersistentObjectService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

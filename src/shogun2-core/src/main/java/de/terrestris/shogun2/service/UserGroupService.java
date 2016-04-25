@@ -21,7 +21,7 @@ import de.terrestris.shogun2.model.UserGroup;
  */
 @Service("userGroupService")
 public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
-		extends AbstractCrudService<E, D> {
+		extends AbstractSecuredPersistentObjectService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

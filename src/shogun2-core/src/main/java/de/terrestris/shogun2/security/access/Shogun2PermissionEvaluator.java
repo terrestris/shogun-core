@@ -3,9 +3,12 @@ package de.terrestris.shogun2.security.access;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
+import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
@@ -23,6 +26,18 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	 */
 	private final static Logger LOG = Logger.getLogger(Shogun2PermissionEvaluator.class);
 
+	/**
+	 * We have to use the DAO here. If we would use the service, we would end
+	 * with StackOverflow errors as a call to (secured) service methods triggers
+	 * this PermissionEvaluator class.
+	 */
+	@Autowired
+	@Qualifier("userDao")
+	private UserDao<User> userDao;
+
+	/**
+	 *
+	 */
 	@SuppressWarnings("rawtypes")
 	private EntityPermissionEvaluatorFactory permissionEvaluatorFactory;
 
@@ -42,7 +57,12 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 				&& targetDomainObject instanceof PersistentObject
 				&& permissionObject instanceof String) {
 
-			final User user = (User) authentication.getPrincipal();
+			// get the user state when the user logged in
+			User user = (User) authentication.getPrincipal();
+
+			// get the "full" user from the database
+			user = userDao.findById(user.getId());
+
 			final PersistentObject persistentObject = (PersistentObject) targetDomainObject;
 			final Integer objectId = persistentObject.getId();
 			final String simpleClassName = targetDomainObject.getClass().getSimpleName();
@@ -55,7 +75,7 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 			PersistentObjectPermissionEvaluator entityPermissionEvaluator = permissionEvaluatorFactory
 					.getEntityPermissionEvaluator(persistentObject.getClass());
 
-			hasPermission = entityPermissionEvaluator.hasPermission(user.getId(), persistentObject, permission);
+			hasPermission = entityPermissionEvaluator.hasPermission(user, persistentObject, permission);
 
 		} else {
 			LOG.error("Permission evaluation has been aborted.");
@@ -71,6 +91,20 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	public boolean hasPermission(Authentication authentication,
 			Serializable targetId, String targetType, Object permission) {
 		return false;
+	}
+
+	/**
+	 * @return the userDao
+	 */
+	public UserDao<User> getUserDao() {
+		return userDao;
+	}
+
+	/**
+	 * @param userDao the userDao to set
+	 */
+	public void setUserDao(UserDao<User> userDao) {
+		this.userDao = userDao;
 	}
 
 	/**
