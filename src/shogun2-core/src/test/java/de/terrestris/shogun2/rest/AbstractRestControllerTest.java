@@ -410,14 +410,14 @@ public class AbstractRestControllerTest {
 
 		TestModel entityToDelete = buildTestInstanceWithIdAndValue(id, value);
 
-		when(serviceMock.loadById(id)).thenReturn(entityToDelete);
+		when(serviceMock.findById(id)).thenReturn(entityToDelete);
 		doNothing().when(serviceMock).delete(entityToDelete);
 
 		// Test DELETE method
 		mockMvc.perform(delete("/tests/" + id)).andExpect(
 				status().isNoContent());
 
-		verify(serviceMock, times(1)).loadById(id);
+		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).delete(entityToDelete);
 		verifyNoMoreInteractions(serviceMock);
 	}
@@ -437,14 +437,14 @@ public class AbstractRestControllerTest {
 
 		TestModel entityToDelete = buildTestInstanceWithIdAndValue(id, value);
 
-		when(serviceMock.loadById(id)).thenReturn(entityToDelete);
+		when(serviceMock.findById(id)).thenReturn(entityToDelete);
 		doThrow(new RuntimeException()).when(serviceMock).delete(entityToDelete);
 
 		// Test DELETE method
 		mockMvc.perform(delete("/tests/" + id)).andExpect(
 				status().isNotFound());
 
-		verify(serviceMock, times(1)).loadById(id);
+		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).delete(entityToDelete);
 		verifyNoMoreInteractions(serviceMock);
 	}
