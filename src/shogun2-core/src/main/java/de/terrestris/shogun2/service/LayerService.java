@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.module.Module;
  */
 @Service("layerService")
 public class LayerService<E extends Layer, D extends LayerDao<E>> extends
-		AbstractCrudService<E, D> {
+		AbstractLayerService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

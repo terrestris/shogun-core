@@ -14,8 +14,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.SecuredPersistentObject;
-import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
-import de.terrestris.shogun2.model.layer.source.LayerDataSource;
 
 /**
  *
@@ -51,6 +49,10 @@ public abstract class AbstractLayer extends SecuredPersistentObject {
 	 *
 	 */
 	private String name;
+
+	/**
+	 *
+	 */
 	private String type;
 
 	/**
@@ -66,7 +68,7 @@ public abstract class AbstractLayer extends SecuredPersistentObject {
 	 * @param source The data source of the layer
 	 * @param appearance The appearance configuration of the layer
 	 */
-	public AbstractLayer(String name, String type, LayerDataSource source, LayerAppearance appearance) {
+	public AbstractLayer(String name, String type) {
 		super();
 		this.name = name;
 		this.type = type;

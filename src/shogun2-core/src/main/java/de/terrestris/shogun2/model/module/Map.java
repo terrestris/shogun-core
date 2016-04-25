@@ -81,7 +81,6 @@ public class Map extends Module {
 
 	/**
 	 * @param name
-	 * @param magnific
 	 * @param mapConfig
 	 * @param mapLayers
 	 */
