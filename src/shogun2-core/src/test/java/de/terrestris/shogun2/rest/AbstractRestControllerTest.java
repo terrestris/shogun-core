@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +25,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -221,13 +224,19 @@ public class AbstractRestControllerTest {
 	 */
 	@Test
 	public void save_shouldReturn_EntityAndCreated() throws Exception {
-		int id = 42;
+		final int id = 42;
 		String value = "save value";
 
 		TestModel withoutId = buildTestInstanceWithValue(value);
-		TestModel withId = buildTestInstanceWithIdAndValue(id, value);
 
-		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenReturn(withId);
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				TestModel entity = (TestModel) invocation.getArguments()[0];
+				IdHelper.setIdOnPersistentObject(entity, id);
+				return null;
+			}
+		}).when(serviceMock).saveOrUpdate(any(TestModel.class));
 
 		// Test POST method with JSON payload
 		mockMvc.perform(
@@ -282,8 +291,7 @@ public class AbstractRestControllerTest {
 
 		TestModel payload = buildTestInstanceWithValue(value);
 
-		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenThrow(
-				new RuntimeException());
+		doThrow(new RuntimeException()).when(serviceMock).saveOrUpdate(any(TestModel.class));
 
 		// Test POST method with JSON payload
 		mockMvc.perform(
@@ -304,8 +312,8 @@ public class AbstractRestControllerTest {
 	@Test
 	public void update_shouldReturn_EntityAndOK() throws Exception {
 		int id = 42;
-		String originalValue = "original value";
-		String updatedValue = "updated value";
+		final String originalValue = "original value";
+		final String updatedValue = "updated value";
 
 		TestModel originalObject = buildTestInstanceWithIdAndValue(id,
 				originalValue);
@@ -313,8 +321,15 @@ public class AbstractRestControllerTest {
 				updatedValue);
 
 		when(serviceMock.findById(id)).thenReturn(originalObject);
-		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenReturn(
-				updatedObject);
+
+		doAnswer(new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				TestModel entity = (TestModel) invocation.getArguments()[0];
+				entity.setTestValue(updatedValue);
+				return null;
+			}
+		}).when(serviceMock).saveOrUpdate(any(TestModel.class));;
 
 		// Test PUT method with JSON payload
 		mockMvc.perform(
@@ -381,8 +396,7 @@ public class AbstractRestControllerTest {
 
 		when(serviceMock.findById(id)).thenReturn(originalObject);
 
-		when(serviceMock.saveOrUpdate(any(TestModel.class))).thenThrow(
-				new RuntimeException());
+		doThrow(new RuntimeException()).when(serviceMock).saveOrUpdate(any(TestModel.class));
 
 		// Test PUT method with JSON payload
 		mockMvc.perform(

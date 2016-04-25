@@ -3,8 +3,8 @@ package de.terrestris.shogun2.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
@@ -100,7 +102,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveUserPermissions_shouldCreateNewPermissionCollectionWithOneElement() {
 
 		final Permission adminPermission = Permission.ADMIN;
-		PermissionCollection permissionCollection = new PermissionCollection();
+		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(adminPermission);
 
 		User user = new User("Dummy", "Dummy", "dummy");
@@ -109,7 +111,8 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertTrue(implToTest.getUserPermissions().keySet().isEmpty());
 
 		// mock
-		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(permissionCollection);
+
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
@@ -136,7 +139,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission writePermission = Permission.WRITE;
 		final Permission deletePermission = Permission.DELETE;
 
-		PermissionCollection permissionCollection = new PermissionCollection();
+		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(readPermission);
 		permissionCollection.getPermissions().add(writePermission);
 		permissionCollection.getPermissions().add(deletePermission);
@@ -147,7 +150,8 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertTrue(implToTest.getUserPermissions().keySet().isEmpty());
 
 		// mock
-		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(permissionCollection);
+
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
@@ -174,7 +178,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission newPermission = Permission.READ;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
-		PermissionCollection newPermissionCollection = new PermissionCollection();
+		final PermissionCollection newPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(existingPermission);
 
@@ -194,7 +198,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getUserPermissions().get(user).getPermissions().size());
 
 		// mock
-		doReturn(newPermissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(newPermissionCollection);
 
 		// invoke method to test
 		crudService.addAndSaveUserPermissions(implToTest, user, newPermission);
@@ -220,7 +224,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission newPermission = Permission.WRITE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
-		PermissionCollection newPermissionCollection = new PermissionCollection();
+		final PermissionCollection newPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(existingPermission);
 
@@ -240,7 +244,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getUserPermissions().get(user).getPermissions().size());
 
 		// mock
-		doReturn(newPermissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(newPermissionCollection);
 
 		// invoke method to test
 		crudService.addAndSaveUserPermissions(implToTest, user, newPermission);
@@ -413,7 +417,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveGroupPermissions_shouldCreateNewPermissionCollectionWithOneElement() {
 
 		final Permission adminPermission = Permission.ADMIN;
-		PermissionCollection permissionCollection = new PermissionCollection();
+		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(adminPermission);
 
 		UserGroup userGroup = new UserGroup();
@@ -423,7 +427,8 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
 
 		// mock
-		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(permissionCollection);
+
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
@@ -450,7 +455,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission writePermission = Permission.WRITE;
 		final Permission deletePermission = Permission.DELETE;
 
-		PermissionCollection permissionCollection = new PermissionCollection();
+		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(readPermission);
 		permissionCollection.getPermissions().add(writePermission);
 		permissionCollection.getPermissions().add(deletePermission);
@@ -462,7 +467,8 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertTrue(implToTest.getGroupPermissions().keySet().isEmpty());
 
 		// mock
-		doReturn(permissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(permissionCollection);
+
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
@@ -489,7 +495,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission newPermission = Permission.READ;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
-		PermissionCollection newPermissionCollection = new PermissionCollection();
+		final PermissionCollection newPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(existingPermission);
 
@@ -510,7 +516,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
 
 		// mock
-		doReturn(newPermissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(newPermissionCollection);
 
 		// invoke method to test
 		crudService.addAndSaveGroupPermissions(implToTest, userGroup, newPermission);
@@ -536,7 +542,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		final Permission newPermission = Permission.WRITE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
-		PermissionCollection newPermissionCollection = new PermissionCollection();
+		final PermissionCollection newPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(existingPermission);
 
@@ -557,7 +563,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		assertEquals(existingPermissionCollection.getPermissions().size(), implToTest.getGroupPermissions().get(userGroup).getPermissions().size());
 
 		// mock
-		doReturn(newPermissionCollection).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
+		mockSaveOrUpdateOfPc(newPermissionCollection);
 
 		// invoke method to test
 		crudService.addAndSaveGroupPermissions(implToTest, userGroup, newPermission);
@@ -690,6 +696,26 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		verify(dao, times(0)).saveOrUpdate(implToTest);
 
 		assertEquals(1, implToTest.getGroupPermissions().keySet().size());
+	}
+
+	/**
+	 * @param permissionCollection
+	 */
+	private void mockSaveOrUpdateOfPc(
+			final PermissionCollection permissionCollection) {
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation)
+					throws NoSuchFieldException, SecurityException,
+					IllegalArgumentException, IllegalAccessException,
+					InterruptedException {
+				@SuppressWarnings("unused")
+				PermissionCollection pc = (PermissionCollection) invocation.getArguments()[0];
+
+				pc = permissionCollection;
+
+				return null;
+			}
+		}).when(permissionCollectionService).saveOrUpdate(any(PermissionCollection.class));
 	}
 
 }
