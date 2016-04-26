@@ -36,8 +36,7 @@ public class ProjectApplicationPermissionEvaluator<E extends ProjectApplication>
 	}
 
 	/**
-	 * Grants READ permission on the user object of the currently logged in
-	 * user. Uses default implementation otherwise.
+	 * Always grants right to CREATE this entity.
 	 */
 	@Override
 	public boolean hasPermission(User user, E entity, Permission permission) {
