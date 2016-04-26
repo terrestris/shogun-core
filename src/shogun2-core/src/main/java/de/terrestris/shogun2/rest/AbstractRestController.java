@@ -109,7 +109,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 		}
 
 		try {
-			entity = this.service.saveOrUpdate(entity);
+			this.service.saveOrUpdate(entity);
 			LOG.trace("Created " + simpleClassName + " with ID " + entity.getId());
 			return new ResponseEntity<E>(entity, HttpStatus.CREATED);
 		} catch (Exception e) {

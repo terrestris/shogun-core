@@ -41,9 +41,8 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return
 	 */
 	@PreAuthorize("isAuthenticated()")
-	public E saveOrUpdate(E e) {
+	public void saveOrUpdate(E e) {
 		dao.saveOrUpdate(e);
-		return e;
 	}
 
 	/**
