@@ -22,7 +22,6 @@ import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.service.UserService;
 
 /**
  * @author Nils Bühner
@@ -37,7 +36,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 			.getLogger(Shogun2AuthenticationProvider.class);
 
 	@Autowired
-	private UserService<User, UserDao<User>> userService;
+	private UserDao<User> userDao;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -64,7 +63,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
 		LOG.debug("Trying to authenticate User '" + accountName + "'");
 
-		User user = userService.findByAccountName(accountName);
+		User user = userDao.findByAccountName(accountName);
 
 		// prepare set of authorities
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();

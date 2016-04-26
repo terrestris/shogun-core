@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.AbstractLayerDao;
@@ -65,6 +66,7 @@ public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLay
 	 *
 	 */
 	@Override
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'DELETE')")
 	public void delete (E layer) {
 		// get all maps that contain the layer
 		Set<Map> maps = mapService.findMapsWithLayer(layer);

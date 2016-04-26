@@ -5,6 +5,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,6 +60,7 @@ public class FileService<E extends File, D extends FileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
+	@PreAuthorize("isAuthenticated()")
 	public E uploadFile(MultipartFile file) throws Exception {
 
 		if (file == null) {

@@ -5,10 +5,11 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -97,14 +98,9 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param accountName A unique account name.
 	 * @return The unique user for the account name or null.
 	 */
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	public E findByAccountName(String accountName) {
-
-		SimpleExpression eqAccountName =
-			Restrictions.eq("accountName", accountName);
-
-		E user = dao.findByUniqueCriteria(eqAccountName);
-
-		return user;
+		return dao.findByAccountName(accountName);
 	}
 
 	/**
@@ -112,12 +108,9 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param email
 	 * @return
 	 */
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	public E findByEmail(String email) {
-
-		SimpleExpression eqEmail = Restrictions.eq("email", email);
-		E user = dao.findByUniqueCriteria(eqEmail);
-
-		return user;
+		return dao.findByEmail(email);
 	}
 
 	/**
@@ -134,7 +127,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 		String email = user.getEmail();
 
 		// check if a user with the email already exists
-		E existingUser = this.findByEmail(email);
+		E existingUser = dao.findByEmail(email);
 
 		if(existingUser != null) {
 			final String errorMessage = "User with eMail '" + email + "' already exists.";
@@ -222,6 +215,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param rawPassword
 	 * @throws Exception
 	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#user, 'UPDATE')")
 	public void updatePassword(E user, String rawPassword) throws Exception {
 
 		if(user.getId() == null) {
@@ -257,6 +251,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @return
 	 * @throws Exception
 	 */
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
 
 		Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
