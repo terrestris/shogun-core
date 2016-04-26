@@ -109,7 +109,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 		}
 
 		try {
-			entity = this.service.saveOrUpdate(entity);
+			this.service.saveOrUpdate(entity);
 			LOG.trace("Created " + simpleClassName + " with ID " + entity.getId());
 			return new ResponseEntity<E>(entity, HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -181,10 +181,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	public ResponseEntity<E> delete(@PathVariable int id) {
 
 		try {
-			// Use the loadById method to get a proxy that will throw exceptions
-			// when the object can later not be accessed. This is more performant
-			// than using the findById method, which will always hit the database.
-			E entityToDelete = this.service.loadById(id);
+			E entityToDelete = this.service.findById(id);
 
 			this.service.delete(entityToDelete);
 

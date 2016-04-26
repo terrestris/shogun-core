@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,6 +69,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 * @throws Exception
 	 */
 	@Override
+	@PreAuthorize("isAuthenticated()")
 	public E uploadFile(MultipartFile file) throws Exception {
 
 		if (file == null) {
@@ -96,6 +98,7 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
+	@PreAuthorize("isAuthenticated()")
 	public E saveImage(MultipartFile file, boolean createThumbnail, Integer thumbnailTargetSize)
 			throws Exception {
 

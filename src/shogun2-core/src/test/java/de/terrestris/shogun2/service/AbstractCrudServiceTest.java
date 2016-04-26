@@ -104,8 +104,8 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 	@Test
 	public void saveOrUpdate_shouldSave() {
 
-		doAnswer(new Answer<E>() {
-			public E answer(InvocationOnMock invocation)
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation)
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException {
 				E po = (E) invocation.getArguments()[0];
@@ -113,14 +113,14 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 				// set id like the dao does
 				IdHelper.setIdOnPersistentObject(po, 1);
 
-				return po;
+				return null;
 			}
 		}).when(dao).saveOrUpdate(implToTest);
 
 		// id has to be NULL before the service method is called
 		assertNull(implToTest.getId());
 
-		implToTest = crudService.saveOrUpdate(implToTest);
+		crudService.saveOrUpdate(implToTest);
 
 		// id must not be NULL after the service method is called
 		assertNotNull(implToTest.getId());
@@ -154,8 +154,8 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 
 		IdHelper.setIdOnPersistentObject(implToTest, id);
 
-		doAnswer(new Answer<E>() {
-			public E answer(InvocationOnMock invocation)
+		doAnswer(new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation)
 					throws NoSuchFieldException, SecurityException,
 					IllegalArgumentException, IllegalAccessException,
 					InterruptedException {
@@ -165,12 +165,12 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 				Thread.sleep(1);
 				po.setModified(DateTime.now());
 
-				return po;
+				return null;
 			}
 		}).when(dao).saveOrUpdate(implToTest);
 
 		// now call the method to test
-		implToTest = crudService.saveOrUpdate(implToTest);
+		crudService.saveOrUpdate(implToTest);
 
 		// id and created should not have changed
 		assertEquals(id, implToTest.getId());

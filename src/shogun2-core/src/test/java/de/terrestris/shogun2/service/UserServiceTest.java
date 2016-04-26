@@ -91,11 +91,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		User expectedUser = new User("Test", "User", accountName);
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
+		when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
 
 		User actualUser = crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByAccountName(accountName);
 		verifyNoMoreInteractions(dao);
 
 		assertEquals(expectedUser, actualUser);
@@ -108,11 +108,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		User expectedUser = null;
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
+		when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
 
 		User actualUser = crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByAccountName(accountName);
 		verifyNoMoreInteractions(dao);
 
 		assertEquals(expectedUser, actualUser);
@@ -124,11 +124,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 
 		// mock the dao
 		doThrow(new HibernateException("errormsg"))
-			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
+			.when(dao).findByAccountName(accountName);
 
 		crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByAccountName(accountName);
 		verifyNoMoreInteractions(dao);
 	}
 
@@ -140,11 +140,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		expectedUser.setEmail(eMail);
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
+		when(dao.findByEmail(eMail)).thenReturn(expectedUser);
 
 		User actualUser = crudService.findByEmail(eMail);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByEmail(eMail);
 		verifyNoMoreInteractions(dao);
 
 		assertEquals(expectedUser, actualUser);
@@ -157,11 +157,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		User expectedUser = null;
 
 		// mock the dao
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(expectedUser);
+		when(dao.findByEmail(eMail)).thenReturn(expectedUser);
 
 		User actualUser = crudService.findByEmail(eMail);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByEmail(eMail);
 		verifyNoMoreInteractions(dao);
 
 		assertEquals(expectedUser, actualUser);
@@ -173,11 +173,11 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 
 		// mock the dao
 		doThrow(new HibernateException("errormsg"))
-			.when(dao).findByUniqueCriteria(any(SimpleExpression.class));
+			.when(dao).findByEmail(email);
 
 		crudService.findByEmail(email);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByEmail(email);
 		verifyNoMoreInteractions(dao);
 	}
 
@@ -189,7 +189,7 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 
 		// mock the dao
 		// there is no existing user -> return null (in the findByEmail method)
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(null);
+		when(dao.findByEmail(email)).thenReturn(null);
 
 		// the saveOrUpdate will be called in the persistNewUser method
 		doNothing().when(dao).saveOrUpdate(any(User.class));
@@ -212,7 +212,7 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		// finally call the method that is tested here
 		User registeredUser = crudService.registerUser(user, requestMock);
 
-		verify(dao, times(1)).findByUniqueCriteria(any(SimpleExpression.class));
+		verify(dao, times(1)).findByEmail(email);
 		verify(dao, times(1)).saveOrUpdate(any(User.class));
 		verifyNoMoreInteractions(dao);
 
@@ -238,7 +238,7 @@ public class UserServiceTest extends AbstractSecuredPersistentObjectServiceTest<
 		existingUser.setEmail(email);
 
 		// there is an existing user -> return null (in the findByEmail method)
-		when(dao.findByUniqueCriteria(any(SimpleExpression.class))).thenReturn(existingUser);
+		when(dao.findByEmail(email)).thenReturn(existingUser);
 
 		HttpServletRequest requestMock = mock(HttpServletRequest.class);
 		// finally call the method that is tested here

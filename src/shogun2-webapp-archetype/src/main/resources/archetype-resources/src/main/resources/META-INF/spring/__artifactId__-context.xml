@@ -29,44 +29,56 @@
 
     <!-- The mailSender configuration -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${mail.server.host}" />
-        <property name="port" value="${mail.server.port}" />
-        <property name="username" value="${mail.server.username}" />
-        <property name="password" value="${mail.server.password}" />
+        <property name="host" value="${symbol_dollar}{mail.server.host}" />
+        <property name="port" value="${symbol_dollar}{mail.server.port}" />
+        <property name="username" value="${symbol_dollar}{mail.server.username}" />
+        <property name="password" value="${symbol_dollar}{mail.server.password}" />
         <property name="javaMailProperties">
            <props>
-                  <prop key="mail.transport.protocol">${mail.server.transportProtocol}</prop>
-                  <prop key="mail.smtp.auth">${mail.server.smtpAuth}</prop>
-                  <prop key="mail.smtp.starttls.enable">${mail.server.smtpStartTlsEnable}</prop>
+                  <prop key="mail.transport.protocol">${symbol_dollar}{mail.server.transportProtocol}</prop>
+                  <prop key="mail.smtp.auth">${symbol_dollar}{mail.server.smtpAuth}</prop>
+                  <prop key="mail.smtp.starttls.enable">${symbol_dollar}{mail.server.smtpStartTlsEnable}</prop>
                </props>
         </property>
     </bean>
 
     <!-- The default mail sender -->
     <bean id="defaultMailSender" class="java.lang.String">
-        <constructor-arg value="${mail.defaultSender}"></constructor-arg>
+        <constructor-arg value="${symbol_dollar}{mail.defaultSender}"></constructor-arg>
     </bean>
 
     <!-- The registration-success mail message template -->
     <bean id="registrationMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="${mail.defaultSender}" />
-        <property name="subject" value="${mail.registrationMailTemplateSubject}" />
-        <property name="text" value="${mail.registrationMailTemplateText}" />
+        <property name="from" value="${symbol_dollar}{mail.defaultSender}" />
+        <property name="subject" value="${symbol_dollar}{mail.registrationMailTemplateSubject}" />
+        <property name="text" value="${symbol_dollar}{mail.registrationMailTemplateText}" />
     </bean>
 
     <!-- The reset-password mail message template -->
     <bean id="resetPasswordMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="${mail.defaultSender}" />
-        <property name="subject" value="${mail.resetPasswordMailMessageTemplateSubject}" />
-        <property name="text" value="${mail.resetPasswordMailMessageTemplateText}" />
+        <property name="from" value="${symbol_dollar}{mail.defaultSender}" />
+        <property name="subject" value="${symbol_dollar}{mail.resetPasswordMailMessageTemplateSubject}" />
+        <property name="text" value="${symbol_dollar}{mail.resetPasswordMailMessageTemplateText}" />
     </bean>
 
     <!-- The (relative) URL to your change password client component -->
     <bean id="changePasswordPath" class="java.lang.String">
-        <constructor-arg value="${login.changePasswordPath}"></constructor-arg>
+        <constructor-arg value="${symbol_dollar}{login.changePasswordPath}"></constructor-arg>
     </bean>
 
     <!-- The GeoServer Namespace to URI map used in the Interceptor -->
     <util:properties id="geoServerNameSpaces" location="classpath*:META-INF/geoServerNameSpaces.properties" />
 
+    <!--
+     | The interceptor beans, uncomment to be able to use the interceptor
+     | classes for OGC requests
+     |
+    <bean id="wmsRequestInterceptor" class="${package}.util.WmsRequestInterceptor" />
+    <bean id="wmsResponseInterceptor" class="${package}.util.WmsResponseInterceptor" />
+    <bean id="wfsRequestInterceptor" class="${package}.util.WfsRequestInterceptor" />
+    <bean id="wfsResponseInterceptor" class="${package}.util.WfsResponseInterceptor" />
+    <bean id="wcsRequestInterceptor" class="${package}.util.WcsRequestInterceptor" />
+    <bean id="wcsResponseInterceptor" class="${package}.util.WcsResponseInterceptor" />
+     |
+     +-->
 </beans>

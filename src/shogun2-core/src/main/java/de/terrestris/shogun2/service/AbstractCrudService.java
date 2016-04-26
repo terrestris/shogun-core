@@ -40,10 +40,11 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @param e
 	 * @return
 	 */
-	@PreAuthorize("isAuthenticated()")
-	public E saveOrUpdate(E e) {
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())"
+			+ " or (#e.id == null and hasPermission(#e, 'CREATE'))"
+			+ " or (#e.id != null and hasPermission(#e, 'UPDATE'))")
+	public void saveOrUpdate(E e) {
 		dao.saveOrUpdate(e);
-		return e;
 	}
 
 	/**

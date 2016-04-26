@@ -38,7 +38,6 @@ import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.service.UserGroupService;
-import de.terrestris.shogun2.service.UserService;
 
 /**
  * @author Nils Bühner
@@ -49,7 +48,7 @@ import de.terrestris.shogun2.service.UserService;
 public class Shogun2AuthenticationProviderTest {
 
 	@Mock
-	private UserService<User, UserDao<User>> userService;
+	private UserDao<User> userDao;
 
 	@Mock
 	private UserGroupService<UserGroup, UserGroupDao<UserGroup>> userGroupService;
@@ -104,8 +103,8 @@ public class Shogun2AuthenticationProviderTest {
 		when(authRequest.getName()).thenReturn(shogun2UserName);
 		when(authRequest.getCredentials()).thenReturn(shogun2UserPass);
 
-		// 2. Mock the userService
-		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+		// 2. Mock the userDao
+		when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
 
 		// 3. Mock the roleHierarchy (return empty collection)
 		when(
@@ -150,8 +149,8 @@ public class Shogun2AuthenticationProviderTest {
 		Authentication authRequest = mock(Authentication.class);
 		when(authRequest.getName()).thenReturn(shogun2UserName);
 
-		// 3. Mock the userService by returning null (-> no user found)
-		when(userService.findByAccountName(shogun2UserName)).thenReturn(null);
+		// 3. Mock the userDao by returning null (-> no user found)
+		when(userDao.findByAccountName(shogun2UserName)).thenReturn(null);
 
 		// 4. Call the authenticate method with the mocked object to provoke
 		// the expected UserNameNotFoundException
@@ -180,8 +179,8 @@ public class Shogun2AuthenticationProviderTest {
 		when(authRequest.getName()).thenReturn(shogun2UserName);
 		when(authRequest.getCredentials()).thenReturn(wrongPassword);
 
-		// 3. Mock the userService
-		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+		// 3. Mock the userDao
+		when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
 
 		// 4. Call the authenticate method with the mocked object to provoke
 		// the expected BadCredentialsException
@@ -208,8 +207,8 @@ public class Shogun2AuthenticationProviderTest {
 		when(authRequest.getName()).thenReturn(shogun2UserName);
 		when(authRequest.getCredentials()).thenReturn(correctPassword);
 
-		// 3. Mock the userService
-		when(userService.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+		// 3. Mock the userDao
+		when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
 
 		// 4. Call the authenticate method with the mocked object to provoke
 		// the expected DisabledException
