@@ -556,7 +556,7 @@
         </property>
     </bean>
 
-    <!-- The default interceptor roles -->
+    <!-- The default interceptor rules -->
     <bean id="defaultWMSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
         <property name="rule" value="ALLOW"/>
