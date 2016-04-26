@@ -103,7 +103,7 @@ public class Shogun2AuthenticationProviderTest {
 		when(authRequest.getName()).thenReturn(shogun2UserName);
 		when(authRequest.getCredentials()).thenReturn(shogun2UserPass);
 
-		// 2. Mock the useruserDao
+		// 2. Mock the userDao
 		when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
 
 		// 3. Mock the roleHierarchy (return empty collection)

@@ -98,7 +98,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param accountName A unique account name.
 	 * @return The unique user for the account name or null.
 	 */
-	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#accountName, 'READ')")
 	public E findByAccountName(String accountName) {
 		return dao.findByAccountName(accountName);
 	}
@@ -108,7 +108,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param email
 	 * @return
 	 */
-	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#email, 'READ')")
 	public E findByEmail(String email) {
 		return dao.findByEmail(email);
 	}
