@@ -7,6 +7,7 @@ package de.terrestris.shogun2.model.security;
  */
 public enum Permission {
 	ADMIN("ADMIN"),
+	CREATE("CREATE"),
 	DELETE("DELETE"),
 	UPDATE("UPDATE"),
 	READ("READ");
