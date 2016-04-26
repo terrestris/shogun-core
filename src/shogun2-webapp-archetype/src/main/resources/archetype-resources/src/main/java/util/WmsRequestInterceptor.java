@@ -8,7 +8,7 @@ import de.terrestris.shogun2.util.interceptor.WmsRequestInterceptorInterface;
 
 /**
  * This class demonstrates how to implement the WmsRequestInterceptorInterface.
- * 
+ *
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
  *
@@ -18,7 +18,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetMap(
 			MutableHttpServletRequest request) {
-		request.setParameter("LAYERS", "peter");
+		// Manipulate request as you like…
 		return request;
 	}
 
