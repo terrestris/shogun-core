@@ -147,7 +147,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 	 * @return
 	 * @throws URISyntaxException
 	 */
-	private URI createRegistrationActivationURI(HttpServletRequest request,
+	public URI createRegistrationActivationURI(HttpServletRequest request,
 			RegistrationToken registrationToken) throws URISyntaxException {
 
 		// get the webapp URI
