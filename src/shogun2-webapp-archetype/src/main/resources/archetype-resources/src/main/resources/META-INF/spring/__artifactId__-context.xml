@@ -69,4 +69,16 @@
     <!-- The GeoServer Namespace to URI map used in the Interceptor -->
     <util:properties id="geoServerNameSpaces" location="classpath*:META-INF/geoServerNameSpaces.properties" />
 
+    <!--
+     | The interceptor beans, uncomment to be able to use the interceptor
+     | classes for OGC requests
+     |
+    <bean id="wmsRequestInterceptor" class="${package}.util.WmsRequestInterceptor" />
+    <bean id="wmsResponseInterceptor" class="${package}.util.WmsResponseInterceptor" />
+    <bean id="wfsRequestInterceptor" class="${package}.util.WfsRequestInterceptor" />
+    <bean id="wfsResponseInterceptor" class="${package}.util.WfsResponseInterceptor" />
+    <bean id="wcsRequestInterceptor" class="${package}.util.WcsRequestInterceptor" />
+    <bean id="wcsResponseInterceptor" class="${package}.util.WcsResponseInterceptor" />
+     |
+     +-->
 </beans>
