@@ -76,7 +76,8 @@
 
     <beans:bean id="permissionEvaluator" class="de.terrestris.shogun2.security.access.Shogun2PermissionEvaluator">
         <beans:property name="permissionEvaluatorFactory">
-            <beans:bean class="de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFactory" />
+            <!-- This is how project specific permission evaluators can be used/configured -->
+            <beans:bean class="${package}.security.access.factory.ProjectEntityPermissionEvaluatorFactory" />
         </beans:property>
     </beans:bean>
 

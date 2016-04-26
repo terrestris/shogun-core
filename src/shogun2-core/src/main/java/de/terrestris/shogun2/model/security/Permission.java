@@ -7,8 +7,9 @@ package de.terrestris.shogun2.model.security;
  */
 public enum Permission {
 	ADMIN("ADMIN"),
+	CREATE("CREATE"),
 	DELETE("DELETE"),
-	WRITE("WRITE"),
+	UPDATE("UPDATE"),
 	READ("READ");
 
 	private final String permission;

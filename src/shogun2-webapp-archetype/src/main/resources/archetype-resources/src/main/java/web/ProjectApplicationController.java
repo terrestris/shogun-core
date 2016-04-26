@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import ${package}.model.ProjectApplication;
 import ${package}.dao.ProjectApplicationDao;
@@ -54,5 +56,26 @@ public class ProjectApplicationController<E extends ProjectApplication, D extend
 	@Qualifier("projectApplicationService")
 	public void setService(S service) {
 		super.setService(service);
+	}
+
+	/**
+	 * A demo interface for the creation of a new project application. Can be
+	 * used as a showcase that the project specific permission evaluators for
+	 * the CREATE permission are really working ;-) You should set the LOG level
+	 * to TRACE to see the logs of the permission evaluators (when logged in as
+	 * a NON-admin, e.g. "user").
+	 *
+	 * @param name
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	@RequestMapping(value = "create.action", method = RequestMethod.GET)
+	public @ResponseBody E create(String name)
+			throws InstantiationException, IllegalAccessException {
+		E app = getEntityClass().newInstance();
+		app.setName(name);
+		service.saveOrUpdate(app);
+		return app;
 	}
 }

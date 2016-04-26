@@ -3,7 +3,11 @@
 ## 0.1.0 (not finally released yet)
 
 * Changes:
+  * `Permission.WRITE` has been renamed to `Permission.UPDATE`
+  * A new permission `Permission.CREATE` has been introduced
+  * The `saveOrUpdate` method of the `AbstractCrudService` now has a more secure permission/authorization annotation. The `CREATE` case is currently not respected in the permission evaluators of SHOGun2 and should be handled in project specific implementations.
   * The `saveOrUpdate` method of the services are now void. Existing projects that are using this method may need some simple adaptions like changes from `PersistentObject newObject = object.saveOrUpdate()` to `object.saveOrUpdate()`
+  * The webapp-archetype has been extended to demonstrate how custom permission evaluators for project specific solutions can be used.
 * New features:
   * An `AbstractSecuredPersistentObjectService` has been introduced. This service provides useful methods to add and remove permissions for certain objects. `PermissionCollection`s will be persisted in the database when using these methods. All services of entities that extend `SecuredPersistentObject` should extend the abstract service mentioned above.
 

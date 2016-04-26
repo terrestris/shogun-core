@@ -76,14 +76,14 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// prepare permission collection/map
 		Map<User, PermissionCollection> userPermissionsMap = new HashMap<User, PermissionCollection>();
 
-		// WRITE as example permission for the user
-		Permission writePermission = Permission.WRITE;
-		PermissionCollection permissionCollection = buildPermissionCollection(writePermission);
+		// UPDATE as example permission for the user
+		Permission updatePermission = Permission.UPDATE;
+		PermissionCollection permissionCollection = buildPermissionCollection(updatePermission);
 		userPermissionsMap.put(user , permissionCollection);
 		entityToCheck.setUserPermissions(userPermissionsMap);
 
 		// call method to test
-		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, writePermission);
+		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, updatePermission);
 
 		assertThat(permissionResult, equalTo(true));
 	}
@@ -106,14 +106,14 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 		// prepare permission collection/map for the group
 		Map<UserGroup, PermissionCollection> userGroupPermissionsMap = new HashMap<UserGroup, PermissionCollection>();
 
-		// WRITE as example permission for the group
-		Permission writePermission = Permission.WRITE;
-		PermissionCollection permissionCollection = buildPermissionCollection(writePermission);
+		// UPDATE as example permission for the group
+		Permission updatePermission = Permission.UPDATE;
+		PermissionCollection permissionCollection = buildPermissionCollection(updatePermission);
 		userGroupPermissionsMap.put(group , permissionCollection);
 		entityToCheck.setGroupPermissions(userGroupPermissionsMap);
 
 		// call method to test
-		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, writePermission);
+		boolean permissionResult = persistentObjectPermissionEvaluator.hasPermission(user , entityToCheck, updatePermission);
 
 		assertThat(permissionResult, equalTo(true));
 	}
@@ -195,8 +195,8 @@ public abstract class AbstractSecuredObjectPermissionEvaluatorTest<E extends Sec
 
 	/**
 	 * Helper method to easily build a {@link PermissionCollection}
-	 *
-	 * @param writePermission
+	 * 
+	 * @param permissions
 	 * @return
 	 */
 	private PermissionCollection buildPermissionCollection(

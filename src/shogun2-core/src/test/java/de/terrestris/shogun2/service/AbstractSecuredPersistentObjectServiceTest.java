@@ -136,12 +136,12 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveUserPermissions_shouldCreateNewPermissionCollectionWithMultipleElements() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 		final Permission deletePermission = Permission.DELETE;
 
 		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(readPermission);
-		permissionCollection.getPermissions().add(writePermission);
+		permissionCollection.getPermissions().add(updatePermission);
 		permissionCollection.getPermissions().add(deletePermission);
 
 		User user = new User("Dummy", "Dummy", "dummy");
@@ -155,7 +155,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
-		crudService.addAndSaveUserPermissions(implToTest, user, readPermission, writePermission, deletePermission);
+		crudService.addAndSaveUserPermissions(implToTest, user, readPermission, updatePermission, deletePermission);
 
 		// be sure that the permission collection as well as the entity have been saved
 		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
@@ -221,7 +221,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveUserPermissions_shouldAddPermissionToExistingPermissionCollection() {
 
 		final Permission existingPermission = Permission.READ;
-		final Permission newPermission = Permission.WRITE;
+		final Permission newPermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 		final PermissionCollection newPermissionCollection = new PermissionCollection();
@@ -301,11 +301,11 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	@Test
 	public void removeAndSaveUserPermissions_shouldDoNothingWhenNoPermissionsExist() {
 
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		User user = new User("Dummy", "Dummy", "dummy");
 
-		crudService.removeAndSaveUserPermissions(implToTest, user, writePermission);
+		crudService.removeAndSaveUserPermissions(implToTest, user, updatePermission);
 
 		// be sure that nothing happened
 		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
@@ -321,7 +321,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void removeAndSaveUserPermissions_onlyPersistsIfNecessary() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 		existingPermissionCollection.getPermissions().add(readPermission);
@@ -334,7 +334,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		implToTest.setUserPermissions(existingUserPermissionsMap);
 
 		// remove the permission that does not exist in the current collection
-		crudService.removeAndSaveUserPermissions(implToTest, user, writePermission);
+		crudService.removeAndSaveUserPermissions(implToTest, user, updatePermission);
 
 		// be sure that nothing has been updated
 		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
@@ -350,12 +350,12 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void removeAndSaveUserPermissions_shouldRemoveExistingPermission() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(readPermission);
-		existingPermissionCollection.getPermissions().add(writePermission);
+		existingPermissionCollection.getPermissions().add(updatePermission);
 
 		User user = new User("Dummy", "Dummy", "dummy");
 
@@ -364,7 +364,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 
 		implToTest.setUserPermissions(existingUserPermissionsMap);
 
-		crudService.removeAndSaveUserPermissions(implToTest, user, writePermission);
+		crudService.removeAndSaveUserPermissions(implToTest, user, updatePermission);
 
 		// be sure that the permission collection has been updated
 		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
@@ -452,12 +452,12 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveGroupPermissions_shouldCreateNewPermissionCollectionWithMultipleElements() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 		final Permission deletePermission = Permission.DELETE;
 
 		final PermissionCollection permissionCollection = new PermissionCollection();
 		permissionCollection.getPermissions().add(readPermission);
-		permissionCollection.getPermissions().add(writePermission);
+		permissionCollection.getPermissions().add(updatePermission);
 		permissionCollection.getPermissions().add(deletePermission);
 
 		UserGroup userGroup = new UserGroup();
@@ -472,7 +472,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		doNothing().when(dao).saveOrUpdate(implToTest);
 
 		// invoke method to test
-		crudService.addAndSaveGroupPermissions(implToTest, userGroup, readPermission, writePermission, deletePermission);
+		crudService.addAndSaveGroupPermissions(implToTest, userGroup, readPermission, updatePermission, deletePermission);
 
 		// be sure that the permission collection as well as the entity have been saved
 		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
@@ -539,7 +539,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void addAndSaveGroupPermissions_shouldAddPermissionToExistingPermissionCollection() {
 
 		final Permission existingPermission = Permission.READ;
-		final Permission newPermission = Permission.WRITE;
+		final Permission newPermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 		final PermissionCollection newPermissionCollection = new PermissionCollection();
@@ -623,12 +623,12 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	@Test
 	public void removeAndSaveGroupPermissions_shouldDoNothingWhenNoPermissionsExist() {
 
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		UserGroup userGroup = new UserGroup();
 		userGroup.setName("test");
 
-		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, writePermission);
+		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, updatePermission);
 
 		// be sure that nothing happened
 		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
@@ -644,7 +644,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void removeAndSaveGroupPermissions_onlyPersistsIfNecessary() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 		existingPermissionCollection.getPermissions().add(readPermission);
@@ -658,7 +658,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 		implToTest.setGroupPermissions(existingUserPermissionsMap);
 
 		// remove the permission that does not exist in the current collection
-		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, writePermission);
+		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, updatePermission);
 
 		// be sure that nothing has been updated
 		verify(permissionCollectionService, times(0)).saveOrUpdate(any(PermissionCollection.class));
@@ -674,12 +674,12 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 	public void removeAndSaveGroupPermissions_shouldRemoveExistingPermission() {
 
 		final Permission readPermission = Permission.READ;
-		final Permission writePermission = Permission.WRITE;
+		final Permission updatePermission = Permission.UPDATE;
 
 		PermissionCollection existingPermissionCollection = new PermissionCollection();
 
 		existingPermissionCollection.getPermissions().add(readPermission);
-		existingPermissionCollection.getPermissions().add(writePermission);
+		existingPermissionCollection.getPermissions().add(updatePermission);
 
 		UserGroup userGroup = new UserGroup();
 		userGroup.setName("test");
@@ -689,7 +689,7 @@ public abstract class AbstractSecuredPersistentObjectServiceTest<E extends Secur
 
 		implToTest.setGroupPermissions(existingGroupPermissionsMap);
 
-		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, writePermission);
+		crudService.removeAndSaveGroupPermissions(implToTest, userGroup, updatePermission);
 
 		// be sure that the permission collection has been updated
 		verify(permissionCollectionService, times(1)).saveOrUpdate(any(PermissionCollection.class));
