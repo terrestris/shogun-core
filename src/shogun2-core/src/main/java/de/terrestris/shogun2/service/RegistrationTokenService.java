@@ -98,15 +98,17 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 	}
 
 	/**
-	 * @throws InvocationTargetException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws SecurityException
+	 * 
+	 * @param request
+	 * @param user
 	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
 	 * @throws URISyntaxException
 	 * @throws UnsupportedEncodingException
-	 *
 	 */
 	public void sendRegistrationActivationMail(HttpServletRequest request,
 			User user) throws NoSuchMethodException, SecurityException,
@@ -114,12 +116,9 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 			IllegalArgumentException, InvocationTargetException,
 			URISyntaxException, UnsupportedEncodingException {
 
-		// generate and save the unique registration token for the user
-		RegistrationToken registrationToken = getValidTokenForUser(user, registrationTokenExpirationTime);
-
 		// create the reset-password URI that will be send to the user
 		URI resetPasswordURI = createRegistrationActivationURI(request,
-				registrationToken);
+				user);
 
 		// create a thread safe "copy" of the template message
 		SimpleMailMessage registrationActivationMsg = new SimpleMailMessage(
@@ -142,13 +141,25 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 
 	/**
 	 *
-	 * @param request
 	 * @param registrationToken
+	 * @param user
 	 * @return
 	 * @throws URISyntaxException
+	 * @throws InvocationTargetException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
 	 */
 	public URI createRegistrationActivationURI(HttpServletRequest request,
-			RegistrationToken registrationToken) throws URISyntaxException {
+			User user) throws URISyntaxException, NoSuchMethodException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+
+		// generate and save the unique registration token for the user
+		RegistrationToken registrationToken = getValidTokenForUser(user,
+				registrationTokenExpirationTime);
 
 		// get the webapp URI
 		URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);

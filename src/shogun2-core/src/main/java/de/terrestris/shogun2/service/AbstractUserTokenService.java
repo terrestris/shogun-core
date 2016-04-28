@@ -113,7 +113,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public E getValidTokenForUser(User user, Integer expirationTimeInMinutes) throws NoSuchMethodException,
+	protected E getValidTokenForUser(User user, Integer expirationTimeInMinutes) throws NoSuchMethodException,
 			SecurityException, InstantiationException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
