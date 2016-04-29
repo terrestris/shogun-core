@@ -32,14 +32,6 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 	protected PermissionCollectionService<PermissionCollection, PermissionCollectionDao<PermissionCollection>> permissionCollectionService;
 
 	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public AbstractPermissionAwareCrudService() {
-		this((Class<E>) PersistentObject.class);
-	}
-
-	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
