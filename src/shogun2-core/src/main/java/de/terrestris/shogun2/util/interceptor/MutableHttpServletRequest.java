@@ -5,8 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,10 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
 
 /**
  * An implementation of HttpServletRequestWrapper.
@@ -24,6 +30,11 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class MutableHttpServletRequest extends HttpServletRequestWrapper {
+
+	/**
+	 * The Logger.
+	 */
+	private static final Logger LOG = Logger.getLogger(MutableHttpServletRequest.class);
 
 	/**
 	 * Holds custom parameter mapping
@@ -49,6 +60,101 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 		this.customRequestURI = request.getRequestURI();
 		this.customParameters = new HashMap<String, String[]>(
 				request.getParameterMap());
+	}
+
+	/**
+	 *
+	 * @param mutableRequest
+	 * @param key
+	 * @return
+	 * @throws InterceptorException
+	 * @throws IOException
+	 */
+	public static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
+			String[] keys) throws InterceptorException, IOException {
+
+		String value = StringUtils.EMPTY;
+
+		for (String key : keys) {
+
+			value = getRequestParameterValue(mutableRequest, key);
+
+			if (StringUtils.isNotEmpty(value)) {
+				break;
+			}
+		}
+
+		return value;
+	}
+
+	/**
+	 *
+	 * @param mutableRequest
+	 * @param parameter
+	 * @return
+	 * @throws InterceptorException
+	 * @throws IOException
+	 */
+	public static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
+			String parameter) throws InterceptorException, IOException {
+
+		LOG.debug("Finding the request parameter [" + parameter + "]");
+
+		String value = StringUtils.EMPTY;
+
+		Map<String, String[]> queryParams = mutableRequest.getParameterMap();
+
+		if (!queryParams.isEmpty()) {
+
+			LOG.trace("The request contains query parameters (GET or POST).");
+
+			Map<String, String[]> params = new TreeMap<String, String[]>(
+					String.CASE_INSENSITIVE_ORDER);
+
+			params.putAll(queryParams);
+
+			if (params.containsKey(parameter)) {
+				value = StringUtils.join(params.get(parameter), ",");
+			}
+
+		} else {
+
+			String xml = OgcXmlUtil.getRequestBody(mutableRequest);
+
+			if (!StringUtils.isEmpty(xml)) {
+
+				LOG.trace("The request contains a POST body.");
+
+				Document document = OgcXmlUtil.getDocumentFromString(xml);
+
+				if (parameter.equalsIgnoreCase(OgcEnum.Service.SERVICE.toString())) {
+					value = OgcXmlUtil.getPathInDocument(
+							document, "/*/@service");
+				} else if (parameter.equalsIgnoreCase(OgcEnum.Operation.OPERATION.toString())) {
+					value = OgcXmlUtil.getPathInDocument(
+							document, "name(/*)");
+
+					if (value.contains(":")) {
+						value = value.split(":")[1];
+					}
+
+				} else if (Arrays.asList(OgcEnum.EndPoint.getAllValues()).contains(parameter)) {
+					value = OgcXmlUtil.getPathInDocument(
+							document, "//TypeName/text()");
+					if (StringUtils.isEmpty(value)) {
+						value = OgcXmlUtil.getPathInDocument(document,
+								"//@typeName");
+					}
+				}
+
+			} else {
+				LOG.error("No body found in the request.");
+			}
+		}
+
+		LOG.debug("Found the request parameter value: " + value);
+
+		return value;
 	}
 
 	/**

@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import de.terrestris.shogun2.model.interceptor.InterceptorRule;
 import de.terrestris.shogun2.util.enumeration.HttpEnum;
@@ -138,8 +136,10 @@ public class GeoServerInterceptorService {
 
 		// finally filter the white-listed response headers
 		// TODO: Move to global proxy class
-		interceptedResponse.setHeaders(
-				getHeadersToForward(interceptedResponse.getHeaders()));
+		HttpHeaders forwardingHeaders= getHeadersToForward(
+				interceptedResponse.getHeaders()
+			);
+		interceptedResponse.setHeaders(forwardingHeaders);
 
 		return interceptedResponse;
 	}
@@ -158,11 +158,11 @@ public class GeoServerInterceptorService {
 
 		OgcMessage ogcMessage = new OgcMessage();
 
-		String requestService = getRequestParameterValue(
+		String requestService = MutableHttpServletRequest.getRequestParameterValue(
 				mutableRequest, OgcEnum.Service.SERVICE.toString());
-		String requestOperation = getRequestParameterValue(
+		String requestOperation = MutableHttpServletRequest.getRequestParameterValue(
 				mutableRequest, OgcEnum.Operation.OPERATION.toString());
-		String requestEndPoint = getRequestParameterValue(
+		String requestEndPoint = MutableHttpServletRequest.getRequestParameterValue(
 				mutableRequest, OgcEnum.EndPoint.getAllValues());
 
 		if (StringUtils.isEmpty(requestService) ||
@@ -314,101 +314,6 @@ public class GeoServerInterceptorService {
 		}
 
 		return mostSpecificRule;
-	}
-
-	/**
-	 *
-	 * @param mutableRequest
-	 * @param key
-	 * @return
-	 * @throws InterceptorException
-	 * @throws IOException
-	 */
-	private static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
-			String[] keys) throws InterceptorException, IOException {
-
-		String value = StringUtils.EMPTY;
-
-		for (String key : keys) {
-
-			value = getRequestParameterValue(mutableRequest, key);
-
-			if (StringUtils.isNotEmpty(value)) {
-				break;
-			}
-		}
-
-		return value;
-	}
-
-	/**
-	 *
-	 * @param mutableRequest
-	 * @param parameter
-	 * @return
-	 * @throws InterceptorException
-	 * @throws IOException
-	 */
-	private static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
-			String parameter) throws InterceptorException, IOException {
-
-		LOG.debug("Finding the request parameter [" + parameter + "]");
-
-		String value = StringUtils.EMPTY;
-
-		Map<String, String[]> queryParams = mutableRequest.getParameterMap();
-
-		if (!queryParams.isEmpty()) {
-
-			LOG.trace("The request contains query parameters (GET or POST).");
-
-			Map<String, String[]> params = new TreeMap<String, String[]>(
-					String.CASE_INSENSITIVE_ORDER);
-
-			params.putAll(queryParams);
-
-			if (params.containsKey(parameter)) {
-				value = StringUtils.join(params.get(parameter), ",");
-			}
-
-		} else {
-
-			String xml = OgcXmlUtil.getRequestBody(mutableRequest);
-
-			if (!StringUtils.isEmpty(xml)) {
-
-				LOG.trace("The request contains a POST body.");
-
-				Document document = OgcXmlUtil.getDocumentFromString(xml);
-
-				if (parameter.equalsIgnoreCase(OgcEnum.Service.SERVICE.toString())) {
-					value = OgcXmlUtil.getPathInDocument(
-							document, "/*/@service");
-				} else if (parameter.equalsIgnoreCase(OgcEnum.Operation.OPERATION.toString())) {
-					value = OgcXmlUtil.getPathInDocument(
-							document, "name(/*)");
-
-					if (value.contains(":")) {
-						value = value.split(":")[1];
-					}
-
-				} else if (Arrays.asList(OgcEnum.EndPoint.getAllValues()).contains(parameter)) {
-					value = OgcXmlUtil.getPathInDocument(
-							document, "//TypeName/text()");
-					if (StringUtils.isEmpty(value)) {
-						value = OgcXmlUtil.getPathInDocument(document,
-								"//@typeName");
-					}
-				}
-
-			} else {
-				LOG.error("No body found in the request.");
-			}
-		}
-
-		LOG.debug("Found the request parameter value: " + value);
-
-		return value;
 	}
 
 	/**

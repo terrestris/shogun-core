@@ -1,5 +1,11 @@
 package de.terrestris.shogun2.util.enumeration;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -295,6 +301,105 @@ public class OgcEnum {
 		public String toString() {
 			return value;
 		}
+	}
+
+	/**
+	 * A map that contains a set of {@link OperationType}s for any possible
+	 * {@link ServiceType}. See also the opposite collection
+	 * {@link SERVICETYPES_BY_OPERATION}.
+	 */
+	public static Map<ServiceType, Set<OperationType>> OPERATIONS_BY_SERVICETYPE;
+	static {
+		Map<ServiceType, Set<OperationType>> map = new HashMap<ServiceType, Set<OperationType>>();
+
+		Set<OperationType> wmsOps = new HashSet<OperationType>();
+		wmsOps.add(OperationType.GET_CAPABILITIES);
+		wmsOps.add(OperationType.GET_MAP);
+		wmsOps.add(OperationType.GET_FEATURE_INFO);
+		wmsOps.add(OperationType.DESCRIBE_LAYER);
+		wmsOps.add(OperationType.GET_LEGEND_GRAPHIC);
+		wmsOps.add(OperationType.GET_STYLES);
+
+		Set<OperationType> wfsOps = new HashSet<OperationType>();
+		wfsOps.add(OperationType.GET_CAPABILITIES);
+		wfsOps.add(OperationType.DESCRIBE_FEATURE_TYPE);
+		wfsOps.add(OperationType.GET_FEATURE);
+		wfsOps.add(OperationType.LOCK_FEATURE);
+		wfsOps.add(OperationType.TRANSACTION);
+
+		Set<OperationType> wcsOps = new HashSet<OperationType>();
+		wcsOps.add(OperationType.GET_CAPABILITIES);
+		wcsOps.add(OperationType.DESCRIBE_COVERAGE);
+		wcsOps.add(OperationType.GET_COVERAGE);
+
+		map.put(ServiceType.WMS, Collections.unmodifiableSet(wmsOps));
+		map.put(ServiceType.WFS, Collections.unmodifiableSet(wfsOps));
+		map.put(ServiceType.WCS, Collections.unmodifiableSet(wcsOps));
+
+		// store it in the lookup
+		OPERATIONS_BY_SERVICETYPE = Collections.unmodifiableMap(map);
+	}
+
+	/**
+	 * A map that contains a set of {@link ServiceType}s for any possible
+	 * {@link OperationType}. See also the opposite collection
+	 * {@link OPERATIONS_BY_SERVICETYPE}.
+	 */
+	public static Map<OperationType, Set<ServiceType>> SERVICETYPES_BY_OPERATION;
+	static {
+		Map<OperationType, Set<ServiceType>> map = new HashMap<OperationType, Set<ServiceType>>();
+
+		// A set containing only the WMS ServiceType
+		Set<ServiceType> wmsSet = new HashSet<ServiceType>();
+		wmsSet.add(ServiceType.WMS);
+		wmsSet = Collections.unmodifiableSet(wmsSet);
+
+		// A set containing only the WFS ServiceType
+		Set<ServiceType> wfsSet = new HashSet<ServiceType>();
+		wfsSet.add(ServiceType.WFS);
+		wfsSet = Collections.unmodifiableSet(wfsSet);
+
+		// A set containing only the WCS ServiceType
+		Set<ServiceType> wcsSet = new HashSet<ServiceType>();
+		wcsSet.add(ServiceType.WCS);
+		wcsSet = Collections.unmodifiableSet(wcsSet);
+
+		// A set containing the WMS, WFS and WCS ServiceTypes
+		Set<ServiceType> getCapSet = new HashSet<ServiceType>();
+		getCapSet.add(ServiceType.WMS);
+		getCapSet.add(ServiceType.WFS);
+		getCapSet.add(ServiceType.WCS);
+		getCapSet = Collections.unmodifiableSet(getCapSet);
+
+		// look up all WMS operations from the previously created map
+		Set<OperationType> wmsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WMS);
+		// look up all WFS operations from the previously created map
+		Set<OperationType> wfsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WFS);
+		// look up all WCS operations from the previously created map
+		Set<OperationType> wcsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WCS);
+
+		// put all ServiceTypes for the GetCapability operation
+		map.put(OperationType.GET_CAPABILITIES, getCapSet);
+		// for WMS operations, put the WMS set, unless it's the GetCapability op
+		for(OperationType wmsOperation : wmsOperations) {
+			if (!OperationType.GET_CAPABILITIES.equals(wmsOperation)) {
+				map.put(wmsOperation, wmsSet);
+			}
+		}
+		// for WFS operations, put the WFS set, unless it's the GetCapability op
+		for(OperationType wfsOperation : wfsOperations) {
+			if (!OperationType.GET_CAPABILITIES.equals(wfsOperation)) {
+				map.put(wfsOperation, wfsSet);
+			}
+		}
+		// for WCS operations, put the WCS set, unless it's the GetCapability op
+		for(OperationType wcsOperation : wcsOperations) {
+			if (!OperationType.GET_CAPABILITIES.equals(wcsOperation)) {
+				map.put(wcsOperation, wcsSet);
+			}
+		}
+		// store it in the lookup
+		SERVICETYPES_BY_OPERATION = Collections.unmodifiableMap(map);
 	}
 
 }
