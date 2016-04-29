@@ -9,6 +9,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -20,6 +24,15 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Table
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		include = JsonTypeInfo.As.PROPERTY,
+		property = "type"
+)
+@JsonSubTypes({
+		@Type(value = TreeLeaf.class, name = "Leaf"),
+		@Type(value = TreeFolder.class, name = "Folder")
+})
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class TreeNode extends PersistentObject{
 
@@ -27,6 +40,11 @@ public abstract class TreeNode extends PersistentObject{
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
+	private String type;
 
 	/**
 	 *
@@ -71,7 +89,21 @@ public abstract class TreeNode extends PersistentObject{
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
-	
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
