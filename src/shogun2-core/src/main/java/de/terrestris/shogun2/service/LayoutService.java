@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.layout.Layout;
  */
 @Service("layoutService")
 public class LayoutService<E extends Layout, D extends LayoutDao<E>> extends
-		AbstractCrudService<E, D> {
+		AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

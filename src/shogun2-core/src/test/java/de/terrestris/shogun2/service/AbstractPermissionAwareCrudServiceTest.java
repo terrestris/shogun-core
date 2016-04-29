@@ -19,7 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
-import de.terrestris.shogun2.model.SecuredPersistentObject;
+import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
@@ -27,12 +27,12 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
 
 /**
  * Abstract (parent) test for the
- * {@link AbstractSecuredPersistentObjectServiceTest}.
+ * {@link AbstractPermissionAwareCrudServiceTest}.
  *
  * @author Nils Bühner
  *
  */
-public abstract class AbstractSecuredPersistentObjectServiceTest<E extends SecuredPersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractSecuredPersistentObjectService<E, D>>
+public abstract class AbstractPermissionAwareCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractPermissionAwareCrudService<E, D>>
 	extends AbstractCrudServiceTest<E, D, S> {
 
 	/**

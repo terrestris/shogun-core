@@ -21,7 +21,7 @@ import de.terrestris.shogun2.model.security.Permission;
  *
  */
 public class UserPermissionEvaluatorTest extends
-	AbstractSecuredObjectPermissionEvaluatorTest<User> {
+		AbstractPersistentObjectPermissionEvaluatorTest<User> {
 
 	public UserPermissionEvaluatorTest() {
 		super(User.class, new UserPermissionEvaluator<>(), new User());

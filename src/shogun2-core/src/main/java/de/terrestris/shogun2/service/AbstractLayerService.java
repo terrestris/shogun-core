@@ -20,12 +20,12 @@ import de.terrestris.shogun2.model.module.Map;
  * point.
  *
  * @author Nils Bühner
- * @see AbstractSecuredPersistentObjectService
+ * @see AbstractPermissionAwareCrudService
  *
  */
 @Service("abstractLayerService")
 public class AbstractLayerService<E extends AbstractLayer, D extends AbstractLayerDao<E>>
-		extends AbstractSecuredPersistentObjectService<E, D> {
+		extends AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
