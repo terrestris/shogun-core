@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.layer.Layer;
 
 /**
  * The TreeLeaf extends the TreeNode and has an associated layer.
@@ -37,7 +37,7 @@ public class TreeLeaf extends TreeNode {
 			property="id"
 	)
 	@JsonIdentityReference(alwaysAsId=true)
-	private AbstractLayer layer;
+	private Layer layer;
 
 	/**
 	 * 
@@ -48,17 +48,17 @@ public class TreeLeaf extends TreeNode {
 	/**
 	 * @return the layer
 	 */
-	public AbstractLayer getLayer() {
+	public Layer getLayer() {
 		return layer;
 	}
 
 	/**
 	 * @param layer the layer to set
 	 */
-	public void setLayer(AbstractLayer layer) {
+	public void setLayer(Layer layer) {
 		this.layer = layer;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 *
