@@ -1,20 +1,11 @@
 package de.terrestris.shogun2.model.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -56,19 +47,6 @@ public class TreeFolder extends TreeNode {
 	/**
 	 * 
 	 */
-	@ManyToMany
-	@JoinTable(
-		name = "TREEFOLDER_CHILDREN",
-		joinColumns = { @JoinColumn(name = "TREEFOLDER_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "TREENODE_ID") }
-	)
-	@OrderColumn(name = "IDX")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	private List<TreeNode> children = new ArrayList<TreeNode>();
-
-	/**
-	 * 
-	 */
 	public TreeFolder() {
 	}
 
@@ -84,20 +62,6 @@ public class TreeFolder extends TreeNode {
 	 */
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-	}
-
-	/**
-	 * @return the children
-	 */
-	public List<TreeNode> getChildren() {
-		return children;
-	}
-
-	/**
-	 * @param children the children to set
-	 */
-	public void setChildren(List<TreeNode> children) {
-		this.children = children;
 	}
 
 	/**
@@ -128,7 +92,6 @@ public class TreeFolder extends TreeNode {
 		return new HashCodeBuilder(7, 89)
 				.appendSuper(super.hashCode())
 				.append(isExpanded())
-				.append(getChildren())
 				.toHashCode();
 	}
 
@@ -149,7 +112,6 @@ public class TreeFolder extends TreeNode {
 		return new EqualsBuilder()
 				.appendSuper(super.equals(other))
 				.append(isExpanded(), other.isExpanded())
-				.append(getChildren(), other.getChildren())
 				.isEquals();
 	}
 
@@ -161,7 +123,6 @@ public class TreeFolder extends TreeNode {
 		return new ToStringBuilder(this)
 				.appendSuper(super.toString())
 				.append("expanded", isExpanded())
-				.append("children", getChildren())
 				.toString();
 	}
 

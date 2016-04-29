@@ -3,8 +3,14 @@
  */
 package de.terrestris.shogun2.model.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import de.terrestris.shogun2.model.tree.TreeFolder;
+import de.terrestris.shogun2.model.tree.TreeNode;
 
 /**
  * The TreePanel module contains a RootNodeConfig which contains a TreeFolder.
@@ -34,23 +40,27 @@ public class TreePanel extends Module {
 	/**
 	 *
 	 */
-	@OneToOne
+	@ManyToMany
+	@JoinTable(
+		joinColumns = { @JoinColumn(name = "TREEPANEL_NODECONFIGS") },
+		inverseJoinColumns = { @JoinColumn(name = "NODECONFIG_ID") }
+	)
+	@OrderColumn(name = "IDX")
 	@Cascade(CascadeType.SAVE_UPDATE)
-	private TreeFolder rootNodeConfig;
-
+	private List<TreeNode> nodeConfigs = new ArrayList<TreeNode>();
 
 	/**
-	 * @return the rootNodeConfig
+	 * @return the nodeConfigs
 	 */
-	public TreeFolder getRootNodeConfig() {
-		return rootNodeConfig;
+	public List<TreeNode> getNodeConfigs() {
+		return nodeConfigs;
 	}
 
 	/**
-	 * @param rootNodeConfig the rootNodeConfig to set
+	 * @param nodeConfigs the nodeConfigs to set
 	 */
-	public void setRootNodeConfig(TreeFolder rootNodeConfig) {
-		this.rootNodeConfig = rootNodeConfig;
+	public void setNodeConfigs(List<TreeNode> nodeConfigs) {
+		this.nodeConfigs = nodeConfigs;
 	}
 
 	/**
@@ -63,9 +73,9 @@ public class TreePanel extends Module {
 	 */
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(9, 89).
-				appendSuper(super.hashCode())
-				.append(getRootNodeConfig())
+		return new HashCodeBuilder(9, 89)
+				.appendSuper(super.hashCode())
+				.append(getNodeConfigs())
 				.toHashCode();
 	}
 
@@ -82,9 +92,9 @@ public class TreePanel extends Module {
 			return false;
 		TreePanel other = (TreePanel) obj;
 
-		return new EqualsBuilder().
-				appendSuper(super.equals(other))
-				.append(getRootNodeConfig(), other.getRootNodeConfig())
+		return new EqualsBuilder()
+				.appendSuper(super.equals(other))
+				.append(getNodeConfigs(), other.getNodeConfigs())
 				.isEquals();
 	}
 
@@ -95,7 +105,7 @@ public class TreePanel extends Module {
 	public String toString() {
 		return new ToStringBuilder(this)
 				.appendSuper(super.toString())
-				.append("treeConfig", getRootNodeConfig())
+				.append(getNodeConfigs())
 				.toString();
 	}
 
