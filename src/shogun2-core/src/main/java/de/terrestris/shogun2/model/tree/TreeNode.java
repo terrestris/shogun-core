@@ -118,6 +118,7 @@ public abstract class TreeNode extends PersistentObject{
 		return new HashCodeBuilder(2, 89)
 				.appendSuper(super.hashCode())
 				.append(getText())
+				.append(getType())
 				.append(isChecked())
 				.toHashCode();
 	}
@@ -139,6 +140,7 @@ public abstract class TreeNode extends PersistentObject{
 		return new EqualsBuilder()
 				.appendSuper(super.equals(other))
 				.append(getText(), other.getText())
+				.append(getType(), other.getType())
 				.append(isChecked(), other.isChecked())
 				.isEquals();
 	}
@@ -151,6 +153,7 @@ public abstract class TreeNode extends PersistentObject{
 		return new ToStringBuilder(this)
 				.appendSuper(super.toString())
 				.append("text", getText())
+				.append("type", getType())
 				.append("checked", isChecked())
 				.toString();
 	}

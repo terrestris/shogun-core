@@ -94,6 +94,7 @@ public class TreeFolder extends TreeNode {
 		return new HashCodeBuilder(7, 89)
 				.appendSuper(super.hashCode())
 				.append(isExpanded())
+				.append(getLayerGroup())
 				.toHashCode();
 	}
 
@@ -114,6 +115,7 @@ public class TreeFolder extends TreeNode {
 		return new EqualsBuilder()
 				.appendSuper(super.equals(other))
 				.append(isExpanded(), other.isExpanded())
+				.append(getLayerGroup(), other.getLayerGroup())
 				.isEquals();
 	}
 
@@ -125,6 +127,7 @@ public class TreeFolder extends TreeNode {
 		return new ToStringBuilder(this)
 				.appendSuper(super.toString())
 				.append("expanded", isExpanded())
+				.append("layerGroup", getLayerGroup())
 				.toString();
 	}
 
