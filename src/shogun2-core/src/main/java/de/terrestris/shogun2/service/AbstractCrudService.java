@@ -20,14 +20,6 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 		extends AbstractDaoService<E, D> {
 
 	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public AbstractCrudService() {
-		this((Class<E>) PersistentObject.class);
-	}
-
-	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */

@@ -22,7 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import de.terrestris.shogun2.dao.ImageFileDao;
 import de.terrestris.shogun2.model.ImageFile;
 
-public class ImageFileServiceTest extends AbstractSecuredPersistentObjectServiceTest<ImageFile, ImageFileDao<ImageFile>, ImageFileService<ImageFile, ImageFileDao<ImageFile>>> {
+public class ImageFileServiceTest extends AbstractPermissionAwareCrudServiceTest<ImageFile, ImageFileDao<ImageFile>, ImageFileService<ImageFile, ImageFileDao<ImageFile>>> {
 
 	/**
 	 *

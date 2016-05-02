@@ -13,7 +13,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import de.terrestris.shogun2.dao.FileDao;
 import de.terrestris.shogun2.model.File;
 
-public class FileServiceTest extends AbstractSecuredPersistentObjectServiceTest<File, FileDao<File>, FileService<File, FileDao<File>>> {
+public class FileServiceTest extends AbstractPermissionAwareCrudServiceTest<File, FileDao<File>, FileService<File, FileDao<File>>> {
 
 	/**
 	 *

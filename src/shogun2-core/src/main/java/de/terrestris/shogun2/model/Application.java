@@ -2,14 +2,10 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -33,18 +29,7 @@ import de.terrestris.shogun2.model.module.CompositeModule;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@AssociationOverrides({
-	@AssociationOverride(
-			name="userPermissions",
-			joinTable=@JoinTable(name="APPLICATIONS_USERPERMISSIONS",
-			joinColumns = @JoinColumn(name = "APPLICATION_ID"))),
-
-	@AssociationOverride(
-			name="groupPermissions",
-			joinTable=@JoinTable(name="APPLICATIONS_GROUPPERMISSIONS",
-			joinColumns = @JoinColumn(name = "APPLICATION_ID")))
-})
-public class Application extends SecuredPersistentObject {
+public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 

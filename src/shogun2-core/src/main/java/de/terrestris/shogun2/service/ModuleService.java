@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.module.Module;
  */
 @Service("moduleService")
 public class ModuleService<E extends Module, D extends ModuleDao<E>> extends
-		AbstractCrudService<E, D> {
+		AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

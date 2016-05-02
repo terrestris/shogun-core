@@ -5,11 +5,16 @@
 package de.terrestris.shogun2.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -20,6 +25,8 @@ import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.terrestris.shogun2.model.security.PermissionCollection;
 
 /**
  * This class represents the abstract superclass for all entities that are
@@ -34,8 +41,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @MappedSuperclass
 public abstract class PersistentObject implements Serializable {
 
+	/**
+	 *
+	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 *
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	// The column annotation is used by hibernate for the column creation, e.g.
@@ -62,6 +75,26 @@ public abstract class PersistentObject implements Serializable {
 	private ReadableDateTime modified;
 
 	/**
+	 *
+	 */
+	@ManyToMany
+	@JoinTable(
+		name="USERPERMISSIONS",
+		joinColumns = @JoinColumn(name = "ENTITY_ID"))
+	@JsonIgnore
+	private Map<User, PermissionCollection> userPermissions = new HashMap<User, PermissionCollection>();
+
+	/**
+	 *
+	 */
+	@ManyToMany
+	@JoinTable(
+		name="GROUPPERMISSIONS",
+		joinColumns = @JoinColumn(name = "ENTITY_ID"))
+	@JsonIgnore
+	private Map<UserGroup, PermissionCollection> groupPermissions = new HashMap<UserGroup, PermissionCollection>();
+
+	/**
 	 * Constructor
 	 */
 	protected PersistentObject() {
@@ -69,6 +102,10 @@ public abstract class PersistentObject implements Serializable {
 		this.modified = DateTime.now();
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public Integer getId() {
 		return id;
 	}
@@ -76,7 +113,7 @@ public abstract class PersistentObject implements Serializable {
 	/**
 	 * Ignore the {@link #created} property when de-/serializing.
 	 * This can be overwritten in subclasses.
-	 * 
+	 *
 	 * @return The date of the creation of the entity.
 	 */
 	@JsonIgnore
@@ -87,7 +124,7 @@ public abstract class PersistentObject implements Serializable {
 	/**
 	 * Ignore the {@link #modified} property when de-/serializing.
 	 * This can be overwritten in subclasses.
-	 * 
+	 *
 	 * @return The date of the last modification of the entity.
 	 */
 	@JsonIgnore
@@ -95,8 +132,41 @@ public abstract class PersistentObject implements Serializable {
 		return modified;
 	}
 
+	/**
+	 *
+	 * @param modified
+	 */
 	public void setModified(ReadableDateTime modified) {
 		this.modified = modified;
+	}
+
+	/**
+	 * @return the userPermissions
+	 */
+	public Map<User, PermissionCollection> getUserPermissions() {
+		return userPermissions;
+	}
+
+	/**
+	 * @param userPermissions the userPermissions to set
+	 */
+	public void setUserPermissions(Map<User, PermissionCollection> userPermissions) {
+		this.userPermissions = userPermissions;
+	}
+
+	/**
+	 * @return the groupPermissions
+	 */
+	public Map<UserGroup, PermissionCollection> getGroupPermissions() {
+		return groupPermissions;
+	}
+
+	/**
+	 * @param groupPermissions the groupPermissions to set
+	 */
+	public void setGroupPermissions(
+			Map<UserGroup, PermissionCollection> groupPermissions) {
+		this.groupPermissions = groupPermissions;
 	}
 
 	/**

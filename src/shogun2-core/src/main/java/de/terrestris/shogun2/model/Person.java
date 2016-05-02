@@ -2,14 +2,10 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,18 +21,7 @@ import org.joda.time.LocalDate;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
-@AssociationOverrides({
-	@AssociationOverride(
-			name="userPermissions",
-			joinTable=@JoinTable(name="PERSONS_USERPERMISSIONS",
-			joinColumns = @JoinColumn(name = "PERSON_ID"))),
-
-	@AssociationOverride(
-			name="groupPermissions",
-			joinTable=@JoinTable(name="PERSONS_GROUPPERMISSIONS",
-			joinColumns = @JoinColumn(name = "PERSON_ID")))
-})
-public class Person extends SecuredPersistentObject {
+public class Person extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 

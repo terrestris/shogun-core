@@ -9,7 +9,7 @@ import de.terrestris.shogun2.model.layout.Layout;
  *
  */
 public class LayoutPermissionEvaluatorTest extends
-	AbstractUnsecuredObjectPermissionEvaluatorTest<Layout> {
+	AbstractPersistentObjectPermissionEvaluatorTest<Layout> {
 
 	public LayoutPermissionEvaluatorTest() {
 		super(Layout.class, new PersistentObjectPermissionEvaluator<>(Layout.class), new Layout());

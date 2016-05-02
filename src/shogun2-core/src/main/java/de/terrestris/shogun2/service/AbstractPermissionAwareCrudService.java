@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
-import de.terrestris.shogun2.model.SecuredPersistentObject;
+import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
@@ -21,26 +21,21 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
  * @see AbstractCrudService
  *
  */
-public abstract class AbstractSecuredPersistentObjectService<E extends SecuredPersistentObject, D extends GenericHibernateDao<E, Integer>>
+public abstract class AbstractPermissionAwareCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
 		extends AbstractCrudService<E, D> {
 
+	/**
+	 * 
+	 */
 	@Autowired
 	@Qualifier("permissionCollectionService")
 	protected PermissionCollectionService<PermissionCollection, PermissionCollectionDao<PermissionCollection>> permissionCollectionService;
 
 	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public AbstractSecuredPersistentObjectService() {
-		this((Class<E>) SecuredPersistentObject.class);
-	}
-
-	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected AbstractSecuredPersistentObjectService(Class<E> entityClass) {
+	protected AbstractPermissionAwareCrudService(Class<E> entityClass) {
 		super(entityClass);
 	}
 

@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.module.Module;
  */
 @Service("mapControlService")
 public class MapControlService<E extends MapControl, D extends MapControlDao<E>> extends
-		AbstractCrudService<E, D> {
+		AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

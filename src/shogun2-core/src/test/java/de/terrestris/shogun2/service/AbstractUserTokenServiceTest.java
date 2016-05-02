@@ -28,7 +28,7 @@ import de.terrestris.shogun2.model.token.UserToken;
  *
  */
 public abstract class AbstractUserTokenServiceTest<E extends UserToken, D extends AbstractUserTokenDao<E>, S extends AbstractUserTokenService<E, D>>
-		extends AbstractCrudServiceTest<E, D, S> {
+		extends AbstractPermissionAwareCrudServiceTest<E, D, S> {
 
 	/**
 	 * Has to be implemented by subclasses and should return an expired token.

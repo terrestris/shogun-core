@@ -3,8 +3,6 @@ package de.terrestris.shogun2.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -27,18 +25,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@AssociationOverrides({
-	@AssociationOverride(
-			name="userPermissions",
-			joinTable=@JoinTable(name="USERGROUPS_USERPERMISSIONS",
-			joinColumns = @JoinColumn(name = "USERGROUP_ID"))),
-
-	@AssociationOverride(
-			name="groupPermissions",
-			joinTable=@JoinTable(name="USERGROUPS_GROUPPERMISSIONS",
-			joinColumns = @JoinColumn(name = "USERGROUP_ID")))
-})
-public class UserGroup extends SecuredPersistentObject {
+public class UserGroup extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 

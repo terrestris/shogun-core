@@ -7,7 +7,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.model.SecuredPersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
@@ -47,59 +46,41 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
 	 */
 	public boolean hasPermission(User user, E entity, Permission permission) {
 
-		final boolean isSecuredObject = SecuredPersistentObject.class.isAssignableFrom(entityClass);
 		final String simpleClassName = entityClass.getSimpleName();
 
-		// HANDLE SECURED OBJECTS
-		if(isSecuredObject) {
-			SecuredPersistentObject securedObject = (SecuredPersistentObject) entity;
+		// CHECK USER PERMISSIONS
+		final Map<User, PermissionCollection> userPermissionsMap = entity.getUserPermissions();
 
-			// CHECK USER PERMISSIONS
-			final Map<User, PermissionCollection> userPermissionsMap = securedObject.getUserPermissions();
+		PermissionCollection userPermissionCol = extractUserPermissions(user, userPermissionsMap);
+		final Set<Permission> userPermissions = userPermissionCol.getPermissions();
 
-			PermissionCollection userPermissionCol = extractUserPermissions(user, userPermissionsMap);
-			final Set<Permission> userPermissions = userPermissionCol.getPermissions();
-
-			// grant access if user explicitly has the requested permission or
-			// if the user has the ADMIN permission
-			if (userPermissions.contains(permission)
-					|| userPermissions.contains(Permission.ADMIN)) {
-				LOG.trace("Granting " + permission
-						+ " access by user permissions");
-				return true;
-			}
-
-			// CHECK GROUP PERMISSIONS
-			final Map<UserGroup, PermissionCollection> groupPermissionsMap = securedObject.getGroupPermissions();
-
-			PermissionCollection groupPermissionsCol = extractGroupPermissions(user, groupPermissionsMap);
-			final Set<Permission> groupPermissions = groupPermissionsCol.getPermissions();
-
-			// grant access if group explicitly has the requested permission or
-			// if the group has the ADMIN permission
-			if (groupPermissions.contains(permission)
-					|| groupPermissions.contains(Permission.ADMIN)) {
-				LOG.trace("Granting " + permission
-						+ " access by group permissions");
-				return true;
-			}
-
-			LOG.trace("Restricting " + permission + " access on secured object '"
-					+ simpleClassName + "' with ID " + entity.getId());
-			return false;
-		}
-
-		// HANDLE UNSECURED OBJECTS
-		if(permission.equals(Permission.READ)) {
-			LOG.trace("Granting READ access on unsecured object '"
-					+ simpleClassName + "' with ID " + entity.getId());
+		// grant access if user explicitly has the requested permission or
+		// if the user has the ADMIN permission
+		if (userPermissions.contains(permission)
+				|| userPermissions.contains(Permission.ADMIN)) {
+			LOG.trace("Granting " + permission
+					+ " access by user permissions");
 			return true;
-		} else {
-			LOG.trace("Restricting " + permission + " access on unsecured object '"
-					+ simpleClassName + "' with ID " + entity.getId());
-			return false;
 		}
 
+		// CHECK GROUP PERMISSIONS
+		final Map<UserGroup, PermissionCollection> groupPermissionsMap = entity.getGroupPermissions();
+
+		PermissionCollection groupPermissionsCol = extractGroupPermissions(user, groupPermissionsMap);
+		final Set<Permission> groupPermissions = groupPermissionsCol.getPermissions();
+
+		// grant access if group explicitly has the requested permission or
+		// if the group has the ADMIN permission
+		if (groupPermissions.contains(permission)
+				|| groupPermissions.contains(Permission.ADMIN)) {
+			LOG.trace("Granting " + permission
+					+ " access by group permissions");
+			return true;
+		}
+
+		LOG.trace("Restricting " + permission + " access on secured object '"
+				+ simpleClassName + "' with ID " + entity.getId());
+		return false;
 	}
 
 	/**

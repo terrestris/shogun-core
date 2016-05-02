@@ -14,7 +14,7 @@ import de.terrestris.shogun2.model.token.Token;
  *
  */
 public abstract class AbstractTokenService<E extends Token, D extends AbstractTokenDao<E>>
-		extends AbstractCrudService<E, D> {
+		extends AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

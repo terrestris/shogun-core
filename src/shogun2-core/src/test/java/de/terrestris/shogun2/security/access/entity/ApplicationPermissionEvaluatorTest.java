@@ -10,7 +10,7 @@ import de.terrestris.shogun2.model.Application;
  *
  */
 public class ApplicationPermissionEvaluatorTest extends
-	AbstractSecuredObjectPermissionEvaluatorTest<Application> {
+	AbstractPersistentObjectPermissionEvaluatorTest<Application> {
 
 	public ApplicationPermissionEvaluatorTest() {
 		super(Application.class, new PersistentObjectPermissionEvaluator<>(Application.class), new Application());

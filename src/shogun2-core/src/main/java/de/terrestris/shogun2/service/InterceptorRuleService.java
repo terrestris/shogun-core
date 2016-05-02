@@ -20,7 +20,7 @@ import de.terrestris.shogun2.model.interceptor.InterceptorRule;
  */
 @Service("interceptorRuleService")
 public class InterceptorRuleService<E extends InterceptorRule, D extends InterceptorRuleDao<E>>
-		extends AbstractCrudService<E, D> {
+		extends AbstractPermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
