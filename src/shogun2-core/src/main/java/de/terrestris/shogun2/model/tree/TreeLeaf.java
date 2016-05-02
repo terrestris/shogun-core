@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import de.terrestris.shogun2.converter.LayerIdResolver;
 import de.terrestris.shogun2.model.layer.Layer;
 
 /**
@@ -34,7 +35,8 @@ public class TreeLeaf extends TreeNode {
 	@ManyToOne
 	@JsonIdentityInfo(
 			generator=ObjectIdGenerators.PropertyGenerator.class,
-			property="id"
+			property="id",
+			resolver = LayerIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId=true)
 	private Layer layer;

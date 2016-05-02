@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import de.terrestris.shogun2.converter.LayerGroupIdResolver;
 import de.terrestris.shogun2.model.layer.LayerGroup;
 
 /**
@@ -39,7 +40,8 @@ public class TreeFolder extends TreeNode {
 	@ManyToOne
 	@JsonIdentityInfo(
 			generator=ObjectIdGenerators.PropertyGenerator.class,
-			property="id"
+			property="id",
+			resolver = LayerGroupIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId=true)
 	private LayerGroup layerGroup;
