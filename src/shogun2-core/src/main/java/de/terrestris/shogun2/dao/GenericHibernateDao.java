@@ -20,7 +20,7 @@ import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.paging.PagingResult;
 
 /**
- * The abstract superclass for all data access objects. Provides basic CRUD
+ * The superclass for all data access objects. Provides basic CRUD
  * functionality and a logger instance for all subclasses.
  *
  * @author Nils Bühner
@@ -37,7 +37,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	/**
 	 * Represents the class of the entity
 	 */
-	private final Class<E> clazz;
+	private final Class<E> entityClass;
 
 	/**
 	 * Default constructor
@@ -53,7 +53,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @param clazz
 	 */
 	protected GenericHibernateDao(Class<E> clazz) {
-		this.clazz = clazz;
+		this.entityClass = clazz;
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @return The object from the database or null if it does not exist
 	 */
 	public E findById(ID id) {
-		LOG.trace("Finding " + clazz.getSimpleName() + " with ID " + id);
-		return (E) getSession().get(clazz, id);
+		LOG.trace("Finding " + entityClass.getSimpleName() + " with ID " + id);
+		return (E) getSession().get(entityClass, id);
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @return
 	 */
 	public E loadById(ID id) {
-		LOG.trace("Loading " + clazz.getSimpleName() + " with ID " + id);
-		return (E) getSession().load(clazz, id);
+		LOG.trace("Loading " + entityClass.getSimpleName() + " with ID " + id);
+		return (E) getSession().load(entityClass, id);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @return All entities
 	 */
 	public List<E> findAll() throws HibernateException {
-		LOG.trace("Finding all instances of " + clazz.getSimpleName());
+		LOG.trace("Finding all instances of " + entityClass.getSimpleName());
 		return findByCriteria();
 	}
 
@@ -124,7 +124,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 		String createOrUpdatePrefix = hasId ? "Updating" : "Creating a new";
 		String idSuffix = hasId ? "with ID " + id : "";
 
-		LOG.trace(createOrUpdatePrefix + " instance of " + clazz.getSimpleName()
+		LOG.trace(createOrUpdatePrefix + " instance of " + entityClass.getSimpleName()
 				+ idSuffix);
 
 		e.setModified(DateTime.now());
@@ -137,7 +137,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @param e The entity to remove from the database.
 	 */
 	public void delete(E e) {
-		LOG.trace("Deleting " + clazz.getSimpleName() + " with ID " + e.getId());
+		LOG.trace("Deleting " + entityClass.getSimpleName() + " with ID " + e.getId());
 		getSession().delete(e);
 	}
 
@@ -151,7 +151,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 */
 	@SuppressWarnings("unchecked")
 	public List<E> findByCriteria(Criterion... criterion) throws HibernateException {
-		LOG.trace("Finding instances of " + clazz.getSimpleName()
+		LOG.trace("Finding instances of " + entityClass.getSimpleName()
 				+ " based on " + criterion.length + " criteria");
 
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
@@ -170,7 +170,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 */
 	@SuppressWarnings("unchecked")
 	public E findByUniqueCriteria(Criterion... criterion) throws HibernateException {
-		LOG.trace("Finding one unique " + clazz.getSimpleName()
+		LOG.trace("Finding one unique " + entityClass.getSimpleName()
 				+ " based on " + criterion.length + " criteria");
 
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
@@ -195,7 +195,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 
 		int nrOfSorters = sorters == null ? 0 : sorters.size();
 
-		LOG.trace("Finding instances of " + clazz.getSimpleName()
+		LOG.trace("Finding instances of " + entityClass.getSimpleName()
 				+ " based on " + criterion.length + " criteria"
 				+ " with " + nrOfSorters + " sorters");
 
@@ -223,7 +223,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	}
 
 	/**
-	 * Helper method: Creates a criteria for the {@link #clazz} of this dao.
+	 * Helper method: Creates a criteria for the {@link #entityClass} of this dao.
 	 * The query results will be handled with a
 	 * {@link DistinctRootEntityResultTransformer}. The criteria will contain
 	 * all passed criterions.
@@ -231,7 +231,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @return
 	 */
 	protected Criteria createDistinctRootEntityCriteria(Criterion... criterion) {
-		Criteria criteria = getSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(entityClass);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return criteria;
@@ -244,7 +244,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 * @return
 	 */
 	private Number getTotalCount(Criterion... criterion) throws HibernateException {
-		Criteria criteria = getSession().createCriteria(clazz);
+		Criteria criteria = getSession().createCriteria(entityClass);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setProjection(Projections.rowCount());
 		return (Long) criteria.uniqueResult();
@@ -265,4 +265,12 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 			}
 		}
 	}
+
+	/**
+	 * @return the entityClass
+	 */
+	public Class<E> getEntityClass() {
+		return entityClass;
+	}
+
 }
