@@ -325,8 +325,8 @@ public class AbstractRestControllerTest {
 		when(serviceMock.findById(id)).thenReturn(originalObject);
 
 		when(serviceMock.updatePartialWithJsonNode(
-				any(JsonNode.class),
 				same(originalObject),
+				any(JsonNode.class),
 				any(ObjectMapper.class)))
 		.thenReturn(updatedObject);
 
@@ -342,7 +342,7 @@ public class AbstractRestControllerTest {
 
 		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).updatePartialWithJsonNode(
-				any(JsonNode.class), same(originalObject), any(ObjectMapper.class));
+				same(originalObject), any(JsonNode.class), any(ObjectMapper.class));
 		verifyNoMoreInteractions(serviceMock);
 	}
 
@@ -397,8 +397,8 @@ public class AbstractRestControllerTest {
 		when(serviceMock.findById(id)).thenReturn(originalObject);
 
 		doThrow(new RuntimeException()).when(serviceMock).updatePartialWithJsonNode(
-				any(JsonNode.class),
 				same(originalObject),
+				any(JsonNode.class),
 				any(ObjectMapper.class));
 
 		// Test PUT method with JSON payload
@@ -409,8 +409,8 @@ public class AbstractRestControllerTest {
 
 		verify(serviceMock, times(1)).findById(id);
 		verify(serviceMock, times(1)).updatePartialWithJsonNode(
-				any(JsonNode.class),
 				same(originalObject),
+				any(JsonNode.class),
 				any(ObjectMapper.class));
 		verifyNoMoreInteractions(serviceMock);
 	}

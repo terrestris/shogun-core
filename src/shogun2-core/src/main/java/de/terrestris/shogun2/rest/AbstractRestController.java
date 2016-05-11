@@ -167,7 +167,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 				// in a non-transactional way (e.g. controller method), as
 				// a possible permission evaluation could trigger an unwanted
 				// persist action before the permission was evaluated.
-				entity = service.updatePartialWithJsonNode(jsonObject, entity, objectMapper);
+				entity = service.updatePartialWithJsonNode(entity, jsonObject, objectMapper);
 				return new ResponseEntity<E>(entity, HttpStatus.OK);
 			}
 			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);

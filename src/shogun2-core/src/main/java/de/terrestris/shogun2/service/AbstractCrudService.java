@@ -51,8 +51,8 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
-	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#e, 'UPDATE')")
-	public E updatePartialWithJsonNode(JsonNode jsonObject, E entity, ObjectMapper objectMapper) throws IOException, JsonProcessingException {
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#entity, 'UPDATE')")
+	public E updatePartialWithJsonNode(E entity, JsonNode jsonObject, ObjectMapper objectMapper) throws IOException, JsonProcessingException {
 		// update "partially". credits go to http://stackoverflow.com/a/15145480
 		entity = objectMapper.readerForUpdating(entity).readValue(jsonObject);
 		this.saveOrUpdate(entity);
