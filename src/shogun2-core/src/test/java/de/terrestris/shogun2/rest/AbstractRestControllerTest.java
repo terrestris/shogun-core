@@ -3,6 +3,7 @@ package de.terrestris.shogun2.rest;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
@@ -322,14 +324,11 @@ public class AbstractRestControllerTest {
 
 		when(serviceMock.findById(id)).thenReturn(originalObject);
 
-		doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				TestModel entity = (TestModel) invocation.getArguments()[0];
-				entity.setTestValue(updatedValue);
-				return null;
-			}
-		}).when(serviceMock).saveOrUpdate(any(TestModel.class));;
+		when(serviceMock.updatePartialWithJsonNode(
+				any(JsonNode.class),
+				same(originalObject),
+				any(ObjectMapper.class)))
+		.thenReturn(updatedObject);
 
 		// Test PUT method with JSON payload
 		mockMvc.perform(
@@ -342,7 +341,8 @@ public class AbstractRestControllerTest {
 				.andExpect(jsonPath("$.testValue", is(updatedValue)));
 
 		verify(serviceMock, times(1)).findById(id);
-		verify(serviceMock, times(1)).saveOrUpdate(any(TestModel.class));
+		verify(serviceMock, times(1)).updatePartialWithJsonNode(
+				any(JsonNode.class), same(originalObject), any(ObjectMapper.class));
 		verifyNoMoreInteractions(serviceMock);
 	}
 
@@ -396,7 +396,10 @@ public class AbstractRestControllerTest {
 
 		when(serviceMock.findById(id)).thenReturn(originalObject);
 
-		doThrow(new RuntimeException()).when(serviceMock).saveOrUpdate(any(TestModel.class));
+		doThrow(new RuntimeException()).when(serviceMock).updatePartialWithJsonNode(
+				any(JsonNode.class),
+				same(originalObject),
+				any(ObjectMapper.class));
 
 		// Test PUT method with JSON payload
 		mockMvc.perform(
@@ -405,7 +408,10 @@ public class AbstractRestControllerTest {
 				status().isNotFound());
 
 		verify(serviceMock, times(1)).findById(id);
-		verify(serviceMock, times(1)).saveOrUpdate(any(TestModel.class));
+		verify(serviceMock, times(1)).updatePartialWithJsonNode(
+				any(JsonNode.class),
+				same(originalObject),
+				any(ObjectMapper.class));
 		verifyNoMoreInteractions(serviceMock);
 	}
 

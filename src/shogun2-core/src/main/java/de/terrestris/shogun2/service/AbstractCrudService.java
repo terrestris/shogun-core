@@ -1,10 +1,15 @@
 package de.terrestris.shogun2.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
@@ -40,9 +45,24 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	}
 
 	/**
+	 * @param jsonObject
+	 * @param entity
+	 * @return
+	 * @throws IOException
+	 * @throws JsonProcessingException
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#e, 'UPDATE')")
+	public E updatePartialWithJsonNode(JsonNode jsonObject, E entity, ObjectMapper objectMapper) throws IOException, JsonProcessingException {
+		// update "partially". credits go to http://stackoverflow.com/a/15145480
+		entity = objectMapper.readerForUpdating(entity).readValue(jsonObject);
+		this.saveOrUpdate(entity);
+		return entity;
+	}
+
+	/**
 	 * Return the real object from the database. Returns null if the object does
 	 * not exist.
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -55,7 +75,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * Return a proxy of the object (without hitting the database). This should
 	 * only be used if it is assumed that the object really exists and where
 	 * non-existence would be an actual error.
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
