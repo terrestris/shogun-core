@@ -1,13 +1,16 @@
 package de.terrestris.shogun2.security.access;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
+import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
@@ -25,6 +28,9 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	 * The LOGGER instance
 	 */
 	private final static Logger LOG = Logger.getLogger(Shogun2PermissionEvaluator.class);
+
+	@Autowired
+	private ApplicationContext appContext;
 
 	/**
 	 * We have to use the DAO here. If we would use the service, we would end
@@ -85,12 +91,76 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	}
 
 	/**
-	 * We do currently do not support/use this implementation.
+	 *
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public boolean hasPermission(Authentication authentication,
 			Serializable targetId, String targetType, Object permission) {
-		return false;
+
+		Class<?> entityClass;
+
+		try {
+			entityClass = Class.forName(targetType);
+		} catch (ClassNotFoundException e) {
+			LOG.error("Could not create class for type: " + targetType + "(" + e.getMessage() + ")");
+			return false;
+		}
+
+		// get all available DAOs from the app context
+		Collection<GenericHibernateDao> allDaos = appContext.getBeansOfType(GenericHibernateDao.class).values();
+
+		// the DAO we'll use to get the entity from the database
+		GenericHibernateDao daoToUse = null;
+
+		// we'll first try to find the exact matching DAO
+		for (GenericHibernateDao dao : allDaos) {
+			if(dao.getEntityClass().equals(entityClass)) {
+				// we found a matching DAO
+				daoToUse = dao;
+				LOG.debug("Found an exactly matching DAO for type " + entityClass);
+				break;
+			}
+		}
+
+		// if we could not find an exact match, we'll try to use the "next best"
+		// from the entity hierarchy
+		if(daoToUse == null) {
+			for (GenericHibernateDao dao : allDaos) {
+				if(dao.getEntityClass().isAssignableFrom(entityClass)) {
+					// we found a DAO that will work (e.g. PersonDao for User.class)
+					daoToUse = dao;
+					LOG.debug("Found a matching DAO from the hierarchy of type " + entityClass);
+					break;
+				}
+			}
+		}
+
+		// LOG warning if we could NOT find a matching DAO
+		if(daoToUse == null) {
+			LOG.warn("Could not find a DAO for type:" + entityClass);
+			return false;
+		}
+
+		// finally get the entity from the DB
+		PersistentObject entity = daoToUse.findById(targetId);
+
+		// call implementation based on entity
+		return this.hasPermission(authentication, entity, permission);
+	}
+
+	/**
+	 * @return the appContext
+	 */
+	public ApplicationContext getAppContext() {
+		return appContext;
+	}
+
+	/**
+	 * @param appContext the appContext to set
+	 */
+	public void setAppContext(ApplicationContext appContext) {
+		this.appContext = appContext;
 	}
 
 	/**

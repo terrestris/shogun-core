@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.AbstractLayerDao;
@@ -81,6 +82,7 @@ public class LayerGroupService<E extends LayerGroup, D extends LayerGroupDao<E>>
 	 * @return
 	 * @throws Exception
 	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layerGroupId, 'de.terrestris.shogun2.model.layer.LayerGroup', 'UPDATE')")
 	public List<AbstractLayer> setLayersForLayerGroup (Integer layerGroupId, List<Integer> abstractLayerIds) {
 		E layerGroup = this.findById(layerGroupId);
 		List<AbstractLayer> layers = new ArrayList<AbstractLayer>();
