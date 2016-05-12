@@ -157,9 +157,17 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 			E entity = service.findById(id);
 
 			if(entity != null){
-				// update "partially". credits go to http://stackoverflow.com/a/15145480
-				entity = objectMapper.readerForUpdating(entity).readValue(jsonObject);
-				service.saveOrUpdate(entity);
+				// we call this transactional method (instead of save or update)
+				// to make sure that the possibly modified entity does not
+				// get persisted / synced unexpectedly by hibernate
+				// (due to FlushMode.AUTO) when another database-related
+				// interaction is triggered in the meantime (which could happen
+				// for example in a permission evaluation).
+				// In other words: Do not get an entity, modify it and save it
+				// in a non-transactional way (e.g. controller method), as
+				// a possible permission evaluation could trigger an unwanted
+				// persist action before the permission was evaluated.
+				entity = service.updatePartialWithJsonNode(entity, jsonObject, objectMapper);
 				return new ResponseEntity<E>(entity, HttpStatus.OK);
 			}
 			return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
