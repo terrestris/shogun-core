@@ -1,7 +1,9 @@
 package de.terrestris.shogun2.dao;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -17,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
+import de.terrestris.shogun2.model.security.PermissionCollection;
 import de.terrestris.shogun2.paging.PagingResult;
 
 /**
@@ -220,6 +225,90 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 		}
 
 		return new PagingResult<E>(criteria.list(), getTotalCount(criterion));
+	}
+
+	/**
+	 * This method returns a {@link Map} that maps {@link PersistentObject}s
+	 * to PermissionCollections for the passed {@link User}. I.e. the keySet
+	 * of the map is the collection of all {@link PersistentObject}s where the
+	 * user has at least one permission and the corresponding value contains
+	 * the {@link PermissionCollection} for the passed user on the entity.
+	 *
+	 * @param user
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public Map<PersistentObject, PermissionCollection> findAllUserPermissionsOfUser(User user) {
+
+		Criteria criteria = getSession().createCriteria(PersistentObject.class);
+
+		// by only setting the alias, we will only get those entities where
+		// there is at least one permission set...
+		// it is hard (or even impossible in this scenario) to create a
+		// restriction that filters for permissions of the given user only.
+		// using HQL here is no option as the PersistentObject is
+		// a MappedSuperclass (without table).
+		// another efficient way would be a SQL query, but then the SQL
+		// would be written in an explicit SQL dialect...
+		criteria.createAlias("userPermissions", "up");
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<PersistentObject> entitiesWithPermissions = criteria.list();
+
+		Map<PersistentObject, PermissionCollection> userPermissions = new HashMap<PersistentObject, PermissionCollection>();
+
+		// TODO find a better way than iterating over all entities of the system
+		// that have at least one permission (for any user) (see comment above)
+		for (PersistentObject entity : entitiesWithPermissions) {
+			Map<User, PermissionCollection> entityUserPermissions = entity.getUserPermissions();
+			if(entityUserPermissions.containsKey(user)) {
+				userPermissions.put(entity, entityUserPermissions.get(user));
+			}
+		}
+
+		return userPermissions;
+	}
+
+	/**
+	 * This method returns a {@link Map} that maps {@link PersistentObject}s
+	 * to PermissionCollections for the passed {@link UserGroup}. I.e. the keySet
+	 * of the map is the collection of all {@link PersistentObject}s where the
+	 * user group has at least one permission and the corresponding value contains
+	 * the {@link PermissionCollection} for the passed user group on the entity.
+	 *
+	 * @param userGroup
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked" })
+	public Map<PersistentObject, PermissionCollection> findAllUserGroupPermissionsOfUserGroup(UserGroup userGroup) {
+
+		Criteria criteria = getSession().createCriteria(PersistentObject.class);
+
+		// by only setting the alias, we will only get those entities where
+		// there is at least one permission set...
+		// it is hard (or even impossible in this scenario) to create a
+		// restriction that filters for permissions of the given user group only.
+		// using HQL here is no option as the PersistentObject is
+		// a MappedSuperclass (without table).
+		// another efficient way would be a SQL query, but then the SQL
+		// would be written in an explicit SQL dialect...
+		criteria.createAlias("groupPermissions", "gp");
+		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<PersistentObject> entitiesWithPermissions = criteria.list();
+
+		Map<PersistentObject, PermissionCollection> userGroupPermissions = new HashMap<PersistentObject, PermissionCollection>();
+
+		// TODO find a better way than iterating over all entities of the system
+		// that have at least one permission (for any user) (see comment above)
+		for (PersistentObject entity : entitiesWithPermissions) {
+			Map<UserGroup, PermissionCollection> entityUserGroupPermissions = entity.getGroupPermissions();
+			if(entityUserGroupPermissions.containsKey(userGroup)) {
+				userGroupPermissions.put(entity, entityUserGroupPermissions.get(userGroup));
+			}
+		}
+
+		return userGroupPermissions;
 	}
 
 	/**
