@@ -125,6 +125,7 @@ public class OgcEnum {
 	public static enum EndPoint {
 		LAYERS("LAYERS"),
 		LAYER("LAYER"),
+		TYPENAME("TYPENAME"),
 		NAMESPACE("NAMESPACE");
 
 		private final String value;
