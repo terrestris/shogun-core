@@ -2,10 +2,12 @@ package de.terrestris.shogun2.service;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
@@ -25,7 +27,7 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 		extends AbstractCrudService<E, D> {
 
 	/**
-	 * 
+	 *
 	 */
 	@Autowired
 	@Qualifier("permissionCollectionService")
@@ -288,6 +290,36 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 			permissionCollectionService.saveOrUpdate(groupPermissionCollection);
 			LOG.debug("Persisted a permission collection");
 		}
+	}
+
+	/**
+	 * This method returns a {@link Map} that maps {@link PersistentObject}s
+	 * to PermissionCollections for the passed {@link User}. I.e. the keySet
+	 * of the map is the collection of all {@link PersistentObject}s where the
+	 * user has at least one permission and the corresponding value contains
+	 * the {@link PermissionCollection} for the passed user on the entity.
+	 *
+	 * @param user
+	 * @return
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#user, 'READ')")
+	public Map<PersistentObject, PermissionCollection> findAllUserPermissionsOfUser(User user) {
+		return dao.findAllUserPermissionsOfUser(user);
+	}
+
+	/**
+	 * This method returns a {@link Map} that maps {@link PersistentObject}s
+	 * to PermissionCollections for the passed {@link UserGroup}. I.e. the keySet
+	 * of the map is the collection of all {@link PersistentObject}s where the
+	 * user group has at least one permission and the corresponding value contains
+	 * the {@link PermissionCollection} for the passed user group on the entity.
+	 *
+	 * @param userGroup
+	 * @return
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#userGroup, 'READ')")
+	public Map<PersistentObject, PermissionCollection> findAllUserGroupPermissionsOfUserGroup(UserGroup userGroup) {
+		return dao.findAllUserGroupPermissionsOfUserGroup(userGroup);
 	}
 
 	/**
