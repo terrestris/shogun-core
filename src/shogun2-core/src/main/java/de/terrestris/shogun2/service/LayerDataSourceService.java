@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.module.Module;
  */
 @Service("layerDataSourceService")
 public class LayerDataSourceService<E extends LayerDataSource, D extends LayerDataSourceDao<E>> extends
-		AbstractPermissionAwareCrudService<E, D> {
+		PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.Role;
  */
 @Service("roleService")
 public class RoleService<E extends Role, D extends RoleDao<E>> extends
-		AbstractPermissionAwareCrudService<E, D> {
+		PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

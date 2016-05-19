@@ -25,7 +25,7 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
  *
  */
 @Service("permissionAwareCrudService")
-public class AbstractPermissionAwareCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
+public class PermissionAwareCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
 		extends AbstractCrudService<E, D> {
 
 	/**
@@ -40,7 +40,7 @@ public class AbstractPermissionAwareCrudService<E extends PersistentObject, D ex
 	 * Default constructor, which calls the type-constructor
 	 */
 	@SuppressWarnings("unchecked")
-	public AbstractPermissionAwareCrudService() {
+	public PermissionAwareCrudService() {
 		this((Class<E>) PersistentObject.class);
 	}
 
@@ -48,7 +48,7 @@ public class AbstractPermissionAwareCrudService<E extends PersistentObject, D ex
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected AbstractPermissionAwareCrudService(Class<E> entityClass) {
+	protected PermissionAwareCrudService(Class<E> entityClass) {
 		super(entityClass);
 	}
 

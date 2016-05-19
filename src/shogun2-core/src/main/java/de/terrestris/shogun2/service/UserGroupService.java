@@ -22,7 +22,7 @@ import de.terrestris.shogun2.model.UserGroup;
  */
 @Service("userGroupService")
 public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
-		extends AbstractPermissionAwareCrudService<E, D> {
+		extends PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

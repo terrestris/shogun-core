@@ -27,12 +27,12 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
 
 /**
  * Abstract (parent) test for the
- * {@link AbstractPermissionAwareCrudServiceTest}.
+ * {@link PermissionAwareCrudServiceTest}.
  *
  * @author Nils Bühner
  *
  */
-public abstract class AbstractPermissionAwareCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractPermissionAwareCrudService<E, D>>
+public abstract class PermissionAwareCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends PermissionAwareCrudService<E, D>>
 	extends AbstractCrudServiceTest<E, D, S> {
 
 	/**

@@ -17,7 +17,7 @@ import de.terrestris.shogun2.model.module.Module;
  */
 @Service("tileGridService")
 public class TileGridService<E extends TileGrid, D extends TileGridDao<E>> extends
-		AbstractPermissionAwareCrudService<E, D> {
+		PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
