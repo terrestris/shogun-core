@@ -4,7 +4,7 @@ import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 
 public class ApplicationServiceTest extends
-		AbstractPermissionAwareCrudServiceTest<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> {
+		PermissionAwareCrudServiceTest<Application, ApplicationDao<Application>, ApplicationService<Application, ApplicationDao<Application>>> {
 
 	/**
 	 *

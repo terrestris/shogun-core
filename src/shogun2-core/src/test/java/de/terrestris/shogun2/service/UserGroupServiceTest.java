@@ -4,7 +4,7 @@ import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.UserGroup;
 
 public class UserGroupServiceTest extends
-		AbstractPermissionAwareCrudServiceTest<UserGroup, UserGroupDao<UserGroup>, UserGroupService<UserGroup, UserGroupDao<UserGroup>>> {
+		PermissionAwareCrudServiceTest<UserGroup, UserGroupDao<UserGroup>, UserGroupService<UserGroup, UserGroupDao<UserGroup>>> {
 
 	/**
 	 *

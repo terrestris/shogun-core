@@ -15,7 +15,7 @@ import org.junit.Test;
 import de.terrestris.shogun2.dao.RoleDao;
 import de.terrestris.shogun2.model.Role;
 
-public class RoleServiceTest extends AbstractPermissionAwareCrudServiceTest<Role, RoleDao<Role>, RoleService<Role, RoleDao<Role>>> {
+public class RoleServiceTest extends PermissionAwareCrudServiceTest<Role, RoleDao<Role>, RoleService<Role, RoleDao<Role>>> {
 
 	/**
 	 *

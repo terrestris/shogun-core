@@ -38,7 +38,7 @@ import de.terrestris.shogun2.model.token.RegistrationToken;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
-public class UserServiceTest extends AbstractPermissionAwareCrudServiceTest<User, UserDao<User>, UserService<User, UserDao<User>>> {
+public class UserServiceTest extends PermissionAwareCrudServiceTest<User, UserDao<User>, UserService<User, UserDao<User>>> {
 
 	@Mock
 	private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
@@ -23,7 +24,8 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
  * @see AbstractCrudService
  *
  */
-public abstract class AbstractPermissionAwareCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
+@Service("permissionAwareCrudService")
+public class PermissionAwareCrudService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>>
 		extends AbstractCrudService<E, D> {
 
 	/**
@@ -33,12 +35,28 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 	@Qualifier("permissionCollectionService")
 	protected PermissionCollectionService<PermissionCollection, PermissionCollectionDao<PermissionCollection>> permissionCollectionService;
 
+
+	/**
+	 * Default constructor, which calls the type-constructor
+	 */
+	@SuppressWarnings("unchecked")
+	public PermissionAwareCrudService() {
+		this((Class<E>) PersistentObject.class);
+	}
+
 	/**
 	 * Constructor that sets the concrete entity class for the service.
 	 * Subclasses MUST call this constructor.
 	 */
-	protected AbstractPermissionAwareCrudService(Class<E> entityClass) {
+	protected PermissionAwareCrudService(Class<E> entityClass) {
 		super(entityClass);
+	}
+
+	@Override
+	@Autowired
+	@Qualifier("genericDao")
+	public void setDao(D dao) {
+		this.dao = dao;
 	}
 
 	/**
@@ -155,6 +173,18 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 		userPermissions.removeAll(permissionsSet);
 
 		int newNrOfPermissions = userPermissions.size();
+
+		if(newNrOfPermissions == 0) {
+			LOG.debug("The permission collection is empty and will thereby be deleted now.");
+
+			// remove
+			entity.getUserPermissions().remove(user);
+			this.saveOrUpdate(entity);
+
+			permissionCollectionService.delete(userPermissionCollection);
+
+			return;
+		}
 
 		// only persist if we have "really" removed something
 		if(newNrOfPermissions < originalNrOfPermissions) {
@@ -281,6 +311,17 @@ public abstract class AbstractPermissionAwareCrudService<E extends PersistentObj
 		groupPermissions.removeAll(permissionsSet);
 
 		int newNrOfPermissions = groupPermissions.size();
+
+		if(newNrOfPermissions == 0) {
+			// remove
+			entity.getGroupPermissions().remove(userGroup);
+			this.saveOrUpdate(entity);
+
+			LOG.debug("The permission collection is empty and will thereby be deleted now.");
+			permissionCollectionService.delete(groupPermissionCollection);
+
+			return;
+		}
 
 		// only persist if we have "really" removed something
 		if(newNrOfPermissions < originalNrOfPermissions) {

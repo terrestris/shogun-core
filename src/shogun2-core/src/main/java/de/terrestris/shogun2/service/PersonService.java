@@ -16,7 +16,7 @@ import de.terrestris.shogun2.model.Person;
  */
 @Service("personService")
 public class PersonService<E extends Person, D extends PersonDao<E>> extends
-		AbstractPermissionAwareCrudService<E, D> {
+		PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
