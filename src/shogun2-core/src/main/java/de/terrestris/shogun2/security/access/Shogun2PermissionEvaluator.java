@@ -58,23 +58,25 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 		boolean hasPermission = false;
 
 		if (authentication != null
-				&& authentication.getPrincipal() instanceof User
 				&& targetDomainObject != null
 				&& targetDomainObject instanceof PersistentObject
 				&& permissionObject instanceof String) {
 
-			// get the user state when the user logged in
-			User user = (User) authentication.getPrincipal();
+			User user = null;
 
-			// get the "full" user from the database
-			user = userDao.findById(user.getId());
+			if(authentication.getPrincipal() instanceof User) {
+				// get the "full" user from the database
+				user = userDao.findById(((User) authentication.getPrincipal()).getId());
+			}
 
 			final PersistentObject persistentObject = (PersistentObject) targetDomainObject;
 			final Integer objectId = persistentObject.getId();
 			final String simpleClassName = targetDomainObject.getClass().getSimpleName();
 			final Permission permission = Permission.fromString((String) permissionObject);
 
-			LOG.trace("Evaluating whether user '" + user.getAccountName()
+			String accountName = (user == null) ? "ANONYMOUS" : user.getAccountName();
+
+			LOG.trace("Evaluating whether user '" + accountName
 					+ "' has permission '" + permission + "' on '"
 					+ simpleClassName + "' with ID " + objectId);
 

@@ -65,14 +65,21 @@ public class Shogun2PermissionEvaluatorTest {
 	/**
 	 *
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void hasPermission_ShouldRestrictAccessIfPrinicipalIsNotAUser() {
 		// mock auth object
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getPrincipal()).thenReturn("Not a User object");
 
-		Object targetDomainObject = new Application("Test", "Test");
-		Object permissionObject = "READ";
+		PersistentObject targetDomainObject = new Application("Test", "Test");
+		String permissionObject = "READ";
+
+		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
+		when(persistentObjectEvaluatorMock.hasPermission(null, targetDomainObject, Permission.fromString(permissionObject))).thenReturn(false);
+
+		// mock factory (with previously mocked evaluator)
+		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(targetDomainObject.getClass())).thenReturn(persistentObjectEvaluatorMock);
 
 		// execute method that is tested here
 		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
@@ -101,7 +108,7 @@ public class Shogun2PermissionEvaluatorTest {
 
 		// verify
 		assertFalse(permissionResult);
-		verify(authentication, times(1)).getPrincipal();
+		verify(authentication, times(0)).getPrincipal();
 		verifyNoMoreInteractions(authentication);
 	}
 
@@ -123,7 +130,7 @@ public class Shogun2PermissionEvaluatorTest {
 
 		// verify
 		assertFalse(permissionResult);
-		verify(authentication, times(1)).getPrincipal();
+		verify(authentication, times(0)).getPrincipal();
 		verifyNoMoreInteractions(authentication);
 	}
 
@@ -145,7 +152,7 @@ public class Shogun2PermissionEvaluatorTest {
 
 		// verify
 		assertFalse(permissionResult);
-		verify(authentication, times(1)).getPrincipal();
+		verify(authentication, times(0)).getPrincipal();
 		verifyNoMoreInteractions(authentication);
 	}
 
