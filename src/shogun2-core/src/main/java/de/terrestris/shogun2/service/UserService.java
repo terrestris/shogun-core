@@ -233,9 +233,15 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 */
 	public E getUserBySession() {
 
-		@SuppressWarnings("unchecked")
-		E loggedInUser = (E) SecurityContextHolder.getContext()
+		final Object principal = SecurityContextHolder.getContext()
 				.getAuthentication().getPrincipal();
+
+		if(!(principal instanceof User)) {
+			return null;
+		}
+
+		@SuppressWarnings("unchecked")
+		E loggedInUser = (E) principal;
 
 		// The SecurityContextHolder holds a static copy of the user from
 		// the moment he logged in. So we need to get the current instance from
