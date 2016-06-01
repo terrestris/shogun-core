@@ -85,6 +85,8 @@ public class HttpUtil {
 	 * Performs an HTTP GET on the given URL.
 	 *
 	 * @param url The URL to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -422,8 +424,8 @@ public class HttpUtil {
 	 *
 	 * @param httpRequest
 	 * @param file
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -516,8 +518,8 @@ public class HttpUtil {
 	 * Perform HTTP PUT with empty body
 	 *
 	 * @param uri
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 * @return
 	 * @throws URISyntaxException
 	 * @throws HttpException
@@ -530,6 +532,9 @@ public class HttpUtil {
 	 * Perform HTTP PUT with empty body
 	 *
 	 * @param uriString
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
 	 * @return
 	 * @throws HttpException
 	 * @throws URISyntaxException
@@ -620,6 +625,8 @@ public class HttpUtil {
 	 * Performs an HTTP DELETE on the given URL.
 	 *
 	 * @param url The URL to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -668,8 +675,8 @@ public class HttpUtil {
 	 * @param httpRequest
 	 * @param body
 	 * @param contentType
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 * @return The HTTP response as Response object.
 	 * @throws URISyntaxException
 	 * @throws HttpException
