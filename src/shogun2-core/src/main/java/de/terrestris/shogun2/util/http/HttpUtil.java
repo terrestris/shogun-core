@@ -27,6 +27,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -84,6 +85,8 @@ public class HttpUtil {
 	 * Performs an HTTP GET on the given URL.
 	 *
 	 * @param url The URL to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -421,8 +424,8 @@ public class HttpUtil {
 	 *
 	 * @param httpRequest
 	 * @param file
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -515,8 +518,8 @@ public class HttpUtil {
 	 * Perform HTTP PUT with empty body
 	 *
 	 * @param uri
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 * @return
 	 * @throws URISyntaxException
 	 * @throws HttpException
@@ -529,6 +532,9 @@ public class HttpUtil {
 	 * Perform HTTP PUT with empty body
 	 *
 	 * @param uriString
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
 	 * @return
 	 * @throws HttpException
 	 * @throws URISyntaxException
@@ -600,14 +606,77 @@ public class HttpUtil {
 	public static Response put(URI uri, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
 		return putBody(new HttpPut(uri), body, contentType, username, password);
 	}
+	
+	/**
+	 * Performs an HTTP DELETE on the given URL.
+	 *
+	 * @param url The URL to connect to.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(String url) throws URISyntaxException, HttpException {
+		return send(new HttpDelete(url), null, null);
+	}
+
+	/**
+	 * Performs an HTTP DELETE on the given URL.
+	 *
+	 * @param url The URL to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(String url, String username, String password)
+			throws URISyntaxException, HttpException {
+		return send(new HttpDelete(url), username, password);
+	}
+
+	/**
+	 * Performs an HTTP DELETE on the given URI.
+	 *
+	 * @param uri The URI to connect to.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(URI uri) throws URISyntaxException, HttpException {
+		return send(new HttpDelete(uri), null, null);
+	}
+
+	/**
+	 * Performs an HTTP DELETE on the given URI.
+	 * Basic auth is used if both username and pw are not null.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(URI uri, String username, String password)
+			throws URISyntaxException, HttpException {
+		return send(new HttpDelete(uri), username, password);
+	}
 
 	/**
 	 *
 	 * @param httpRequest
 	 * @param body
 	 * @param contentType
-	 * @param username
-	 * @param password
+	 * @param username The Basic authentication username.
+	 * @param password The Basic authentication password.
 	 * @return The HTTP response as Response object.
 	 * @throws URISyntaxException
 	 * @throws HttpException
