@@ -4,8 +4,15 @@ import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.layer.Layer;
 
+/**
+ *
+ * @author Nils Bühner
+ *
+ * @param <E>
+ */
 @Repository("layerDao")
-public class LayerDao<E extends Layer> extends AbstractLayerDao<E> {
+public class LayerDao<E extends Layer> extends
+		GenericHibernateDao<E, Integer> {
 
 	/**
 	 * Public default constructor for this DAO.

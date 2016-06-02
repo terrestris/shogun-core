@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.dao.AbstractLayerDao;
+import de.terrestris.shogun2.dao.LayerDao;
 import de.terrestris.shogun2.dao.MapDao;
 import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.module.Map;
 import de.terrestris.shogun2.model.module.Module;
 
@@ -28,8 +28,8 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 		ModuleService<E, D> {
 
 	@Autowired
-	@Qualifier("abstractLayerService")
-	private AbstractLayerService<AbstractLayer, AbstractLayerDao<AbstractLayer>> abstractLayerService;
+	@Qualifier("layerService")
+	private LayerService<Layer, LayerDao<Layer>> layerService;
 
 	/**
 	 * Default constructor, which calls the type-constructor
@@ -65,7 +65,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 	 * @return
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'READ')")
-	public Set<E> findMapsWithLayer(AbstractLayer layer) {
+	public Set<E> findMapsWithLayer(Layer layer) {
 		return dao.findMapsWithLayer(layer);
 	}
 
@@ -73,22 +73,22 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 	 * TODO secure this method!?
 	 *
 	 * @param MapModuleId
-	 * @param abstractLayerIds
+	 * @param layerIds
 	 * @return
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#mapModuleId, 'de.terrestris.shogun2.model.module.Map', 'UPDATE')")
-	public List<AbstractLayer> setLayersForMap (Integer mapModuleId, List<Integer> abstractLayerIds) throws Exception{
+	public List<Layer> setLayersForMap (Integer mapModuleId, List<Integer> layerIds) throws Exception{
 		E module = this.findById(mapModuleId);
-		List<AbstractLayer> layers = new ArrayList<AbstractLayer>();
+		List<Layer> layers = new ArrayList<Layer>();
 
 		if(module instanceof Map) {
 			Map mapModule = (Map) module;
-			for (Integer id : abstractLayerIds) {
-				PersistentObject entity = this.abstractLayerService.findById(id);
-				if(entity instanceof AbstractLayer){
-					AbstractLayer layer = (AbstractLayer) entity;
+			for (Integer id : layerIds) {
+				PersistentObject entity = this.layerService.findById(id);
+				if(entity instanceof Layer){
+					Layer layer = (Layer) entity;
 					if(layer != null){
 						layers.add(layer);
 					}

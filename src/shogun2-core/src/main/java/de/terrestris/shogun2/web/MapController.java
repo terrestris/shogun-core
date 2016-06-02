@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.terrestris.shogun2.dao.MapDao;
-import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.module.Map;
 import de.terrestris.shogun2.service.MapService;
 import de.terrestris.shogun2.util.data.ResultSet;
@@ -66,10 +66,10 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
 	@RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
 	public @ResponseBody java.util.Map<String, Object> setLayersForMap(
 			@RequestParam("mapModuleId") Integer mapModuleId,
-			@RequestParam("abstractLayerIds") List<Integer> abstractLayerIds) {
+			@RequestParam("layerIds") List<Integer> layerIds) {
 
 		try {
-			List<AbstractLayer> layers = this.service.setLayersForMap(mapModuleId, abstractLayerIds);
+			List<Layer> layers = this.service.setLayersForMap(mapModuleId, layerIds);
 			return ResultSet.success(layers);
 		} catch (Exception e) {
 			return ResultSet.error("Could not set Layers for Map");

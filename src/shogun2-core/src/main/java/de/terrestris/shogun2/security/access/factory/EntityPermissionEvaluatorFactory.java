@@ -51,7 +51,7 @@ public class EntityPermissionEvaluatorFactory<E extends PersistentObject> {
 		// NOT listed here (and therefore "fully secured") are the following
 		// classes AND (!) their subclasses:
 		//
-		// * AbstractLayer
+		// * Layer
 		// * Application
 		// * File
 		// * Person

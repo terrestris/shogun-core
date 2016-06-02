@@ -21,8 +21,8 @@ import de.terrestris.shogun2.service.LayerService;
  */
 @Controller
 @RequestMapping("/layer")
-public class LayerController<E extends Layer, D extends LayerDao<E>, S extends LayerService<E, D>>
-		extends AbstractLayerController<E, D, S> {
+public abstract class LayerController<E extends Layer, D extends LayerDao<E>, S extends LayerService<E, D>>
+		extends AbstractWebController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor

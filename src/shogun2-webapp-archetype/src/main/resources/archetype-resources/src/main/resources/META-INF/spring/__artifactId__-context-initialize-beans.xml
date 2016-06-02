@@ -425,14 +425,12 @@
 
     <bean id="osmWmsLayer" class="de.terrestris.shogun2.model.layer.Layer">
         <property name="name" value="OSM-WMS" />
-        <property name="type" value="Tile" />
         <property name="source" ref="osmWmsLayerDataSource" />
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
     <bean id="osmWmsLayerGray" class="de.terrestris.shogun2.model.layer.Layer">
         <property name="name" value="OSM-WMS GRAY" />
-        <property name="type" value="Tile" />
         <property name="source" ref="osmWmsLayerGrayDataSource" />
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
