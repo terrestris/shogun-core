@@ -72,6 +72,18 @@ public class Layer extends PersistentObject {
 	}
 
 	/**
+	 * @param name Layer name
+	 * @param source
+	 * @param appearance
+	 */
+	public Layer(String name, LayerDataSource source, LayerAppearance appearance) {
+		super();
+		this.name = name;
+		this.source = source;
+		this.appearance = appearance;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
