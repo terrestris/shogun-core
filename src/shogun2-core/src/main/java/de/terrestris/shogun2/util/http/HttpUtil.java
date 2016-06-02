@@ -44,8 +44,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import de.terrestris.shogun2.util.model.Response;
 
@@ -55,6 +57,7 @@ import de.terrestris.shogun2.util.model.Response;
  * @author terrestris GmbH & Co. KG
  *
  */
+@Component
 public class HttpUtil {
 
 	/**
@@ -63,9 +66,9 @@ public class HttpUtil {
 	private static final Logger LOG = Logger.getLogger(HttpUtil.class);
 
 	/**
-	 *
+	 * The timeout for all outgoing HTTP connections.
 	 */
-	private static final int HTTP_TIMEOUT = 30000;
+	private static int httpTimeout;
 
 	/**
 	 * Performs an HTTP GET on the given URL.
@@ -606,7 +609,7 @@ public class HttpUtil {
 	public static Response put(URI uri, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
 		return putBody(new HttpPut(uri), body, contentType, username, password);
 	}
-	
+
 	/**
 	 * Performs an HTTP DELETE on the given URL.
 	 *
@@ -723,9 +726,9 @@ public class HttpUtil {
 
 		// set the request configuration that will passed to the httpRequest
 		RequestConfig requestConfig = RequestConfig.custom()
-				.setConnectionRequestTimeout(HTTP_TIMEOUT)
-				.setConnectTimeout(HTTP_TIMEOUT)
-				.setSocketTimeout(HTTP_TIMEOUT)
+				.setConnectionRequestTimeout(httpTimeout)
+				.setConnectTimeout(httpTimeout)
+				.setSocketTimeout(httpTimeout)
 				.setProxy(systemProxy)
 				.build();
 
@@ -859,6 +862,19 @@ public class HttpUtil {
 		}
 
 		return systemProxy;
+	}
+
+	/**
+	 * Note: The value annotation is set to the setter of httpTimeout here as
+	 * we can't autowire any value to its static field (but the field has to be
+	 * static itself).
+	 *
+	 * @param httpTimeout the httpTimeout to set
+	 */
+	@Value("${http.timeout}")
+	@SuppressWarnings("static-method")
+	public void setHttpTimeout(int httpTimeout) {
+		HttpUtil.httpTimeout = httpTimeout;
 	}
 
 }
