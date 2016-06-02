@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
 import de.terrestris.shogun2.model.map.MapControl;
 
@@ -70,7 +70,7 @@ public class Map extends Module {
 		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
-	private List<AbstractLayer> mapLayers = new ArrayList<AbstractLayer>();
+	private List<Layer> mapLayers = new ArrayList<Layer>();
 
 	/**
 	 * default constructor
@@ -84,7 +84,7 @@ public class Map extends Module {
 	 * @param mapConfig
 	 * @param mapLayers
 	 */
-	public Map(String name, MapConfig mapConfig, List<AbstractLayer> mapLayers) {
+	public Map(String name, MapConfig mapConfig, List<Layer> mapLayers) {
 		super(name);
 		this.mapConfig = mapConfig;
 		this.mapLayers = mapLayers;
@@ -121,14 +121,14 @@ public class Map extends Module {
 	/**
 	 * @return the mapLayers
 	 */
-	public List<AbstractLayer> getMapLayers() {
+	public List<Layer> getMapLayers() {
 		return mapLayers;
 	}
 
 	/**
 	 * @param mapLayers the mapLayers to set
 	 */
-	public void setMapLayers(List<AbstractLayer> mapLayers) {
+	public void setMapLayers(List<Layer> mapLayers) {
 		this.mapLayers = mapLayers;
 	}
 

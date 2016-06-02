@@ -1,23 +1,27 @@
 package de.terrestris.shogun2.service;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.LayerDao;
+import de.terrestris.shogun2.dao.MapDao;
 import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.module.Module;
+import de.terrestris.shogun2.model.module.Map;
 
 /**
- * Service class for the {@link Module} model.
+ * Service class for the {@link Layer} model.
  *
  * @author Nils Bühner
- * @see AbstractCrudService
+ * @see PermissionAwareCrudService
  *
  */
 @Service("layerService")
-public class LayerService<E extends Layer, D extends LayerDao<E>> extends
-		AbstractLayerService<E, D> {
+public class LayerService<E extends Layer, D extends LayerDao<E>>
+		extends PermissionAwareCrudService<E, D> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
@@ -46,4 +50,35 @@ public class LayerService<E extends Layer, D extends LayerDao<E>> extends
 	public void setDao(D dao) {
 		this.dao = dao;
 	}
+
+	/**
+	 *
+	 */
+	@Autowired
+	@Qualifier("mapService")
+	MapService<Map, MapDao<Map>> mapService;
+
+	/**
+	 *
+	 */
+	@Override
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'DELETE')")
+	public void delete (E layer) {
+		// get all maps that contain the layer
+		Set<Map> maps = mapService.findMapsWithLayer(layer);
+
+		LOG.info("Found " + maps.size() + " maps with layer " + layer);
+
+		// remove the layer from these maps
+		for (Map map : maps) {
+			map.getMapLayers().remove(layer);
+			mapService.saveOrUpdate(map);
+
+			LOG.info("Removed layer from map");
+		}
+
+		// finally remove the layer
+		super.delete(layer);
+	}
+
 }

@@ -8,7 +8,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import de.terrestris.shogun2.model.layer.AbstractLayer;
+import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.module.Map;
 
 @Repository("mapDao")
@@ -36,7 +36,7 @@ public class MapDao<E extends Map> extends
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<E> findMapsWithLayer(AbstractLayer layer) throws HibernateException {
+	public Set<E> findMapsWithLayer(Layer layer) throws HibernateException {
 		Criteria criteria = createDistinctRootEntityCriteria();
 
 		criteria.createAlias("mapLayers", "ml");
