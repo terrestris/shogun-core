@@ -18,6 +18,8 @@ Existing projects (that were possibly created with an old version of the webapp 
 * Adapt the existing ``{{your-project}}-context-initialize-beans.xml`` file (under ``src/main/resources/META-INF/spring/``) according to the new structure as it is defined in the [archetype](https://github.com/terrestris/shogun2/blob/master/src/shogun2-webapp-archetype/src/main/resources/archetype-resources/src/main/resources/META-INF/spring/__artifactId__-context-initialize-beans.xml)
 * Adapt the existing ``{{your-project}}-context.xml`` file (under ``src/main/resources/META-INF/spring/``) according to the new structure as it is defined in the [archetype](https://github.com/terrestris/shogun2/blob/master/src/shogun2-webapp-archetype/src/main/resources/archetype-resources/src/main/resources/META-INF/spring/__artifactId__-context.xml)
 * Add the missing ``geoServerNameSpaces.properties`` file to ``src/main/resources/META-INF/``, like the one in the [archetype](https://github.com/terrestris/shogun2/blob/master/src/shogun2-webapp-archetype/src/main/resources/archetype-resources/src/main/resources/META-INF/geoServerNameSpaces.properties)
+* Remove all occurences of ``<property name="type" value="Tile" />`` in the ``{{your-project}}-context-initialize-beans.xml`` file (under ``src/main/resources/META-INF/spring/``)
+* Add ``http.timeout=30000`` to the ``{{your-project}}.properties`` file (under ``src/main/resources/META-INF/``)
 
 ## 0.0.6 (2016-04-06)
 * All EXT-Direct related stuff has been removed. Existing projects (that were possibly created with an old version of the webapp archetype) need adaptions regarding the following points:
