@@ -7,6 +7,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import de.terrestris.shogun2.model.PersistentObject;
@@ -17,6 +19,7 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class PermissionCollection extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;

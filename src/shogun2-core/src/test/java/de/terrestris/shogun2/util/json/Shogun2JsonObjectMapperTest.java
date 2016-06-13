@@ -11,6 +11,7 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
+import com.bedatadriven.jackson.datatype.jts.JtsModule;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +39,9 @@ public class Shogun2JsonObjectMapperTest {
 
 		List<Module> modules = Shogun2JsonObjectMapper.findModules();
 
-		assertEquals(1, modules.size());
+		assertEquals(2, modules.size());
 		assertThat(modules.get(0), instanceOf(JodaModule.class));
+		assertThat(modules.get(1), instanceOf(JtsModule.class));
 	}
 
 	/**
