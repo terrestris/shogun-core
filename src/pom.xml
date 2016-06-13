@@ -184,6 +184,12 @@
         <!-- Powermock -->
         <powermock.version>1.6.4</powermock.version>
 
+        <!-- Java Topology Suite -->
+        <jts.version>1.14.0</jts.version>
+
+        <!-- JTS Jackson Datatype -->
+        <jackson-datatype-jts.version>2.3</jackson-datatype-jts.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -613,6 +619,12 @@
                 <version>${jackson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.bedatadriven</groupId>
+                <artifactId>jackson-datatype-jts</artifactId>
+                <version>${jackson-datatype-jts.version}</version>
+            </dependency>
+
             <!-- ehcache -->
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
@@ -741,6 +753,12 @@
                 <groupId>org.imgscalr</groupId>
                 <artifactId>imgscalr-lib</artifactId>
                 <version>${imgscalr.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.vividsolutions</groupId>
+                <artifactId>jts-core</artifactId>
+                <version>${jts.version}</version>
             </dependency>
 
         </dependencies>
