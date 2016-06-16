@@ -252,7 +252,7 @@ public class GeoServerInterceptorService {
 		List<InterceptorRule> interceptorRules = this.interceptorRuleService
 				.findAllRulesForServiceAndEvent(requestService, ruleEvent);
 
-		LOG.debug("Got " + interceptorRules.size() + " rule(s) from database.");
+		LOG.trace("Got " + interceptorRules.size() + " rule(s) from database.");
 
 		if (LogManager.getRootLogger().getLevel().equals(Level.TRACE)) {
 			for (InterceptorRule interceptorRule : interceptorRules) {
@@ -507,13 +507,13 @@ public class GeoServerInterceptorService {
 			return responseHeaders;
 		}
 
-		LOG.debug("Requested to filter the Headers to respond with:");
+		LOG.trace("Requested to filter the Headers to respond with:");
 
 		for (Entry<String, List<String>> header : headers.entrySet()) {
 			String headerKey = header.getKey();
 			String headerVal = StringUtils.join(header.getValue(), ",");
 
-			LOG.debug("  * Header: " + headerKey);
+			LOG.trace("  * Header: " + headerKey);
 
 			if (Arrays.asList(FORWARD_HEADER_KEYS).contains(headerKey)) {
 
@@ -539,9 +539,9 @@ public class GeoServerInterceptorService {
 				}
 
 				responseHeaders.set(headerKey, headerVal);
-				LOG.debug("    > Forwarded");
+				LOG.trace("    > Forwarded");
 			} else {
-				LOG.debug("    > Skipped");
+				LOG.trace("    > Skipped");
 			}
 		}
 
