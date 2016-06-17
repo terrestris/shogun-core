@@ -70,8 +70,10 @@ public class OgcMessageDistributorTest {
 
 		Response response = new Response();
 
+		MutableHttpServletRequest request = new MutableHttpServletRequest(new MockHttpServletRequest());
+
 		Response returnedRequest =
-				distributor.distributeToResponseInterceptor(response, message);
+				distributor.distributeToResponseInterceptor(request, response, message);
 
 		assertNotNull(returnedRequest);
 	}
@@ -83,7 +85,9 @@ public class OgcMessageDistributorTest {
 
 		Response response = new Response();
 
-		distributor.distributeToResponseInterceptor(response, message);
+		MutableHttpServletRequest request = new MutableHttpServletRequest(new MockHttpServletRequest());
+
+		distributor.distributeToResponseInterceptor(request, response, message);
 	}
 
 	@Test
@@ -94,8 +98,10 @@ public class OgcMessageDistributorTest {
 
 		Response response = new Response();
 
+		MutableHttpServletRequest request = new MutableHttpServletRequest(new MockHttpServletRequest());
+
 		Response returnedResponse =
-				distributor.distributeToResponseInterceptor(response, message);
+				distributor.distributeToResponseInterceptor(request, response, message);
 
 		assertNotNull(returnedResponse);
 	}

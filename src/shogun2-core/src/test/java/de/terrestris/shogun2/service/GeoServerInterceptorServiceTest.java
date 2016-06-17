@@ -90,7 +90,7 @@ public class GeoServerInterceptorServiceTest {
 				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
 		when(ogcMessageDistributor.distributeToResponseInterceptor(
-				any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
 
 		when(ruleService.findAllRulesForServiceAndEvent(
 				any(String.class), any(String.class))).thenReturn(
@@ -125,7 +125,7 @@ public class GeoServerInterceptorServiceTest {
 				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
 		when(ogcMessageDistributor.distributeToResponseInterceptor(
-				any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
 
 		when(ruleService.findAllRulesForServiceAndEvent(
 				any(String.class), any(String.class))).thenReturn(
@@ -169,7 +169,7 @@ public class GeoServerInterceptorServiceTest {
 				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
 		when(ogcMessageDistributor.distributeToResponseInterceptor(
-				any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
 
 		when(ruleService.findAllRulesForServiceAndEvent(
 				any(String.class), any(String.class))).thenReturn(
