@@ -4,6 +4,7 @@
 package ${package}.util;
 
 import de.terrestris.shogun2.util.interceptor.WcsResponseInterceptorInterface;
+import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.model.Response;
 
 /**
@@ -16,17 +17,17 @@ import de.terrestris.shogun2.util.model.Response;
 public class WcsResponseInterceptor implements WcsResponseInterceptorInterface{
 
 	@Override
-	public Response interceptGetCapabilities(Response response) {
+	public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptDescribeCoverage(Response response) {
+	public Response interceptDescribeCoverage(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetCoverage(Response response) {
+	public Response interceptGetCoverage(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
