@@ -219,12 +219,13 @@ public class OgcMessageDistributor {
 
 	/**
 	 *
+	 * @param mutableRequest 
 	 * @param response
 	 * @param message
 	 * @return
 	 * @throws InterceptorException
 	 */
-	public Response distributeToResponseInterceptor(Response response,
+	public Response distributeToResponseInterceptor(MutableHttpServletRequest mutableRequest, Response response,
 			OgcMessage message) throws InterceptorException {
 
 		if (message.isResponseAllowed()) {
@@ -256,17 +257,17 @@ public class OgcMessageDistributor {
 			LOG.debug(infoMsg);
 
 			if (message.isWmsGetCapabilities()) {
-				response = this.wmsResponseInterceptor.interceptGetCapabilities(response);
+				response = this.wmsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
 			} else if (message.isWmsGetMap()) {
-				response = this.wmsResponseInterceptor.interceptGetMap(response);
+				response = this.wmsResponseInterceptor.interceptGetMap(mutableRequest, response);
 			} else if (message.isWmsGetFeatureInfo()) {
-				response = this.wmsResponseInterceptor.interceptGetFeatureInfo(response);
+				response = this.wmsResponseInterceptor.interceptGetFeatureInfo(mutableRequest, response);
 			} else if (message.isWmsGetLegendGraphic()) {
-				response = this.wmsResponseInterceptor.interceptGetLegendGraphic(response);
+				response = this.wmsResponseInterceptor.interceptGetLegendGraphic(mutableRequest, response);
 			} else if (message.isWmsGetStyles()) {
-				response = this.wmsResponseInterceptor.interceptGetStyles(response);
+				response = this.wmsResponseInterceptor.interceptGetStyles(mutableRequest, response);
 			} else if (message.isWmsDescribeLayer()) {
-				response = this.wmsResponseInterceptor.interceptDescribeLayer(response);
+				response = this.wmsResponseInterceptor.interceptDescribeLayer(mutableRequest, response);
 			} else {
 				throw new InterceptorException(operationErrMsg);
 			}
@@ -283,15 +284,15 @@ public class OgcMessageDistributor {
 
 			// Note: WFS 2.0.0 operations are not supported yet!
 			if (message.isWfsGetCapabilities()) {
-				response = this.wfsResponseInterceptor.interceptGetCapabilities(response);
+				response = this.wfsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
 			} else if (message.isWfsGetFeature()) {
-				response = this.wfsResponseInterceptor.interceptGetFeature(response);
+				response = this.wfsResponseInterceptor.interceptGetFeature(mutableRequest, response);
 			} else if (message.isWfsDescribeFeatureType()) {
-				response = this.wfsResponseInterceptor.interceptDescribeFeatureType(response);
+				response = this.wfsResponseInterceptor.interceptDescribeFeatureType(mutableRequest, response);
 			} else if (message.isWfsTransaction()) {
-				response = this.wfsResponseInterceptor.interceptTransaction(response);
+				response = this.wfsResponseInterceptor.interceptTransaction(mutableRequest, response);
 			} else if (message.isWfsLockFeature()) {
-				response = this.wfsResponseInterceptor.interceptLockFeature(response);
+				response = this.wfsResponseInterceptor.interceptLockFeature(mutableRequest, response);
 			} else {
 				throw new InterceptorException(operationErrMsg);
 			}
@@ -307,11 +308,11 @@ public class OgcMessageDistributor {
 			LOG.debug(infoMsg);
 
 			if (message.isWcsGetCapabilities()) {
-				response = this.wcsResponseInterceptor.interceptGetCapabilities(response);
+				response = this.wcsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
 			} else if (message.isWcsDescribeCoverage()) {
-				response = this.wcsResponseInterceptor.interceptDescribeCoverage(response);
+				response = this.wcsResponseInterceptor.interceptDescribeCoverage(mutableRequest, response);
 			} else if (message.isWcsGetCoverage()) {
-				response = this.wcsResponseInterceptor.interceptGetCoverage(response);
+				response = this.wcsResponseInterceptor.interceptGetCoverage(mutableRequest, response);
 			} else {
 				throw new InterceptorException(operationErrMsg);
 			}
