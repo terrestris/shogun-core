@@ -64,20 +64,20 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 	/**
 	 *
-	 * @param mutableRequest
+	 * @param httpServletRequest
 	 * @param key
 	 * @return
 	 * @throws InterceptorException
 	 * @throws IOException
 	 */
-	public static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
+	public static String getRequestParameterValue(HttpServletRequest httpServletRequest,
 			String[] keys) throws InterceptorException, IOException {
 
 		String value = StringUtils.EMPTY;
 
 		for (String key : keys) {
 
-			value = getRequestParameterValue(mutableRequest, key);
+			value = getRequestParameterValue(httpServletRequest, key);
 
 			if (StringUtils.isNotEmpty(value)) {
 				break;
@@ -89,20 +89,20 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 	/**
 	 *
-	 * @param mutableRequest
+	 * @param httpServletRequest
 	 * @param parameter
 	 * @return
 	 * @throws InterceptorException
 	 * @throws IOException
 	 */
-	public static String getRequestParameterValue(MutableHttpServletRequest mutableRequest,
+	public static String getRequestParameterValue(HttpServletRequest httpServletRequest,
 			String parameter) throws InterceptorException, IOException {
 
 		LOG.debug("Finding the request parameter [" + parameter + "]");
 
 		String value = StringUtils.EMPTY;
 
-		Map<String, String[]> queryParams = mutableRequest.getParameterMap();
+		Map<String, String[]> queryParams = httpServletRequest.getParameterMap();
 
 		if (!queryParams.isEmpty()) {
 
@@ -119,7 +119,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 		} else {
 
-			String xml = OgcXmlUtil.getRequestBody(mutableRequest);
+			String xml = OgcXmlUtil.getRequestBody(httpServletRequest);
 
 			if (!StringUtils.isEmpty(xml)) {
 

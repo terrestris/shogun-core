@@ -4,6 +4,7 @@
 package ${package}.util;
 
 import de.terrestris.shogun2.util.interceptor.WfsResponseInterceptorInterface;
+import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.model.Response;
 
 /**
@@ -16,27 +17,27 @@ import de.terrestris.shogun2.util.model.Response;
 public class WfsResponseInterceptor implements WfsResponseInterceptorInterface{
 
 	@Override
-	public Response interceptGetCapabilities(Response response) {
+	public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptDescribeFeatureType(Response response) {
+	public Response interceptDescribeFeatureType(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetFeature(Response response) {
+	public Response interceptGetFeature(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptLockFeature(Response response) {
+	public Response interceptLockFeature(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptTransaction(Response response) {
+	public Response interceptTransaction(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 

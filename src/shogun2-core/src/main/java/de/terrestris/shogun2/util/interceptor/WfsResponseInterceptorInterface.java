@@ -7,14 +7,14 @@ import de.terrestris.shogun2.util.model.Response;
 @Component
 public interface WfsResponseInterceptorInterface {
 
-	public Response interceptGetCapabilities(Response response);
+	public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
 
-	public Response interceptDescribeFeatureType(Response response);
+	public Response interceptDescribeFeatureType(MutableHttpServletRequest request, Response response);
 
-	public Response interceptGetFeature(Response response);
+	public Response interceptGetFeature(MutableHttpServletRequest request, Response response);
 
-	public Response interceptLockFeature(Response response);
+	public Response interceptLockFeature(MutableHttpServletRequest request, Response response);
 
-	public Response interceptTransaction(Response response);
+	public Response interceptTransaction(MutableHttpServletRequest request, Response response);
 
 }

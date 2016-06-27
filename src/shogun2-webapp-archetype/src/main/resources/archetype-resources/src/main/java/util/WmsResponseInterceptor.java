@@ -4,6 +4,7 @@
 package ${package}.util;
 
 import de.terrestris.shogun2.util.interceptor.WmsResponseInterceptorInterface;
+import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.model.Response;
 
 /**
@@ -16,32 +17,32 @@ import de.terrestris.shogun2.util.model.Response;
 public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
 
 	@Override
-	public Response interceptGetMap(Response response) {
+	public Response interceptGetMap(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetCapabilities(Response response) {
+	public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetFeatureInfo(Response response) {
+	public Response interceptGetFeatureInfo(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptDescribeLayer(Response response) {
+	public Response interceptDescribeLayer(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetLegendGraphic(Response response) {
+	public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
 	@Override
-	public Response interceptGetStyles(Response response) {
+	public Response interceptGetStyles(MutableHttpServletRequest request, Response response) {
 		return response;
 	}
 
