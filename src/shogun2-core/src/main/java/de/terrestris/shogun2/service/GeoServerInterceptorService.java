@@ -327,7 +327,7 @@ public class GeoServerInterceptorService {
 
 		for (Entry<String, String[]> param : params.entrySet()) {
 			queryParams.add(new BasicNameValuePair(param.getKey(),
-					StringUtils.join(param.getValue())));
+					StringUtils.join(param.getValue(), ",")));
 		}
 
 		return queryParams;
