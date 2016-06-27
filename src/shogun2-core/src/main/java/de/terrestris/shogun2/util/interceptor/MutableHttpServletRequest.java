@@ -244,7 +244,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 	 */
 	@Override
 	public String getParameter(String key) {
-		if (customParameters.get(key) != null) {
+		if (customParameters.containsKey(key)) {
 			return StringUtils.join(customParameters.get(key), ",");
 		} else {
 			HttpServletRequest request = (HttpServletRequest) super.getRequest();
