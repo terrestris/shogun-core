@@ -129,7 +129,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 					+ "Please check your mails!");
 		} catch (Exception e) {
 			LOG.error("Could not request a password reset: " + e.getMessage());
-			return ResultSet.error("An error has occured during passwort reset request.");
+			return ResultSet.error("An error has occurred during password reset request.");
 		}
 	}
 

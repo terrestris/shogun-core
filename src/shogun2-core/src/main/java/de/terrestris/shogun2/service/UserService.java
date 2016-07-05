@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -215,7 +214,6 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param rawPassword
 	 * @throws Exception
 	 */
-	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#user, 'UPDATE')")
 	public void updatePassword(E user, String rawPassword) throws Exception {
 
 		if(user.getId() == null) {
