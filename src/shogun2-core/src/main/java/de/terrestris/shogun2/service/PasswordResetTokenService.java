@@ -59,6 +59,12 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
 	 *
 	 */
 	@Autowired
+	private UserDao<User> userDao;
+
+	/**
+	 *
+	 */
+	@Autowired
 	private MailPublisher mailPublisher;
 
 	/**
@@ -123,7 +129,7 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
 			URISyntaxException, UnsupportedEncodingException {
 
 		// get the user by the provided email address
-		User user = userService.findByEmail(email);
+		User user = userDao.findByEmail(email);
 
 		if (user == null) {
 			throw new UsernameNotFoundException(

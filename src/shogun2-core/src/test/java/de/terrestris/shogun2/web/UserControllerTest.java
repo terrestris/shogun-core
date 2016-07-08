@@ -183,7 +183,7 @@ public class UserControllerTest {
 			.andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(jsonPath("$.*", hasSize(2)))
 			.andExpect(jsonPath("$.success", is(false)))
-			.andExpect(jsonPath("$.message", is("An error has occured during passwort reset request.")));
+			.andExpect(jsonPath("$.message", is("An error has occurred during password reset request.")));
 
 		verify(tokenService, times(1)).sendResetPasswordMail(any(HttpServletRequest.class), eq(email));
 		verifyNoMoreInteractions(tokenService);
