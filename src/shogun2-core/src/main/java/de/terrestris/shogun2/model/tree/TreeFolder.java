@@ -1,11 +1,12 @@
+/**
+ *
+ */
 package de.terrestris.shogun2.model.tree;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -17,19 +18,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-
 /**
-*
-* Representation of a layer which consists a corresponding data source
-* and an appearance
-*
-* @author Kai Volland
-* @author terrestris GmbH & Co. KG
-*
-*/
+ * This class represents a (simple) composite {@link TreeNode}, i.e. a folder
+ * having {@link TreeNode}-children.
+ *
+ * @author Nils Bühner
+ * @author Kai Volland
+ * @author terrestris GmbH & Co. KG
+ *
+ */
 @Entity
 @Table
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class TreeFolder extends TreeNode {
 
 	/**
@@ -38,34 +37,45 @@ public class TreeFolder extends TreeNode {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The initial expand status of the folder
-	 */
-	private Boolean expanded;
-
-	/**
 	 *
 	 */
 	@ManyToMany
 	@JoinTable(
-		name = "TREEFOLDER_CHILDREN",
+		name = "TREEFOLDERS_TREENODES",
 		joinColumns = { @JoinColumn(name = "TREEFOLDER_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "CHILDREN_ID") }
+		inverseJoinColumns = { @JoinColumn(name = "TREENODE_ID") }
 	)
 	@OrderColumn(name = "IDX")
 	private List<TreeNode> children = new ArrayList<TreeNode>();
 
 	/**
-	 * @return the expanded
+	 * Explicitly adding the default constructor as this is important, e.g. for
+	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
-	public Boolean getExpanded() {
-		return expanded;
+	public TreeFolder() {
+		super();
+
+		// folders are not leafs...
+		this.setLeaf(false);
+
+		// folders are usually expandable
+		this.setExpandable(true);
 	}
 
 	/**
-	 * @param expanded the expanded to set
+	 *
+	 * @param node
 	 */
-	public void setExpanded(Boolean expanded) {
-		this.expanded = expanded;
+	public void addNode(TreeNode node) {
+		this.children.add(node);
+	}
+
+	/**
+	 *
+	 * @param node
+	 */
+	public void remove(TreeNode node) {
+		this.children.remove(node);
 	}
 
 	/**
@@ -76,7 +86,8 @@ public class TreeFolder extends TreeNode {
 	}
 
 	/**
-	 * @param children the children to set
+	 * @param children
+	 *            the children to set
 	 */
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
@@ -93,11 +104,10 @@ public class TreeFolder extends TreeNode {
 	@Override
 	public int hashCode() {
 		// two randomly chosen prime numbers
-		return new HashCodeBuilder(1, 7).
-				appendSuper(super.hashCode()).
-				append(getExpanded()).
-				append(getChildren()).
-				toHashCode();
+		return new HashCodeBuilder(19, 17)
+				.appendSuper(super.hashCode())
+				.append(getChildren())
+				.toHashCode();
 	}
 
 	/**
@@ -114,15 +124,14 @@ public class TreeFolder extends TreeNode {
 			return false;
 		TreeFolder other = (TreeFolder) obj;
 
-		return new EqualsBuilder().
-				appendSuper(super.equals(other)).
-				append(getExpanded(), other.getExpanded()).
-				append(getChildren(), other.getChildren()).
-				isEquals();
+		return new EqualsBuilder()
+				.appendSuper(super.equals(other))
+				.append(getChildren(), other.getChildren())
+				.isEquals();
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 *
 	 */
 	@Override
 	public String toString() {
