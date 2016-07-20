@@ -6,6 +6,8 @@ package de.terrestris.shogun2.model.tree;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,9 +15,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import de.terrestris.shogun2.converter.TreeNodeIdResolver;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -43,6 +49,31 @@ public class TreeNode extends PersistentObject {
 	 * The text to show on node label (html tags are accepted)
 	 */
 	private String text;
+
+	/**
+	 * This is the owning side of the relation between parent/child!
+	 */
+	@ManyToOne
+	@JoinColumn(name="TREEFOLDER_ID")
+	@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id",
+		resolver = TreeNodeIdResolver.class
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private TreeFolder parentFolder;
+
+	/**
+	 * The position of the node inside its parent. When parent has 4 children
+	 * and the node is third amongst them, index will be 2 -> starting with
+	 * index 0
+	 */
+	private int index;
+
+	/**
+	 * True if this is the root node.
+	 */
+	private boolean root;
 
 	/**
 	 * Set to true to indicate that this child can have no children. The expand
@@ -118,6 +149,48 @@ public class TreeNode extends PersistentObject {
 	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	/**
+	 * @return the parentFolder
+	 */
+	public TreeFolder getParentFolder() {
+		return parentFolder;
+	}
+
+	/**
+	 * @param parentFolder the parentFolder to set
+	 */
+	public void setParentFolder(TreeFolder parentFolder) {
+		this.parentFolder = parentFolder;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	/**
+	 * @return the root
+	 */
+	public boolean isRoot() {
+		return root;
+	}
+
+	/**
+	 * @param root the root to set
+	 */
+	public void setRoot(boolean root) {
+		this.root = root;
 	}
 
 	/**

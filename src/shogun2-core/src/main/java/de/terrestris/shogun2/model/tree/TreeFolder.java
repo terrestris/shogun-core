@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -37,15 +35,15 @@ public class TreeFolder extends TreeNode {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 *
+	 * This is NOT (!) the owning side of the parent/child relation, i.e. if you
+	 * add a child to this list and persist the instance of this folder, this
+	 * will NOT be persisted in the database! You will always have to change the
+	 * child nodes itself to persist such changes, e.g. by setting a different
+	 * index (for ordering in a folder) or setting a different parentFolder
+	 * there.
 	 */
-	@ManyToMany
-	@JoinTable(
-		name = "TREEFOLDERS_TREENODES",
-		joinColumns = { @JoinColumn(name = "TREEFOLDER_ID") },
-		inverseJoinColumns = { @JoinColumn(name = "TREENODE_ID") }
-	)
-	@OrderColumn(name = "IDX")
+	@OneToMany(mappedBy = "parentFolder")
+	@OrderBy("index")
 	private List<TreeNode> children = new ArrayList<TreeNode>();
 
 	/**
