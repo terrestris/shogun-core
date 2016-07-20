@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import de.terrestris.shogun2.converter.TreeNodeIdResolver;
+import de.terrestris.shogun2.converter.TreeFolderIdResolver;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -59,7 +59,7 @@ public class TreeNode extends PersistentObject {
 	@JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id",
-		resolver = TreeNodeIdResolver.class
+		resolver = TreeFolderIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	@JsonProperty("parentId")
