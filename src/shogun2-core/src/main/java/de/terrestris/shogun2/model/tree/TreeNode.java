@@ -319,6 +319,8 @@ public class TreeNode extends PersistentObject {
 		return new HashCodeBuilder(17, 5).
 				appendSuper(super.hashCode()).
 				append(getText()).
+				append(getIndex()).
+				append(isRoot()).
 				append(isLeaf()).
 				append(isChecked()).
 				append(isExpandable()).
@@ -346,7 +348,9 @@ public class TreeNode extends PersistentObject {
 
 		return new EqualsBuilder().appendSuper(super.equals(other)).
 				append(getText(), other.getText()).
+				append(getIndex(), other.getIndex()).
 				append(isLeaf(), other.isLeaf()).
+				append(isRoot(), other.isRoot()).
 				append(isChecked(), other.isChecked()).
 				append(isExpandable(), other.isExpandable()).
 				append(isExpanded(), other.isExpanded()).
