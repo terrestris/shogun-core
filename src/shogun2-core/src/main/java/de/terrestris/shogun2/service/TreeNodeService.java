@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.TreeNodeDao;
-import de.terrestris.shogun2.model.module.Module;
 import de.terrestris.shogun2.model.tree.TreeNode;
 
 /**
- * Service class for the {@link Module} model.
+ * Service class for the {@link TreeNode} model.
  *
  * @author Nils Bühner
  * @see AbstractCrudService
