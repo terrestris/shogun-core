@@ -54,7 +54,7 @@ public class TreeNode extends PersistentObject {
 	 * This is the owning side of the relation between parent/child!
 	 */
 	@ManyToOne
-	@JoinColumn(name="TREEFOLDER_ID")
+	@JoinColumn(name="PARENTFOLDER_ID")
 	@JsonIdentityInfo(
 		generator = ObjectIdGenerators.PropertyGenerator.class,
 		property = "id",
