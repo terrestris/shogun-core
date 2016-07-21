@@ -87,9 +87,15 @@ public class TreeNode extends PersistentObject {
 	private boolean leaf = true;
 
 	/**
-	 * Set to true or false to show a checkbox alongside this node.
+	 * Control checkboxes:
+	 * 
+	 * <ul>
+	 *   <li>null: no checkbox will appear</li>
+	 *   <li>true: a checked checkbox will appear</li>
+	 *   <li>false: an unchecked checkbox will appear</li>
+	 * </ul>
 	 */
-	private boolean checked;
+	private Boolean checked;
 
 	/**
 	 * False to prevent expanding/collapsing of this node.
@@ -212,14 +218,14 @@ public class TreeNode extends PersistentObject {
 	/**
 	 * @return the checked
 	 */
-	public boolean isChecked() {
+	public Boolean isChecked() {
 		return checked;
 	}
 
 	/**
 	 * @param checked the checked to set
 	 */
-	public void setChecked(boolean checked) {
+	public void setChecked(Boolean checked) {
 		this.checked = checked;
 	}
 
