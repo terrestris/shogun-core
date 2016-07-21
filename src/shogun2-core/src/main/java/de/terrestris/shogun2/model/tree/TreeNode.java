@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.converter.TreeFolderIdResolver;
@@ -39,6 +40,7 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonInclude(Include.NON_NULL)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class TreeNode extends PersistentObject {
 
 	/**
