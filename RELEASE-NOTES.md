@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.1.0 (not finally released yet)
+## 0.1.0 (2016-09-05)
 
 * Changes:
   * `Permission.WRITE` has been renamed to `Permission.UPDATE`
