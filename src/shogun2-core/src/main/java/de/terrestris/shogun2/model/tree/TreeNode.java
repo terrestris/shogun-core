@@ -77,7 +77,7 @@ public class TreeNode extends PersistentObject {
 	/**
 	 * True if this is the root node.
 	 */
-	private boolean root;
+	private boolean root = false;
 
 	/**
 	 * Set to true to indicate that this child can have no children. The expand
