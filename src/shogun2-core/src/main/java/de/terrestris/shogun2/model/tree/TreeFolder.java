@@ -61,22 +61,6 @@ public class TreeFolder extends TreeNode {
 	}
 
 	/**
-	 *
-	 * @param node
-	 */
-	public void addNode(TreeNode node) {
-		this.children.add(node);
-	}
-
-	/**
-	 *
-	 * @param node
-	 */
-	public void remove(TreeNode node) {
-		this.children.remove(node);
-	}
-
-	/**
 	 * @return the children
 	 */
 	public List<TreeNode> getChildren() {
