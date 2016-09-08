@@ -36,7 +36,7 @@ public class ApplicationDao<E extends Application> extends
 	 */
 	@Override
 	public List<E> findAll() {
-		LOG.trace("Finding all (non-template) applications of ");
+		LOG.trace("Finding all (non-template) applications.");
 		SimpleExpression areNotTemplate =
 				Restrictions.ne("template", true); // everything but true (i.e. false or null)
 		return findByCriteria(areNotTemplate);
@@ -48,7 +48,7 @@ public class ApplicationDao<E extends Application> extends
 	 * @return All applications that are templates.
 	 */
 	public List<E> findAllTemplates() {
-		LOG.trace("Finding all template applications of ");
+		LOG.trace("Finding all template applications.");
 		SimpleExpression areTemplate =
 				Restrictions.eq("template", true);
 		return findByCriteria(areTemplate);
