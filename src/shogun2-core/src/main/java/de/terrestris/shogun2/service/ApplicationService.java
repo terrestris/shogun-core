@@ -1,7 +1,10 @@
 package de.terrestris.shogun2.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 
 import de.terrestris.shogun2.dao.ApplicationDao;
@@ -44,5 +47,15 @@ public class ApplicationService<E extends Application, D extends ApplicationDao<
 	@Qualifier("applicationDao")
 	public void setDao(D dao) {
 		this.dao = dao;
+	}
+
+	/**
+	 * Returns all template applications
+	 *
+	 * @return
+	 */
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	public List<E> findAllTemplates() {
+		return dao.findAllTemplates();
 	}
 }

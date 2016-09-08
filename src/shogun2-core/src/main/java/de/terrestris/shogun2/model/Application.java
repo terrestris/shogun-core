@@ -66,6 +66,17 @@ public class Application extends PersistentObject {
 	private Boolean active = true;
 
 	/**
+	 * Whether this application serves as a template for new applications or
+	 * not. A template application will not be returned when querying for all
+	 * applications via REST.
+	 *
+	 * An application is only considered to be a template if this value is true,
+	 * i.e. if this value is null, the app should not be treated as a template.
+	 */
+	@Column
+	private Boolean template = false;
+
+	/**
 	 * The URL under which the application is accessible.
 	 */
 	@Column
@@ -149,6 +160,14 @@ public class Application extends PersistentObject {
 		this.active = active;
 	}
 
+	public Boolean getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Boolean template) {
+		this.template = template;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -188,6 +207,7 @@ public class Application extends PersistentObject {
 				append(getLanguage()).
 				append(getOpen()).
 				append(getActive()).
+				append(getTemplate()).
 				append(getUrl()).
 				append(getViewport()).
 				toHashCode();
@@ -212,6 +232,7 @@ public class Application extends PersistentObject {
 				append(getLanguage(), other.getLanguage()).
 				append(getOpen(), other.getOpen()).
 				append(getActive(), other.getActive()).
+				append(getTemplate(), other.getTemplate()).
 				append(getUrl(), other.getUrl()).
 				append(getViewport(), other.getViewport()).
 				isEquals();

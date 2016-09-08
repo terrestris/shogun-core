@@ -147,6 +147,17 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	}
 
 	/**
+	 * Evicts/detaches the entity from the hibernate session cache.
+	 *
+	 * @param e The entity to evict/detach
+	 */
+	public void evict(E e) {
+		LOG.trace("Removing/detaching " + entityClass.getSimpleName() + " with ID " + e.getId()
+				+ " from the hibernate session cache.");
+		getSession().evict(e);
+	}
+
+	/**
 	 * Gets the results, that match a variable number of passed criterions. Call
 	 * this method without arguments to find all entities.
 	 *
