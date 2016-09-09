@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -102,4 +103,26 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 		dao.delete(e);
 	}
 
+	/**
+	 * Clones an entity by detaching it from the hibernate session and resetting the ID to null.
+	 * The clone will be persisted as a new entity if persist is true.
+	 *
+	 * @param e The entity to clone
+	 * @param persist whether or not the clone should be persisted as a new entity
+	 *
+	 * @throws IllegalAccessException
+	 * @throws NoSuchFieldException
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#e, 'READ')")
+	public E cloneEntity(E e, boolean persist) throws NoSuchFieldException, IllegalAccessException {
+		dao.evict(e);
+
+		IdHelper.setIdOnPersistentObject(e, null);
+
+		if(persist) {
+			dao.saveOrUpdate(e);
+		}
+
+		return e;
+	}
 }
