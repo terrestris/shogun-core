@@ -13,28 +13,25 @@
 
     <context:component-scan base-package="de.terrestris.shogun2.dao" />
 
-    <!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html#jdbc-datasource -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-        destroy-method="close">
-        <property name="driverClass" value="${jdbc.driverClassName}" />
-        <property name="jdbcUrl" value="${jdbc.url}" />
-        <property name="user" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
+     <!-- HIKARI CP config-->
+     <bean id="hikariConfigTest" class="com.zaxxer.hikari.HikariConfig">
+         <property name="dataSourceClassName" value="${hikari.dataSourceClassName}"/>
+         <property name="dataSourceProperties">
+             <props>
+                 <prop key="url">${jdbc.url}</prop>
+                 <prop key="user">${jdbc.username}</prop>
+                 <prop key="password">${jdbc.password}</prop>
+             </props>
+         </property>
+     </bean>
 
-        <!-- Configuration of the c3p0 Connection Pool -->
-        <property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
-        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
-        <property name="acquireRetryDelay" value="${c3p0.acquireRetryDelay}" />
-        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
-    </bean>
+     <bean id="testDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+         <constructor-arg ref="hikariConfigTest"/>
+     </bean>
 
     <bean id="sessionFactory"
         class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="testDataSource" />
         <property name="packagesToScan" value="de.terrestris.shogun2.model" />
         <property name="hibernateProperties">
             <props>
