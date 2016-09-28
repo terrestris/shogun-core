@@ -17,6 +17,8 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -62,12 +64,7 @@ public class HttpUtilTest {
 	/**
 	 *
 	 */
-	private static final String USERNAME = "Shinji";
-
-	/**
-	 *
-	 */
-	private static final String PASSWORD = "Kagawa";
+	private static final Credentials CREDENTIALS = new UsernamePasswordCredentials("Shinji", "Kagawa");
 
 	/**
 	 *
@@ -178,13 +175,13 @@ public class HttpUtilTest {
 
 	@Test
 	public void get_url_auth() throws URISyntaxException, HttpException {
-		Response response = HttpUtil.get(URL, USERNAME, PASSWORD);
+		Response response = HttpUtil.get(URL, CREDENTIALS);
 		assertNotNull(response);
 	}
 
 	@Test
 	public void get_uri_auth() throws URISyntaxException, HttpException {
-		Response response = HttpUtil.get(URI, USERNAME, PASSWORD);
+		Response response = HttpUtil.get(URI, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -202,13 +199,13 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_url_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URL, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URL, CREDENTIALS);
 		assertNotNull(response);
 	}
 
 	@Test
 	public void post_uri_empty_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URI, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URI, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -220,7 +217,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_url_kvp_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -232,7 +229,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_uri_kvp_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -244,7 +241,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_url_body_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -256,7 +253,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_uri_body_auth() throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -268,7 +265,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_url_multipart_auth() throws URISyntaxException, HttpException {
-		Response response = HttpUtil.post(URL, getTestFile(), USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URL, getTestFile(), CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -280,7 +277,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void post_uri_multipart_auth() throws URISyntaxException, HttpException {
-		Response response = HttpUtil.post(URI, getTestFile(), USERNAME, PASSWORD);
+		Response response = HttpUtil.post(URI, getTestFile(), CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -298,13 +295,13 @@ public class HttpUtilTest {
 
 	@Test
 	public void put_uri_empty_auth() throws URISyntaxException, HttpException{
-		Response response = HttpUtil.put(URI, USERNAME, PASSWORD);
+		Response response = HttpUtil.put(URI, CREDENTIALS);
 		assertNotNull(response);
 	}
 
 	@Test
 	public void put_url_empty_auth() throws URISyntaxException, HttpException{
-		Response response = HttpUtil.put(URL, USERNAME, PASSWORD);
+		Response response = HttpUtil.put(URL, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -316,7 +313,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void put_uri_body_auth() throws URISyntaxException, HttpException{
-		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
 		assertNotNull(response);
 	}
 
@@ -328,7 +325,7 @@ public class HttpUtilTest {
 
 	@Test
 	public void put_url_body_auth() throws URISyntaxException, HttpException{
-		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
 		assertNotNull(response);
 	}
 
