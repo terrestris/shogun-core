@@ -178,6 +178,11 @@
             <artifactId>imgscalr-lib</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.elasticsearch</groupId>
+            <artifactId>structured-content-tools</artifactId>
+        </dependency>
+
         <!-- Jackson/JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -190,6 +195,12 @@
         <dependency>
             <groupId>com.bedatadriven</groupId>
             <artifactId>jackson-datatype-jts</artifactId>
+        </dependency>
+
+        <!-- CSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
         </dependency>
 
         <!-- Mailing -->
@@ -241,7 +252,7 @@
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts-core</artifactId>
-    	</dependency>
+        </dependency>
 
     </dependencies>
 

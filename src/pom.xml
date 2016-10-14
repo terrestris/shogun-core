@@ -60,6 +60,17 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>jboss-releases</id>
+            <name>JBoss Releases</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
     </repositories>
 
     <developers>
@@ -122,6 +133,7 @@
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
         <jackson.version>2.6.6</jackson.version>
+        <opencsv.version>3.8</opencsv.version>
         <ehcache.version>2.10.1</ehcache.version>
 
         <!-- Persistence -->
@@ -165,6 +177,7 @@
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
+        <structured-content-tools.version>1.3.9</structured-content-tools.version>
 
         <!-- Java Mail API -->
         <javax-mail-api.version>1.5.5</javax-mail-api.version>
@@ -625,6 +638,13 @@
                 <version>${jackson-datatype-jts.version}</version>
             </dependency>
 
+            <!-- CSV -->
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
+
             <!-- ehcache -->
             <dependency>
                 <groupId>net.sf.ehcache</groupId>
@@ -753,6 +773,12 @@
                 <groupId>org.imgscalr</groupId>
                 <artifactId>imgscalr-lib</artifactId>
                 <version>${imgscalr.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.elasticsearch</groupId>
+                <artifactId>structured-content-tools</artifactId>
+                <version>${structured-content-tools.version}</version>
             </dependency>
 
             <dependency>
