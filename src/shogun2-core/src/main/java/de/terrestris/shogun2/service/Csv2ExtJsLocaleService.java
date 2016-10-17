@@ -32,8 +32,8 @@ public class Csv2ExtJsLocaleService {
 
 	/**
 	 *
-	 * @param locale
-	 * @param locale2
+	 * @param appId The name of a CSV file in META-INF/locale
+	 * @param locale The name of the locale column in the CSV
 	 * @return
 	 * @throws Exception
 	 */
@@ -127,7 +127,7 @@ public class Csv2ExtJsLocaleService {
 			throw new Exception("CSV locale file is invalid: Not enough columns.");
 		}
 
-		// start with the third column as the first to columns must not be a
+		// start with the third column as the first two columns must not be a
 		// locale column
 		for (int i = 2; i < headerLine.size(); i++) {
 			String columnName = headerLine.get(i);
