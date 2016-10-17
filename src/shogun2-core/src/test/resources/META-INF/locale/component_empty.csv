@@ -1,0 +1,8 @@
+component;field;de;en
+MyProject.some.Component;config.data.title;"de:title;and something after a semicolon";en:foobar
+;config.data.tooltip;de:tooltip;en:tooltip
+MyProject.some.Component;config.data.dragText;{0} Zeile(n) ausgewählt;{0} line(s) selected
+MyProject.another.Component;justonefield;de:foo;en:foo
+MyProject.another.Component;data.a;de:data.a;en:data.a
+MyProject.another.Component;data.b;de:data.b;en:data.b
+MyProject.yet.another.Component;config.myArray[];de:v1,v2,v3, ...;en:v1,v2,v3, ...
