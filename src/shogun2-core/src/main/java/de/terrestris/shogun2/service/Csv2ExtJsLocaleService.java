@@ -54,46 +54,55 @@ public class Csv2ExtJsLocaleService {
 			int columnIndexOfLocale = detectColumnIndexOfLocale(locale, csvReader);
 
 			List<String> nextLine;
-			while ((nextLine = Arrays.asList(ArrayUtils.nullToEmpty(csvReader.readNext()))).isEmpty() == false) {
-				String component = nextLine.get(0);
-				String field = nextLine.get(1);
-				String localeValue = nextLine.get(columnIndexOfLocale);
+			boolean nextLineIsNotEmpty = true;
 
-				Object value = localeValue;
+			while (nextLineIsNotEmpty) {
+				final String[] nextLineArray = ArrayUtils.nullToEmpty(csvReader.readNext());
+				nextLine = Arrays.asList(nextLineArray);
+				nextLineIsNotEmpty = nextLine.isEmpty() == false;
 
-				if (component.isEmpty()) {
-					throw new Exception("Missing component entry in CSV line " + csvReader.getLinesRead());
-				}
-				if (field.isEmpty()) {
-					throw new Exception("Missing field entry in CSV line " + csvReader.getLinesRead());
-				}
+				if(nextLineIsNotEmpty) {
+					String component = nextLine.get(0);
+					String field = nextLine.get(1);
+					String localeValue = nextLine.get(columnIndexOfLocale);
 
-				Object componentEntry;
+					Object value = localeValue;
 
-				if (resultMap.containsKey(component)) {
-					componentEntry = resultMap.get(component);
-				} else {
-					componentEntry = new TreeMap<String, Object>();
-				}
-
-				// handle arrays
-				if (field.contains("[]")) {
-					// assure that [] occurs only once at end of string
-					if(Pattern.matches(".+(\\[])$", field) &&
-						StringUtils.countMatches(field, "[]") == 1) { //TODO check this within the regex above
-						// convert localeValue to an array and adapt field
-						field = field.replace("[]", StringUtils.EMPTY);
-						value = localeValue.isEmpty() ? ArrayUtils.EMPTY_STRING_ARRAY : localeValue.split(",");
-					} else {
-						throw new Exception("Invalid field description '" + field
-								+ "': '[]' may only occure once at the end, but not before");
+					if (component.isEmpty()) {
+						throw new Exception("Missing component entry in CSV line " + csvReader.getLinesRead());
 					}
+					if (field.isEmpty()) {
+						throw new Exception("Missing field entry in CSV line " + csvReader.getLinesRead());
+					}
+
+					Object componentEntry;
+
+					if (resultMap.containsKey(component)) {
+						componentEntry = resultMap.get(component);
+					} else {
+						componentEntry = new TreeMap<String, Object>();
+					}
+
+					// handle arrays
+					if (field.contains("[]")) {
+						// assure that [] occurs only once at end of string
+						if(Pattern.matches(".+(\\[])$", field) &&
+								StringUtils.countMatches(field, "[]") == 1) { //TODO check this within the regex above
+							// convert localeValue to an array and adapt field
+							field = field.replace("[]", StringUtils.EMPTY);
+							value = localeValue.isEmpty() ? ArrayUtils.EMPTY_STRING_ARRAY : localeValue.split(",");
+						} else {
+							throw new Exception("Invalid field description '" + field
+									+ "': '[]' may only occure once at the end, but not before");
+						}
+					}
+
+					// insert the value
+					StructureUtils.putValueIntoMapOfMaps((Map<String, Object>) componentEntry, field, value);
+
+					resultMap.put(component, componentEntry);
 				}
 
-				// insert the value
-				StructureUtils.putValueIntoMapOfMaps((Map<String, Object>) componentEntry, field, value);
-
-				resultMap.put(component, componentEntry);
 			}
 		} catch (Exception e) {
 			throw e;
