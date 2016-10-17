@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-locale-service.xml" })
+@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-locale.xml" })
 public class Csv2ExtJsLocaleServiceTest {
 
 	@Autowired

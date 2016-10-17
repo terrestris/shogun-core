@@ -23,7 +23,7 @@ import de.terrestris.shogun2.service.Csv2ExtJsLocaleService;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-locale-controller.xml" })
+@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-locale.xml" })
 public class Csv2ExtJsLocaleControllerTest {
 
 	/**
