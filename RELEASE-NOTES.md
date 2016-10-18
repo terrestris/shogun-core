@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.1 (xxxx-xx-xx)
+
+* New features:
+  * A new web interface for the easy creation of ExtJS locale JSON files (based on CSV files) has been added. See this PR for details: https://github.com/terrestris/shogun2/pull/213
+
 ## 0.1.0 (2016-09-05)
 
 * Changes:
