@@ -2,6 +2,8 @@
 
 ## 0.1.1 (xxxx-xx-xx)
 
+* Changes:
+  * `HttpUtil` methods can now be called with intances of [`Credentials` interface](https://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/org/apache/http/auth/class-use/Credentials.html)
 * New features:
   * A new web interface for the easy creation of ExtJS locale JSON files (based on CSV files) has been added. See this PR for details: https://github.com/terrestris/shogun2/pull/213
 
