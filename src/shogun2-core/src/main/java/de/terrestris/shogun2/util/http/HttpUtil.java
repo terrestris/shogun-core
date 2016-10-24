@@ -21,6 +21,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
@@ -54,6 +55,7 @@ import de.terrestris.shogun2.util.model.Response;
 /**
  *
  * @author Daniel Koch
+ * @author Andre Henn
  * @author terrestris GmbH & Co. KG
  *
  */
@@ -71,7 +73,7 @@ public class HttpUtil {
 	private static int httpTimeout;
 
 	/**
-	 * Performs an HTTP GET on the given URL.
+	 * Performs an HTTP GET on the given URL <i>without authentication</i>
 	 *
 	 * @param url The URL to connect to.
 	 *
@@ -81,28 +83,41 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response get(String url) throws URISyntaxException, HttpException {
-		return send(new HttpGet(url), null, null);
+		return send(new HttpGet(url), null);
 	}
 
 	/**
 	 * Performs an HTTP GET on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param credentials instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response get(String url, String username, String password)
+	public static Response get(String url, Credentials credentials)
 			throws URISyntaxException, HttpException {
-		return send(new HttpGet(url), username, password);
+		return send(new HttpGet(url), credentials);
+	}
+
+	/**
+	 * Performs an HTTP GET on the given URL
+	 *
+	 * @param url The URL to connect to.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
+	 * @throws HttpException
+	 * @throws URISyntaxException
+	 */
+	public static Response get(String url, String username, String password) throws URISyntaxException, HttpException {
+		return send(new HttpGet(url), new UsernamePasswordCredentials(username, password));
 	}
 
 	/**
 	 * Performs an HTTP GET on the given URI.
+	 * No credentials needed.
 	 *
 	 * @param uri The URI to connect to.
 	 *
@@ -112,16 +127,16 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response get(URI uri) throws URISyntaxException, HttpException {
-		return send(new HttpGet(uri), null, null);
+		return send(new HttpGet(uri), null);
 	}
 
 	/**
 	 * Performs an HTTP GET on the given URI.
-	 * Basic auth is used if both username and pw are not null.
+	 * Basic auth is used if both username and password are not null.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -130,7 +145,24 @@ public class HttpUtil {
 	 */
 	public static Response get(URI uri, String username, String password)
 			throws URISyntaxException, HttpException {
-		return send(new HttpGet(uri), username, password);
+		return send(new HttpGet(uri), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP GET on the given URI.
+	 * Basic auth is used if both username and pw are not null.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response get(URI uri, Credentials credentials)
+			throws URISyntaxException, HttpException {
+		return send(new HttpGet(uri), credentials);
 	}
 
 	/**
@@ -146,17 +178,16 @@ public class HttpUtil {
 	 */
 	public static Response post(String url)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(),
-				null, null);
+		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(), null);
 	}
 
 	/**
 	 * Performs an HTTP POST on the given URL.
-	 * Basic auth is used if both username and pw are not null.
+	 * Basic auth is used if both and password are not null.
 	 *
-	 * @param url The URL to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param uri The URI to connect to.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -164,10 +195,27 @@ public class HttpUtil {
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
 	 */
-	public static Response post(String url, String username, String password)
+	public static Response post(String url, String password, String username)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(),
-				username, password);
+		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if credentials object is not null
+	 *
+	 * @param url The URL to connect to.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, Credentials credentials)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(url), new ArrayList<NameValuePair>(), credentials);
 	}
 
 	/**
@@ -183,17 +231,16 @@ public class HttpUtil {
 	 */
 	public static Response post(URI uri)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(),
-				null, null);
+		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(), null);
 	}
 
 	/**
 	 * Performs an HTTP POST on the given URI.
-	 * Basic auth is used if both username and pw are not null.
+	 * Basic auth is used if both and password are not null.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -203,8 +250,25 @@ public class HttpUtil {
 	 */
 	public static Response post(URI uri, String username, String password)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(),
-				username, password);
+		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URI.
+	 * Basic auth is used if credentials object is not null
+	 *
+	 * @param uri The URI to connect to.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, Credentials credentials)
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(uri), new ArrayList<NameValuePair>(), credentials);
 	}
 
 	/**
@@ -221,16 +285,17 @@ public class HttpUtil {
 	 */
 	public static Response post(String url, List<NameValuePair> queryParams)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(url), queryParams, null, null);
+		return postParams(new HttpPost(url), queryParams, null);
 	}
 
 	/**
 	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if both and password are not null.
 	 *
 	 * @param url The URL to connect to.
 	 * @param queryParams The list of NameValuePairs.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -238,10 +303,27 @@ public class HttpUtil {
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
 	 */
-	public static Response post(String url, List<NameValuePair> queryParams,
-			String username, String password) throws URISyntaxException,
+	public static Response post(String url, List<NameValuePair> queryParams, String username, String password) throws URISyntaxException,
 			UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(url), queryParams, username, password);
+		return postParams(new HttpPost(url), queryParams, new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 *
+	 * @param url The URL to connect to.
+	 * @param queryParams The list of NameValuePairs.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, List<NameValuePair> queryParams, Credentials credentials) throws URISyntaxException,
+			UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(url), queryParams, credentials);
 	}
 
 	/**
@@ -258,16 +340,17 @@ public class HttpUtil {
 	 */
 	public static Response post(URI uri, List<NameValuePair> queryParams)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(uri), queryParams, null, null);
+		return postParams(new HttpPost(uri), queryParams, null);
 	}
 
 	/**
 	 * Performs an HTTP POST on the given URI.
+	 * Basic auth is used if both and password are not null.
 	 *
 	 * @param uri The URI to connect to.
 	 * @param queryParams The list of NameValuePairs.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -275,10 +358,27 @@ public class HttpUtil {
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
 	 */
-	public static Response post(URI uri, List<NameValuePair> queryParams,
-			String username, String password) throws URISyntaxException,
+	public static Response post(URI uri, List<NameValuePair> queryParams, String username, String password) throws URISyntaxException,
 			UnsupportedEncodingException, HttpException {
-		return postParams(new HttpPost(uri), queryParams, username, password);
+		return postParams(new HttpPost(uri), queryParams, new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URI.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param queryParams The list of NameValuePairs.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws UnsupportedEncodingException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, List<NameValuePair> queryParams, Credentials credentials) throws URISyntaxException,
+			UnsupportedEncodingException, HttpException {
+		return postParams(new HttpPost(uri), queryParams, credentials);
 	}
 
 	/**
@@ -295,7 +395,26 @@ public class HttpUtil {
 	 */
 	public static Response post(String url, String body, ContentType contentType)
 			throws URISyntaxException, HttpException {
-		return postBody(new HttpPost(url), body, contentType, null, null);
+		return postBody(new HttpPost(url), body, contentType, null);
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used is both username and password are not null
+	 *
+	 * @param url The URL to connect to.
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body
+	 * @param username Credentials - username
+	 * @param password Credentials - password
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException {
+		return postBody(new HttpPost(url), body, contentType, new UsernamePasswordCredentials(username, password));
 	}
 
 	/**
@@ -304,8 +423,7 @@ public class HttpUtil {
 	 * @param url The URL to connect to.
 	 * @param body The POST body.
 	 * @param contentType The ContentType of the POST body.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -313,8 +431,8 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response post(String url, String body, ContentType contentType,
-			String username, String password) throws URISyntaxException, HttpException {
-		return postBody(new HttpPost(url), body, contentType, username, password);
+			Credentials credentials) throws URISyntaxException, HttpException {
+		return postBody(new HttpPost(url), body, contentType, credentials);
 	}
 
 	/**
@@ -332,17 +450,18 @@ public class HttpUtil {
 	 */
 	public static Response post(URI uri, String body, ContentType contentType)
 			throws URISyntaxException, HttpException {
-		return postBody(new HttpPost(uri), body, contentType, null, null);
+		return postBody(new HttpPost(uri), body, contentType, null);
 	}
 
 	/**
 	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if both username and password are not null
 	 *
 	 * @param uri The URI to connect to.
 	 * @param body The POST body.
 	 * @param contentType The ContentType of the POST body.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username Credentials - username
+	 * @param password Credentials - password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -351,7 +470,25 @@ public class HttpUtil {
 	 */
 	public static Response post(URI uri, String body, ContentType contentType,
 			String username, String password) throws URISyntaxException, HttpException {
-		return postBody(new HttpPost(uri), body, contentType, username, password);
+		return postBody(new HttpPost(uri), body, contentType, new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param body The POST body.
+	 * @param contentType The ContentType of the POST body.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, String body, ContentType contentType,
+			Credentials credentials) throws URISyntaxException, HttpException {
+		return postBody(new HttpPost(uri), body, contentType, credentials);
 	}
 
 	/**
@@ -366,27 +503,44 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response post(String url, File file) throws URISyntaxException, HttpException {
-		return postMultiPart(new HttpPost(url), new FileBody(file), null, null);
+		return postMultiPart(new HttpPost(url), new FileBody(file), null);
 	}
 
 	/**
 	 *
 	 * Performs an HTTP POST on the given URL.
-	 * Basic auth is used if both username and password are not null.
+	 * Basic auth is used if both username and password are not null
 	 *
 	 * @param url The URL to connect to.
 	 * @param file The file to send as MultiPartFile.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username username
+	 * @param password password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response post(String url, File file, String username,
-			String password) throws URISyntaxException, HttpException {
-		return postMultiPart(new HttpPost(url), new FileBody(file), username, password);
+	public static Response post(String url, File file, String username, String password) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(url), new FileBody(file), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 *
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if credentials object is not null.
+	 *
+	 * @param url The URL to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(String url, File file, Credentials credentials) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(url), new FileBody(file), credentials);
 	}
 
 	/**
@@ -401,7 +555,7 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response post(URI uri, File file) throws URISyntaxException, HttpException {
-		return postMultiPart(new HttpPost(uri), new FileBody(file), null, null);
+		return postMultiPart(new HttpPost(uri), new FileBody(file), null);
 	}
 
 	/**
@@ -410,40 +564,54 @@ public class HttpUtil {
 	 *
 	 * @param uri The URI to connect to.
 	 * @param file The file to send as MultiPartFile.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username username
+	 * @param password password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response post(URI uri, File file, String username,
-			String password) throws URISyntaxException, HttpException {
-		return postMultiPart(new HttpPost(uri), new FileBody(file), username, password);
+	public static Response post(URI uri, File file, String username, String password) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(uri), new FileBody(file), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP POST on the given URL.
+	 * Basic auth is used if credentials object is not null.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param file The file to send as MultiPartFile.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response post(URI uri, File file, Credentials credentials) throws URISyntaxException, HttpException {
+		return postMultiPart(new HttpPost(uri), new FileBody(file), credentials);
 	}
 
 	/**
 	 *
 	 * @param httpRequest
 	 * @param file
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	private static Response postMultiPart(HttpPost httpRequest, FileBody file,
-			String username, String password) throws URISyntaxException, HttpException {
+	private static Response postMultiPart(HttpPost httpRequest, FileBody file, Credentials credentials) throws URISyntaxException, HttpException {
 
 		HttpEntity multiPartEntity = MultipartEntityBuilder.create()
 				.addPart("file", file)
 				.build();
 		httpRequest.setEntity(multiPartEntity);
 
-		return send(httpRequest, username, password);
+		return send(httpRequest, credentials);
 	}
 
 	/**
@@ -451,31 +619,28 @@ public class HttpUtil {
 	 * @param httpRequest
 	 * @param body
 	 * @param contentType
-	 * @param username The Basic authentication username. No basic auth if null.
-	 * @param password The Basic authentication password. No basic auth if null.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	private static Response postBody(HttpPost httpRequest, String body,
-			ContentType contentType, String username, String password)
+	private static Response postBody(HttpPost httpRequest, String body, ContentType contentType, Credentials credentials)
 			throws URISyntaxException, HttpException {
 
 		StringEntity stringEntity = new StringEntity(body, contentType);
 		stringEntity.setChunked(true);
 		httpRequest.setEntity(stringEntity);
 
-		return send(httpRequest, username, password);
+		return send(httpRequest, credentials);
 	}
 
 	/**
 	 *
 	 * @param httpRequest
 	 * @param queryParams
-	 * @param username The Basic authentication username. No basic auth if null.
-	 * @param password The Basic authentication password. No basic auth if null.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -483,14 +648,13 @@ public class HttpUtil {
 	 * @throws UnsupportedEncodingException
 	 * @throws HttpException
 	 */
-	private static Response postParams(HttpPost httpRequest,
-			List<NameValuePair> queryParams, String username, String password)
+	private static Response postParams(HttpPost httpRequest, List<NameValuePair> queryParams, Credentials credentials)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 
 		HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
 		httpRequest.setEntity(httpEntity);
 
-		return send(httpRequest, username, password);
+		return send(httpRequest, credentials);
 	}
 
 	/**
@@ -502,7 +666,7 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 */
 	public static Response put(URI uri) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uri), null, null, null, null);
+		return putBody(new HttpPut(uri), null, null, null);
 	}
 
 	/**
@@ -514,51 +678,99 @@ public class HttpUtil {
 	 * @throws URISyntaxException
 	 */
 	public static Response put(String uriString) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uriString), null, null, null, null);
+		return putBody(new HttpPut(uriString), null, null, null);
 	}
 
 	/**
 	 * Perform HTTP PUT with empty body
+	 * Basic auth will be used if both username and password are not null
 	 *
-	 * @param uri
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param uri URI to connect to
+	 * @param username username
+	 * @param password password
+	 *
 	 * @return
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
 	public static Response put(URI uri, String username, String password) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uri), null, null, username, password);
+		return putBody(new HttpPut(uri), null, null, new UsernamePasswordCredentials(username, password));
 	}
 
 	/**
 	 * Perform HTTP PUT with empty body
 	 *
-	 * @param uriString
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param uri URI to connect to
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(URI uri, Credentials credentials) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uri), null, null, credentials);
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uriString String representing the URI to connect to
+	 * @param username username
+	 * @param password password
 	 *
 	 * @return
 	 * @throws HttpException
 	 * @throws URISyntaxException
 	 */
 	public static Response put(String uriString, String username, String password) throws URISyntaxException, HttpException {
-		return putBody(new HttpPut(uriString), null, null, username, password);
+		return putBody(new HttpPut(uriString), null, null, new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Perform HTTP PUT with empty body
+	 *
+	 * @param uriString String representing the URI to connect to
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return
+	 * @throws HttpException
+	 * @throws URISyntaxException
+	 */
+	public static Response put(String uriString, Credentials credentials) throws URISyntaxException, HttpException {
+		return putBody(new HttpPut(uriString), null, null, credentials);
 	}
 
 	/**
 	 * Performs an HTTP PUT on the given URL.
 	 * (without BasicAuth)
 	 *
-	 * @param uriString
+	 * @param uriString String representing the URI to connect to
 	 * @param body
 	 * @param contentType
+	 *
 	 * @return
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
 	public static Response put(String uriString, String body, ContentType contentType) throws URISyntaxException, HttpException{
-		return putBody(new HttpPut(uriString), body, contentType, null, null);
+		return putBody(new HttpPut(uriString), body, contentType, null);
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 *
+	 * @param uriString String representing the URI to connect to
+	 * @param body
+	 * @param contentType
+	 * @param username
+	 * @param password
+	 *
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(String uriString, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uriString), body, contentType, new UsernamePasswordCredentials(username, password));
 	}
 
 	/**
@@ -567,15 +779,14 @@ public class HttpUtil {
 	 * @param uriString
 	 * @param body
 	 * @param contentType
-	 * @param username The Basic authentication username. No basic auth if null.
-	 * @param password The Basic authentication password. No basic auth if null.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response put(String uriString, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
-		return putBody(new HttpPut(uriString), body, contentType, username, password);
+	public static Response put(String uriString, String body, ContentType contentType, Credentials credentials) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uriString), body, contentType, credentials);
 	}
 
 	/**
@@ -590,7 +801,7 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response put(URI uri, String body, ContentType contentType) throws URISyntaxException, HttpException{
-		return putBody(new HttpPut(uri), body, contentType, null, null);
+		return putBody(new HttpPut(uri), body, contentType, null);
 	}
 
 	/**
@@ -599,15 +810,30 @@ public class HttpUtil {
 	 * @param uri
 	 * @param body
 	 * @param contentType
-	 * @param username The Basic authentication username. No basic auth if null.
-	 * @param password The Basic authentication password. No basic auth if null.
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response put(URI uri, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uri), body, contentType, new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP PUT on the given URL.
+	 *
+	 * @param uri
+	 * @param body
+	 * @param contentType
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response put(URI uri, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException{
-		return putBody(new HttpPut(uri), body, contentType, username, password);
+	public static Response put(URI uri, String body, ContentType contentType, Credentials credentials) throws URISyntaxException, HttpException{
+		return putBody(new HttpPut(uri), body, contentType, credentials);
 	}
 
 	/**
@@ -621,15 +847,15 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response delete(String url) throws URISyntaxException, HttpException {
-		return send(new HttpDelete(url), null, null);
+		return send(new HttpDelete(url), null);
 	}
 
 	/**
 	 * Performs an HTTP DELETE on the given URL.
 	 *
 	 * @param url The URL to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username username
+	 * @param password password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
@@ -638,7 +864,23 @@ public class HttpUtil {
 	 */
 	public static Response delete(String url, String username, String password)
 			throws URISyntaxException, HttpException {
-		return send(new HttpDelete(url), username, password);
+		return send(new HttpDelete(url), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP DELETE on the given URL.
+	 *
+	 * @param url The URL to connect to.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(String url, Credentials credentials)
+			throws URISyntaxException, HttpException {
+		return send(new HttpDelete(url), credentials);
 	}
 
 	/**
@@ -652,7 +894,7 @@ public class HttpUtil {
 	 * @throws HttpException
 	 */
 	public static Response delete(URI uri) throws URISyntaxException, HttpException {
-		return send(new HttpDelete(uri), null, null);
+		return send(new HttpDelete(uri), null);
 	}
 
 	/**
@@ -660,17 +902,33 @@ public class HttpUtil {
 	 * Basic auth is used if both username and pw are not null.
 	 *
 	 * @param uri The URI to connect to.
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param username username
+	 * @param password password
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	public static Response delete(URI uri, String username, String password)
+	public static Response delete(URI uri, String username, String password) throws URISyntaxException, HttpException {
+		return send(new HttpDelete(uri), new UsernamePasswordCredentials(username, password));
+	}
+
+	/**
+	 * Performs an HTTP DELETE on the given URI.
+	 * Basic auth is used if both username and pw are not null.
+	 *
+	 * @param uri The URI to connect to.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response delete(URI uri, Credentials credentials)
 			throws URISyntaxException, HttpException {
-		return send(new HttpDelete(uri), username, password);
+		return send(new HttpDelete(uri), credentials);
 	}
 
 	/**
@@ -678,13 +936,13 @@ public class HttpUtil {
 	 * @param httpRequest
 	 * @param body
 	 * @param contentType
-	 * @param username The Basic authentication username.
-	 * @param password The Basic authentication password.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
+	 *
 	 * @return The HTTP response as Response object.
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	private static Response putBody(HttpPut httpRequest, String body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException {
+	private static Response putBody(HttpPut httpRequest, String body, ContentType contentType, Credentials credentials) throws URISyntaxException, HttpException {
 
 		if (contentType != null && !StringUtils.isEmpty(body)) {
 			StringEntity stringEntity = new StringEntity(body, contentType);
@@ -692,7 +950,7 @@ public class HttpUtil {
 			httpRequest.setEntity(stringEntity);
 		}
 
-		return send(httpRequest, username, password);
+		return send(httpRequest, credentials);
 	}
 
 	/**
@@ -700,16 +958,14 @@ public class HttpUtil {
 	 * Basic auth is used if both username and pw are not null.
 	 *
 	 * @param httpRequest The HttpRequest to connect to.
-	 * @param username The Basic authentication username. No basic auth if null.
-	 * @param password The Basic authentication password. No basic auth if null.
+	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
 	 * @throws HttpException
 	 */
-	private static Response send(HttpRequestBase httpRequest, String username,
-			String password) throws URISyntaxException, HttpException {
+	private static Response send(HttpRequestBase httpRequest, Credentials credentials) throws URISyntaxException, HttpException {
 
 		CloseableHttpClient httpClient = null;
 		CloseableHttpResponse httpResponse = null;
@@ -733,12 +989,12 @@ public class HttpUtil {
 				.build();
 
 		// set (preemptive) authentication if credentials are given
-		if (username != null && password != null) {
+		if (credentials != null) {
 
 			CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 			credentialsProvider.setCredentials(
 					AuthScope.ANY,
-					new UsernamePasswordCredentials(username, password)
+					credentials
 			);
 
 			HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(),
