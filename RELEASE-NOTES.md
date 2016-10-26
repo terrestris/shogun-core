@@ -1,6 +1,8 @@
 # Release Notes
 
-## 0.1.1 (xxxx-xx-xx)
+## 0.1.2 (xxxx-xx-xx)
+
+## 0.1.1 (2016-10-26)
 
 * New features:
   * Some tree models have been introduced. See https://github.com/terrestris/shogun2/pull/208/ for details.
