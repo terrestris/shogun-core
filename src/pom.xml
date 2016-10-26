@@ -125,44 +125,44 @@
 
         <webapp-archetype-resource-pom>shogun2-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>8.0.33</tomcat.version>
+        <tomcat.version>8.0.38</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.2.5.RELEASE</spring.version>
+        <spring.version>4.2.8.RELEASE</spring.version>
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <jackson.version>2.6.6</jackson.version>
+        <jackson.version>2.6.7</jackson.version>
         <opencsv.version>3.8</opencsv.version>
-        <ehcache.version>2.10.1</ehcache.version>
+        <ehcache.version>2.10.3</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.1.0.Final</hibernate.version>
-        <hikari-jdk7.version>2.4.8</hikari-jdk7.version>
-        <hikari.version>2.5.0</hikari.version>
-        <h2.version>1.4.191</h2.version>
+        <hibernate.version>5.1.2.Final</hibernate.version>
+        <hikari-jdk7.version>2.4.9</hikari-jdk7.version>
+        <hikari.version>2.5.1</hikari.version>
+        <h2.version>1.4.192</h2.version>
 
         <!-- Testing -->
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>1.10.19</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
-        <greenmail.version>1.5.0</greenmail.version>
+        <greenmail.version>1.5.2</greenmail.version>
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
         <jacoco-maven-plugin.version>0.7.6.201602180812</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
-        <commons-io.version>2.4</commons-io.version>
-        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <commons-io.version>2.5</commons-io.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-dbutils.version>1.6</commons-dbutils.version>
         <commons-collections4.version>4.1</commons-collections4.version>
 
         <!-- Joda Time -->
-        <joda-time.version>2.9.3</joda-time.version>
+        <joda-time.version>2.9.4</joda-time.version>
         <!-- TODO: make use of the release candidate 3.2.0? -->
         <jadira-usertype-jodatime.version>2.0.1</jadira-usertype-jodatime.version>
 
@@ -182,7 +182,7 @@
         <structured-content-tools.version>1.3.9</structured-content-tools.version>
 
         <!-- Java Mail API -->
-        <javax-mail-api.version>1.5.5</javax-mail-api.version>
+        <javax-mail-api.version>1.5.6</javax-mail-api.version>
 
         <!-- Java Transaction API -->
         <jta.version>1.1</jta.version>
@@ -197,7 +197,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>1.6.4</powermock.version>
+        <powermock.version>1.6.5</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.14.0</jts.version>
