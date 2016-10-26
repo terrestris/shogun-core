@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.terrestris</groupId>
     <artifactId>shogun2</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
     <packaging>pom</packaging>
     <name>SHOGun2</name>
     <description>SHOGun2 is a Java based WebGIS framework</description>
@@ -27,7 +27,7 @@
         <url>https://github.com/terrestris/shogun2</url>
         <connection>scm:git:git://github.com/terrestris/shogun2.git</connection>
         <developerConnection>scm:git:git@github.com:terrestris/shogun2.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.1.1</tag>
     </scm>
 
     <ciManagement>
