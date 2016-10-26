@@ -2,6 +2,9 @@
 
 ## 0.1.2 (xxxx-xx-xx)
 
+* Changes:
+  * Connection pooling has been replaced by [HikariCP](http://brettwooldridge.github.io/HikariCP/). Beside that [HikariCP outperforms](https://github.com/brettwooldridge/HikariCP-benchmark) c3p0 insofar as performance is concerned, the major advantage is that there are less (required) parameters to tweak which makes the configuration of the connection pooling much simpler. Please take care of differing `artifactId` depending on your Java version
+
 ## 0.1.1 (2016-10-26)
 
 * New features:

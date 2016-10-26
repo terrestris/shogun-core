@@ -156,12 +156,6 @@
             <artifactId>h2</artifactId>
         </dependency>
 
-        <!-- Connection pooling -->
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-        </dependency>
-
         <!-- Joda Time -->
         <dependency>
             <groupId>joda-time</groupId>

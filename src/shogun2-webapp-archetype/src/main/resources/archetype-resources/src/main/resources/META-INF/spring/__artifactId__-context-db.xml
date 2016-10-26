@@ -20,23 +20,22 @@
         <constructor-arg value="${symbol_dollar}{ddl.tablePrefix}" />
     </bean>
 
-    <!-- Using c3p0 connection pooling. See http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/jdbc.html${symbol_pound}jdbc-datasource -->
-    <bean id="shogun2DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-        destroy-method="close">
-        <property name="driverClass" value="${symbol_dollar}{jdbc.driverClassName}" />
-        <property name="jdbcUrl" value="${symbol_dollar}{jdbc.url}" />
-        <property name="user" value="${symbol_dollar}{jdbc.username}" />
-        <property name="password" value="${symbol_dollar}{jdbc.password}" />
+    <!-- HIKARI CP config-->
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="connectionTestQuery" value="${symbol_dollar}{hikari.testQuery}" />
+        <property name="maximumPoolSize" value="${symbol_dollar}{hikari.maximumPoolSize}" />
+        <property name="dataSourceClassName" value="${symbol_dollar}{hikari.dataSourceClassName}"/>
+        <property name="dataSourceProperties">
+            <props>
+                <prop key="url">${symbol_dollar}{jdbc.url}</prop>
+                <prop key="user">${symbol_dollar}{jdbc.username}</prop>
+                <prop key="password">${symbol_dollar}{jdbc.password}</prop>
+            </props>
+        </property>
+    </bean>
 
-        <!-- Configuration of the c3p0 Connection Pool -->
-        <property name="initialPoolSize" value="${symbol_dollar}{c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${symbol_dollar}{c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${symbol_dollar}{c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${symbol_dollar}{c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${symbol_dollar}{c3p0.maxIdleTime}" />
-        <property name="acquireRetryAttempts" value="${symbol_dollar}{c3p0.acquireRetryAttempts}" />
-        <property name="acquireRetryDelay" value="${symbol_dollar}{c3p0.acquireRetryDelay}" />
-        <property name="checkoutTimeout" value="${symbol_dollar}{c3p0.checkoutTimeout}" />
+    <bean id="shogun2DataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <constructor-arg ref="hikariConfig"/>
     </bean>
 
     <bean id="sessionFactory"

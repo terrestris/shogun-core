@@ -132,13 +132,15 @@
         <spring-security.version>4.0.4.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
+        <slf4j.version>1.7.5</slf4j.version>
         <jackson.version>2.6.6</jackson.version>
         <opencsv.version>3.8</opencsv.version>
         <ehcache.version>2.10.1</ehcache.version>
 
         <!-- Persistence -->
         <hibernate.version>5.1.0.Final</hibernate.version>
-        <c3p0.version>0.9.5.2</c3p0.version>
+        <hikari-jdk7.version>2.4.8</hikari-jdk7.version>
+        <hikari.version>2.5.0</hikari.version>
         <h2.version>1.4.191</h2.version>
 
         <!-- Testing -->
@@ -217,6 +219,14 @@
             <properties>
                 <jdk.version>1.7</jdk.version>
             </properties>
+            <dependencies>
+                <!-- Connection Pooling -->
+                <dependency>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP-java7</artifactId>
+                    <version>${hikari-jdk7.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
 
         <!-- A profile for JDK 1.8 (and later) -->
@@ -230,6 +240,14 @@
                 <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
+            <dependencies>
+                <!-- Connection Pooling -->
+                <dependency>
+                    <groupId>com.zaxxer</groupId>
+                    <artifactId>HikariCP</artifactId>
+                    <version>${hikari.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
 
         <!-- A profile to configure the build of the Javadocs with UMLGraph.
@@ -443,6 +461,11 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
     </dependencies>
@@ -670,13 +693,6 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
-            </dependency>
-
-            <!-- Connection Pooling -->
-            <dependency>
-                <groupId>com.mchange</groupId>
-                <artifactId>c3p0</artifactId>
-                <version>${c3p0.version}</version>
             </dependency>
 
             <!-- Joda Time -->
