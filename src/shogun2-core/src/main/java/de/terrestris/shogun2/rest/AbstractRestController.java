@@ -10,10 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +57,27 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<E>> findAll() {
 		final List<E> resultList = this.service.findAll();
+
+		if (resultList != null && !resultList.isEmpty()) {
+			LOG.trace("Found a total of " + resultList.size()
+					+ " entities of type "
+					+ resultList.get(0).getClass().getSimpleName());
+		}
+
+		return new ResponseEntity<List<E>>(resultList, HttpStatus.OK);
+	}
+
+	/**
+	 * Find all entities that match the conditions from the query string.
+	 * 
+	 * The requestParams MultiValueMap contains all information from the query String @see {@link RequestParam}
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/filter", method = RequestMethod.GET)
+	public ResponseEntity<List<E>> findBySimpleFilter(@RequestParam MultiValueMap<String,String> requestParams) {
+
+		final List<E> resultList = this.service.findBySimpleFilter(requestParams);
 
 		if (resultList != null && !resultList.isEmpty()) {
 			LOG.trace("Found a total of " + resultList.size()
