@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.terrestris.shogun2.model.Application;
+
 /**
  * The Image Module is the Ext JS representation of an HTML img element.
  *
@@ -30,23 +32,23 @@ public class Button extends Module {
 	 * A text to display on the button.
 	 */
 	private String text;
-	
+
 	/**
 	 * The text showing up when hovering the button.
 	 */
 	private String tooltip;
-	
+
 	/**
 	 * A glyph String to display an iconFont sign. e.g. 'xf059@FontAwesome'
 	 */
 	private String glyph;
-	
+
 	/**
 	 * The module which is connected to the button, if action OPENMODULEWINDOW
-	 * set. 
+	 * set.
 	 */
 	private Module connectedModule;
-	
+
 	/**
 	 * If action TOGGLEINTERACTION is set: This string represents the ol3
 	 * interaction class. e.g. 'ol.interaction.DragZoom'
@@ -55,29 +57,35 @@ public class Button extends Module {
 
 	/**
 	 * The buttonAction describes the action/handler of the button.
-	 * 
+	 *
 	 * The String can be any of the ButtonClasses available in the
 	 * BasiGX Package (https://github.com/terrestris/BasiGX).
 	 * e.g. "ToggleLegend"
 	 * Use "Measurearea" or "Measureline" to specify the type of the
 	 * BasiGX.view.button.Measure.
-	 * 
+	 *
 	 * Additional there are two ActionTypes to be more flexible:
-	 * 
+	 *
 	 * OPENMODULEWINDOW (this.connectedModule required)
 	 *    Opens any module in an Ext.window.Window.
 	 * TOGGLEINTERACTION (this.interaction required)
 	 *    Toggles the functionality of an OpenLayers 3 interaction.
 	 */
 	private String buttonAction;
-	
+
+	/**
+	 * Whether or not this button is a default tool in an {@link Application}.
+	 *
+	 */
+	private Boolean defaultButton;
+
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
 	 * Hibernate: http://goo.gl/3Cr1pw
 	 */
 	public Button() {
 	}
-	
+
 	/**
 	 * @return the text
 	 */
@@ -163,6 +171,20 @@ public class Button extends Module {
 	}
 
 	/**
+	 * @return the defaultButton
+	 */
+	public Boolean getDefaultButton() {
+		return defaultButton;
+	}
+
+	/**
+	 * @param defaultButton the defaultButton to set
+	 */
+	public void setDefaultButton(Boolean defaultButton) {
+		this.defaultButton = defaultButton;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 *
 	 *      According to
@@ -180,6 +202,7 @@ public class Button extends Module {
 				append(getConnectedModule()).
 				append(getInteraction()).
 				append(getButtonAction()).
+				append(getDefaultButton()).
 				toHashCode();
 	}
 
@@ -204,6 +227,7 @@ public class Button extends Module {
 				append(getConnectedModule(), other.getConnectedModule()).
 				append(getInteraction(), other.getInteraction()).
 				append(getButtonAction(), other.getButtonAction()).
+				append(getDefaultButton(), other.getDefaultButton()).
 				isEquals();
 	}
 
