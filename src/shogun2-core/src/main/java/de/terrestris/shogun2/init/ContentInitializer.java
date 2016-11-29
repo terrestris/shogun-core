@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationProvider;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
@@ -39,14 +38,6 @@ public class ContentInitializer {
 	 */
 	@Autowired
 	protected InitializationService initService;
-
-	/**
-	 * We use the authenticationProvider to login with the admin user, that will
-	 * be created in this initializer.
-	 */
-	@Autowired
-	@Qualifier("shogun2AuthenticationProvider")
-	protected AuthenticationProvider authenticationProvider;
 
 	/**
 	 * The list of objects that shall be persisted.
