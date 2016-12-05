@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -24,6 +25,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
@@ -107,6 +109,11 @@ public class HttpUtilTest {
 	/**
 	 *
 	 */
+	private static final Header[] REQ_HEADERS = {new BasicHeader("Accept-Charset", "utf-8")};
+
+	/**
+	 *
+	 */
 	private static URI URI;
 
 	/**
@@ -178,8 +185,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void get_url_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URL, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+
+	@Test
 	public void get_uri() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void get_uri_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URI, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -190,8 +210,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void get_url_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URL, USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void get_uri_auth_pw() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URI, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void get_uri_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URI, USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -202,8 +234,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void get_url_auth_cred_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URL, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void get_uri_auth_cred() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.get(URI, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void get_uri_auth_cred_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.get(URI, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -214,8 +258,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_empty_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_empty() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -226,8 +282,22 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_empty_auth_pw_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_empty_auth_pw() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI,  USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty_auth_pw_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -238,8 +308,22 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_empty_auth_cred_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_empty_auth_cred() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_empty_auth_cred_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -250,8 +334,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_kvp_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_url_kvp_auth_pw() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_kvp_auth_pw_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -262,8 +358,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_kvp_auth_cred_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_KEY_VALUE_PAIRS, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_kvp() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_kvp_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -274,8 +382,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_uri_kvp_auth_pw_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_kvp_auth_cred() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_kvp_auth_cred_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_KEY_VALUE_PAIRS, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -286,8 +407,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_body_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_url_body_auth_pw() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_body_auth_pw_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD,
+				REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -298,8 +432,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_body_auth_cred_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_body() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_body_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -310,8 +457,22 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_uri_body_auth_pw_headers() throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD,
+				REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_body_auth_cred() throws URISyntaxException, UnsupportedEncodingException, HttpException {
 		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_body_auth_cred_headers()
+			throws URISyntaxException, UnsupportedEncodingException, HttpException {
+		Response response = HttpUtil.post(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -322,8 +483,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_multipart_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile(), REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_url_multipart_auth_pw() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.post(URL, getTestFile(), USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_url_multipart_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile(), USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -334,8 +507,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_url_multipart_auth_cred_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URL, getTestFile(), CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_multipart() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.post(URI, getTestFile());
+		assertNotNull(response);
+	}
+
+
+	@Test
+	public void post_uri_multipart_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile(), REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -346,8 +532,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void post_uri_multipart_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile(), USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void post_uri_multipart_auth_cred() throws URISyntaxException, HttpException {
 		Response response = HttpUtil.post(URI, getTestFile(), CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void post_uri_multipart_auth_cred_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.post(URI, getTestFile(), CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -358,8 +556,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_uri_empty_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_url_empty() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URL);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_empty_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -370,8 +580,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_uri_empty_auth_pw_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_url_empty_auth_pw() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URL,  USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_empty_auth_pw_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL,  USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -382,8 +604,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_uri_empty_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_url_empty_auth_cred() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URL, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_empty_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -394,8 +628,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_uri_body_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_uri_body_auth_pw() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_uri_body_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD,
+				REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -406,8 +653,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_uri_body_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URI, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_url_body() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_body_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -418,8 +677,21 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void put_url_body_auth_pw_headers() throws URISyntaxException, HttpException {
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, USERNAME, PASSWORD,
+				REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void put_url_body_auth_cred() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void put_url_body_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.put(URL, POST_XML_BODY, POST_XML_BODY_CONTENT_TYPE, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -430,7 +702,7 @@ public class HttpUtilTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void checkIllegalArgumentException_all() throws URISyntaxException, HttpException{
-		HttpUtil.get(URL, null, null);
+		HttpUtil.get(URL, null, null, null);
 	}
 
 	/**
@@ -450,8 +722,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void delete_url_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URL, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void delete_uri() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.delete(URI);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void delete_uri_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URI, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -462,8 +746,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void delete_url_auth_pw_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URL, USERNAME, PASSWORD, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void delete_uri_auth_pw() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.delete(URI, USERNAME, PASSWORD);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void delete_uri_auth_pw_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URI, USERNAME, PASSWORD, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
@@ -474,8 +770,20 @@ public class HttpUtilTest {
 	}
 
 	@Test
+	public void delete_url_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URL, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
 	public void delete_uri_auth_cred() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.delete(URI, CREDENTIALS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void delete_uri_auth_cred_headers() throws URISyntaxException, HttpException{
+		Response response = HttpUtil.delete(URI, CREDENTIALS, REQ_HEADERS);
 		assertNotNull(response);
 	}
 
