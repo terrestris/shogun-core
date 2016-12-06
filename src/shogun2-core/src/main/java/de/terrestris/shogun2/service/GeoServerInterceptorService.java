@@ -359,7 +359,7 @@ public class GeoServerInterceptorService {
 	 * @throws URISyntaxException
 	 * @throws InterceptorException
 	 */
-	private URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace)
+	public URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace)
 			throws URISyntaxException, InterceptorException {
 
 		URI uri = null;
