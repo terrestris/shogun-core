@@ -1,14 +1,17 @@
 package de.terrestris.shogun2.service;
 
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.elasticsearch.tools.content.StructureUtils;
@@ -47,7 +50,8 @@ public class Csv2ExtJsLocaleService {
 			throw new Exception("CSV locale resource for " + appId + " does not exist.");
 		}
 
-		Reader reader = new FileReader(csvResource.getFile());
+		FileInputStream fileIs = new FileInputStream(csvResource.getFile().getCanonicalPath());
+		Reader reader = new InputStreamReader(fileIs, StandardCharsets.UTF_8);
 		CSVReader csvReader = new CSVReader(reader, ';', '"', '\\');
 
 		try {
@@ -107,8 +111,9 @@ public class Csv2ExtJsLocaleService {
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			reader.close();
-			csvReader.close();
+			IOUtils.closeQuietly(fileIs);
+			IOUtils.closeQuietly(reader);
+			IOUtils.closeQuietly(csvReader);
 		}
 
 		return resultMap;
