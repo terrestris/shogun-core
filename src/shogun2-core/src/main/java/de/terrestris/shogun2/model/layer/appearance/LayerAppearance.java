@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.model.layer.Layer;
 
 /**
  *
@@ -31,6 +32,16 @@ public class LayerAppearance extends PersistentObject{
 	 *
 	 */
 	private String attribution;
+
+	/**
+	 *
+	 */
+	private Boolean hoverable;
+
+	/**
+	 *
+	 */
+	private String hoverTemplate;
 
 	/**
 	 *
@@ -96,6 +107,34 @@ public class LayerAppearance extends PersistentObject{
 	 */
 	public void setAttribution(String attribution) {
 		this.attribution = attribution;
+	}
+
+	/**
+	 * @return the hoverable
+	 */
+	public Boolean getHoverable() {
+		return hoverable;
+	}
+
+	/**
+	 * @param hoverable the hoverable to set
+	 */
+	public void setHoverable(Boolean hoverable) {
+		this.hoverable = hoverable;
+	}
+
+	/**
+	 * @return the hoverTemplate
+	 */
+	public String getHoverTemplate() {
+		return hoverTemplate;
+	}
+
+	/**
+	 * @param hoverTemplate the hoverTemplate to set
+	 */
+	public void setHoverTemplate(String hoverTemplate) {
+		this.hoverTemplate = hoverTemplate;
 	}
 
 	/**
@@ -187,6 +226,8 @@ public class LayerAppearance extends PersistentObject{
 				append(getMinResolution()).
 				append(getOpacity()).
 				append(getVisible()).
+				append(getHoverable()).
+				append(getHoverTemplate()).
 				toHashCode();
 	}
 
@@ -212,6 +253,8 @@ public class LayerAppearance extends PersistentObject{
 				append(getMinResolution(), other.getMinResolution()).
 				append(getOpacity(), other.getOpacity()).
 				append(getVisible(), other.getVisible()).
+				append(getHoverable(), other.getHoverable()).
+				append(getHoverTemplate(), other.getHoverTemplate()).
 				isEquals();
 	}
 
