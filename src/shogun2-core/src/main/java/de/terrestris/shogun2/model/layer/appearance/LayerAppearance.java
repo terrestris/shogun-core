@@ -1,6 +1,15 @@
 package de.terrestris.shogun2.model.layer.appearance;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,6 +17,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.terrestris.shogun2.converter.PropertyValueConverter;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.Layer;
 
@@ -42,6 +52,16 @@ public class LayerAppearance extends PersistentObject{
 	 *
 	 */
 	private String hoverTemplate;
+
+	/**
+	 *
+	 */
+	@ElementCollection
+	@MapKeyColumn(name = "PROPERTY")
+	@Column(name = "VALUE")
+	@CollectionTable(joinColumns = @JoinColumn(name = "APPEARANCE_ID"))
+	@Convert(converter = PropertyValueConverter.class, attributeName="value")
+	private Map<String, Object> properties = new HashMap<>();
 
 	/**
 	 *
@@ -138,6 +158,20 @@ public class LayerAppearance extends PersistentObject{
 	}
 
 	/**
+	 * @return the properties
+	 */
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	/**
+	 * @param properties the properties to set
+	 */
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
@@ -228,6 +262,7 @@ public class LayerAppearance extends PersistentObject{
 				append(getVisible()).
 				append(getHoverable()).
 				append(getHoverTemplate()).
+				append(getProperties()).
 				toHashCode();
 	}
 
@@ -255,6 +290,7 @@ public class LayerAppearance extends PersistentObject{
 				append(getVisible(), other.getVisible()).
 				append(getHoverable(), other.getHoverable()).
 				append(getHoverTemplate(), other.getHoverTemplate()).
+				append(getProperties(), other.getProperties()).
 				isEquals();
 	}
 
