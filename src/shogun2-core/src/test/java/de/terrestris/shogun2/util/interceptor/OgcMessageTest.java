@@ -64,6 +64,13 @@ public class OgcMessageTest {
 	}
 
 	@Test
+	public void is_wps() {
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WPS,
+				null, null, null, null);
+		assertEquals(true, message.isWps());
+	}
+
+	@Test
 	public void is_wms_get_capabilities() {
 		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WMS,
 				OgcEnum.OperationType.GET_CAPABILITIES, null, null, null);
@@ -159,6 +166,27 @@ public class OgcMessageTest {
 		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WCS,
 				OgcEnum.OperationType.GET_COVERAGE, null, null, null);
 		assertEquals(true, message.isWcsGetCoverage());
+	}
+
+	@Test
+	public void is_wps_get_capabilities() {
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WPS,
+				OgcEnum.OperationType.GET_CAPABILITIES, null, null, null);
+		assertEquals(true, message.isWpsGetCapabilities());
+	}
+
+	@Test
+	public void is_wps_describe_process() {
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WPS,
+				OgcEnum.OperationType.DESCRIBE_PROCESS, null, null, null);
+		assertEquals(true, message.isWpsDescribeProcess());
+	}
+
+	@Test
+	public void is_wps_execute() {
+		OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WPS,
+				OgcEnum.OperationType.EXECUTE, null, null, null);
+		assertEquals(true, message.isWpsExecute());
 	}
 
 	@Test

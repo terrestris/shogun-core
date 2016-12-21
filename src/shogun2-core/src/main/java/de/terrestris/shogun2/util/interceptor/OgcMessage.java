@@ -181,6 +181,15 @@ public class OgcMessage {
 	 *
 	 * @return
 	 */
+	public boolean isWps() {
+		return this.getService() != null &&
+				this.getService().equals(OgcEnum.ServiceType.WPS);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isWmsGetCapabilities() {
 		return this.isWms() &&
 				this.getOperation() != null &&
@@ -316,6 +325,37 @@ public class OgcMessage {
 				this.getOperation() != null &&
 				this.getOperation().equals(OgcEnum.OperationType.GET_COVERAGE);
 	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isWpsGetCapabilities() {
+		return this.isWps() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isWpsDescribeProcess() {
+		return this.isWps() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.DESCRIBE_PROCESS);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isWpsExecute() {
+		return this.isWps() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.EXECUTE);
+	}
+
 
 	/**
 	 *
