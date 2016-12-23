@@ -139,11 +139,11 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 					}
 
 				} else if (Arrays.asList(OgcEnum.EndPoint.getAllValues()).contains(parameter)) {
-					value = OgcXmlUtil.getPathInDocument(
-							document, "//TypeName/text()");
+					value = OgcXmlUtil.getPathInDocument(document,
+							"//TypeName/text() | //TypeNames/text()");
 					if (StringUtils.isEmpty(value)) {
 						value = OgcXmlUtil.getPathInDocument(document,
-								"//@typeName");
+								"//@typeName | //@typeNames");
 					}
 				}
 
