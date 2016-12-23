@@ -126,6 +126,7 @@ public class OgcEnum {
 		LAYERS("LAYERS"),
 		LAYER("LAYER"),
 		TYPENAME("TYPENAME"),
+		TYPENAMES("TYPENAMES"),
 		NAMESPACE("NAMESPACE");
 
 		private final String value;
