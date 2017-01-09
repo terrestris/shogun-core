@@ -140,7 +140,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 				} else if (Arrays.asList(OgcEnum.EndPoint.getAllValues()).contains(parameter)) {
 					value = OgcXmlUtil.getPathInDocument(document,
-							"//TypeName/text() | //TypeNames/text()");
+							"//TypeName/text() | //TypeNames/text() | //GetCoverage/Identifier/text()");
 					if (StringUtils.isEmpty(value)) {
 						value = OgcXmlUtil.getPathInDocument(document,
 								"//@typeName | //@typeNames");
