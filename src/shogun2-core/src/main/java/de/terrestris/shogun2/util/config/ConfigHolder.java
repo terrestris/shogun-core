@@ -13,10 +13,20 @@ import org.springframework.stereotype.Component;
 @Component("configHolder")
 public class ConfigHolder {
 
-	@Value("${role.superAdminRoleName}")
+	/**
+	 * The name of the (super) admin role. If the property configured in the
+	 * {@link Value} annotation is not present, the empty string "" will be used
+	 * as a fallback.
+	 */
+	@Value("${role.superAdminRoleName:}")
 	private String superAdminRoleName;
 
-	@Value("${role.defaultUserRoleName}")
+	/**
+	 * The name of the default user role. If the property configured in the
+	 * {@link Value} annotation is not present, the empty string "" will be used
+	 * as a fallback.
+	 */
+	@Value("${role.defaultUserRoleName:}")
 	private String defaultUserRoleName;
 
 	/**
