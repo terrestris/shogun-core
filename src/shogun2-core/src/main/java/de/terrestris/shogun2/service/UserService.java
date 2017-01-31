@@ -74,7 +74,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 *
 	 * TODO: We should only autowire a string with the role name...
 	 */
-	@Autowired
+	@Autowired(required = false)
 	@Qualifier("userRole")
 	private Role defaultUserRole;
 
@@ -162,13 +162,16 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 		E user = (E) token.getUser();
 		user.setActive(true);
 
-		// get the persisted default user role
-		final String defaultRoleName = getDefaultUserRole().getName();
-		Role persistedDefaultUserRole = roleService
-				.findByRoleName(defaultRoleName);
+		// set the persisted default user role if available
+		if(defaultUserRole != null) {
+			final String defaultRoleName = defaultUserRole.getName();
+			Role persistedDefaultUserRole = roleService.findByRoleName(defaultRoleName);
 
-		// assign the default user role
-		user.getRoles().add(persistedDefaultUserRole);
+			if (persistedDefaultUserRole != null) {
+				// assign the default user role
+				user.getRoles().add(persistedDefaultUserRole);
+			}
+		}
 
 		// update the user
 		dao.saveOrUpdate((E) user);
