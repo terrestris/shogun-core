@@ -77,8 +77,10 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 
 			User user = null;
 
-			if(authentication.getPrincipal() instanceof User) {
-				final User principal = (User) authentication.getPrincipal();
+			final Object principalObject = authentication.getPrincipal();
+
+			if(principalObject instanceof User) {
+				final User principal = (User) principalObject;
 
 				if(usePlainPrincipal == true) {
 					user = principal;
