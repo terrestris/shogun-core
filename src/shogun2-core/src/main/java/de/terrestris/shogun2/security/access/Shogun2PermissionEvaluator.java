@@ -42,6 +42,19 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	private UserDao<User> userDao;
 
 	/**
+	 * If set to true, the plain principal object from the spring security
+	 * context will be used as "user". Otherwise the "full" user object will be
+	 * loaded from the SHOGun2 database.
+	 *
+	 * It may be helpful to set this to true, if the user/principal object from
+	 * the security context contains information that is not persisted in the
+	 * database.
+	 *
+	 * Setting this to the null value is the same as using "false".
+	 */
+	private Boolean usePlainPrincipal = false;
+
+	/**
 	 *
 	 */
 	@SuppressWarnings("rawtypes")
@@ -64,9 +77,17 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 
 			User user = null;
 
-			if(authentication.getPrincipal() instanceof User) {
-				// get the "full" user from the database
-				user = userDao.findById(((User) authentication.getPrincipal()).getId());
+			final Object principalObject = authentication.getPrincipal();
+
+			if(principalObject instanceof User) {
+				final User principal = (User) principalObject;
+
+				if(usePlainPrincipal == true) {
+					user = principal;
+				} else {
+					// get the "full" user from the database
+					user = userDao.findById(principal.getId());
+				}
 			}
 
 			final PersistentObject persistentObject = (PersistentObject) targetDomainObject;
@@ -177,6 +198,20 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
 	 */
 	public void setUserDao(UserDao<User> userDao) {
 		this.userDao = userDao;
+	}
+
+	/**
+	 * @return the usePlainPrincipal
+	 */
+	public Boolean getUsePlainPrincipal() {
+		return usePlainPrincipal;
+	}
+
+	/**
+	 * @param usePlainPrincipal the usePlainPrincipal to set
+	 */
+	public void setUsePlainPrincipal(Boolean usePlainPrincipal) {
+		this.usePlainPrincipal = usePlainPrincipal;
 	}
 
 	/**
