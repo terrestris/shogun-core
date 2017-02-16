@@ -16,7 +16,7 @@ import de.terrestris.shogun2.service.WpsPrimitiveService;
 @RestController
 @RequestMapping("/wpsprimitives")
 public class WpsPrimitiveRestController<E extends WpsPrimitive, D extends WpsPrimitiveDao<E>, S extends WpsPrimitiveService<E, D>>
-		extends AbstractRestController<E, D, S> {
+		extends WpsParameterRestController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
