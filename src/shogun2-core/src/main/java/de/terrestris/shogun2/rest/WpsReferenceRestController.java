@@ -16,7 +16,7 @@ import de.terrestris.shogun2.service.WpsReferenceService;
 @RestController
 @RequestMapping("/wpsreferences")
 public class WpsReferenceRestController<E extends WpsReference, D extends WpsReferenceDao<E>, S extends WpsReferenceService<E, D>>
-		extends AbstractRestController<E, D, S> {
+		extends WpsParameterRestController<E, D, S> {
 
 	/**
 	 * Default constructor, which calls the type-constructor
