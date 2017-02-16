@@ -45,7 +45,7 @@ public class WpsProcessExecuteController<E extends WpsProcessExecute, D extends 
 	 */
 	@Override
 	@Autowired
-	@Qualifier("wpsReferenceService")
+	@Qualifier("wpsProcessExecuteService")
 	public void setService(S service) {
 		this.service = service;
 	}
