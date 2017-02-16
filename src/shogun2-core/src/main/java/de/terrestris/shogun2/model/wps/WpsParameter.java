@@ -23,11 +23,6 @@ import de.terrestris.shogun2.model.PersistentObject;
 	property = "classType",
 	visible = true
 )
-//@JsonSubTypes({
-//		@Type(value = PointGeometry.class, name = "Point"),
-//		@Type(value = LineGeometry.class, name = "LineString"),
-//		@Type(value = PolygonGeometry.class, name = "Polygon")
-//})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class WpsParameter extends PersistentObject {
 
