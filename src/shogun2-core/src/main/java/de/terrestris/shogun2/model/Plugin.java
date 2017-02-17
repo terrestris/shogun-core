@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * 
+ *
  */
 @Entity
 @Table
@@ -28,9 +28,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Plugin extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/** A name (or display name) */
+	private String name;
 
 	/** the class name of the plugin **/
 	private String className;
@@ -59,6 +62,20 @@ public class Plugin extends PersistentObject {
 	 * Constructor
 	 */
 	public Plugin() {
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -144,6 +161,7 @@ public class Plugin extends PersistentObject {
 	public int hashCode() {
 		return new HashCodeBuilder(47, 19) // two randomly chosen prime numbers
 			.appendSuper(super.hashCode())
+			.append(getName())
 			.append(getClassName())
 			.append(getXtype())
 			.toHashCode();
@@ -164,6 +182,7 @@ public class Plugin extends PersistentObject {
 
 		return new EqualsBuilder()
 			.appendSuper(super.equals(other))
+			.append(getName(), other.getName())
 			.append(getClassName(), other.getClassName())
 			.append(getXtype(), other.getXtype())
 			.isEquals();
@@ -176,6 +195,7 @@ public class Plugin extends PersistentObject {
 	public String toString(){
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.appendSuper(super.toString())
+			.append("name", name)
 			.append("className", className)
 			.append("xtype", xtype)
 			.toString();

@@ -26,11 +26,6 @@ public class WpsPlugin extends Plugin {
 	/**
 	 * 
 	 */
-	private String name;
-
-	/**
-	 * 
-	 */
 	@ManyToOne
 	private WpsProcessExecute process;
 
@@ -39,23 +34,6 @@ public class WpsPlugin extends Plugin {
 	 */
 	public WpsPlugin() {
 	}
-
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
 
 	/**
 	 * @return the process
@@ -84,7 +62,7 @@ public class WpsPlugin extends Plugin {
 	public int hashCode() {
 		return new HashCodeBuilder(19, 59) // two randomly chosen prime numbers
 			.appendSuper(super.hashCode())
-			.append(getName())
+			.append(getProcess())
 			.toHashCode();
 	}
 
@@ -103,7 +81,7 @@ public class WpsPlugin extends Plugin {
 
 		return new EqualsBuilder()
 			.appendSuper(super.equals(other))
-			.append(getName(), other.getName())
+			.append(getProcess(), other.getProcess())
 			.isEquals();
 	}
 
@@ -114,7 +92,7 @@ public class WpsPlugin extends Plugin {
 	public String toString(){
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.appendSuper(super.toString())
-			.append("name", name)
+			.append("process", process)
 			.toString();
 	}
 }
