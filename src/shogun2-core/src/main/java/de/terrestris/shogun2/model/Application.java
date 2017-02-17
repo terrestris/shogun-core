@@ -1,12 +1,18 @@
 package de.terrestris.shogun2.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,8 +21,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.ReadableDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import de.terrestris.shogun2.converter.PluginIdResolver;
 import de.terrestris.shogun2.model.module.CompositeModule;
 
 /**
@@ -76,6 +86,24 @@ public class Application extends PersistentObject {
 	 */
 	@ManyToOne
 	private CompositeModule viewport;
+
+	/**
+	 * The plugins available in this application
+	 */
+	@ManyToMany
+	@JoinTable(
+		joinColumns = { @JoinColumn(name = "APPLICATION_ID") },
+		inverseJoinColumns = { @JoinColumn(name = "PLUGIN_ID") }
+	)
+	@OrderColumn(name = "IDX")
+	// The List of layers will be serialized (JSON) as an array of ID values
+	@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id",
+		resolver = PluginIdResolver.class
+	)
+	@JsonIdentityReference(alwaysAsId = true)
+	private List<Plugin> plugins = new ArrayList<>();
 
 	/**
 	 * Explicitly adding the default constructor as this is important, e.g. for
@@ -170,6 +198,20 @@ public class Application extends PersistentObject {
 	 */
 	public void setViewport(CompositeModule viewport) {
 		this.viewport = viewport;
+	}
+
+	/**
+	 * @return the plugins
+	 */
+	public List<Plugin> getPlugins() {
+		return plugins;
+	}
+
+	/**
+	 * @param plugins the plugins to set
+	 */
+	public void setPlugins(List<Plugin> plugins) {
+		this.plugins = plugins;
 	}
 
 	/**
