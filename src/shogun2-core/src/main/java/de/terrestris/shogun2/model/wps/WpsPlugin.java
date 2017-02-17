@@ -1,6 +1,7 @@
 package de.terrestris.shogun2.model.wps;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -30,6 +31,7 @@ public class WpsPlugin extends Plugin {
 	/**
 	 * 
 	 */
+	@ManyToOne
 	private WpsProcessExecute process;
 
 	/**
