@@ -9,27 +9,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
- * 
+ *
  */
 @Entity
-@JsonTypeInfo(
-	use = JsonTypeInfo.Id.MINIMAL_CLASS,
-	include = JsonTypeInfo.As.PROPERTY,
-	property = "classType",
-	visible = true
-)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class WpsParameter extends PersistentObject {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
+	private final String classType;
 
 	/**
 	 *
@@ -40,6 +37,15 @@ public abstract class WpsParameter extends PersistentObject {
 	 * Constructor
 	 */
 	public WpsParameter() {
+		this.classType = getClass().getSimpleName();
+	}
+
+
+	/**
+	 * @return the classType
+	 */
+	public String getClassType() {
+		return classType;
 	}
 
 
