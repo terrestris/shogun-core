@@ -36,9 +36,11 @@ public class Plugin extends PersistentObject {
 	private String name;
 
 	/** the class name of the plugin **/
+	@Column(unique = true)
 	private String className;
 
 	/** the xtype of the plugin **/
+	@Column(unique = true)
 	private String xtype;
 
 	/** the JavaScript (JS) code of the plugin **/
