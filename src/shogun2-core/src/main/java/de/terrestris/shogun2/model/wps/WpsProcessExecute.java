@@ -3,10 +3,10 @@ package de.terrestris.shogun2.model.wps;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
@@ -40,12 +40,13 @@ public class WpsProcessExecute extends WpsReference {
 	/**
 	 *
 	 */
-	@ElementCollection
-	@MapKeyColumn(name = "INPUT_IDENTIFIER")
-	@CollectionTable(
-		name = "WPSPROCESSEXECUTE_INPUTS",
-		joinColumns = @JoinColumn(name = "WPSPROCESSEXECUTE_ID")
-	)
+	@ManyToMany
+	@JoinTable(
+			name = "WPSPROCESSEXECUTES_INPUTS",
+			joinColumns = { @JoinColumn(name = "WPSEXECUTEPROCESS_ID") },
+			inverseJoinColumns = { @JoinColumn(name = "WPSPARAMETER_ID") }
+		)
+	@MapKeyColumn(name="IDENTIFIER")
 	private Map<String, WpsParameter> input = new HashMap<>();
 
 	/**
