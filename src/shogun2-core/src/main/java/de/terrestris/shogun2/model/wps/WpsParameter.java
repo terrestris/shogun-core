@@ -9,6 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import de.terrestris.shogun2.model.PersistentObject;
 
 /**
@@ -16,6 +20,15 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		property = "classType"
+)
+@JsonSubTypes({
+		@Type(value = WpsPrimitive.class, name = "WpsPrimitive"),
+		@Type(value = WpsReference.class, name = "WpsReference"),
+		@Type(value = WpsProcessExecute.class, name = "WpsProcessExecute")
+})
 public abstract class WpsParameter extends PersistentObject {
 
 	/**
