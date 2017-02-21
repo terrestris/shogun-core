@@ -1,9 +1,15 @@
 # Release Notes
 
-## 0.1.2 (xxxx-xx-xx)
+## 0.1.3 (xxxx-xx-xx)
 
+## 0.1.2 (2017-02-21)
+
+* New features:
+  * A REST filter feature has been introduced in https://github.com/terrestris/shogun2/pull/216 which allows basic/simple filtering based on primitve fields of (arbitrary) entities.
 * Changes:
   * Connection pooling has been replaced by [HikariCP](http://brettwooldridge.github.io/HikariCP/). Beside that [HikariCP outperforms](https://github.com/brettwooldridge/HikariCP-benchmark) c3p0 insofar as performance is concerned, the major advantage is that there are less (required) parameters to tweak which makes the configuration of the connection pooling much simpler. Please take care of differing `artifactId` depending on your Java version
+  * The `HttpUtil` now offers the possibility to add custom HTTP headers to requests: https://github.com/terrestris/shogun2/pull/218
+  * The `Shogun2PermissionEvaluator` can now be configured to use the *plain* `Principal` object from the spring security context (instead of always fetching a full SHOGun2-database user object): https://github.com/terrestris/shogun2/pull/229
 
 ## 0.1.1 (2016-10-26)
 
