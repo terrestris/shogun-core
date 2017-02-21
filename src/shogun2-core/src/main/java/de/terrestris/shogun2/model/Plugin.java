@@ -166,6 +166,8 @@ public class Plugin extends PersistentObject {
 			.append(getName())
 			.append(getClassName())
 			.append(getXtype())
+			.append(getSourceCode())
+			.append(getStyleSheet())
 			.toHashCode();
 	}
 
@@ -187,6 +189,8 @@ public class Plugin extends PersistentObject {
 			.append(getName(), other.getName())
 			.append(getClassName(), other.getClassName())
 			.append(getXtype(), other.getXtype())
+			.append(getSourceCode(), other.getSourceCode())
+			.append(getStyleSheet(), other.getStyleSheet())
 			.isEquals();
 	}
 
@@ -200,6 +204,8 @@ public class Plugin extends PersistentObject {
 			.append("name", name)
 			.append("className", className)
 			.append("xtype", xtype)
+			.append("sourcecode", sourceCode)
+			.append("stylesheet", styleSheet)
 			.toString();
 	}
 }
