@@ -9,6 +9,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -44,11 +45,11 @@ public class Plugin extends PersistentObject {
 	private String xtype;
 
 	/** the JavaScript (JS) code of the plugin **/
-	@Column(length = Integer.MAX_VALUE)
+	@Lob
 	private String sourceCode;
 
 	/** the Cascading Style Sheets (CSS) of the plugin **/
-	@Column(length = Integer.MAX_VALUE)
+	@Lob
 	private String styleSheet;
 
 	/** A list of assigned {@link PluginUploadFile}s. */
