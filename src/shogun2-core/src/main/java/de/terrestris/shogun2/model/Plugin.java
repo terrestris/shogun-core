@@ -37,7 +37,7 @@ public class Plugin extends PersistentObject {
 	private String name;
 
 	/** the class name of the plugin **/
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String className;
 
 	/** the xtype of the plugin **/
@@ -99,7 +99,6 @@ public class Plugin extends PersistentObject {
 	/**
 	 * @return the xtype
 	 */
-	@Column(unique = true, nullable = false)
 	public String getXtype() {
 		return xtype;
 	}
