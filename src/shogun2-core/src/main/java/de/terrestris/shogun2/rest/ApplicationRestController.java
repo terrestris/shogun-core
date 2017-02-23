@@ -1,8 +1,13 @@
 package de.terrestris.shogun2.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.dao.ApplicationDao;
@@ -45,6 +50,23 @@ public class ApplicationRestController<E extends Application, D extends Applicat
 	@Qualifier("applicationService")
 	public void setService(S service) {
 		this.service = service;
+	}
+
+	/**
+	 * Find all template applications.
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/templates", method = RequestMethod.GET)
+	public ResponseEntity<List<E>> findAllTemplates() {
+		final List<E> resultList = this.service.findAllTemplates();
+
+		if (resultList != null && !resultList.isEmpty()) {
+			LOG.trace("Found a total of " + resultList.size()
+					+ " template applications.");
+		}
+
+		return new ResponseEntity<List<E>>(resultList, HttpStatus.OK);
 	}
 
 }
