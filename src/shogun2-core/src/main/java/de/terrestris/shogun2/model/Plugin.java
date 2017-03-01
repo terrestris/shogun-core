@@ -9,7 +9,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -17,6 +16,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -45,11 +45,11 @@ public class Plugin extends PersistentObject {
 	private String xtype;
 
 	/** the JavaScript (JS) code of the plugin **/
-	@Lob
+	@Type(type="text")
 	private String sourceCode;
 
 	/** the Cascading Style Sheets (CSS) of the plugin **/
-	@Lob
+	@Type(type="text")
 	private String styleSheet;
 
 	/** A list of assigned {@link PluginUploadFile}s. */
