@@ -7,12 +7,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +146,34 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	public void delete(E e) {
 		LOG.trace("Deleting " + entityClass.getSimpleName() + " with ID " + e.getId());
 		getSession().delete(e);
+	}
+
+	/**
+	 * Unproxy the entity (and eagerly fetch properties).
+	 */
+	@SuppressWarnings("unchecked")
+	public E unproxy(E e) {
+		if (e == null) {
+			throw new NullPointerException("Entity passed for initialization is null");
+		}
+
+		Hibernate.initialize(e);
+
+		if (e instanceof HibernateProxy) {
+			e = (E) ((HibernateProxy) e).getHibernateLazyInitializer().getImplementation();
+		}
+
+		return e;
+	}
+
+	/**
+	 * Detach an entity from the hibernate session
+	 *
+	 * @param e
+	 */
+	public void evict(E e) {
+		LOG.trace("Detaching " + entityClass.getSimpleName() + " with ID " + e.getId() + " from hibernate session");
+		getSession().evict(e);
 	}
 
 	/**
