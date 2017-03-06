@@ -171,6 +171,17 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	}
 
 	/**
+	 * TODO for NB: write docs
+	 *
+	 * @param property
+	 * @param subEntity
+	 * @return
+	 */
+	public List<E> findAllReferencing(String property, PersistentObject subEntity) {
+		return dao.findAllReferencing(property, subEntity);
+	}
+
+	/**
 	 *
 	 * @param e
 	 */

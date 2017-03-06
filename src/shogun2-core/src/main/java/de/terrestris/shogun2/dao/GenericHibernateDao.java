@@ -14,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
@@ -25,6 +26,7 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.PermissionCollection;
 import de.terrestris.shogun2.paging.PagingResult;
+import de.terrestris.shogun2.util.entity.EntityUtil;
 
 /**
  * The superclass for all data access objects. Provides basic CRUD
@@ -91,6 +93,26 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	public E findById(ID id) {
 		LOG.trace("Finding " + entityClass.getSimpleName() + " with ID " + id);
 		return (E) getSession().get(entityClass, id);
+	}
+
+	/**
+	 * TODO for NB: write docs
+	 *
+	 * @param property
+	 * @param subEntity
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<E> findAllReferencing(String property, PersistentObject subEntity) {
+		// TODO for NB: Double check the implementation of this utility, please
+		if (EntityUtil.isCollectionField(entityClass, property, subEntity.getClass())) {
+			Criteria criteria = getSession().createCriteria(entityClass, "p");
+			criteria.createAlias(property, "s");
+			criteria.add(Restrictions.eq("s.id", subEntity.getId()));
+			// TODO for NB: what about result transformers?
+			return (List<E>) criteria.list();
+		}
+		return null; // TODO for NB or an empty collection?
 	}
 
 	/**

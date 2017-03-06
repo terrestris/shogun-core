@@ -2,6 +2,8 @@ package de.terrestris.shogun2.util.entity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,6 +23,74 @@ import org.springframework.util.MultiValueMap;
  *
  */
 public class EntityUtil {
+
+	/**
+	 * TODO for NB: write docs
+	 *
+	 * @param clazz
+	 * @param fieldName
+	 * @return
+	 */
+	public static Field getField(Class<?> clazz, String fieldName) {
+		Field field = null;
+		if(hasField(clazz, fieldName)) {
+			field = FieldUtils.getDeclaredField(clazz, fieldName, true);
+		}
+		return field;
+	}
+
+	/**
+	 * TODO for NB: write docs
+	 *
+	 * @param clazz
+	 * @param fieldName
+	 * @return
+	 */
+	public static boolean hasField(Class<?> clazz, String fieldName) {
+		if (clazz == null || StringUtils.isEmpty(fieldName)) {
+			return false;
+		}
+
+		boolean hasField = false;
+		Field field = FieldUtils.getDeclaredField(clazz, fieldName, true);
+		if (field != null) {
+			hasField = true;
+		}
+		return hasField;
+	}
+
+	/**
+	 * TODO for NB: write docs
+	 *
+	 * @param clazz
+	 * @param fieldName
+	 * @param collectionClazz
+	 * @return
+	 */
+	public static boolean isCollectionField(Class<?> clazz, String fieldName, Class<?> collectionClazz) {
+		Field field = getField(clazz, fieldName);
+		if (field == null) {
+			return false;
+		}
+		boolean isCollectionField = false;
+
+		if (Collection.class.isAssignableFrom(field.getType())) {
+			ParameterizedType collType = (ParameterizedType) field.getGenericType();
+			Class<?> collectionOfClass = (Class<?>) collType.getActualTypeArguments()[0];
+			// TODO for NB: double check:
+			//
+			//     collectionOfClass.isAssignableFrom(collectionClazz);
+			//
+			// or
+			//
+			//     collectionClazz.isAssignableFrom(collectionClazz);
+			//
+			// ???
+			isCollectionField = collectionClazz.isAssignableFrom(collectionOfClass);
+		}
+
+		return isCollectionField;
+	}
 
 	/**
 	 * This method returns a multi value map, where the keys are the

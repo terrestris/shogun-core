@@ -109,10 +109,8 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 			LOG.error("Plugin cannot be deleted, failed to autowire application service");
 			return;
 		}
-		// TODO We should have a more elegant way of finding the affected applications instead of fetching them all
-		//      Maybe a generic method `service.findAllHavingSubentity(String nameOfCollPropToCheck, Class subtype)`
-		//      in the AbstractCrudService?
-		List<Application> apps = applicationService.findAll();
+
+		List<Application> apps = applicationService.findAllReferencing("plugins", plugin);
 		Integer pluginId = plugin.getId();
 		for (Application app : apps) {
 			List<Plugin> plugins = app.getPlugins();
