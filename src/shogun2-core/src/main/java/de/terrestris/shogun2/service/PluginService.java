@@ -36,7 +36,9 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	/**
 	 * The application service which we e.g. need when plugins are deleted.
 	 */
-	private ApplicationService<Application, ApplicationDao<Application>> applicationService = null;
+	@Autowired
+	@Qualifier("applicationService")
+	private ApplicationService<Application, ApplicationDao<Application>> applicationService;
 
 	/**
 	 * Default constructor, which calls the type-constructor
@@ -103,34 +105,29 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	@Override
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#plugin, 'DELETE')")
 	public void delete(E plugin) {
-		ApplicationService<Application, ApplicationDao<Application>> appService = this.applicationService;
-		if (appService == null) {
+		if (applicationService == null) {
 			LOG.error("Plugin cannot be deleted, failed to autowire application service");
 			return;
 		}
 		// TODO We should have a more elegant way of finding the affected applications instead of fetching them all
 		//      Maybe a generic method `service.findAllHavingSubentity(String nameOfCollPropToCheck, Class subtype)`
 		//      in the AbstractCrudService?
-		List<Application> apps = appService.findAll();
+		List<Application> apps = applicationService.findAll();
 		Integer pluginId = plugin.getId();
 		for (Application app : apps) {
 			List<Plugin> plugins = app.getPlugins();
 			if (plugins != null && plugins.contains(plugin)) {
-				if (LOG.isDebugEnabled()) {
-					String msg = String.format(
-						"Remove plugin (id=%s) from application (id=%s)",
-						pluginId, app.getId()
-					);
-					LOG.debug(msg);
-				}
+				String msg = String.format(
+					"Remove plugin (id=%s) from application (id=%s)",
+					pluginId, app.getId()
+				);
+				LOG.debug(msg);
 				plugins.remove(plugin);
 				// TODO will this use the the PreAuthorize annotations of AbstractCrudService wrt WRITE on the app?
-				appService.saveOrUpdate(app);
+				applicationService.saveOrUpdate(app);
 			}
 		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Delete plugin (id=%s)", pluginId));
-		}
+		LOG.debug(String.format("Delete plugin (id=%s)", pluginId));
 		// call overridden parent to actually delete the entity itself
 		super.delete(plugin);
 	}
@@ -152,7 +149,6 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	 *
 	 * @param applicationService
 	 */
-	@Autowired
 	public void setApplicationService(ApplicationService<Application, ApplicationDao<Application>> applicationService) {
 		this.applicationService = applicationService;
 	}
