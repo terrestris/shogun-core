@@ -1,14 +1,19 @@
 package de.terrestris.shogun2.service;
 
+import java.util.List;
+
 import org.h2.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.dao.PluginDao;
+import de.terrestris.shogun2.model.Application;
 import de.terrestris.shogun2.model.Plugin;
 
 /**
@@ -27,6 +32,11 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	 */
 	@Value("${plugin.namespace:Plugin}")
 	private String pluginNamespace;
+
+	/**
+	 * The application service which we e.g. need when plugins are deleted.
+	 */
+	private ApplicationService<Application, ApplicationDao<Application>> applicationService = null;
 
 	/**
 	 * Default constructor, which calls the type-constructor
@@ -85,6 +95,47 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	}
 
 	/**
+	 * Removes the passed plugin from all applications and afterwards deletes the plugin itself. This overrides the
+	 * generic method to delete {@link AbstractCrudService#delete(de.terrestris.shogun2.model.PersistentObject)}.
+	 *
+	 * @param plugin
+	 */
+	@Override
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#plugin, 'DELETE')")
+	public void delete(E plugin) {
+		ApplicationService<Application, ApplicationDao<Application>> appService = this.applicationService;
+		if (appService == null) {
+			LOG.error("Plugin cannot be deleted, failed to autowire application service");
+			return;
+		}
+		// TODO We should have a more elegant way of finding the affected applications instead of fetching them all
+		//      Maybe a generic method `service.findAllHavingSubentity(String nameOfCollPropToCheck, Class subtype)`
+		//      in the AbstractCrudService?
+		List<Application> apps = appService.findAll();
+		Integer pluginId = plugin.getId();
+		for (Application app : apps) {
+			List<Plugin> plugins = app.getPlugins();
+			if (plugins != null && plugins.contains(plugin)) {
+				if (LOG.isDebugEnabled()) {
+					String msg = String.format(
+						"Remove plugin (id=%s) from application (id=%s)",
+						pluginId, app.getId()
+					);
+					LOG.debug(msg);
+				}
+				plugins.remove(plugin);
+				// TODO will this use the the PreAuthorize annotations of AbstractCrudService wrt WRITE on the app?
+				appService.saveOrUpdate(app);
+			}
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Delete plugin (id=%s)", pluginId));
+		}
+		// call overridden parent to actually delete the entity itself
+		super.delete(plugin);
+	}
+
+	/**
 	 * We have to use {@link Qualifier} to define the correct dao here.
 	 * Otherwise, spring can not decide which dao has to be autowired here
 	 * as there are multiple candidates.
@@ -94,5 +145,15 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	@Qualifier("pluginDao")
 	public void setDao(D dao) {
 		this.dao = dao;
+	}
+
+	/**
+	 * Sets the applicationService.
+	 *
+	 * @param applicationService
+	 */
+	@Autowired
+	public void setApplicationService(ApplicationService<Application, ApplicationDao<Application>> applicationService) {
+		this.applicationService = applicationService;
 	}
 }
