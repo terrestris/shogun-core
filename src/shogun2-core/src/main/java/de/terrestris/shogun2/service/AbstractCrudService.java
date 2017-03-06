@@ -182,6 +182,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 *
 	 * @return The list of objects
 	 */
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	public List<E> findAllWithCollectionContaining(String fieldName, PersistentObject subElement) {
 		return dao.findAllWithCollectionContaining(fieldName, subElement);
 	}
