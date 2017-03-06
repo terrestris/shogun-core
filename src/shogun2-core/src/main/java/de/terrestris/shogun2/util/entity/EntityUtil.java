@@ -24,15 +24,28 @@ import org.springframework.util.MultiValueMap;
 public class EntityUtil {
 
 	/**
-	 * TODO for NB: write docs
+	 * Checks whether the given <code>fieldName</code> in <code>clazz</code> is
+	 * a collection field with elements of type
+	 * <code>collectionElementType</code>.
 	 *
 	 * @param clazz
+	 *            The class to check for the given collection field
 	 * @param fieldName
-	 * @param collectionClazz
-	 * @return
+	 *            The name of the collection field
+	 * @param collectionElementType
+	 *            The type of the elements of the collection
+	 * @param forceAccess
+	 *            whether to break scope restrictions using the
+	 *            {@link java.lang.reflect.AccessibleObject#setAccessible(boolean)}
+	 *            method. {@code false} will only match {@code public} fields.
+	 *
+	 * @return Whether or not the given <code>fieldName</code> in
+	 *         <code>clazz</code> is a collection field with elements of type
+	 *         <code>collectionElementType</code>.
 	 */
-	public static boolean isCollectionField(Class<?> clazz, String fieldName, Class<?> collectionClazz) {
-		Field field = FieldUtils.getField(clazz, fieldName, true);
+	public static boolean isCollectionField(Class<?> clazz, String fieldName, Class<?> collectionElementType,
+			boolean forceAccess) {
+		Field field = FieldUtils.getField(clazz, fieldName, forceAccess);
 		if (field == null) {
 			return false;
 		}
@@ -40,17 +53,8 @@ public class EntityUtil {
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			ParameterizedType collType = (ParameterizedType) field.getGenericType();
-			Class<?> collectionOfClass = (Class<?>) collType.getActualTypeArguments()[0];
-			// TODO for NB: double check:
-			//
-			//     collectionOfClass.isAssignableFrom(collectionClazz);
-			//
-			// or
-			//
-			//     collectionClazz.isAssignableFrom(collectionClazz);
-			//
-			// ???
-			isCollectionField = collectionClazz.isAssignableFrom(collectionOfClass);
+			Class<?> actualElementTypeOfCollection = (Class<?>) collType.getActualTypeArguments()[0];
+			isCollectionField = collectionElementType.isAssignableFrom(actualElementTypeOfCollection);
 		}
 
 		return isCollectionField;

@@ -96,23 +96,39 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	}
 
 	/**
-	 * TODO for NB: write docs
+	 * Returns a list of entity objects that have a collection named
+	 * <code>fieldName</code>, which contains the passed
+	 * <code>subElement</code>.
 	 *
-	 * @param property
-	 * @param subEntity
-	 * @return
+	 * The can e.g. be used to return all applications that contain a certain layer.
+	 *
+	 * @param fieldName The name of the collection field
+	 * @param subElement The element that should be contained in the collection
+	 * @param criterion Additional criterions to apply (optional)
+	 *
+	 * @return The list of objects
 	 */
 	@SuppressWarnings("unchecked")
-	public List<E> findAllReferencing(String property, PersistentObject subEntity) {
-		// TODO for NB: Double check the implementation of this utility, please
-		if (EntityUtil.isCollectionField(entityClass, property, subEntity.getClass())) {
-			Criteria criteria = getSession().createCriteria(entityClass, "p");
-			criteria.createAlias(property, "s");
-			criteria.add(Restrictions.eq("s.id", subEntity.getId()));
-			// TODO for NB: what about result transformers?
-			return (List<E>) criteria.list();
+	public List<E> findAllWithCollectionContaining(String fieldName, PersistentObject subElement,
+			Criterion... criterion) {
+		final Class<? extends PersistentObject> subElementType = subElement.getClass();
+
+		final boolean isCollectionField = EntityUtil.isCollectionField(entityClass, fieldName, subElementType, true);
+
+		if (!isCollectionField) {
+			String errorMsg = String.format(
+				"There is no collection field '%s' with element type '%s' in the type '%s'",
+				fieldName,
+				subElementType.getName(),
+				entityClass.getName()
+			);
+			throw new IllegalArgumentException(errorMsg);
 		}
-		return null; // TODO for NB or an empty collection?
+
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+		criteria.createAlias(fieldName, "sub");
+		criteria.add(Restrictions.eq("sub.id", subElement.getId()));
+		return (List<E>) criteria.list();
 	}
 
 	/**

@@ -110,7 +110,7 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 			return;
 		}
 
-		List<Application> apps = applicationService.findAllReferencing("plugins", plugin);
+		List<Application> apps = applicationService.findAllWithCollectionContaining("plugins", plugin);
 		Integer pluginId = plugin.getId();
 		for (Application app : apps) {
 			List<Plugin> plugins = app.getPlugins();
