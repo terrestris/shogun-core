@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,46 +28,11 @@ public class EntityUtil {
 	 *
 	 * @param clazz
 	 * @param fieldName
-	 * @return
-	 */
-	public static Field getField(Class<?> clazz, String fieldName) {
-		Field field = null;
-		if(hasField(clazz, fieldName)) {
-			field = FieldUtils.getDeclaredField(clazz, fieldName, true);
-		}
-		return field;
-	}
-
-	/**
-	 * TODO for NB: write docs
-	 *
-	 * @param clazz
-	 * @param fieldName
-	 * @return
-	 */
-	public static boolean hasField(Class<?> clazz, String fieldName) {
-		if (clazz == null || StringUtils.isEmpty(fieldName)) {
-			return false;
-		}
-
-		boolean hasField = false;
-		Field field = FieldUtils.getDeclaredField(clazz, fieldName, true);
-		if (field != null) {
-			hasField = true;
-		}
-		return hasField;
-	}
-
-	/**
-	 * TODO for NB: write docs
-	 *
-	 * @param clazz
-	 * @param fieldName
 	 * @param collectionClazz
 	 * @return
 	 */
 	public static boolean isCollectionField(Class<?> clazz, String fieldName, Class<?> collectionClazz) {
-		Field field = getField(clazz, fieldName);
+		Field field = FieldUtils.getField(clazz, fieldName, true);
 		if (field == null) {
 			return false;
 		}
