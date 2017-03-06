@@ -171,6 +171,22 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	}
 
 	/**
+	 * Returns a list of entity objects that have a collection named
+	 * <code>fieldName</code>, which contains the passed
+	 * <code>subElement</code>.
+	 *
+	 * The can e.g. be used to return all applications that contain a certain layer.
+	 *
+	 * @param fieldName The name of the collection field
+	 * @param subElement The element that should be contained in the collection
+	 *
+	 * @return The list of objects
+	 */
+	public List<E> findAllWithCollectionContaining(String fieldName, PersistentObject subElement) {
+		return dao.findAllWithCollectionContaining(fieldName, subElement);
+	}
+
+	/**
 	 *
 	 * @param e
 	 */

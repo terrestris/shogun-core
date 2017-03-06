@@ -14,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
@@ -25,6 +26,7 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.PermissionCollection;
 import de.terrestris.shogun2.paging.PagingResult;
+import de.terrestris.shogun2.util.entity.EntityUtil;
 
 /**
  * The superclass for all data access objects. Provides basic CRUD
@@ -91,6 +93,42 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	public E findById(ID id) {
 		LOG.trace("Finding " + entityClass.getSimpleName() + " with ID " + id);
 		return (E) getSession().get(entityClass, id);
+	}
+
+	/**
+	 * Returns a list of entity objects that have a collection named
+	 * <code>fieldName</code>, which contains the passed
+	 * <code>subElement</code>.
+	 *
+	 * The can e.g. be used to return all applications that contain a certain layer.
+	 *
+	 * @param fieldName The name of the collection field
+	 * @param subElement The element that should be contained in the collection
+	 * @param criterion Additional criterions to apply (optional)
+	 *
+	 * @return The list of objects
+	 */
+	@SuppressWarnings("unchecked")
+	public List<E> findAllWithCollectionContaining(String fieldName, PersistentObject subElement,
+			Criterion... criterion) {
+		final Class<? extends PersistentObject> subElementType = subElement.getClass();
+
+		final boolean isCollectionField = EntityUtil.isCollectionField(entityClass, fieldName, subElementType, true);
+
+		if (!isCollectionField) {
+			String errorMsg = String.format(
+				"There is no collection field '%s' with element type '%s' in the type '%s'",
+				fieldName,
+				subElementType.getName(),
+				entityClass.getName()
+			);
+			throw new IllegalArgumentException(errorMsg);
+		}
+
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+		criteria.createAlias(fieldName, "sub");
+		criteria.add(Restrictions.eq("sub.id", subElement.getId()));
+		return (List<E>) criteria.list();
 	}
 
 	/**

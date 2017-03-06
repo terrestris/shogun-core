@@ -2,6 +2,8 @@ package de.terrestris.shogun2.util.entity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,43 @@ import org.springframework.util.MultiValueMap;
  *
  */
 public class EntityUtil {
+
+	/**
+	 * Checks whether the given <code>fieldName</code> in <code>clazz</code> is
+	 * a collection field with elements of type
+	 * <code>collectionElementType</code>.
+	 *
+	 * @param clazz
+	 *            The class to check for the given collection field
+	 * @param fieldName
+	 *            The name of the collection field
+	 * @param collectionElementType
+	 *            The type of the elements of the collection
+	 * @param forceAccess
+	 *            whether to break scope restrictions using the
+	 *            {@link java.lang.reflect.AccessibleObject#setAccessible(boolean)}
+	 *            method. {@code false} will only match {@code public} fields.
+	 *
+	 * @return Whether or not the given <code>fieldName</code> in
+	 *         <code>clazz</code> is a collection field with elements of type
+	 *         <code>collectionElementType</code>.
+	 */
+	public static boolean isCollectionField(Class<?> clazz, String fieldName, Class<?> collectionElementType,
+			boolean forceAccess) {
+		Field field = FieldUtils.getField(clazz, fieldName, forceAccess);
+		if (field == null) {
+			return false;
+		}
+		boolean isCollectionField = false;
+
+		if (Collection.class.isAssignableFrom(field.getType())) {
+			ParameterizedType collType = (ParameterizedType) field.getGenericType();
+			Class<?> actualElementTypeOfCollection = (Class<?>) collType.getActualTypeArguments()[0];
+			isCollectionField = collectionElementType.isAssignableFrom(actualElementTypeOfCollection);
+		}
+
+		return isCollectionField;
+	}
 
 	/**
 	 * This method returns a multi value map, where the keys are the
