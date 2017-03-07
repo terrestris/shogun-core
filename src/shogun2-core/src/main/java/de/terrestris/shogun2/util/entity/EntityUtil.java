@@ -33,7 +33,7 @@ public class EntityUtil {
 	 * @param fieldName
 	 *            The name of the collection field
 	 * @param collectionElementType
-	 *            The type of the elements of the collection
+	 *            The type of the concrete element in the collection
 	 * @param forceAccess
 	 *            whether to break scope restrictions using the
 	 *            {@link java.lang.reflect.AccessibleObject#setAccessible(boolean)}
@@ -53,8 +53,8 @@ public class EntityUtil {
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			ParameterizedType collType = (ParameterizedType) field.getGenericType();
-			Class<?> actualElementTypeOfCollection = (Class<?>) collType.getActualTypeArguments()[0];
-			isCollectionField = collectionElementType.isAssignableFrom(actualElementTypeOfCollection);
+			Class<?> elementTypeOfCollection = (Class<?>) collType.getActualTypeArguments()[0];
+			isCollectionField = elementTypeOfCollection.isAssignableFrom(collectionElementType);
 		}
 
 		return isCollectionField;
