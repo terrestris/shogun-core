@@ -9,6 +9,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import de.terrestris.shogun2.converter.WpsProcessExecuteIdResolver;
 import de.terrestris.shogun2.model.Plugin;
 
 /**
@@ -27,6 +32,12 @@ public class WpsPlugin extends Plugin {
 	 * 
 	 */
 	@ManyToOne
+	@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id",
+		resolver = WpsProcessExecuteIdResolver.class
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	private WpsProcessExecute process;
 
 	/**
