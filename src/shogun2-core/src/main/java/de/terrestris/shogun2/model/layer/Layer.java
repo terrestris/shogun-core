@@ -45,6 +45,11 @@ public class Layer extends PersistentObject {
 	/**
 	 *
 	 */
+	private String description;
+
+	/**
+	 *
+	 */
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private LayerDataSource source;
@@ -99,6 +104,20 @@ public class Layer extends PersistentObject {
 
 
 	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
 	 * @return the source
 	 */
 	public LayerDataSource getSource() {
@@ -140,6 +159,7 @@ public class Layer extends PersistentObject {
 		return new HashCodeBuilder(29, 13).
 				appendSuper(super.hashCode()).
 				append(getName()).
+				append(getDescription()).
 				append(getSource()).
 				append(getAppearance()).
 				toHashCode();
@@ -162,6 +182,7 @@ public class Layer extends PersistentObject {
 		return new EqualsBuilder().
 				appendSuper(super.equals(other)).
 				append(getName(), other.getName()).
+				append(getDescription(), other.getDescription()).
 				append(getSource(), other.getSource()).
 				append(getAppearance(), other.getAppearance()).
 				isEquals();
