@@ -96,6 +96,37 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	}
 
 	/**
+	 * Returns a list of entity objects that have field named
+	 * <code>fieldName</code>, which has an object <code>fieldEntity</code>
+	 * as value.
+	 *
+	 * @param fieldName The name of the field
+	 * @param fieldEntity The element that should be set as value
+	 * @param criterion Additional criterions to apply (optional)
+	 *
+	 * @return The list of objects
+	 */
+	@SuppressWarnings("unchecked")
+	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldEntity,
+			Criterion... criterion) {
+
+		final boolean isField = EntityUtil.isField(entityClass, fieldName, true);
+
+		if (!isField) {
+			String errorMsg = String.format(
+				"There is no field '%s' in the type '%s'",
+				fieldName,
+				entityClass.getName()
+			);
+			throw new IllegalArgumentException(errorMsg);
+		}
+
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+		criteria.add(Restrictions.eq(fieldName, fieldEntity));
+		return (List<E>) criteria.list();
+	}
+
+	/**
 	 * Returns a list of entity objects that have a collection named
 	 * <code>fieldName</code>, which contains the passed
 	 * <code>subElement</code>.

@@ -171,6 +171,21 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	}
 
 	/**
+	 * Returns a list of entity objects that have field named
+	 * <code>fieldName</code>, which has an object <code>fieldEntity</code>
+	 * as value.
+	 *
+	 * @param fieldName The name of the field
+	 * @param fieldEntity The element that should be set as value
+	 *
+	 * @return The list of objects
+	 */
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldEntity) {
+		return dao.findAllWhereFieldEquals(fieldName, fieldEntity);
+	}
+
+	/**
 	 * Returns a list of entity objects that have a collection named
 	 * <code>fieldName</code>, which contains the passed
 	 * <code>subElement</code>.
