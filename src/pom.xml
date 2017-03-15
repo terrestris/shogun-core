@@ -128,12 +128,12 @@
         <tomcat.version>8.0.38</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.2.9.RELEASE</spring.version>
-        <spring-security.version>4.0.4.RELEASE</spring-security.version>
+        <spring.version>4.3.7.RELEASE</spring.version>
+        <spring-security.version>4.2.2.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <jackson.version>2.6.7</jackson.version>
+        <jackson.version>2.8.7</jackson.version>
         <opencsv.version>3.9</opencsv.version>
         <ehcache.version>2.10.3</ehcache.version>
 

@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.rest;
 
+import java.io.BufferedReader;
 import java.io.Reader;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,9 +69,9 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 
 	/**
 	 * Find all entities that match the conditions from the query string.
-	 * 
+	 *
 	 * The requestParams MultiValueMap contains all information from the query String @see {@link RequestParam}
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/filter", method = RequestMethod.GET)
@@ -116,28 +116,36 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<E> save(@RequestBody E entity) {
+	public ResponseEntity<E> save(HttpServletRequest request) {
 
-		final String simpleClassName = entity.getClass().getSimpleName();
+		final String simpleClassName = getEntityClass().getSimpleName();
 		final String errorMessagePrefix = "Error when saving entity of type "
 				+ simpleClassName + ": ";
 
-		// ID value MUST be null to assure that
-		// saveOrUpdate will save and not update
-		final Integer id = entity.getId();
-		if (id != null) {
-			LOG.error(errorMessagePrefix + "ID value is set to " + id
-					+ ", but MUST be null");
-			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
-		}
-
+		BufferedReader reader = null;
+		// read and parse the json request body
 		try {
+			reader = request.getReader();
+
+			E entity = objectMapper.readValue(reader, getEntityClass());
+
+			// ID value MUST be null to assure that
+			// saveOrUpdate will save and not update
+			final Integer id = entity.getId();
+			if (id != null) {
+				LOG.error(errorMessagePrefix + "ID value is set to " + id
+						+ ", but MUST be null");
+				return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+			}
+
 			this.service.saveOrUpdate(entity);
 			LOG.trace("Created " + simpleClassName + " with ID " + entity.getId());
 			return new ResponseEntity<E>(entity, HttpStatus.CREATED);
 		} catch (Exception e) {
 			LOG.error(errorMessagePrefix + e.getMessage());
 			return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
+		} finally {
+			IOUtils.closeQuietly(reader);
 		}
 	}
 
