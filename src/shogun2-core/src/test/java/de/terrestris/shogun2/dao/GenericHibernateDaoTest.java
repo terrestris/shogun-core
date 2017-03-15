@@ -740,4 +740,57 @@ public class GenericHibernateDaoTest {
 
 		assertTrue("findAllWithCollectionContaining() does throw with invalid collection field", catchedException);
 	}
+
+	/**
+	 * Tests whether findAllWhereFieldEquals works as expected
+	 * in common usage.
+	 */
+	@Test
+	public void findAllWhereFieldEquals_commonUsage() {
+
+		Application a1_1 = this.getMockApp("a1");
+		a1_1.setDescription("a1_1");
+
+		Application a1_2 = this.getMockApp("a1");
+		a1_2.setDescription("a1_2");
+
+		Application a2 = this.getMockApp("a2");
+
+		appDao.saveOrUpdate(a1_1);
+		appDao.saveOrUpdate(a1_2);
+		appDao.saveOrUpdate(a2);
+
+		List<Application> expectSize2List = this.appDao.findAllWhereFieldEquals("name", "a1");
+		assertEquals(2, expectSize2List.size());
+
+		List<Application> expectSize1List = this.appDao.findAllWhereFieldEquals("name", "a2");
+		assertEquals(1, expectSize1List.size());
+
+		List<Application> expectSize0List = this.appDao.findAllWhereFieldEquals("name", "a3");
+		assertEquals(0, expectSize0List.size());
+
+		Criterion descIsA1_1 = Restrictions.eq("description", "a1_1");
+		List<Application> expectDescIsCorrectSize1List = this.appDao.findAllWhereFieldEquals("name", "a1", descIsA1_1);
+		assertEquals(1, expectDescIsCorrectSize1List.size());
+	}
+
+	/**
+	 * Tests whether findAllWhereFieldEquals throws exception if field is not a field.
+	 */
+	@Test
+	public void findAllWhereFieldEquals_shouldThrowIfFieldIsNotAField() {
+
+		boolean catchedException = false;
+
+		try {
+			this.appDao.findAllWhereFieldEquals("non_existing_field", "value");
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			assertEquals("There is no field 'non_existing_field' in the type "
+					+ "'de.terrestris.shogun2.model.Application'", msg);
+			catchedException = true;
+		}
+
+		assertTrue("findAllWhereFieldEquals() does throw with invalid field", catchedException);
+	}
 }
