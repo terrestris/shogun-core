@@ -50,6 +50,17 @@ public class EntityUtilTest {
 		public String publicNeitherListNorSet;
 	}
 
+	private class SimpleEntity extends PersistentObject {
+
+		private String privateField;
+		protected String protectedField;
+		public String publicField;
+	}
+
+	private class SimpleChildEntity extends SimpleEntity {
+
+	}
+
 	//
 	// End setup code
 	//
@@ -354,5 +365,68 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "thisFieldIsNotThere", TestClassGrandChild.class, false
 		);
+	}
+
+	@Test
+	public void test_isField_forPrivateField() {
+		boolean isField;
+
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", true);
+		assertTrue(isField);
+	}
+
+	@Test
+	public void test_isField_forProtectedField() {
+		boolean isField;
+
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", true);
+		assertTrue(isField);
+	}
+
+	@Test
+	public void test_isField_forPublicField() {
+		boolean isField;
+
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", false);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", false);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", true);
+		assertTrue(isField);
+	}
+
+	@Test
+	public void test_isField_forNonExistingField() {
+		boolean isField;
+
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", true);
+		assertFalse(isField);
+
 	}
 }
