@@ -298,4 +298,40 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 		// maybe this test can be enhanced...
 	}
 
+	/**
+	 *
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findAllWhereFieldEquals_shouldWorkAsExpected() {
+
+		String fieldName = "id";
+		Integer value = 42;
+
+		doAnswer(new Answer<List<E>>() {
+			public List<E> answer(InvocationOnMock invocation)
+					throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+				E po = (E) implToTest.getClass().newInstance();
+
+				// set id like the dao does
+				IdHelper.setIdOnPersistentObject(po, value);
+
+				List<E> r = new ArrayList<>();
+				r.add(po);
+				return r ;
+			}
+		}).when(dao).findAllWhereFieldEquals(fieldName, value);
+
+		// id has to be NULL before the service method is called
+		assertNull(implToTest.getId());
+
+		List<E> resultList = crudService.findAllWhereFieldEquals(fieldName, value);
+
+		assertNotNull(resultList);
+		assertTrue(resultList.size() == 1);
+
+		// be sure that dao method has been executed exactly once
+		verify(dao, times(1)).findAllWhereFieldEquals(fieldName, value);
+	}
+
 }
