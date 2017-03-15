@@ -305,8 +305,8 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 	@Test
 	public void findAllWhereFieldEquals_shouldWorkAsExpected() {
 
-		String fieldName = "id";
-		Integer value = 42;
+		final String fieldName = "id";
+		final Integer value = 42;
 
 		doAnswer(new Answer<List<E>>() {
 			public List<E> answer(InvocationOnMock invocation)
@@ -338,8 +338,8 @@ public abstract class AbstractCrudServiceTest<E extends PersistentObject, D exte
 	@Test
 	public void findAllWithCollectionContaining_shouldWorkAsExpected() {
 
-		String fieldName = "id";
-		Integer value = 42;
+		final String fieldName = "id";
+		final Integer value = 42;
 
 		doAnswer(new Answer<List<E>>() {
 			public List<E> answer(InvocationOnMock invocation)
