@@ -176,13 +176,13 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * as value.
 	 *
 	 * @param fieldName The name of the field
-	 * @param fieldEntity The element that should be set as value
+	 * @param fieldValue The element that should be set as value
 	 *
 	 * @return The list of objects
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
-	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldEntity) {
-		return dao.findAllWhereFieldEquals(fieldName, fieldEntity);
+	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldValue) {
+		return dao.findAllWhereFieldEquals(fieldName, fieldValue);
 	}
 
 	/**
