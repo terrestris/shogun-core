@@ -282,6 +282,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "publicNeitherListNorSet", TestClassParent.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 	@Test
@@ -298,6 +299,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "publicNeitherListNorSet", TestClassChild.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 	@Test
@@ -314,6 +316,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "publicNeitherListNorSet", TestClassGrandChild.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 
@@ -333,6 +336,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "thisFieldIsNotThere", TestClassParent.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 	@Test
@@ -349,6 +353,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "thisFieldIsNotThere", TestClassChild.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 	@Test
@@ -365,6 +370,7 @@ public class EntityUtilTest {
 		isCollectionField = EntityUtil.isCollectionField(
 			EntityWithCollections.class, "thisFieldIsNotThere", TestClassGrandChild.class, false
 		);
+		assertFalse(isCollectionField);
 	}
 
 	@Test
