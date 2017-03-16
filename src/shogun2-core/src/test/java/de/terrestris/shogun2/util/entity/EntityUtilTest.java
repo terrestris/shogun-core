@@ -377,16 +377,36 @@ public class EntityUtilTest {
 	public void test_isField_forPrivateField() {
 		boolean isField;
 
-		isField = EntityUtil.isField(SimpleEntity.class, "privateField", false);
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", String.class, false);
 		assertFalse(isField);
 
-		isField = EntityUtil.isField(SimpleEntity.class, "privateField", true);
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", String.class, true);
 		assertTrue(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", false);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", String.class, false);
 		assertFalse(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", true);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", String.class, true);
+		assertTrue(isField);
+
+		// field is not integer
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", Integer.class, true);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", Integer.class, true);
+		assertFalse(isField);
+
+		// "unknown" fieldEntityType
+		isField = EntityUtil.isField(SimpleEntity.class, "privateField", null, true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "privateField", null, true);
 		assertTrue(isField);
 	}
 
@@ -394,16 +414,36 @@ public class EntityUtilTest {
 	public void test_isField_forProtectedField() {
 		boolean isField;
 
-		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", false);
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", String.class, false);
 		assertFalse(isField);
 
-		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", true);
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", String.class, true);
 		assertTrue(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", false);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", String.class, false);
 		assertFalse(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", true);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", String.class, true);
+		assertTrue(isField);
+
+		// field is not integer
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", Integer.class, true);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", Integer.class, true);
+		assertFalse(isField);
+
+		// "unknown" fieldEntityType
+		isField = EntityUtil.isField(SimpleEntity.class, "protectedField", null, true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "protectedField", null, true);
 		assertTrue(isField);
 	}
 
@@ -411,16 +451,36 @@ public class EntityUtilTest {
 	public void test_isField_forPublicField() {
 		boolean isField;
 
-		isField = EntityUtil.isField(SimpleEntity.class, "publicField", false);
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", String.class, false);
 		assertTrue(isField);
 
-		isField = EntityUtil.isField(SimpleEntity.class, "publicField", true);
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", String.class, true);
 		assertTrue(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", false);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", String.class, false);
 		assertTrue(isField);
 
-		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", true);
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", String.class, true);
+		assertTrue(isField);
+
+		// field is not integer
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", Integer.class, true);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", Integer.class, true);
+		assertFalse(isField);
+
+		// "unknown" fieldEntityType
+		isField = EntityUtil.isField(SimpleEntity.class, "publicField", null, true);
+		assertTrue(isField);
+
+		isField = EntityUtil.isField(SimpleChildEntity.class, "publicField", null, false);
 		assertTrue(isField);
 	}
 
@@ -428,11 +488,21 @@ public class EntityUtilTest {
 	public void test_isField_forNonExistingField() {
 		boolean isField;
 
-		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", false);
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", String.class, false);
 		assertFalse(isField);
 
-		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", true);
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", String.class, true);
 		assertFalse(isField);
 
+		// field is not integer
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", Integer.class, false);
+		assertFalse(isField);
+
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", Integer.class, true);
+		assertFalse(isField);
+
+		// "unknown" fieldEntityType
+		isField = EntityUtil.isField(SimpleEntity.class, "non_existing_field", null, true);
+		assertFalse(isField);
 	}
 }

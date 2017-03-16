@@ -110,19 +110,32 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldEntity,
 			Criterion... criterion) {
 
-		final boolean isField = EntityUtil.isField(entityClass, fieldName, true);
+		Class<?> fieldEntityType = null;
+
+		if(fieldEntity != null) {
+			fieldEntityType = fieldEntity.getClass();
+		}
+
+		final boolean isField = EntityUtil.isField(entityClass, fieldName, fieldEntityType, true);
 
 		if (!isField) {
 			String errorMsg = String.format(
-				"There is no field '%s' in the type '%s'",
+				"There is no field '%s' in the type '%s' that accepts instances of '%s'",
 				fieldName,
-				entityClass.getName()
+				entityClass.getName(),
+				fieldEntityType.getName()
 			);
 			throw new IllegalArgumentException(errorMsg);
 		}
 
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
-		criteria.add(Restrictions.eq(fieldName, fieldEntity));
+
+		if(fieldEntity == null) {
+			criteria.add(Restrictions.isNull(fieldName));
+		} else {
+			criteria.add(Restrictions.eq(fieldName, fieldEntity));
+		}
+
 		return (List<E>) criteria.list();
 	}
 

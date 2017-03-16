@@ -743,10 +743,10 @@ public class GenericHibernateDaoTest {
 
 	/**
 	 * Tests whether findAllWhereFieldEquals works as expected
-	 * in common usage.
+	 * in common usage (searching for values)
 	 */
 	@Test
-	public void findAllWhereFieldEquals_commonUsage() {
+	public void findAllWhereFieldEquals_commonUsage_withValue() {
 
 		Application a1_1 = this.getMockApp("a1");
 		a1_1.setDescription("a1_1");
@@ -775,6 +775,43 @@ public class GenericHibernateDaoTest {
 	}
 
 	/**
+	 * Tests whether findAllWhereFieldEquals works as expected
+	 * in common usage (searching for null values)
+	 */
+	@Test
+	public void findAllWhereFieldEquals_commonUsage_withNull() {
+
+		Application a1_1 = this.getMockApp("a1");
+		a1_1.setDescription("a1_1");
+		a1_1.setOpen(true);
+
+		Application a1_2 = this.getMockApp("a1");
+		a1_2.setDescription(null);
+		a1_2.setOpen(true);
+
+		Application a2 = this.getMockApp("a2");
+		a2.setDescription(null);
+		a2.setOpen(null);
+
+		appDao.saveOrUpdate(a1_1);
+		appDao.saveOrUpdate(a1_2);
+		appDao.saveOrUpdate(a2);
+
+		List<Application> expectSize2List = this.appDao.findAllWhereFieldEquals("description", null);
+		assertEquals(2, expectSize2List.size());
+
+		List<Application> expectSize1List = this.appDao.findAllWhereFieldEquals("open", null);
+		assertEquals(1, expectSize1List.size());
+
+		List<Application> expectSize0List = this.appDao.findAllWhereFieldEquals("name", null);
+		assertEquals(0, expectSize0List.size());
+
+		Criterion nameIsA1 = Restrictions.eq("name", "a1");
+		List<Application> expectNameIsCorrectSize1List = this.appDao.findAllWhereFieldEquals("description", null, nameIsA1);
+		assertEquals(1, expectNameIsCorrectSize1List.size());
+	}
+
+	/**
 	 * Tests whether findAllWhereFieldEquals throws exception if field is not a field.
 	 */
 	@Test
@@ -787,7 +824,7 @@ public class GenericHibernateDaoTest {
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			assertEquals("There is no field 'non_existing_field' in the type "
-					+ "'de.terrestris.shogun2.model.Application'", msg);
+					+ "'de.terrestris.shogun2.model.Application' that accepts instances of 'java.lang.String'", msg);
 			catchedException = true;
 		}
 
