@@ -24,6 +24,29 @@ import org.springframework.util.MultiValueMap;
 public class EntityUtil {
 
 	/**
+	 * @param clazz
+	 * @param fieldName
+	 * @param fieldEntityType
+	 * @param forceAccess
+	 * @return
+	 */
+	public static boolean isField(Class<?> clazz, String fieldName, Class<?> fieldEntityType, boolean forceAccess) {
+		Field field = FieldUtils.getField(clazz, fieldName, forceAccess);
+		if (field == null) {
+			return false;
+		}
+
+		final Class<?> fieldType = field.getType();
+
+		// we'll also return true if the fieldEntityType is null, i.e. "unknown"
+		if(fieldEntityType == null || fieldType.isAssignableFrom(fieldEntityType)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks whether the given <code>fieldName</code> in <code>clazz</code> is
 	 * a collection field with elements of type
 	 * <code>collectionElementType</code>.

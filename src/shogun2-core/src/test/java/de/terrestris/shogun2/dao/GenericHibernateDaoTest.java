@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.model.Plugin;
 import de.terrestris.shogun2.paging.PagingResult;
 
 /**
@@ -39,16 +41,28 @@ import de.terrestris.shogun2.paging.PagingResult;
  * could have been picked.
  */
 @Repository
-class ConcreteDao extends GenericHibernateDao<Application, Integer> {
-	protected ConcreteDao() {
+class AppTestDao extends GenericHibernateDao<Application, Integer> {
+	protected AppTestDao() {
 		super(Application.class);
+	}
+}
+
+/**
+ *
+ * @author Nils Bühner
+ *
+ */
+@Repository
+class PluginTestDao extends GenericHibernateDao<Plugin, Integer> {
+	protected PluginTestDao() {
+		super(Plugin.class);
 	}
 }
 
 /**
  * This class will test the {@link GenericHibernateDao}. As
  * {@link GenericHibernateDao} is an abstract class, we cannot instantiate it.
- * Instead we will use the {@link ConcreteDao} (as the most basic extension of
+ * Instead we will use the {@link AppTestDao} (as the most basic extension of
  * {@link GenericHibernateDao}) to test the logic contained in
  * {@link GenericHibernateDao}.
  *
@@ -62,12 +76,18 @@ class ConcreteDao extends GenericHibernateDao<Application, Integer> {
 public class GenericHibernateDaoTest {
 
 	/**
-	 * We use the {@link ConcreteDao} to test the behaviour of the
+	 * We use the {@link AppTestDao} to test the behaviour of the
 	 * {@link GenericHibernateDao} (which is an abstract class and cannot be
 	 * instantiated).
 	 */
 	@Autowired
-	ConcreteDao dao;
+	AppTestDao appDao;
+
+	/**
+	 *
+	 */
+	@Autowired
+	PluginTestDao pluginDao;
 
 	private Set<String> usedRandomStrings = new HashSet<String>();
 
@@ -148,7 +168,7 @@ public class GenericHibernateDaoTest {
 
 		Application app = getMockApp(appName);
 
-		dao.saveOrUpdate(app);
+		appDao.saveOrUpdate(app);
 
 		return app;
 	}
@@ -170,7 +190,7 @@ public class GenericHibernateDaoTest {
 			Thread.sleep(1);
 
 			// ... then save
-			dao.saveOrUpdate(app);
+			appDao.saveOrUpdate(app);
 
 			ReadableDateTime after = app.getModified();
 
@@ -206,7 +226,7 @@ public class GenericHibernateDaoTest {
 			Thread.sleep(1);
 
 			// ... and only then save, modified should differ now
-			dao.saveOrUpdate(app);
+			appDao.saveOrUpdate(app);
 			ReadableDateTime after = app.getModified();
 
 			// They should be different
@@ -229,7 +249,7 @@ public class GenericHibernateDaoTest {
 	public void saveOrUpdate_shouldUpdateModified() {
 		// first create an application and save it.
 		Application app = new Application("Some Name", "Some description");
-		dao.saveOrUpdate(app);
+		appDao.saveOrUpdate(app);
 
 		ReadableDateTime before = app.getModified();
 
@@ -238,7 +258,7 @@ public class GenericHibernateDaoTest {
 			// change the application
 			app.setName("Some other name");
 			app.setDescription("Changed description");
-			dao.saveOrUpdate(app);
+			appDao.saveOrUpdate(app);
 			ReadableDateTime after = app.getModified();
 
 			// They should be different
@@ -262,7 +282,7 @@ public class GenericHibernateDaoTest {
 		assertNull(app.getId());
 
 		// Test CREATE
-		dao.saveOrUpdate(app);
+		appDao.saveOrUpdate(app);
 
 		Integer id = app.getId();
 
@@ -276,7 +296,7 @@ public class GenericHibernateDaoTest {
 		app.setName(changedNameOfApp);
 		app.setDescription(changedDescOfApp);
 
-		dao.saveOrUpdate(app);
+		appDao.saveOrUpdate(app);
 
 		assertEquals(id, app.getId());
 		assertEquals(changedNameOfApp, app.getName());
@@ -288,7 +308,7 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findById_shouldReturnNullForNonExistingId() {
-		Application app = dao.findById(-90210);
+		Application app = appDao.findById(-90210);
 		assertNull(app);
 	}
 
@@ -299,7 +319,7 @@ public class GenericHibernateDaoTest {
 	public void findById_shouldRetrieveApplication() {
 		Application app = getRandomSavedMockApp();
 		Integer id = app.getId();
-		Application queriedApp = dao.findById(id);
+		Application queriedApp = appDao.findById(id);
 
 		// ... verify we could get it:
 		assertNotNull(queriedApp);
@@ -319,8 +339,8 @@ public class GenericHibernateDaoTest {
 		Integer firstId = firstApp.getId();
 		Integer secondId = secondApp.getId();
 
-		Application queriedFirst = dao.findById(firstId);
-		Application queriedSecond = dao.findById(secondId);
+		Application queriedFirst = appDao.findById(firstId);
+		Application queriedSecond = appDao.findById(secondId);
 
 		assertEquals(firstApp, queriedFirst);
 		assertEquals(secondApp, queriedSecond);
@@ -333,15 +353,15 @@ public class GenericHibernateDaoTest {
 	public void delete_shouldDelete() {
 		Application app = getRandomSavedMockApp();
 		Integer id = app.getId();
-		int numBefore = dao.findAll().size();
+		int numBefore = appDao.findAll().size();
 
 		// ... delete the app
-		dao.delete(app);
+		appDao.delete(app);
 
-		int numAfter = dao.findAll().size();
+		int numAfter = appDao.findAll().size();
 
 		// ...try to get it by id
-		Application queriedAppAfter = dao.findById(id);
+		Application queriedAppAfter = appDao.findById(id);
 
 		assertNull(queriedAppAfter);
 		assertEquals(numBefore, numAfter + 1);
@@ -355,7 +375,7 @@ public class GenericHibernateDaoTest {
 		Application app = getRandomUnsavedMockApp();
 
 		// ... delete the unsaved app
-		dao.delete(app);
+		appDao.delete(app);
 
 		assertTrue(true);
 	}
@@ -365,7 +385,7 @@ public class GenericHibernateDaoTest {
 	 */
 	@Test
 	public void findAll_shouldReturnEmptyListWhenNothingPersisted() {
-		List<Application> all = this.dao.findAll();
+		List<Application> all = this.appDao.findAll();
 
 		assertTrue("findAll() returns list with correct size", all.size() == 0);
 	}
@@ -379,7 +399,7 @@ public class GenericHibernateDaoTest {
 		Application app1 = this.getRandomSavedMockApp();
 		Application app2 = this.getRandomSavedMockApp();
 
-		List<Application> all = this.dao.findAll();
+		List<Application> all = this.appDao.findAll();
 
 		assertTrue("findAll() returns list with correct size", all.size() == 2);
 
@@ -398,16 +418,16 @@ public class GenericHibernateDaoTest {
 		List<Application> got;
 		Criterion c = Restrictions.eq("id", 1);
 
-		got = dao.findByCriteria();
+		got = appDao.findByCriteria();
 		assertTrue("findByCriteria() doesn't throw when no argument", true);
 
-		got = dao.findByCriteria((Criterion) null);
+		got = appDao.findByCriteria((Criterion) null);
 		assertTrue("findByCriteria() doesn't throw when null argument", true);
 
-		got = dao.findByCriteria(c);
+		got = appDao.findByCriteria(c);
 		assertTrue("findByCriteria() doesn't throw when sane argument", true);
 
-		got = dao.findByCriteria(c, (Criterion) null);
+		got = appDao.findByCriteria(c, (Criterion) null);
 		assertTrue("findByCriteria() doesn't throw when arguments mixed", true);
 	}
 
@@ -421,7 +441,7 @@ public class GenericHibernateDaoTest {
 		Application app2 = getRandomSavedMockApp();
 		Criterion c1 = Restrictions.eq("name", app1.getName());
 
-		List<Application> got = dao.findByCriteria(c1);
+		List<Application> got = appDao.findByCriteria(c1);
 
 		assertTrue("findByCriteria() returned expected number of apps",
 				got.size() == 1);
@@ -460,7 +480,7 @@ public class GenericHibernateDaoTest {
 
 		or.add(c1).add(c3);
 
-		List<Application> got = dao.findByCriteria(or);
+		List<Application> got = appDao.findByCriteria(or);
 
 		assertTrue("findByCriteria() returned expected number of apps",
 				got.size() == 2);
@@ -493,7 +513,7 @@ public class GenericHibernateDaoTest {
 		Criterion c1name = Restrictions.eq("name", app1.getName());
 		Criterion c1modified = Restrictions.eq("modified", app1.getModified());
 
-		List<Application> got = dao.findByCriteria(c1name, c1modified);
+		List<Application> got = appDao.findByCriteria(c1name, c1modified);
 
 		assertTrue("findByCriteria() returned expected number of apps",
 				got.size() == 1);
@@ -515,7 +535,7 @@ public class GenericHibernateDaoTest {
 		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
 
 		int firstResult = 2;
-		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(firstResult, null , null);
+		PagingResult<Application> r = appDao.findByCriteriaWithSortingAndPaging(firstResult, null , null);
 
 		List<Application> queriedApps = r.getResultList();
 
@@ -536,7 +556,7 @@ public class GenericHibernateDaoTest {
 		Set<Application> mockApps = getNrOfRandomSavedMockApps(nrOfMockApps);
 
 		int maxResults = 3;
-		PagingResult<Application> r = dao.findByCriteriaWithSortingAndPaging(null, maxResults , null);
+		PagingResult<Application> r = appDao.findByCriteriaWithSortingAndPaging(null, maxResults , null);
 
 		List<Application> queriedApps = r.getResultList();
 
@@ -558,13 +578,13 @@ public class GenericHibernateDaoTest {
 
 		// get them in ASC order by id
 		List<Order> ascOrder = Arrays.asList(Order.asc("id"));
-		PagingResult<Application> ascResults = dao.findByCriteriaWithSortingAndPaging(null, null, ascOrder);
+		PagingResult<Application> ascResults = appDao.findByCriteriaWithSortingAndPaging(null, null, ascOrder);
 
 		List<Application> ascApps = ascResults.getResultList();
 
 		// get them in DESC order by id
 		List<Order> descOrder = Arrays.asList(Order.desc("id"));
-		PagingResult<Application> descResults = dao.findByCriteriaWithSortingAndPaging(null, null, descOrder);
+		PagingResult<Application> descResults = appDao.findByCriteriaWithSortingAndPaging(null, null, descOrder);
 
 		List<Application> descApps = descResults.getResultList();
 
@@ -606,7 +626,7 @@ public class GenericHibernateDaoTest {
 		Criterion crit = Restrictions.sqlRestriction("{alias}.id % 2 = 1");
 
 		// query
-		PagingResult<Application> pagingResult = dao.findByCriteriaWithSortingAndPaging(firstResult, maxResults , order, crit);
+		PagingResult<Application> pagingResult = appDao.findByCriteriaWithSortingAndPaging(firstResult, maxResults , order, crit);
 
 		List<Application> resultApps = pagingResult.getResultList();
 
@@ -629,5 +649,185 @@ public class GenericHibernateDaoTest {
 			}
 			previousMax = id;
 		}
+	}
+
+	/**
+	 * Tests whether findAllWithCollectionContaining works as expected
+	 * in common usage.
+	 */
+	@Test
+	public void findAllWithCollectionContaining_commonUsage() {
+
+		List<Plugin> pluginsP1andP2 = new ArrayList<>();
+		List<Plugin> pluginsP2andP3 = new ArrayList<>();
+
+		Plugin p1 = new Plugin();
+		p1.setName("p1");
+		p1.setClassName("p1");
+
+		Plugin p2 = new Plugin();
+		p2.setName("p2");
+		p2.setClassName("p2");
+
+		Plugin p3 = new Plugin();
+		p3.setName("p3");
+		p3.setClassName("p3");
+
+		Plugin p4 = new Plugin();
+		p4.setName("p4");
+		p4.setClassName("p4");
+
+		this.pluginDao.saveOrUpdate(p1);
+		this.pluginDao.saveOrUpdate(p2);
+		this.pluginDao.saveOrUpdate(p3);
+		this.pluginDao.saveOrUpdate(p4);
+
+		pluginsP1andP2.add(p1);
+		pluginsP1andP2.add(p2);
+
+		pluginsP2andP3.add(p2);
+		pluginsP2andP3.add(p3);
+
+		Application a1 = this.getMockApp("a1");
+		a1.setPlugins(pluginsP1andP2);
+
+		Application a2 = this.getMockApp("a2");
+		a2.setPlugins(pluginsP2andP3);
+
+		appDao.saveOrUpdate(a1);
+		appDao.saveOrUpdate(a2);
+
+		// p1 is in a1 only
+		List<Application> expectSize1List = this.appDao.findAllWithCollectionContaining("plugins", p1);
+		assertEquals(1, expectSize1List.size());
+
+		// p2 is in a1 and a2
+		List<Application> expectSize2List = this.appDao.findAllWithCollectionContaining("plugins", p2);
+		assertEquals(2, expectSize2List.size());
+
+		// p4 does not exist in a1 or a2
+		List<Application> expectSize0List = this.appDao.findAllWithCollectionContaining("plugins", p4);
+		assertEquals(0, expectSize0List.size());
+
+		// do some tests with additional criteria
+		Criterion nameIsA1 = Restrictions.eq("name", "a1");
+
+		// A1 contains p1
+		List<Application> nameIsA1Size1List = this.appDao.findAllWithCollectionContaining("plugins", p1, nameIsA1);
+		assertEquals(1, nameIsA1Size1List.size());
+
+		// A1 does not contain p3
+		List<Application> nameIsA1Size0List = this.appDao.findAllWithCollectionContaining("plugins", p3, nameIsA1);
+		assertEquals(0, nameIsA1Size0List.size());
+	}
+
+	/**
+	 * Tests whether findAllWithCollectionContaining throws exception if field is not a collection field.
+	 */
+	@Test
+	public void findAllWithCollectionContaining_shouldThrowIfFieldIsNotCollectionField() {
+
+		boolean catchedException = false;
+
+		try {
+			this.appDao.findAllWithCollectionContaining("no_collection_field", new Plugin());
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			assertEquals("There is no collection field 'no_collection_field' with element type "
+					+ "'de.terrestris.shogun2.model.Plugin' in the type 'de.terrestris.shogun2.model.Application'", msg);
+			catchedException = true;
+		}
+
+		assertTrue("findAllWithCollectionContaining() does throw with invalid collection field", catchedException);
+	}
+
+	/**
+	 * Tests whether findAllWhereFieldEquals works as expected
+	 * in common usage (searching for values)
+	 */
+	@Test
+	public void findAllWhereFieldEquals_commonUsage_withValue() {
+
+		Application a1_1 = this.getMockApp("a1");
+		a1_1.setDescription("a1_1");
+
+		Application a1_2 = this.getMockApp("a1");
+		a1_2.setDescription("a1_2");
+
+		Application a2 = this.getMockApp("a2");
+
+		appDao.saveOrUpdate(a1_1);
+		appDao.saveOrUpdate(a1_2);
+		appDao.saveOrUpdate(a2);
+
+		List<Application> expectSize2List = this.appDao.findAllWhereFieldEquals("name", "a1");
+		assertEquals(2, expectSize2List.size());
+
+		List<Application> expectSize1List = this.appDao.findAllWhereFieldEquals("name", "a2");
+		assertEquals(1, expectSize1List.size());
+
+		List<Application> expectSize0List = this.appDao.findAllWhereFieldEquals("name", "a3");
+		assertEquals(0, expectSize0List.size());
+
+		Criterion descIsA1_1 = Restrictions.eq("description", "a1_1");
+		List<Application> expectDescIsCorrectSize1List = this.appDao.findAllWhereFieldEquals("name", "a1", descIsA1_1);
+		assertEquals(1, expectDescIsCorrectSize1List.size());
+	}
+
+	/**
+	 * Tests whether findAllWhereFieldEquals works as expected
+	 * in common usage (searching for null values)
+	 */
+	@Test
+	public void findAllWhereFieldEquals_commonUsage_withNull() {
+
+		Application a1_1 = this.getMockApp("a1");
+		a1_1.setDescription("a1_1");
+		a1_1.setOpen(true);
+
+		Application a1_2 = this.getMockApp("a1");
+		a1_2.setDescription(null);
+		a1_2.setOpen(true);
+
+		Application a2 = this.getMockApp("a2");
+		a2.setDescription(null);
+		a2.setOpen(null);
+
+		appDao.saveOrUpdate(a1_1);
+		appDao.saveOrUpdate(a1_2);
+		appDao.saveOrUpdate(a2);
+
+		List<Application> expectSize2List = this.appDao.findAllWhereFieldEquals("description", null);
+		assertEquals(2, expectSize2List.size());
+
+		List<Application> expectSize1List = this.appDao.findAllWhereFieldEquals("open", null);
+		assertEquals(1, expectSize1List.size());
+
+		List<Application> expectSize0List = this.appDao.findAllWhereFieldEquals("name", null);
+		assertEquals(0, expectSize0List.size());
+
+		Criterion nameIsA1 = Restrictions.eq("name", "a1");
+		List<Application> expectNameIsCorrectSize1List = this.appDao.findAllWhereFieldEquals("description", null, nameIsA1);
+		assertEquals(1, expectNameIsCorrectSize1List.size());
+	}
+
+	/**
+	 * Tests whether findAllWhereFieldEquals throws exception if field is not a field.
+	 */
+	@Test
+	public void findAllWhereFieldEquals_shouldThrowIfFieldIsNotAField() {
+
+		boolean catchedException = false;
+
+		try {
+			this.appDao.findAllWhereFieldEquals("non_existing_field", "value");
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			assertEquals("There is no field 'non_existing_field' in the type "
+					+ "'de.terrestris.shogun2.model.Application' that accepts instances of 'java.lang.String'", msg);
+			catchedException = true;
+		}
+
+		assertTrue("findAllWhereFieldEquals() does throw with invalid field", catchedException);
 	}
 }
