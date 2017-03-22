@@ -14,8 +14,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 /**
  *
@@ -37,11 +35,6 @@ public class WpsProcessExecute extends WpsReference {
 	/**
 	 *
 	 */
-	private String displayName;
-
-	/**
-	 *
-	 */
 	@ManyToMany
 	@JoinTable(
 			name = "WPSPROCESSEXECUTES_INPUTS",
@@ -49,7 +42,6 @@ public class WpsProcessExecute extends WpsReference {
 			inverseJoinColumns = { @JoinColumn(name = "WPSPARAMETER_ID") }
 		)
 	@MapKeyColumn(name="IDENTIFIER")
-	@Cascade(CascadeType.SAVE_UPDATE)
 	private Map<String, WpsParameter> input = new HashMap<>();
 
 	/**
@@ -73,23 +65,6 @@ public class WpsProcessExecute extends WpsReference {
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
-
-
-	/**
-	 * @return the displayName
-	 */
-	public String getDisplayName() {
-		return displayName;
-	}
-
-
-	/**
-	 * @param displayName the displayName to set
-	 */
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
 
 	/**
 	 * @return the input
@@ -119,7 +94,6 @@ public class WpsProcessExecute extends WpsReference {
 		return new HashCodeBuilder(47, 23) // two randomly chosen prime numbers
 			.appendSuper(super.hashCode())
 			.append(getIdentifier())
-			.append(getDisplayName())
 			.toHashCode();
 	}
 
@@ -139,7 +113,6 @@ public class WpsProcessExecute extends WpsReference {
 		return new EqualsBuilder()
 			.appendSuper(super.equals(other))
 			.append(getIdentifier(), other.getIdentifier())
-			.append(getDisplayName(), other.getDisplayName())
 			.isEquals();
 	}
 
@@ -151,7 +124,6 @@ public class WpsProcessExecute extends WpsReference {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.appendSuper(super.toString())
 			.append("identifier", identifier)
-			.append("displayName", displayName)
 			.toString();
 	}
 }
