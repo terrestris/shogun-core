@@ -476,7 +476,7 @@ public class GeoServerInterceptorService {
 							contentType);
 				} else {
 					// perform the request with the given parameters
-					httpResponse = HttpUtil.post(fullRequestUri, queryParams);
+					httpResponse = HttpUtil.post(requestUri, queryParams);
 				}
 
 			} else {
