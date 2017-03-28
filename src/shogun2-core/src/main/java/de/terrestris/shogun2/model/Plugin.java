@@ -52,6 +52,13 @@ public class Plugin extends PersistentObject {
 	@Type(type="text")
 	private String styleSheet;
 
+	/**
+	 * Whether the plugin is a system plugin or not.
+	 * This can e.g. be used to disallow certain actions like editing of the source code.
+	 * No such limitation will be enforced from SHOGun itself.
+	 */
+	private Boolean systemPlugin;
+
 	/** A list of assigned {@link PluginUploadFile}s. */
 	@ManyToMany
 	@JoinTable(
@@ -139,6 +146,20 @@ public class Plugin extends PersistentObject {
 	}
 
 	/**
+	 * @return the systemPlugin
+	 */
+	public Boolean isSystemPlugin() {
+		return systemPlugin;
+	}
+
+	/**
+	 * @param systemPlugin the systemPlugin to set
+	 */
+	public void setSystemPlugin(Boolean systemPlugin) {
+		this.systemPlugin = systemPlugin;
+	}
+
+	/**
 	 * @return the fileUploads
 	 */
 	public Set<File> getFileUploads() {
@@ -168,6 +189,7 @@ public class Plugin extends PersistentObject {
 			.append(getXtype())
 			.append(getSourceCode())
 			.append(getStyleSheet())
+			.append(isSystemPlugin())
 			.toHashCode();
 	}
 
@@ -191,6 +213,7 @@ public class Plugin extends PersistentObject {
 			.append(getXtype(), other.getXtype())
 			.append(getSourceCode(), other.getSourceCode())
 			.append(getStyleSheet(), other.getStyleSheet())
+			.append(isSystemPlugin(), other.isSystemPlugin())
 			.isEquals();
 	}
 
@@ -206,6 +229,7 @@ public class Plugin extends PersistentObject {
 			.append("xtype", xtype)
 			.append("sourcecode", sourceCode)
 			.append("stylesheet", styleSheet)
+			.append("systemPlugin", systemPlugin)
 			.toString();
 	}
 }
