@@ -475,18 +475,17 @@ public class GeoServerInterceptorService {
 					// parse the content type of the request
 					ContentType contentType = ContentType.parse(request.getContentType());
 
-					// perform the request with the given parameters
+					// perform the POST request to the URI with queryString and with the given body
 					httpResponse = HttpUtil.post(requestUri, body, contentType);
 				} else {
 
-					// perform the request with the given parameters
+					// perform the POST request with the given name value pairs,
 					httpResponse = HttpUtil.post(requestUri, allQueryParams);
 				}
 
 			} else {
 				// otherwise throw an exception
-				throw new InterceptorException("Only GET or POST method "
-						+ "is allowed");
+				throw new InterceptorException("Only GET or POST method is allowed");
 			}
 
 		} catch (URISyntaxException | UnsupportedEncodingException e) {
@@ -497,7 +496,8 @@ public class GeoServerInterceptorService {
 	}
 
 	/**
-	 * Adjusted from http://stackoverflow.com/a/26177982
+	 * Returns a new URI with the passed queryString (e.g. foo=bar&baz=123) appended to the passed URI. Adjusted from
+	 * http://stackoverflow.com/a/26177982.
 	 *
 	 * @param uri
 	 * @param appendQuery
