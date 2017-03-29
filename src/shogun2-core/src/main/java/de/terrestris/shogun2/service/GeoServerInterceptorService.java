@@ -505,6 +505,9 @@ public class GeoServerInterceptorService {
 	 * @throws URISyntaxException
 	 */
 	public static URI appendQueryString(URI uri, String appendQuery) {
+		if (uri == null || appendQuery == null || appendQuery.isEmpty()) {
+			return uri;
+		}
 		String newQuery = uri.getQuery();
 		if (newQuery == null) {
 			newQuery = appendQuery;

@@ -1,12 +1,14 @@
 package de.terrestris.shogun2.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -336,9 +338,90 @@ public class GeoServerInterceptorServiceTest {
 
 	@Test(expected=InterceptorException.class)
 	public void get_no_specific_rule() throws Exception {
-
 		getMostSpecificRule("WMS-T", "GetFeatureInfo", "bvb:reus", "REQUEST");
+	}
 
+	@Test
+	public void test_appendQueryString() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_appendsToExistingParams() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html?FC=effzeh");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?FC=effzeh&foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_appendsToExistingParamsOfEqualName() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html?foo=baz");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=baz&foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesHttpsScheme() throws URISyntaxException {
+		URI uri = new URI("https://example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("https://example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesAuthority() throws URISyntaxException {
+		URI uri = new URI("http://user:secret@example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://user:secret@example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesFragment() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html#my-fragment");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=bar&humpty=dumpty#my-fragment", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesComplexCombination() throws URISyntaxException {
+		URI uri = new URI("https://user:secret@example.com/index.html#my-fragment");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("https://user:secret@example.com/index.html?foo=bar&humpty=dumpty#my-fragment", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_no_uri_no_appendQuery() {
+		URI uri = null;
+		String appendQuery = null;
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// we don't throw, but should always return null
+		assertNull(got);
+	}
+
+	@Test
+	public void test_appendQueryString_no_uri() {
+		URI uri = null;
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// we don't throw, but should always return null
+		assertNull(got);
+	}
+
+	@Test
+	public void test_appendQueryString_no_appendQuery() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html");
+		String appendQuery = null;
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// return the passed uri
+		assertEquals(uri, got);
 	}
 
 	/**
