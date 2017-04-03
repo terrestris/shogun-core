@@ -3,6 +3,10 @@ package de.terrestris.shogun2.model.wps;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -14,6 +18,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import de.terrestris.shogun2.converter.PropertyValueConverter;
 
 /**
  *
@@ -45,11 +51,23 @@ public class WpsProcessExecute extends WpsReference {
 	private Map<String, WpsParameter> input = new HashMap<>();
 
 	/**
+	 *
+	 */
+	@ElementCollection
+	@MapKeyColumn(name="IDENTIFIER")
+	@Column(name="VALUE")
+	@CollectionTable(
+			name="WPSPROCESSEXECUTES_INPUTVALUES",
+			joinColumns=@JoinColumn(name="WPSEXECUTEPROCESS_ID")
+		)
+	@Convert(converter = PropertyValueConverter.class, attributeName="value")
+	private Map<String, Object> inputDefaultValues = new HashMap<>();
+
+	/**
 	 * Constructor
 	 */
 	public WpsProcessExecute() {
 	}
-
 
 	/**
 	 * @return the identifier
@@ -57,7 +75,6 @@ public class WpsProcessExecute extends WpsReference {
 	public String getIdentifier() {
 		return identifier;
 	}
-
 
 	/**
 	 * @param identifier the identifier to set
@@ -73,7 +90,6 @@ public class WpsProcessExecute extends WpsReference {
 		return input;
 	}
 
-
 	/**
 	 * @param input the input to set
 	 */
@@ -81,6 +97,19 @@ public class WpsProcessExecute extends WpsReference {
 		this.input = input;
 	}
 
+	/**
+	 * @return the inputDefaultValues
+	 */
+	public Map<String, Object> getInputDefaultValues() {
+		return inputDefaultValues;
+	}
+
+	/**
+	 * @param inputDefaultValues the inputDefaultValues to set
+	 */
+	public void setInputDefaultValues(Map<String, Object> inputDefaultValues) {
+		this.inputDefaultValues = inputDefaultValues;
+	}
 
 	/**
 	 * @see java.lang.Object#hashCode()
