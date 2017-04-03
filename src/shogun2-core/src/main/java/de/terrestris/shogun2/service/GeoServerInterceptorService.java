@@ -435,8 +435,9 @@ public class GeoServerInterceptorService {
 
 		Response httpResponse = new Response();
 
-		boolean getRequest = request.getMethod().equalsIgnoreCase("GET");
-		boolean postRequest = request.getMethod().equalsIgnoreCase("POST");
+		String requestMethod = request.getMethod();
+		boolean getRequest = "GET".equalsIgnoreCase(requestMethod);
+		boolean postRequest = "POST".equalsIgnoreCase(requestMethod);
 
 		try {
 
@@ -445,12 +446,10 @@ public class GeoServerInterceptorService {
 
 			// get the query parameters provided by the GET/POST request and
 			// convert to a list of NameValuePairs
-			List<NameValuePair> queryParams = createQueryParams(
-					request.getParameterMap());
+			List<NameValuePair> allQueryParams = createQueryParams(request.getParameterMap());
 
 			// append the given request parameters to the base URI
-			URI fullRequestUri = getFullRequestURI(requestUri,
-					queryParams);
+			URI fullRequestUri = getFullRequestURI(requestUri, allQueryParams);
 
 			if (getRequest) {
 				// if we're called via GET method
@@ -461,6 +460,12 @@ public class GeoServerInterceptorService {
 			} else if (postRequest) {
 				// if we're called via POST method
 
+				// We have to attach the actual query; a POST to e.g. http://example.com/?foo=bar is totally OK
+				String queryString = request.getQueryString();
+				if (queryString != null) {
+					requestUri = appendQueryString(requestUri, queryString);
+				}
+
 				// get the request body if any
 				String body = OgcXmlUtil.getRequestBody(request);
 
@@ -468,21 +473,19 @@ public class GeoServerInterceptorService {
 					// we do have a POST with string data present
 
 					// parse the content type of the request
-					ContentType contentType = ContentType.parse(
-							request.getContentType());
+					ContentType contentType = ContentType.parse(request.getContentType());
 
-					// perform the request with the given parameters
-					httpResponse = HttpUtil.post(fullRequestUri, body,
-							contentType);
+					// perform the POST request to the URI with queryString and with the given body
+					httpResponse = HttpUtil.post(requestUri, body, contentType);
 				} else {
-					// perform the request with the given parameters
-					httpResponse = HttpUtil.post(fullRequestUri, queryParams);
+
+					// perform the POST request with the given name value pairs,
+					httpResponse = HttpUtil.post(requestUri, allQueryParams);
 				}
 
 			} else {
 				// otherwise throw an exception
-				throw new InterceptorException("Only GET or POST method "
-						+ "is allowed");
+				throw new InterceptorException("Only GET or POST method is allowed");
 			}
 
 		} catch (URISyntaxException | UnsupportedEncodingException e) {
@@ -491,6 +494,39 @@ public class GeoServerInterceptorService {
 
 		return httpResponse;
 	}
+
+	/**
+	 * Returns a new URI with the passed queryString (e.g. foo=bar&baz=123) appended to the passed URI. Adjusted from
+	 * http://stackoverflow.com/a/26177982.
+	 *
+	 * @param uri
+	 * @param appendQuery
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static URI appendQueryString(URI uri, String appendQuery) {
+		if (uri == null || appendQuery == null || appendQuery.isEmpty()) {
+			return uri;
+		}
+		String newQuery = uri.getQuery();
+		if (newQuery == null) {
+			newQuery = appendQuery;
+		} else {
+			newQuery += "&" + appendQuery;
+		}
+		// Fallback is the old URI
+		URI newUri = uri;
+		try {
+			newUri = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), newQuery, uri.getFragment());
+		} catch (URISyntaxException e) {
+			String msg = String.format(
+				"Failed to append query '%s' to URI '%s', returning URI unchanged.",
+				appendQuery, uri
+			);
+			LOG.warn(msg);
+		}
+		return newUri;
+    }
 
 	/**
 	 * @return

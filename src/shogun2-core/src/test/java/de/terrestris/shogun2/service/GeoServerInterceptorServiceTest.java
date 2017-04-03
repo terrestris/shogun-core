@@ -1,11 +1,14 @@
 package de.terrestris.shogun2.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +105,8 @@ public class GeoServerInterceptorServiceTest {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
+	@SuppressWarnings("unchecked")
 	public void send_post_kvp() throws URISyntaxException, HttpException,
 			InterceptorException, IOException {
 
@@ -138,6 +141,47 @@ public class GeoServerInterceptorServiceTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
+	public void send_post_kvp_and_query_params() throws URISyntaxException, HttpException, InterceptorException, IOException {
+		Response resp = new Response();
+
+		String url = "http://example.com/geoserver.action";
+		String queryString = "FC=effzeh&HUMPTY=dumpty";
+		String expectedPostUrl = url + "?" + queryString;
+
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest();
+		httpRequest.setRequestURI(url); // Set the raw URL …
+		httpRequest.setQueryString(queryString); // and the query string …
+		httpRequest.setParameter("SERVICE", "WMS");
+		httpRequest.setParameter("REQUEST", "GetMap");
+		httpRequest.setParameter("LAYERS", "bvb:shinji");
+		httpRequest.setMethod("POST");
+
+		PowerMockito.mockStatic(HttpUtil.class);
+		when(
+			// …but only return the created resp when the expected URL is requested
+			HttpUtil.post(eq(expectedPostUrl), any(List.class))
+		).thenReturn(resp);
+
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
+
+		when(ogcMessageDistributor.distributeToRequestInterceptor(
+				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
+
+		// for the next stub it would be even better if we could use .then(returnsFirstArg() but this needs java 8
+		when(ogcMessageDistributor.distributeToResponseInterceptor(
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+
+		when(ruleService.findAllRulesForServiceAndEvent(
+				any(String.class), any(String.class))).thenReturn(
+				getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
+
+		Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+
+		assertEquals(resp, got);
+	}
+
+	@Test
 	public void send_post_body() throws URISyntaxException, HttpException,
 			InterceptorException, IOException {
 
@@ -168,6 +212,58 @@ public class GeoServerInterceptorServiceTest {
 		when(ogcMessageDistributor.distributeToRequestInterceptor(
 				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
+		// for the next stub it would be even better if we could use .then(returnsFirstArg() but this needs java 8
+		when(ogcMessageDistributor.distributeToResponseInterceptor(
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+
+		when(ruleService.findAllRulesForServiceAndEvent(
+				any(String.class), any(String.class))).thenReturn(
+						getTestInterceptorRulesForServiceAndEvent("WFS", "REQUEST"));
+
+		Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+
+		assertEquals(resp, got);
+	}
+
+	@Test
+	public void send_post_body_and_query_params() throws URISyntaxException, HttpException,
+			InterceptorException, IOException {
+
+		String url = "http://example.com/geoserver.action";
+		String queryString = "FC=effzeh&HUMPTY=dumpty";
+		String expectedPostUrl = url + "?" + queryString;
+
+		Response resp = new Response();
+
+		String describeFeature =
+				"<DescribeFeatureType " +
+				"  version=\"1.1.0\" " +
+				"  service=\"WFS\" " +
+				"  xmlns=\"http://www.opengis.net/wfs\" " +
+				"  xmlns:bvb=\"http://www.openplans.org/bvb\" " +
+				"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+				"  xsi:schemaLocation=\"http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd\"> " +
+				"    <TypeName>bvb:shinji</TypeName> " +
+				"</DescribeFeatureType>";
+
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest();
+		httpRequest.setRequestURI(url); // Set the raw URL …
+		httpRequest.setQueryString(queryString); // and the query string …
+		httpRequest.setContent(describeFeature.getBytes());
+		httpRequest.setContentType(ContentType.APPLICATION_XML.toString());
+		httpRequest.setMethod("POST");
+
+		PowerMockito.mockStatic(HttpUtil.class);
+		when(
+			// …but only return the created resp when the expected URL is requested
+			HttpUtil.post(eq(expectedPostUrl), any(String.class), any(ContentType.class))
+		).thenReturn(resp);
+
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
+
+		when(ogcMessageDistributor.distributeToRequestInterceptor(
+				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
+
 		when(ogcMessageDistributor.distributeToResponseInterceptor(
 				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
 
@@ -180,6 +276,8 @@ public class GeoServerInterceptorServiceTest {
 		assertEquals(resp, got);
 
 	}
+
+
 
 	@Test
 	public void get_most_specific_rule() throws Exception {
@@ -240,9 +338,90 @@ public class GeoServerInterceptorServiceTest {
 
 	@Test(expected=InterceptorException.class)
 	public void get_no_specific_rule() throws Exception {
-
 		getMostSpecificRule("WMS-T", "GetFeatureInfo", "bvb:reus", "REQUEST");
+	}
 
+	@Test
+	public void test_appendQueryString() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_appendsToExistingParams() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html?FC=effzeh");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?FC=effzeh&foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_appendsToExistingParamsOfEqualName() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html?foo=baz");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=baz&foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesHttpsScheme() throws URISyntaxException {
+		URI uri = new URI("https://example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("https://example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesAuthority() throws URISyntaxException {
+		URI uri = new URI("http://user:secret@example.com/index.html");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://user:secret@example.com/index.html?foo=bar&humpty=dumpty", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesFragment() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html#my-fragment");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("http://example.com/index.html?foo=bar&humpty=dumpty#my-fragment", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_handlesComplexCombination() throws URISyntaxException {
+		URI uri = new URI("https://user:secret@example.com/index.html#my-fragment");
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		assertEquals("https://user:secret@example.com/index.html?foo=bar&humpty=dumpty#my-fragment", got.toString());
+	}
+
+	@Test
+	public void test_appendQueryString_no_uri_no_appendQuery() {
+		URI uri = null;
+		String appendQuery = null;
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// we don't throw, but should always return null
+		assertNull(got);
+	}
+
+	@Test
+	public void test_appendQueryString_no_uri() {
+		URI uri = null;
+		String appendQuery = "foo=bar&humpty=dumpty";
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// we don't throw, but should always return null
+		assertNull(got);
+	}
+
+	@Test
+	public void test_appendQueryString_no_appendQuery() throws URISyntaxException {
+		URI uri = new URI("http://example.com/index.html");
+		String appendQuery = null;
+		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
+		// return the passed uri
+		assertEquals(uri, got);
 	}
 
 	/**
