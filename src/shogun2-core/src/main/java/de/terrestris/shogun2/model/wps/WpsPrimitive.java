@@ -26,11 +26,6 @@ public class WpsPrimitive extends WpsParameter {
 	/**
 	 *
 	 */
-	private String defaultTextValue;
-
-	/**
-	 *
-	 */
 	@ManyToOne
 	private Plugin inputPlugin;
 
@@ -38,20 +33,6 @@ public class WpsPrimitive extends WpsParameter {
 	 * Constructor
 	 */
 	public WpsPrimitive() {
-	}
-
-	/**
-	 * @return the defaultTextValue
-	 */
-	public String getDefaultTextValue() {
-		return defaultTextValue;
-	}
-
-	/**
-	 * @param defaultTextValue the defaultTextValue to set
-	 */
-	public void setDefaultTextValue(String defaultTextValue) {
-		this.defaultTextValue = defaultTextValue;
 	}
 
 	/**
@@ -79,7 +60,6 @@ public class WpsPrimitive extends WpsParameter {
 	public int hashCode() {
 		return new HashCodeBuilder(13, 47) // two randomly chosen prime numbers
 			.appendSuper(super.hashCode())
-			.append(getDefaultTextValue())
 			.append(getInputPlugin())
 			.toHashCode();
 	}
@@ -99,7 +79,6 @@ public class WpsPrimitive extends WpsParameter {
 
 		return new EqualsBuilder()
 			.appendSuper(super.equals(other))
-			.append(getDefaultTextValue(), other.getDefaultTextValue())
 			.append(getInputPlugin(), other.getInputPlugin())
 			.isEquals();
 	}
@@ -111,7 +90,6 @@ public class WpsPrimitive extends WpsParameter {
 	public String toString(){
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 			.appendSuper(super.toString())
-			.append("defaultTextValue", defaultTextValue)
 			.append("inputPlugin", inputPlugin)
 			.toString();
 	}
