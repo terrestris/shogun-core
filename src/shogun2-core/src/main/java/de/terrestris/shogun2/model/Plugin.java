@@ -148,7 +148,7 @@ public class Plugin extends PersistentObject {
 	/**
 	 * @return the systemPlugin
 	 */
-	public Boolean isSystemPlugin() {
+	public Boolean getSystemPlugin() {
 		return systemPlugin;
 	}
 
@@ -189,7 +189,7 @@ public class Plugin extends PersistentObject {
 			.append(getXtype())
 			.append(getSourceCode())
 			.append(getStyleSheet())
-			.append(isSystemPlugin())
+			.append(getSystemPlugin())
 			.toHashCode();
 	}
 
@@ -213,7 +213,7 @@ public class Plugin extends PersistentObject {
 			.append(getXtype(), other.getXtype())
 			.append(getSourceCode(), other.getSourceCode())
 			.append(getStyleSheet(), other.getStyleSheet())
-			.append(isSystemPlugin(), other.isSystemPlugin())
+			.append(getSystemPlugin(), other.getSystemPlugin())
 			.isEquals();
 	}
 
