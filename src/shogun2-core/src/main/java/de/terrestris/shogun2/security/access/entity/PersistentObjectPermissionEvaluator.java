@@ -89,7 +89,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
 	 * @param userPermissionsMap
 	 * @return
 	 */
-	protected static PermissionCollection extractUserPermissions(User user,
+	protected PermissionCollection extractUserPermissions(User user,
 			Map<User, PermissionCollection> userPermissionsMap) {
 
 		PermissionCollection permissionCollection = userPermissionsMap.get(user);
@@ -108,7 +108,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
 	 * @param groupPermissionsMap
 	 * @return
 	 */
-	protected static PermissionCollection extractGroupPermissions(User user,
+	protected PermissionCollection extractGroupPermissions(User user,
 			Map<UserGroup, PermissionCollection> groupPermissionsMap) {
 
 		Set<Permission> aggregatedGroupPermissions = new HashSet<Permission>();
