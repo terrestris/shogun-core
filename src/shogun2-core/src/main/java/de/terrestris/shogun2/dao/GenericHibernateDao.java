@@ -444,7 +444,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 *
 	 * @return
 	 */
-	private Number getTotalCount(Criterion... criterion) throws HibernateException {
+	public Number getTotalCount(Criterion... criterion) throws HibernateException {
 		Criteria criteria = getSession().createCriteria(entityClass);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setProjection(Projections.rowCount());
