@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.StreamUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -129,6 +130,39 @@ public class OgcXmlUtil {
 
 		return result;
 
+	}
+
+	/**
+	 *
+	 * @param document
+	 * @param path
+	 * @return
+	 * @throws InterceptorException
+	 */
+	public static NodeList getPathInDocumentAsNodeList(Document document, String path)
+			throws InterceptorException {
+
+		if (document == null) {
+			throw new InterceptorException("Document may not be null");
+		}
+
+		if (StringUtils.isEmpty(path)) {
+			throw new InterceptorException("Missing parameter path");
+		}
+
+		NodeList result;
+
+		try {
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr = xpath.compile(path);
+			result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			throw new InterceptorException("Error while selecting document " +
+					"element with XPath: " + e.getMessage());
+		}
+
+		return result;
 	}
 
 }
