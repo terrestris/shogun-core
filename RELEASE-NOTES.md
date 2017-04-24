@@ -10,6 +10,9 @@
   * Connection pooling has been replaced by [HikariCP](http://brettwooldridge.github.io/HikariCP/). Beside that [HikariCP outperforms](https://github.com/brettwooldridge/HikariCP-benchmark) c3p0 insofar as performance is concerned, the major advantage is that there are less (required) parameters to tweak which makes the configuration of the connection pooling much simpler. Please take care of differing `artifactId` depending on your Java version
   * The `HttpUtil` now offers the possibility to add custom HTTP headers to requests: https://github.com/terrestris/shogun2/pull/218
   * The `Shogun2PermissionEvaluator` can now be configured to use the *plain* `Principal` object from the spring security context (instead of always fetching a full SHOGun2-database user object): https://github.com/terrestris/shogun2/pull/229
+* Upgrade notes to get projects based on v0.1.1 running with v0.1.2:
+  * Copy file hikari.properties from [here](https://github.com/terrestris/shogun2/blob/master/src/shogun2-webapp-archetype/src/main/resources/archetype-resources/src/main/resources/META-INF/hikari.properties) to ``src/main/resources/META-INF/`` in your existing project.
+  * Replace the c3p0-based ``shogun2DataSource`` in the ``{{your-project}}-context-db.xml`` file (under ``src/main/resources/META-INF/spring/``) by the one based on hikari as it is defined in the [archetype](https://github.com/terrestris/shogun2/blob/master/src/shogun2-webapp-archetype/src/main/resources/archetype-resources/src/main/resources/META-INF/spring/__artifactId__-context-db.xml). Make sure also to add the bean ``hikariConfig`` from the archetype.
 
 ## 0.1.1 (2016-10-26)
 
