@@ -475,6 +475,12 @@ public class GeoServerInterceptorService {
 					// parse the content type of the request
 					ContentType contentType = ContentType.parse(request.getContentType());
 
+					if(contentType.getCharset() == null) {
+						// use UTF-8 charset if charset could not be parsed from the content type
+						// of the request
+						contentType = contentType.withCharset("UTF-8");
+					}
+
 					// perform the POST request to the URI with queryString and with the given body
 					httpResponse = HttpUtil.post(requestUri, body, contentType);
 				} else {
