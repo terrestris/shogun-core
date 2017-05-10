@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.terrestris.shogun2.dao.FileDao;
 import de.terrestris.shogun2.model.File;
 import de.terrestris.shogun2.service.FileService;
 import de.terrestris.shogun2.util.data.ResultSet;
-import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 
 /**
  *
@@ -65,21 +61,13 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 	}
 
 	/**
-	 * Use the object mapper from the spring context, if available (e.g.
-	 * {@link Shogun2JsonObjectMapper}). If not available, the default
-	 * implementation will be used.
-	 */
-	@Autowired(required = false)
-	private ObjectMapper objectMapper;
-
-	/**
 	 * Persists a file as bytearray in the database
 	 *
 	 * @param uploadedFile
 	 * @return
 	 */
 	@RequestMapping(value = "/upload.action", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadFile(
+	public ResponseEntity<?> uploadFile(
 			@RequestParam("file") MultipartFile uploadedFile) {
 
 		LOG.debug("Requested to upload a multipart-file");
@@ -96,28 +84,11 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 					e.getMessage());
 		}
 
-		// we have to return the response-Map as String to be browser conform.
-		// as this controller is typically being called by a form.submit() the
-		// browser expects a response with the Content-Type header set to
-		// "text/html".
 		final HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.TEXT_HTML);
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
 		// rewrite the response-Map as String
-		String responseMapAsString = null;
-		try {
-			// try to use autowired object mapper from spring context
-			ObjectMapper om = (objectMapper != null) ? objectMapper : new ObjectMapper();
-			responseMapAsString = om.writeValueAsString(responseMap);
-		} catch (JsonProcessingException e) {
-			String errMsg = "Error while rewriting the response Map to a String: " + e.getMessage();
-			LOG.error(errMsg);
-
-			// use errorMsg if serialization as json failed
-			responseMapAsString = errMsg;
-		}
-
-		return new ResponseEntity<String>(responseMapAsString, responseHeaders, HttpStatus.OK);
+		return new ResponseEntity<>(responseMap, responseHeaders, HttpStatus.OK);
 	}
 
 	/**
