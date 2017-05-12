@@ -81,6 +81,11 @@ public class MapConfig extends PersistentObject{
 	/**
 	 *
 	 */
+	private Double resolution;
+
+	/**
+	 *
+	 */
 	private Double maxResolution;
 
 	/**
@@ -202,6 +207,20 @@ public class MapConfig extends PersistentObject{
 	}
 
 	/**
+	 * @return the resolution
+	 */
+	public Double getResolution() {
+		return resolution;
+	}
+
+	/**
+	 * @param resolution the resolution to set
+	 */
+	public void setResolution(Double resolution) {
+		this.resolution = resolution;
+	}
+
+	/**
 	 * @return the maxResolution
 	 */
 	public Double getMaxResolution() {
@@ -275,6 +294,7 @@ public class MapConfig extends PersistentObject{
 				append(getExtent()).
 				append(getResolutions()).
 				append(getZoom()).
+				append(getResolution()).
 				append(getMaxResolution()).
 				append(getMinResolution()).
 				append(getRotation()).
@@ -302,6 +322,7 @@ public class MapConfig extends PersistentObject{
 				append(getExtent(), other.getExtent()).
 				append(getResolutions(), other.getResolutions()).
 				append(getZoom(), other.getZoom()).
+				append(getResolution(), other.getResolution()).
 				append(getMaxResolution(), other.getMaxResolution()).
 				append(getMinResolution(), other.getMinResolution()).
 				append(getRotation(), other.getRotation()).
