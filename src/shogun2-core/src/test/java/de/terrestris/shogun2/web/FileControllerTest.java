@@ -89,7 +89,7 @@ public class FileControllerTest {
 		mockMvc.perform(
 			MockMvcRequestBuilders.fileUpload("/file/upload.action").file(mockMultipartFile))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.TEXT_HTML))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.*", hasSize(3)))
 				.andExpect(jsonPath("$.success", is(true)))
 				.andExpect(jsonPath("$.total", is(1)))
@@ -120,7 +120,7 @@ public class FileControllerTest {
 		mockMvc.perform(
 			MockMvcRequestBuilders.fileUpload("/file/upload.action").file(file))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.TEXT_HTML))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.*", hasSize(2)))
 				.andExpect(jsonPath("$.success", is(false)))
 				.andExpect(jsonPath("$.message", containsString(errorMessage)));
