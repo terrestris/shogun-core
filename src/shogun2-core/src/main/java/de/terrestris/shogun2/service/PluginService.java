@@ -119,7 +119,6 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 		}
 
 		return result;
-
 	}
 
 	/**

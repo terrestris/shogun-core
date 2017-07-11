@@ -65,17 +65,16 @@ public class PluginController<E extends Plugin, D extends PluginDao<E>, S extend
 	 * @return
 	 */
 	@RequestMapping(value="preCheckDelete.action", method = RequestMethod.POST)
-	public ResponseEntity<?> preCheckDelete(
-			@RequestParam("pluginId") Integer pluginId) {
-			List<String> result = null;
-			try {
-				result = service.preCheckDelete(pluginId);
-			} catch (Exception e) {
-				final String msg = e.getMessage();
-				LOG.error("Could not pre-check plugin deletion: " + msg);
-				return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-			return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);
+	public ResponseEntity<?> preCheckDelete(@RequestParam("pluginId") Integer pluginId) {
+		List<String> result = null;
+		try {
+			result = service.preCheckDelete(pluginId);
+		} catch (Exception e) {
+			final String msg = e.getMessage();
+			LOG.error("Could not pre-check plugin deletion: " + msg);
+			return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);
 	}
 
 }
