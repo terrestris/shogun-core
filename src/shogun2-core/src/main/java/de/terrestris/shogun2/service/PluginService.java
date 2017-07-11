@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.h2.util.StringUtils;
@@ -94,6 +95,31 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 		}
 
 		return code;
+	}
+
+	/**
+	 *
+	 * @param pluginId
+	 * @return List of application names that contain the given plugin
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layerId, 'de.terrestris.shogun2.model.Plugin', 'DELETE')")
+	public List<String> preCheckDelete(Integer pluginId) {
+		List<String> result = new ArrayList<>();
+
+		E plugin = this.dao.findById(pluginId);
+
+		if (plugin != null) {
+
+			List<Application> appsWithPlugin = applicationService.findAllWithCollectionContaining("plugins", plugin);
+
+			for (Application application : appsWithPlugin) {
+				result.add(application.getName());
+			}
+
+		}
+
+		return result;
+
 	}
 
 	/**
