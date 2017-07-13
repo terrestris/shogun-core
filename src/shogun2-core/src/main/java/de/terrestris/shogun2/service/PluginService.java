@@ -102,7 +102,7 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	 * @param pluginId
 	 * @return List of application names that contain the given plugin
 	 */
-	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layerId, 'de.terrestris.shogun2.model.Plugin', 'DELETE')")
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#pluginId, 'de.terrestris.shogun2.model.Plugin', 'DELETE')")
 	public List<String> preCheckDelete(Integer pluginId) {
 		List<String> result = new ArrayList<>();
 
