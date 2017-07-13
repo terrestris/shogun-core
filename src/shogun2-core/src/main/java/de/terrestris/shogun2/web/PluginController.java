@@ -3,14 +3,21 @@
  */
 package de.terrestris.shogun2.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import de.terrestris.shogun2.dao.PluginDao;
 import de.terrestris.shogun2.model.Plugin;
 import de.terrestris.shogun2.service.PluginService;
+import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
  *
@@ -48,6 +55,26 @@ public class PluginController<E extends Plugin, D extends PluginDao<E>, S extend
 	@Qualifier("pluginService")
 	public void setService(S service) {
 		this.service = service;
+	}
+
+	/**
+	 * Checks in which applications the given plugin is contained (and from which it
+	 * would be removed in case of deletion).
+	 * 
+	 * @param pluginId
+	 * @return
+	 */
+	@RequestMapping(value="preCheckDelete.action", method = RequestMethod.POST)
+	public ResponseEntity<?> preCheckDelete(@RequestParam("pluginId") Integer pluginId) {
+		List<String> result = null;
+		try {
+			result = service.preCheckDelete(pluginId);
+		} catch (Exception e) {
+			final String msg = e.getMessage();
+			LOG.error("Could not pre-check plugin deletion: " + msg);
+			return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);
 	}
 
 }
