@@ -22,21 +22,6 @@ before_script:
 
 script:
   - mvn --batch-mode --threads 2.0C --show-version clean test
-  - cd ../../
-  - >
-    mvn archetype:generate
-    -DinteractiveMode=false
-    -DarchetypeCatalog=local
-    -DarchetypeGroupId=de.terrestris
-    -DarchetypeArtifactId=shogun2-webapp-archetype
-    -DgroupId=de.terrestris
-    -DartifactId=shogun2-webapp-travis
-    -Dversion=1.0-TRAVIS
-    -Dpackage=de.terrestris.travis
-    -Dwebapp-name=shogun2-webapp-travis
-  - cd shogun2-webapp-travis/
-  - mvn --batch-mode clean test
-  - cd ../shogun2/src/
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
