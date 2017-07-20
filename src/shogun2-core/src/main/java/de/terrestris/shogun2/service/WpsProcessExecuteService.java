@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -97,6 +98,30 @@ public class WpsProcessExecuteService<E extends WpsProcessExecute, D extends Wps
 	@Qualifier("wpsProcessExecuteDao")
 	public void setDao(D dao) {
 		this.dao = dao;
+	}
+
+	/**
+	 *
+	 * @param wpsId
+	 * @return List of {@link WpsPlugin}s that are connected to the given {@link WpsProcessExecute}
+	 */
+	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#wpsId, 'de.terrestris.shogun2.model.wps.WpsProcessExecute', 'DELETE')")
+	public List<String> preCheckDelete(Integer wpsId) {
+		List<String> result = new ArrayList<>();
+
+		E wpsProcessExecute = this.dao.findById(wpsId);
+
+		if (wpsProcessExecute != null) {
+
+			List<WpsPlugin> pluginsWithWps = wpsPluginService.findAllWhereFieldEquals("process", wpsProcessExecute);
+
+			for (WpsPlugin plugin : pluginsWithWps) {
+				result.add(plugin.getName());
+			}
+
+		}
+
+		return result;
 	}
 
 	/**
