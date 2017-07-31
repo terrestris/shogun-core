@@ -3,6 +3,7 @@ package de.terrestris.shogun2.web;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import de.terrestris.shogun2.service.EndpointDocService;
+
 /**
+ * Web-controller for endpoint documentation.
  * 
  * @author Christian mayer
  */
@@ -24,6 +28,12 @@ public class EndpointDocController {
 	@Autowired
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
+	/**
+	 * The service layer instance
+	 */
+	@Autowired
+	@Qualifier("endpoinDocService")
+	private EndpointDocService service;
 
 	/**
 	 * Provides an overview of all mapped endpoints.
@@ -31,18 +41,24 @@ public class EndpointDocController {
 	@RequestMapping(value = "/endpointdoc", method = RequestMethod.GET)
 	public @ResponseBody Set<RequestMappingInfo> getEndpoints() {
 
-		if (requestMappingHandlerMapping.getHandlerMethods() != null) {
-			return requestMappingHandlerMapping.getHandlerMethods().keySet();
-		}
-		
-		return null;
+		return this.service.getEndpoints(requestMappingHandlerMapping);
 	}
 
 
 	/**
-	 * @param requestMappingHandlerMapping the requestMappingHandlerMapping to set
+	 * @param service
+	 *            the service to set
+	 */
+	public void setService(EndpointDocService service) {
+		this.service = service;
+	}
+
+	/**
+	 * @param requestMappingHandlerMapping
+	 *            the requestMappingHandlerMapping to set
 	 */
 	public void setRequestMappingHandlerMapping(RequestMappingHandlerMapping requestMappingHandlerMapping) {
 		this.requestMappingHandlerMapping = requestMappingHandlerMapping;
 	}
+
 }

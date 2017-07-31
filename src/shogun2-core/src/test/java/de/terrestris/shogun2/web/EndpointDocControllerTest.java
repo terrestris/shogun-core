@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import de.terrestris.shogun2.service.EndpointDocService;
+
 /**
  *
  * @author Christian Mayer
@@ -26,6 +28,9 @@ public class EndpointDocControllerTest {
 	private EndpointDocController endpointDocController;
 
 	@Mock
+	private EndpointDocService endpointDocServiceMock;
+
+	@Mock
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 	@Before
@@ -38,21 +43,19 @@ public class EndpointDocControllerTest {
 		// annotation will not work with the constructors of the controllers
 		// (entityClass). see https://goo.gl/jLbMZe
 		endpointDocController = new EndpointDocController();
+		endpointDocController.setService(endpointDocServiceMock);
 		endpointDocController.setRequestMappingHandlerMapping(requestMappingHandlerMapping);
 		// Setup Spring test in standalone mode
-		this.mockMvc = MockMvcBuilders.standaloneSetup(endpointDocController)
-				.build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(endpointDocController).build();
 	}
 
 	@Test
-	public void findAllRequestMappings_shouldReturnAllRequestMappings()
-			throws Exception {
+	public void findAllRequestMappings_shouldReturnAllRequestMappings() throws Exception {
 
 		// Perform and test the GET-Request
 		mockMvc.perform(get("/endpointdoc"))
 				.andExpect(status().isOk())
-				.andExpect(
-						content().contentType("application/json;charset=UTF-8"))
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(content().string("[]"));
 	}
 }
