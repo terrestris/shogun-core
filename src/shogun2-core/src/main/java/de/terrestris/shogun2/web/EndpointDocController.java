@@ -32,7 +32,7 @@ public class EndpointDocController {
 	 * The service layer instance
 	 */
 	@Autowired
-	@Qualifier("endpoinDocService")
+	@Qualifier("endpointDocService")
 	private EndpointDocService service;
 
 	/**

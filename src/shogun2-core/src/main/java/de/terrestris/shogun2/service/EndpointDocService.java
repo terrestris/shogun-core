@@ -14,7 +14,7 @@ import de.terrestris.shogun2.web.EndpointDocController;
  *
  * @author Christian Mayer
  */
-@Service("endpoinDocService")
+@Service("endpointDocService")
 public class EndpointDocService {
 
 	/**
