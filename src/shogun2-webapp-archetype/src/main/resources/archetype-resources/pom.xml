@@ -157,6 +157,18 @@
             </plugin>
 
         </plugins>
+
+        <!-- Include maven variables (name, version, etc. from pom.xml) in the env.properties file -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>META-INF/**</include>
+                </includes>
+            </resource>
+        </resources>
+
     </build>
 
     <dependencies>
