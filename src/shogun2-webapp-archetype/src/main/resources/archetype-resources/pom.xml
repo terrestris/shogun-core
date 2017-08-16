@@ -164,7 +164,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>META-INF/env.properties</include>
+                    <include>META-INF/**</include>
                 </includes>
             </resource>
         </resources>
