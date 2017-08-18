@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model.layer.source;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.ColumnDefault;
 
 import de.terrestris.shogun2.model.layer.util.TileGrid;
 
@@ -32,6 +34,13 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 	@ManyToOne
 	@Cascade(CascadeType.SAVE_UPDATE)
 	private TileGrid tileGrid;
+
+	/**
+	 * Whether to request the layer with TILED=true.
+	 */
+	@Column(name = "REQUEST_WITH_TILED")
+	@ColumnDefault(value = "true")
+	private Boolean requestWithTiled = true;
 
 	/**
 	 * default constructor
@@ -115,6 +124,21 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
+	}
+
+	/**
+	 * @return the requestWithTiled
+	 */
+	public Boolean getRequestWithTiled() {
+		return requestWithTiled;
+	}
+
+	/**
+	 * @param requestWithTiled
+	 *            the requestWithTiled to set
+	 */
+	public void setRequestWithTiled(Boolean requestWithTiled) {
+		this.requestWithTiled = requestWithTiled;
 	}
 
 }
