@@ -15,7 +15,7 @@ import de.terrestris.shogun2.service.EndpointDocService;
 
 /**
  * Web-controller for endpoint documentation.
- * 
+ *
  * @author Christian mayer
  */
 @Controller
@@ -26,6 +26,7 @@ public class EndpointDocController {
 	 * method-level @RequestMapping annotations in @Controller classes.
 	 */
 	@Autowired
+	@Qualifier("handlerMapping")
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 	/**
