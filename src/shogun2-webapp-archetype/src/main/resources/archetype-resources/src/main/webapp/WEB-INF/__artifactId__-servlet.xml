@@ -47,6 +47,9 @@ ${shogun2-parent-package}.*.web" )
 	</beans:bean>
 
 	<annotation-config />
+	
+	<beans:bean id="requestHandlerMapping"
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
 	<beans:bean id="jacksonObjectMapper"
 		class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
