@@ -26,7 +26,7 @@ public class EndpointDocController {
 	 * method-level @RequestMapping annotations in @Controller classes.
 	 */
 	@Autowired
-	@Qualifier("handlerMapping")
+	@Qualifier("requestHandlerMapping")
 	private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 	/**

@@ -48,11 +48,8 @@ ${shogun2-parent-package}.*.web" )
 
 	<annotation-config />
 	
-	<!-- Use the full path within the current servlet context to find an appropriate handler.
-		s. http://docs.spring.io/spring/docs/4.0.7.RELEASE/spring-framework-reference/htmlsingle/#mvc-handlermapping -->
-	<beans:bean id="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-		<beans:property name="alwaysUseFullPath" value="true"/>
-	</beans:bean>
+	<beans:bean id="requestHandlerMapping"
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
 	<beans:bean id="jacksonObjectMapper"
 		class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
