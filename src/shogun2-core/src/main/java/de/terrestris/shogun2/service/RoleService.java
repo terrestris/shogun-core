@@ -5,6 +5,7 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.RoleDao;
 import de.terrestris.shogun2.model.Role;
@@ -42,6 +43,7 @@ public class RoleService<E extends Role, D extends RoleDao<E>> extends
 	 * @param roleName A unique role name.
 	 * @return The unique role for the role name or null.
 	 */
+	@Transactional(readOnly = true)
 	public E findByRoleName(String roleName) {
 
 		SimpleExpression eqRoleName =

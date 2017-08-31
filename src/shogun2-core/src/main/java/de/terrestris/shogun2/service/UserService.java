@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.RegistrationTokenDao;
 import de.terrestris.shogun2.dao.RoleDao;
@@ -98,6 +99,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @return The unique user for the account name or null.
 	 */
 	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#accountName, 'READ')")
+	@Transactional(readOnly = true)
 	public E findByAccountName(String accountName) {
 		return dao.findByAccountName(accountName);
 	}
@@ -108,6 +110,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @return
 	 */
 	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#email, 'READ')")
+	@Transactional(readOnly = true)
 	public E findByEmail(String email) {
 		return dao.findByEmail(email);
 	}
@@ -232,6 +235,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @param request
 	 * @throws Exception
 	 */
+	@Transactional(readOnly = true)
 	public E getUserBySession() {
 
 		final Object principal = SecurityContextHolder.getContext()
@@ -259,6 +263,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 	 * @throws Exception
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
 
 		Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.PermissionCollectionDao;
@@ -344,6 +345,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
 	 * @return
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#user, 'READ')")
+	@Transactional(readOnly = true)
 	public Map<PersistentObject, PermissionCollection> findAllUserPermissionsOfUser(User user) {
 		return dao.findAllUserPermissionsOfUser(user);
 	}
@@ -359,6 +361,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
 	 * @return
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#userGroup, 'READ')")
+	@Transactional(readOnly = true)
 	public Map<PersistentObject, PermissionCollection> findAllUserGroupPermissionsOfUserGroup(UserGroup userGroup) {
 		return dao.findAllUserGroupPermissionsOfUserGroup(userGroup);
 	}

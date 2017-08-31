@@ -12,6 +12,7 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -75,6 +76,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return
 	 */
 	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
+	@Transactional(readOnly = true)
 	public E findById(Integer id) {
 		return dao.findById(id);
 	}
@@ -88,6 +90,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return
 	 */
 	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
+	@Transactional(readOnly = true)
 	public E loadById(int id) {
 		return dao.loadById(id);
 	}
@@ -97,6 +100,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public List<E> findAll() {
 		return dao.findAll();
 	}
@@ -129,6 +133,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public List<E> findBySimpleFilter(MultiValueMap<String,String> requestedFilter) {
 
 		MultiValueMap<String, Object> origFieldNamesToCastedValues = EntityUtil
@@ -181,6 +186,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return The list of objects
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public List<E> findAllWhereFieldEquals(String fieldName, Object fieldValue) {
 		return dao.findAllWhereFieldEquals(fieldName, fieldValue);
 	}
@@ -198,6 +204,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 * @return The list of objects
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public List<E> findAllWithCollectionContaining(String fieldName, PersistentObject subElement) {
 		return dao.findAllWithCollectionContaining(fieldName, subElement);
 	}

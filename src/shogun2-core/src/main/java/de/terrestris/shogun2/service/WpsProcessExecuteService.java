@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.WpsPluginDao;
 import de.terrestris.shogun2.dao.WpsProcessExecuteDao;
@@ -106,6 +107,7 @@ public class WpsProcessExecuteService<E extends WpsProcessExecute, D extends Wps
 	 * @return List of {@link WpsPlugin}s that are connected to the given {@link WpsProcessExecute}
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#wpsId, 'de.terrestris.shogun2.model.wps.WpsProcessExecute', 'DELETE')")
+	@Transactional(readOnly = true)
 	public List<String> preCheckDelete(Integer wpsId) {
 		List<String> result = new ArrayList<>();
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.dao.PluginDao;
@@ -77,6 +78,7 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	 * @return
 	 * @throws Exception
 	 */
+	@Transactional(readOnly = true)
 	public String getPluginSource(String simpleClassName) throws Exception {
 
 		// qualify className
@@ -103,6 +105,7 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
 	 * @return List of application names that contain the given plugin
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#pluginId, 'de.terrestris.shogun2.model.Plugin', 'DELETE')")
+	@Transactional(readOnly = true)
 	public List<String> preCheckDelete(Integer pluginId) {
 		List<String> result = new ArrayList<>();
 

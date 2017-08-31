@@ -3,6 +3,7 @@ package de.terrestris.shogun2.service;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.AbstractTokenDao;
 import de.terrestris.shogun2.model.token.Token;
@@ -36,6 +37,7 @@ public abstract class AbstractTokenService<E extends Token, D extends AbstractTo
 	 *
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public E findByTokenValue(String token) {
 
 		Criterion criteria = Restrictions.eq("token", token);
@@ -53,6 +55,7 @@ public abstract class AbstractTokenService<E extends Token, D extends AbstractTo
 	 * @throws Exception
 	 *             if the token is not valid (e.g. because it is expired)
 	 */
+	@Transactional(readOnly = true)
 	public void validateToken(E token) throws Exception {
 
 		if (token == null) {
