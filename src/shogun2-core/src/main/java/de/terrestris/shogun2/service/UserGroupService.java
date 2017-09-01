@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.UserGroupDao;
 import de.terrestris.shogun2.model.User;
@@ -59,6 +60,7 @@ public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
 	 * @throws Exception
 	 */
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	@Transactional(readOnly = true)
 	public Set<User> getUsersOfGroup(Integer groupId) throws Exception {
 
 		Set<User> groupUsersSet = new HashSet<User>();

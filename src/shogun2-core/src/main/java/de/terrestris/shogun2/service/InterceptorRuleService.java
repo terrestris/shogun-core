@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.InterceptorRuleDao;
 import de.terrestris.shogun2.model.interceptor.InterceptorRule;
@@ -44,6 +45,7 @@ public class InterceptorRuleService<E extends InterceptorRule, D extends Interce
 	 * @param event
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public List<E> findAllRulesForServiceAndEvent(String service, String event) {
 		return this.dao.findAllRulesForServiceAndEvent(service, event);
 	}

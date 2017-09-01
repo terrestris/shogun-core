@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.AbstractUserTokenDao;
 import de.terrestris.shogun2.model.User;
@@ -61,6 +62,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
 	 * @param user
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public E findByUser(User user) {
 
 		SimpleExpression eqUser = Restrictions.eq("user", user);
@@ -79,6 +81,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
 	 *             if the token is not valid (e.g. because it is expired)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public void validateToken(E userToken) throws Exception {
 
 		// call super

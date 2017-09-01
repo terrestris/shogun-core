@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.LayerDao;
 import de.terrestris.shogun2.dao.MapDao;
@@ -65,6 +66,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
 	 * @return
 	 */
 	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'READ')")
+	@Transactional(readOnly = true)
 	public Set<E> findMapsWithLayer(Layer layer) {
 		return dao.findMapsWithLayer(layer);
 	}
