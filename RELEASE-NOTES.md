@@ -1,6 +1,22 @@
 # Release Notes
 
-## 0.1.3 (xxxx-xx-xx)
+## 0.1.4 (xxxx-xx-xx)
+
+## 0.1.3 (2017-09-12)
+
+* New features:
+  * A new model hierarchy for WPS-/Plugins has been introduced: https://github.com/terrestris/shogun2/pull/230
+  * Nice DAO methods have been introduced:
+    * https://github.com/terrestris/shogun2/pull/239
+    * https://github.com/terrestris/shogun2/pull/246
+  * We're supporting the latest spring versions now: https://github.com/terrestris/shogun2/pull/247
+  * An interface with endpoint documentation has been introduced: https://github.com/terrestris/shogun2/pull/265
+  * You may now use a property file to get easy access to infos coming from the pom.xml: https://github.com/terrestris/shogun2/pull/266
+  * Read-only methods will NEVER persist: https://github.com/terrestris/shogun2/pull/269
+* Changes:
+  * A lot of bugfixing
+  * If you make use of the upload functionality and errors occur, you should have a look at this change: https://github.com/terrestris/shogun2/pull/257/files
+  * A new field on the `TileWmsLayerDataSource` model has been introduced: https://github.com/terrestris/shogun2/pull/268
 
 ## 0.1.2 (2017-02-21)
 
