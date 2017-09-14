@@ -15,6 +15,26 @@
         <authentication-provider ref="shogun2AuthenticationProvider" />
     </authentication-manager>
 
+    <beans:bean id="basicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <beans:property name="realmName" value="SHOGun2 Realm" />
+    </beans:bean>
+
+    <beans:bean id="basicAuthenticationFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <beans:constructor-arg ref="authenticationManager"/>
+        <beans:constructor-arg ref="basicAuthEntryPoint" />
+    </beans:bean>
+
+    <!-- (Additional) Basic auth security for REST -->
+    <http auto-config='false' entry-point-ref="basicAuthEntryPoint" pattern="/rest/**" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+        <!-- Demo scenario: users will only get access to the /rest/users interface -->
+        <intercept-url pattern="/rest/users" access="hasRole('${symbol_dollar}{role.defaultUserRoleName}')"/>
+
+        <!-- All other interfaces can only be accessed by admins -->
+        <intercept-url pattern="/**" access="hasRole('${symbol_dollar}{role.superAdminRoleName}')"/>
+        <custom-filter ref="basicAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <csrf disabled="true"/>
+    </http>
+
     <!-- Web/URL security -->
     <http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
 
@@ -31,7 +51,7 @@
         <intercept-url pattern="/user/activate.action" access="permitAll" />
         <intercept-url pattern="/user/resetPassword.action" access="permitAll" />
         <intercept-url pattern="/user/changePassword.action" access="permitAll" />
-        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/**" access="hasRole('${symbol_dollar}{role.defaultUserRoleName}')" />
 
     </http>
 
