@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
@@ -56,8 +56,8 @@ public class Shogun2JsonObjectMapperTest {
 		DateFormat serializationDateFormat = serializationConfig.getDateFormat();
 		DateFormat deserializationDateFormat = deserializationConfig.getDateFormat();
 
-		assertThat(serializationDateFormat, instanceOf(ISO8601DateFormat.class));
-		assertThat(deserializationDateFormat, instanceOf(ISO8601DateFormat.class));
+		assertThat(serializationDateFormat, instanceOf(StdDateFormat.class));
+		assertThat(deserializationDateFormat, instanceOf(StdDateFormat.class));
 	}
 
 	/**
