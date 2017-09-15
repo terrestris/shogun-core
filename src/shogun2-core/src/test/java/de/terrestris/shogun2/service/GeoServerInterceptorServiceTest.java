@@ -277,22 +277,19 @@ public class GeoServerInterceptorServiceTest {
 
 	}
 
-
-
 	@Test
 	public void get_most_specific_rule() throws Exception {
 
-		// rule is available
 		InterceptorRule expectedRule = new InterceptorRule(
 				HttpEnum.EventType.REQUEST,
-				InterceptorEnum.RuleType.DENY,
+				InterceptorEnum.RuleType.MODIFY,
 				OgcEnum.ServiceType.WMS,
-				OgcEnum.OperationType.GET_MAP,
-				"bvb:shinji"
+				OgcEnum.OperationType.GET_STYLES,
+				"bvb:yarmolenko"
 		);
 
 		InterceptorRule actualRule = getMostSpecificRule(
-				"WMS", "GetMap", "bvb:shinji", "REQUEST");
+				"WMS", "GetStyles", "bvb:yarmolenko", "REQUEST");
 
 		assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
 				actualRule, new String[] {"id","created","modified"}));
@@ -304,33 +301,51 @@ public class GeoServerInterceptorServiceTest {
 		// only operation is matching
 		InterceptorRule expectedRule = new InterceptorRule(
 				HttpEnum.EventType.REQUEST,
-				InterceptorEnum.RuleType.DENY,
-				OgcEnum.ServiceType.WMS,
-				OgcEnum.OperationType.GET_CAPABILITIES,
+				InterceptorEnum.RuleType.ALLOW,
+				OgcEnum.ServiceType.WFS,
+				OgcEnum.OperationType.DESCRIBE_FEATURE_TYPE,
 				null
 		);
 
 		InterceptorRule actualRule = getMostSpecificRule(
-				"WMS", "GetCapabilities", "bvb:shinji", "REQUEST");
+				"WFS", "DescribeFeatureType", null, "REQUEST");
 
 		assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
 				actualRule, new String[] {"id","created","modified"}));
 	}
 
 	@Test
-	public void get_service_specific_rule() throws Exception {
-
-		// only service is matching
+	public void get_operation_and_service_specific_rule() throws Exception {
+		// only endpoint and service are matching
 		InterceptorRule expectedRule = new InterceptorRule(
 				HttpEnum.EventType.REQUEST,
-				InterceptorEnum.RuleType.DENY,
-				OgcEnum.ServiceType.WMS,
-				null,
+				InterceptorEnum.RuleType.ALLOW,
+				OgcEnum.ServiceType.WFS,
+				OgcEnum.OperationType.DESCRIBE_FEATURE_TYPE,
 				null
 		);
 
 		InterceptorRule actualRule = getMostSpecificRule(
-				"WMS", "GetFeatureInfo", "bvb:reus", "REQUEST");
+				"WFS", "DescribeFeatureType", null, "REQUEST");
+
+		assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
+				actualRule, new String[] {"id","created","modified"}));
+	}
+
+	@Test
+	public void get_service_and_endpoint_specific_rule() throws Exception {
+
+		// only service is matching
+		InterceptorRule expectedRule = new InterceptorRule(
+				HttpEnum.EventType.REQUEST,
+				InterceptorEnum.RuleType.MODIFY,
+				OgcEnum.ServiceType.WMS,
+				OgcEnum.OperationType.GET_STYLES,
+				"bvb:yarmolenko"
+		);
+
+		InterceptorRule actualRule = getMostSpecificRule(
+				"WMS", null, "bvb:yarmolenko", "REQUEST");
 
 		assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
 				actualRule, new String[] {"id","created","modified"}));
@@ -465,9 +480,13 @@ public class GeoServerInterceptorServiceTest {
 
 		String[] testRules = new String[] {
 				service + ",GetMap,bvb:hummels," + event + ",ALLOW",
+				service + ",GetFeatureInfo,bvb:shinji," + event + ",MODIFY",
 				service + ",GetMap,bvb:shinji," + event + ",DENY",
-				service + ",GetCapabilities,," + event + ",DENY",
+				service + ",GetCapabilities,bvb:shinji," + event + ",DENY",
+				service + ",DescribeFeatureType,," + event + ",ALLOW",
 				service + ",GetMap,," + event + ",ALLOW",
+				service + ",GetFeatureInfo,," + event + ",DENY",
+				service + ",GetStyles,bvb:yarmolenko," + event + ",MODIFY",
 				service + ",,," + event + ",DENY",
 		};
 
