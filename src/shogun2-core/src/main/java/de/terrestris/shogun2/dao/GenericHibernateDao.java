@@ -211,7 +211,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 		final Integer id = e.getId();
 		final boolean hasId = id != null;
 		String createOrUpdatePrefix = hasId ? "Updating" : "Creating a new";
-		String idSuffix = hasId ? "with ID " + id : "";
+		String idSuffix = hasId ? " with ID " + id : "";
 
 		LOG.trace(createOrUpdatePrefix + " instance of " + entityClass.getSimpleName()
 				+ idSuffix);
