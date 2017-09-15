@@ -125,23 +125,23 @@
 
         <webapp-archetype-resource-pom>shogun2-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>8.0.43</tomcat.version>
+        <tomcat.version>8.5.20</tomcat.version>
 
         <!-- Core -->
-        <spring.version>4.3.8.RELEASE</spring.version>
-        <spring-security.version>4.2.2.RELEASE</spring-security.version>
+        <spring.version>4.3.11.RELEASE</spring.version>
+        <spring-security.version>4.2.3.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
         <log4j.version>1.2.17</log4j.version>
-        <slf4j.version>1.7.5</slf4j.version>
-        <jackson.version>2.8.8</jackson.version>
-        <opencsv.version>3.9</opencsv.version>
-        <ehcache.version>2.10.3</ehcache.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <jackson.version>2.9.1</jackson.version>
+        <opencsv.version>4.0</opencsv.version>
+        <ehcache.version>2.10.4</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.1.6.Final</hibernate.version>
+        <hibernate.version>5.1.10.Final</hibernate.version>
         <hikari-jdk7.version>2.4.11</hikari-jdk7.version>
         <hikari.version>2.6.1</hikari.version>
-        <h2.version>1.4.195</h2.version>
+        <h2.version>1.4.196</h2.version>
 
         <!-- Testing -->
         <junit.version>4.12</junit.version>
@@ -157,8 +157,8 @@
         <!-- Apache Commons -->
         <commons-io.version>2.5</commons-io.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <commons-lang3.version>3.5</commons-lang3.version>
-        <commons-dbutils.version>1.6</commons-dbutils.version>
+        <commons-lang3.version>3.6</commons-lang3.version>
+        <commons-dbutils.version>1.7</commons-dbutils.version>
         <commons-collections4.version>4.1</commons-collections4.version>
 
         <!-- Joda Time -->
@@ -179,16 +179,16 @@
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
-        <structured-content-tools.version>1.3.9</structured-content-tools.version>
+        <structured-content-tools.version>1.3.10</structured-content-tools.version>
 
         <!-- Java Mail API -->
-        <javax-mail-api.version>1.5.6</javax-mail-api.version>
+        <javax-mail-api.version>1.6.0</javax-mail-api.version>
 
         <!-- Java Transaction API -->
         <jta.version>1.1</jta.version>
 
         <!-- Java Servlet API -->
-        <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
+        <javax-servlet-api.version>4.0.0</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
         <apache-httpclient.version>4.5.3</apache-httpclient.version>
@@ -197,7 +197,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>1.6.6</powermock.version>
+        <powermock.version>1.7.1</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.14.0</jts.version>
