@@ -188,7 +188,7 @@
         <jta.version>1.1</jta.version>
 
         <!-- Java Servlet API -->
-        <javax-servlet-api.version>4.0.0</javax-servlet-api.version>
+        <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
         <apache-httpclient.version>4.5.3</apache-httpclient.version>
