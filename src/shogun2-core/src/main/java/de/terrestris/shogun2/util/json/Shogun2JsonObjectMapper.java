@@ -5,7 +5,7 @@ import java.util.TimeZone;
 import com.bedatadriven.jackson.datatype.jts.JtsModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
@@ -38,9 +38,9 @@ public class Shogun2JsonObjectMapper extends ObjectMapper {
 		// register JTS geometry types
 		this.registerModule(new JtsModule());
 
-		// serialize dates in ISO8601 with time zone of the host
+		// StdDateFormat is ISO8601 since jackson 2.9
 		configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		setDateFormat(new ISO8601DateFormat());
+		setDateFormat(new StdDateFormat());
 		setTimeZone(TimeZone.getDefault());
 	}
 

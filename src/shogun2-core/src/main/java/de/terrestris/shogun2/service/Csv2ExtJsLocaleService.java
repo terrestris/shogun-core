@@ -20,7 +20,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 /**
  *
@@ -52,7 +55,16 @@ public class Csv2ExtJsLocaleService {
 
 		FileInputStream fileIs = new FileInputStream(csvResource.getFile().getCanonicalPath());
 		Reader reader = new InputStreamReader(fileIs, StandardCharsets.UTF_8);
-		CSVReader csvReader = new CSVReader(reader, ';', '"', '\\');
+
+		final CSVParser csvParser = new CSVParserBuilder().
+				withSeparator(';').
+				withQuoteChar('"').
+				withEscapeChar('\\').
+				build();
+
+		final CSVReader csvReader = new CSVReaderBuilder(reader).
+				withCSVParser(csvParser).
+				build();
 
 		try {
 			int columnIndexOfLocale = detectColumnIndexOfLocale(locale, csvReader);
