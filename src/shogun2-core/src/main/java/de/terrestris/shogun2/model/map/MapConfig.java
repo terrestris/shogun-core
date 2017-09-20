@@ -17,8 +17,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.util.Extent;
@@ -328,14 +326,6 @@ public class MapConfig extends PersistentObject{
 				append(getRotation(), other.getRotation()).
 				append(getProjection(), other.getProjection()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

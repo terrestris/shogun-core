@@ -17,8 +17,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.ReadableDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -257,16 +255,6 @@ public class Application extends PersistentObject {
 				append(getUrl(), other.getUrl()).
 				append(getViewport(), other.getViewport()).
 				isEquals();
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 *
-	 *      Using Apache Commons String Builder.
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

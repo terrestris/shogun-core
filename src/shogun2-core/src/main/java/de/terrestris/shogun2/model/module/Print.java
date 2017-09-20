@@ -8,8 +8,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * A module which contains a formular to print the map with the mapfish print v3.
@@ -85,13 +83,6 @@ public class Print extends Module {
 				appendSuper(super.equals(other)).
 				append(getUrl(), other.getUrl()).
 				isEquals();
-	}
-
-	/**
-	 *
-	 */
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

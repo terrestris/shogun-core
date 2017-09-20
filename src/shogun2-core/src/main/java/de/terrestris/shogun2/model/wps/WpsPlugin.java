@@ -101,7 +101,7 @@ public class WpsPlugin extends Plugin {
 	 */
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 			.appendSuper(super.toString())
 			.append("process", process)
 			.toString();

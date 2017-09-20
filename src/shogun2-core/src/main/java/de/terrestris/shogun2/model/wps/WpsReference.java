@@ -156,7 +156,7 @@ public class WpsReference extends WpsParameter {
 	 */
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 			.appendSuper(super.toString())
 			.append("url", url)
 			.append("mimeType", mimeType)

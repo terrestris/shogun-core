@@ -6,8 +6,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * @author Nils Bühner
@@ -103,12 +101,5 @@ public class Role extends PersistentObject {
 				append(getName(), other.getName()).
 				append(getDescription(), other.getDescription()).
 				isEquals();
-	}
-
-	/**
-	 *
-	 */
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

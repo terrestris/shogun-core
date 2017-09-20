@@ -5,8 +5,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Data source of <a href= "http://openlayers.org/en/master/apidoc/ol.layer.Vector.html">OpenLayers 3 vector layer</a>
@@ -90,14 +88,6 @@ public class VectorLayerDataSource extends LayerDataSource {
 				appendSuper(super.equals(other)).
 				append(getFormat(), other.getFormat()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }
