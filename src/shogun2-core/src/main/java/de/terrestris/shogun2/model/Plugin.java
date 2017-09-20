@@ -222,12 +222,11 @@ public class Plugin extends PersistentObject {
 	 */
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 			.appendSuper(super.toString())
 			.append("name", name)
 			.append("className", className)
 			.append("xtype", xtype)
-			.append("sourcecode", sourceCode)
 			.append("stylesheet", styleSheet)
 			.append("systemPlugin", systemPlugin)
 			.toString();

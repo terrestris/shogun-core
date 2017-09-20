@@ -3,9 +3,6 @@ package de.terrestris.shogun2.model.token;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import de.terrestris.shogun2.model.User;
 
 /**
@@ -44,14 +41,6 @@ public class RegistrationToken extends UserToken {
 	 */
 	public RegistrationToken(User user, int expirationInMinutes) {
 		super(user, expirationInMinutes);
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

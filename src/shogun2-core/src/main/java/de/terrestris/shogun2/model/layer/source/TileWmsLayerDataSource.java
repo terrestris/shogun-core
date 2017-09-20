@@ -7,8 +7,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.ColumnDefault;
@@ -82,6 +80,21 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 	}
 
 	/**
+	 * @return the requestWithTiled
+	 */
+	public Boolean getRequestWithTiled() {
+		return requestWithTiled;
+	}
+
+	/**
+	 * @param requestWithTiled
+	 *            the requestWithTiled to set
+	 */
+	public void setRequestWithTiled(Boolean requestWithTiled) {
+		this.requestWithTiled = requestWithTiled;
+	}
+
+	/**
 	 * @see java.lang.Object#hashCode()
 	 *
 	 *      According to
@@ -116,29 +129,6 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 				appendSuper(super.equals(other)).
 				append(getTileGrid(), other.getTileGrid()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
-	}
-
-	/**
-	 * @return the requestWithTiled
-	 */
-	public Boolean getRequestWithTiled() {
-		return requestWithTiled;
-	}
-
-	/**
-	 * @param requestWithTiled
-	 *            the requestWithTiled to set
-	 */
-	public void setRequestWithTiled(Boolean requestWithTiled) {
-		this.requestWithTiled = requestWithTiled;
 	}
 
 }

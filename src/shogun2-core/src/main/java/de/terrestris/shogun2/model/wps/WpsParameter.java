@@ -185,7 +185,7 @@ public abstract class WpsParameter extends PersistentObject {
 	 */
 	@Override
 	public String toString(){
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
 			.appendSuper(super.toString())
 			.append("valueType", valueType)
 			.append("displayName", displayName)

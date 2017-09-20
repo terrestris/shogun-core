@@ -15,8 +15,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * @author Nils Bühner
@@ -155,12 +153,5 @@ public class UserGroup extends PersistentObject {
 				append(getMembers(), other.getMembers()).
 				append(getRoles(), other.getRoles()).
 				isEquals();
-	}
-
-	/**
-	 *
-	 */
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

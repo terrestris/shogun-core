@@ -1,14 +1,11 @@
 package de.terrestris.shogun2.model.layer.source;
 
+import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.persistence.Entity;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
@@ -126,14 +123,6 @@ public abstract class LayerDataSource extends PersistentObject {
 				append(getType(), other.getType()).
 				append(getUrl(), other.getUrl()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

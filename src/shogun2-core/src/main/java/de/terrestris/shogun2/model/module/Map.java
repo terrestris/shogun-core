@@ -18,8 +18,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
@@ -170,14 +168,6 @@ public class Map extends Module {
 				append(getMapControls(), other.getMapControls()).
 				append(getMapLayers(), other.getMapLayers()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

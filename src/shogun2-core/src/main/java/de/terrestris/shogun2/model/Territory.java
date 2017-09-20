@@ -1,20 +1,15 @@
 package de.terrestris.shogun2.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import de.terrestris.shogun2.model.PersistentObject;
 
 /**
  *
@@ -127,14 +122,6 @@ public class Territory extends PersistentObject {
 				append(getName(), other.getName()).
 				append(getGeometry(), other.getGeometry()).
 				isEquals();
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 
 }

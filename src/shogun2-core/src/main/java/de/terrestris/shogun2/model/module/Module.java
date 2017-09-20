@@ -19,8 +19,6 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import de.terrestris.shogun2.converter.PropertyValueConverter;
 import de.terrestris.shogun2.model.PersistentObject;
@@ -164,13 +162,5 @@ public class Module extends PersistentObject {
 				append(getXtype(), other.getXtype()).
 				append(getProperties(), other.getProperties()).
 				isEquals();
-	}
-
-	/**
-	 *
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }
