@@ -37,8 +37,7 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 	 * Whether to request the layer with TILED=true.
 	 */
 	@Column(name = "REQUEST_WITH_TILED")
-	@ColumnDefault(value = "true")
-	private Boolean requestWithTiled = true;
+	private Boolean requestWithTiled = Boolean.TRUE;
 
 	/**
 	 * default constructor
