@@ -14,8 +14,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
- * TODO: add documentation
- *
  * @author Andre Henn
  */
 public class OracleNamingStrategyShogun2Test extends PhysicalNamingStrategyShogun2Test{
