@@ -112,7 +112,7 @@ public class PhysicalNamingStrategyShogun2 implements PhysicalNamingStrategy, Se
 			// identifier limit of 30 chars -->
 			// http://stackoverflow.com/a/756569
 			return LENGTH_LIMIT_ORACLE;
-		} if (context.getDialect() instanceof Shogun2OracleDialect) {
+		} else if (context.getDialect() instanceof Shogun2OracleDialect) {
 			// identifier limit of 30 chars -->
 			return LENGTH_LIMIT_ORACLE;
 		} else if (dialectName.startsWith("PostgreSQL")) {
