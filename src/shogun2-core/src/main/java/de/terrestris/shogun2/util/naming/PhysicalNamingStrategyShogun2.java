@@ -1,11 +1,14 @@
 package de.terrestris.shogun2.util.naming;
 
+import de.terrestris.shogun2.util.dialect.Shogun2OracleDialect;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
-import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.io.Serializable;
 
 /**
  * Limits identifier length if necessary.
@@ -13,7 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Nils Bühner
  *
  */
-public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandardImpl {
+public class PhysicalNamingStrategyShogun2 implements PhysicalNamingStrategy, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,15 +28,26 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 	@Qualifier("tablePrefix")
 	private String tablePrefix;
 
+	@Override
+	public Identifier toPhysicalSequenceName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+		return name;
+	}
+
+	@Override
+	public Identifier toPhysicalCatalogName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+		return name;
+	}
+
+	@Override
+	public Identifier toPhysicalSchemaName(Identifier name, JdbcEnvironment jdbcEnvironment) {
+		return name;
+	}
+
 	/**
 	 * Converts table names to lower case and limits the length if necessary.
 	 */
 	@Override
-	public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment context) {
-
-		// call superclass and get string value
-		Identifier tableIdentifier = super.toPhysicalTableName(name, context);
-
+	public Identifier toPhysicalTableName(Identifier tableIdentifier, JdbcEnvironment context) {
 		return convertToLimitedLowerCase(context, tableIdentifier, tablePrefix);
 	}
 
@@ -41,11 +55,7 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 	 * Converts column names to lower case and limits the length if necessary.
 	 */
 	@Override
-	public Identifier toPhysicalColumnName(Identifier name, JdbcEnvironment context) {
-
-		// call superclass and get string value
-		Identifier columnIdentifier = super.toPhysicalColumnName(name, context);
-
+	public Identifier toPhysicalColumnName(Identifier columnIdentifier, JdbcEnvironment context) {
 		return convertToLimitedLowerCase(context, columnIdentifier, null);
 	}
 
@@ -63,7 +73,7 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 	 *            null
 	 * @return
 	 */
-	private Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier, String prefix) {
+	protected Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier, String prefix) {
 		String identifierText = identifier.getText();
 
 		if(prefix != null) {
@@ -94,8 +104,7 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 	 * @return The identifier length limit for the given context. null
 	 *         otherwise.
 	 */
-	private Integer getIdentifierLengthLimit(JdbcEnvironment context) {
-
+	protected Integer getIdentifierLengthLimit(JdbcEnvironment context) {
 		// https://docs.jboss.org/hibernate/orm/5.0/javadocs/org/hibernate/dialect/package-summary.html
 		String dialectName = context.getDialect().getClass().getSimpleName();
 
@@ -103,7 +112,9 @@ public class PhysicalNamingStrategyShogun2 extends PhysicalNamingStrategyStandar
 			// identifier limit of 30 chars -->
 			// http://stackoverflow.com/a/756569
 			return LENGTH_LIMIT_ORACLE;
-
+		} else if (context.getDialect() instanceof Shogun2OracleDialect) {
+			// identifier limit of 30 chars -->
+			return LENGTH_LIMIT_ORACLE;
 		} else if (dialectName.startsWith("PostgreSQL")) {
 			// identifier limit of 63 chars -->
 			// http://stackoverflow.com/a/8218026
