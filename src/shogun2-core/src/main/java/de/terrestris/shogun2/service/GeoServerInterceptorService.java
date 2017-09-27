@@ -277,8 +277,8 @@ public class GeoServerInterceptorService {
 						Objects.equals(rule.getService(), service)) {
 					LOG.trace("  * " + rule + " is endPoint, service and operation specific.");
 					return true;
-				// operation specific: if we have a rule with a matching endPoint and service,
-				// but not with a matching operation
+				// service and endpoint specific: if we have a rule with a matching endPoint and
+				// service, but not with a matching operation
 				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
 						Objects.equals(rule.getService(), service)) {
 					LOG.trace("  * " + rule + " is endPoint and service specific.");
