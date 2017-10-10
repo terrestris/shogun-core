@@ -14,6 +14,17 @@ public class ImplicitNamingStrategyShogun2Test {
 	private final ImplicitNamingStrategyShogun2 namingStrategy = new ImplicitNamingStrategyShogun2();
 
 	/**
+	 * Tests whether some known irregular nouns are detected.
+	 */
+	@Test
+	public void testIrregularPluralForm() {
+		String singularClassName = "Man";
+		String expectedPluralForm = "Men";
+
+		assertCorrectPluralForm(singularClassName, expectedPluralForm);
+	}
+
+	/**
 	 * Tests whether the default plural form (with suffix "s") is being created.
 	 */
 	@Test
