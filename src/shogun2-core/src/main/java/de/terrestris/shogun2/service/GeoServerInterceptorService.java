@@ -84,6 +84,10 @@ public class GeoServerInterceptorService {
 		"geowebcache-tile-index"
 	};
 
+	private final String WMS_REFLECT_ENDPOINT = "/reflect";
+
+	private final String USE_REFLECT_PARAM = "useReflect";
+
 	/**
 	 *
 	 */
@@ -116,8 +120,11 @@ public class GeoServerInterceptorService {
 		// get the OGC message information (service, request, endPoint)
 		OgcMessage message = getOgcMessage(mutableRequest);
 
+		// check whether WMS reflector endpoint should be called
+		final boolean useWmsReflector = shouldReflectEndpointBeCalled(mutableRequest, message);
+
 		// get the GeoServer base URI by the provided request
-		URI geoServerBaseUri = getGeoServerBaseURI(message);
+		URI geoServerBaseUri = getGeoServerBaseURI(message, useWmsReflector);
 
 		// set the GeoServer base URI to the (wrapped) request
 		mutableRequest.setRequestURI(geoServerBaseUri);
@@ -145,6 +152,31 @@ public class GeoServerInterceptorService {
 	}
 
 	/**
+	 * Detect whether the WMS reflector endpoint of GeoServer should be called instead of the one defined in provided message
+	 *
+	 * @param mutableRequest request to check
+	 * @param message instance of {@link OgcMessage}
+	 * @return true if useReflect found in parameters, false otherwise
+	 * @throws InterceptorException
+	 * @throws IOException
+	 */
+	private boolean shouldReflectEndpointBeCalled(MutableHttpServletRequest mutableRequest, OgcMessage message) throws InterceptorException, IOException {
+		boolean useReflect = false;
+
+		if (message.getService() != ServiceType.WMS) {
+			return useReflect;
+		}
+
+		String value = MutableHttpServletRequest.getRequestParameterValue(mutableRequest, USE_REFLECT_PARAM) ;
+		useReflect = Boolean.valueOf(value);
+		if (useReflect) {
+			LOG.info("Parameter "+USE_REFLECT_PARAM+ "found in request. Will use WMS reflector endpoint of GeoServer.");
+		}
+
+		return useReflect;
+	}
+
+	/**
 	 *
 	 * @param mutableRequest
 	 * @return
@@ -168,9 +200,18 @@ public class GeoServerInterceptorService {
 		if (StringUtils.isEmpty(requestService) ||
 				StringUtils.isEmpty(requestOperation) ||
 				StringUtils.isEmpty(requestEndPoint)) {
-			throw new InterceptorException("Couldn't find all required OGC " +
-					"parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
-					"validity of the request.");
+			if (!StringUtils.isEmpty(requestEndPoint) &&
+					! StringUtils.isEmpty(MutableHttpServletRequest.getRequestParameterValue(
+							mutableRequest, USE_REFLECT_PARAM))
+			) {
+				LOG.trace("Will use WMS reflector endpoint of GeoServer");
+				requestService = ServiceType.WMS.toString();
+				requestOperation = OperationType.GET_MAP.toString();
+			} else {
+				throw new InterceptorException("Couldn't find all required OGC " +
+						"parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
+						"validity of the request.");
+			}
 		}
 
 		if (StringUtils.isNotEmpty(requestService)) {
@@ -366,12 +407,14 @@ public class GeoServerInterceptorService {
 
 	/**
 	 *
-	 * @param params
+	 * @param geoServerNamespace
+	 * @param useWmsReflector
+	 * @param isWMS
 	 * @return
 	 * @throws URISyntaxException
 	 * @throws InterceptorException
 	 */
-	public URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace)
+	private URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace, boolean useWmsReflector, boolean isWMS)
 			throws URISyntaxException, InterceptorException {
 
 		URI uri = null;
@@ -384,6 +427,20 @@ public class GeoServerInterceptorService {
 					"from the given namespace");
 		}
 
+		if (useWmsReflector && isWMS) {
+			LOG.trace("Will use WMS reflector endpoint");
+			if (StringUtils.endsWithIgnoreCase(geoServerUrl, "ows")) {
+				StringBuilder builder = new StringBuilder();
+				int start = geoServerUrl.lastIndexOf("ows");
+				builder.append(geoServerUrl.substring(0, start));
+				builder.append("wms" + WMS_REFLECT_ENDPOINT);
+				geoServerUrl = builder.toString();
+			} else if (StringUtils.endsWithIgnoreCase(geoServerUrl, "wms")) {
+				geoServerUrl += WMS_REFLECT_ENDPOINT;
+			}
+			LOG.trace("The modified endpoint is: " + geoServerUrl);
+		}
+
 		URIBuilder builder = new URIBuilder(geoServerUrl);
 
 		uri = builder.build();
@@ -394,10 +451,11 @@ public class GeoServerInterceptorService {
 	/**
 	 *
 	 * @param message
+	 * @return
 	 * @throws URISyntaxException
 	 * @throws InterceptorException
 	 */
-	private URI getGeoServerBaseURI(OgcMessage message) throws URISyntaxException,
+	private URI getGeoServerBaseURI(OgcMessage message, boolean useWmsReflector) throws URISyntaxException,
 			InterceptorException {
 
 		LOG.debug("Finding the GeoServer base URI by the provided EndPoint: " +
@@ -410,7 +468,7 @@ public class GeoServerInterceptorService {
 				+ "EndPoint: " + geoServerNamespace);
 
 		// set the GeoServer base URL
-		URI geoServerBaseUri = getGeoServerBaseURIFromNameSpace(geoServerNamespace);
+		URI geoServerBaseUri = getGeoServerBaseURIFromNameSpace(geoServerNamespace,useWmsReflector, message.isWms());
 
 		LOG.debug("The corresponding GeoServer base URI is: " + geoServerBaseUri);
 
@@ -419,7 +477,7 @@ public class GeoServerInterceptorService {
 
 	/**
 	 *
-	 * @param qualifiedLayerName
+	 * @param endPoint
 	 * @return
 	 */
 	private static String getGeoServerNameSpace(String endPoint) {
