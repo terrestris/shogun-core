@@ -8,6 +8,8 @@ import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -46,6 +48,8 @@ import de.terrestris.shogun2.util.model.Response;
 @PrepareForTest(HttpUtil.class)
 public class GeoServerInterceptorServiceTest {
 
+	private final String TEST_GEOSERVER_BASE_PATH = "http://localhost:1234/geoserver/";
+
 	@InjectMocks
 	GeoServerInterceptorService gsInterceptorService;
 
@@ -60,7 +64,7 @@ public class GeoServerInterceptorServiceTest {
 		MockitoAnnotations.initMocks(this);
 
 		Properties geoServerNameSpaces = new Properties();
-		geoServerNameSpaces.setProperty("bvb", "http://localhost:1234/geoserver/bvb/ows");
+		geoServerNameSpaces.setProperty("bvb", TEST_GEOSERVER_BASE_PATH + "bvb/ows");
 		gsInterceptorService.setGeoServerNameSpaces(geoServerNameSpaces);
 	}
 
@@ -102,7 +106,37 @@ public class GeoServerInterceptorServiceTest {
 		Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
 
 		assertEquals(resp, got);
+	}
 
+	@Test
+	public void send_wms_get_to_reflector() throws InterceptorException,
+			URISyntaxException, HttpException, IOException {
+
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest();
+		httpRequest.setRequestURI("http://example.com/geoserver.action");
+		httpRequest.setParameter("LAYERS", "bvb:yarmolenko");
+		httpRequest.setParameter("useReflect", "true");
+		httpRequest.setMethod("GET");
+
+		PowerMockito.mockStatic(HttpUtil.class);
+		Response resp = new Response();
+		when(HttpUtil.get(any(String.class))).thenReturn(resp);
+
+		MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
+
+		when(ogcMessageDistributor.distributeToRequestInterceptor(
+				any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
+
+		when(ogcMessageDistributor.distributeToResponseInterceptor(
+				any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
+
+		when(ruleService.findAllRulesForServiceAndEvent(
+				any(String.class), any(String.class))).thenReturn(
+				getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
+
+		Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+
+		assertEquals(resp, got);
 	}
 
 	@Test
@@ -437,6 +471,46 @@ public class GeoServerInterceptorServiceTest {
 		URI got = GeoServerInterceptorService.appendQueryString(uri, appendQuery);
 		// return the passed uri
 		assertEquals(uri, got);
+	}
+
+	@Test
+	public void test_getGeoServerBaseURI_reflector() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, URISyntaxException {
+		final String methodName = "getGeoServerBaseURI";
+		final Method methodToCheck = GeoServerInterceptorService.class.getDeclaredMethod(methodName, OgcMessage.class, boolean.class);
+		methodToCheck.setAccessible(true); // set method temporarily public for testing
+
+		final OgcMessage message = new OgcMessage(OgcEnum.ServiceType.WMS, null, "bvb:yarmolenko", null, null);
+		final boolean useReflect = true;
+
+		Object resultObj = methodToCheck.invoke(this.gsInterceptorService, message, useReflect);
+		assertTrue(resultObj instanceof URI);
+
+		URI resultUri = (URI) resultObj;
+		assertEquals("Generated GeoServer URI path does not contain reflector endpoint", (new URI(TEST_GEOSERVER_BASE_PATH)).getPath() + "bvb/wms/reflect", resultUri.getPath());
+	}
+
+	@Test
+	public void test_getGeoServerBaseURI_use_reflect_wfs_do_not_modify_endpoint() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, URISyntaxException {
+		final String methodName = "getGeoServerBaseURI";
+		final Method methodToCheck = GeoServerInterceptorService.class.getDeclaredMethod(methodName, OgcMessage.class, boolean.class);
+		methodToCheck.setAccessible(true); // set method temporarily public for testing
+
+		OgcEnum.ServiceType [] typesToCheck = {
+			OgcEnum.ServiceType.WFS,
+			OgcEnum.ServiceType.WCS,
+			OgcEnum.ServiceType.WPS
+		};
+
+		for (OgcEnum.ServiceType typeToCheck : typesToCheck) {
+			final OgcMessage message = new OgcMessage(typeToCheck, null, "bvb:yarmolenko", null, null);
+			final boolean useReflect = true;
+
+			Object resultObj = methodToCheck.invoke(this.gsInterceptorService, message, useReflect);
+			assertTrue(resultObj instanceof URI);
+
+			URI resultUri = (URI) resultObj;
+			assertEquals("GeoServer URL to call should not be modified for service type: " + typeToCheck.name(), (new URI(TEST_GEOSERVER_BASE_PATH)).getPath() + "bvb/ows", resultUri.getPath());
+		}
 	}
 
 	/**
