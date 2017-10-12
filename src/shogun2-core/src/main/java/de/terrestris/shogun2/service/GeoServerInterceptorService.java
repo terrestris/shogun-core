@@ -271,14 +271,26 @@ public class GeoServerInterceptorService {
 		Predicate<InterceptorRule> condition = new Predicate<InterceptorRule>() {
 			@Override
 			public boolean evaluate(InterceptorRule rule) {
-				// most specific: we have a rule with a matching endPoint
-				//                and operation
+				// most specific: we have a rule with a matching endPoint, service and operation
 				if (Objects.equals(rule.getEndPoint(), endPoint) &&
+						Objects.equals(rule.getOperation(), operation) &&
+						Objects.equals(rule.getService(), service)) {
+					LOG.trace("  * " + rule + " is endPoint, service and operation specific.");
+					return true;
+				// service and endpoint specific: if we have a rule with a matching endPoint and
+				// service, but not with a matching operation
+				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
+						Objects.equals(rule.getService(), service)) {
+					LOG.trace("  * " + rule + " is endPoint and service specific.");
+					return true;
+				// endPoint and operation specific: if we have a rule with a matching endPoint
+				// and operation, but not with a matching service
+				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
 						Objects.equals(rule.getOperation(), operation)) {
 					LOG.trace("  * " + rule + " is endPoint and operation specific.");
 					return true;
 				// operation specific: if we have a rule with no matching
-				//                     endPoint, but a matching operation
+				// endPoint, but a matching operation
 				} else if (Objects.equals(rule.getEndPoint(), null) &&
 						Objects.equals(rule.getOperation(), operation)) {
 					LOG.trace("  * " + rule + " is operation specific.");
