@@ -287,7 +287,7 @@ public class GeoServerInterceptorService {
 				// and operation, but not with a matching service
 				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
 						Objects.equals(rule.getOperation(), operation)) {
-					LOG.trace("  * " + rule + " is operation and service specific.");
+					LOG.trace("  * " + rule + " is endPoint and operation specific.");
 					return true;
 				// operation specific: if we have a rule with no matching
 				// endPoint, but a matching operation
