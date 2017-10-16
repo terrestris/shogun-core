@@ -197,7 +197,8 @@ public class OgcEnum {
 		WMS("WMS"),
 		WFS("WFS"),
 		WCS("WCS"),
-		WPS("WPS");
+		WPS("WPS"),
+		W3DS("W3DS");
 
 		private final String value;
 
@@ -261,7 +262,10 @@ public class OgcEnum {
 		DESCRIBE_COVERAGE("DescribeCoverage"),
 		GET_COVERAGE("GetCoverage"),
 		EXECUTE("Execute"),
-		DESCRIBE_PROCESS("DescribeProcess");
+		DESCRIBE_PROCESS("DescribeProcess"),
+		GET_SCENE("GetScene"),
+		GET_LAYER_INFO("GetLayerInfo"),
+		GET_TILE("GetTile");
 
 		private final String value;
 
@@ -342,10 +346,19 @@ public class OgcEnum {
 		wpsOps.add(OperationType.EXECUTE);
 		wpsOps.add(OperationType.DESCRIBE_PROCESS);
 
+		Set<OperationType> w3dsOps = new HashSet<OperationType>();
+		w3dsOps.add(OperationType.GET_CAPABILITIES);
+		w3dsOps.add(OperationType.GET_SCENE);
+		w3dsOps.add(OperationType.GET_FEATURE_INFO);
+		w3dsOps.add(OperationType.GET_LAYER_INFO);
+		w3dsOps.add(OperationType.GET_TILE);
+
+
 		map.put(ServiceType.WMS, Collections.unmodifiableSet(wmsOps));
 		map.put(ServiceType.WFS, Collections.unmodifiableSet(wfsOps));
 		map.put(ServiceType.WCS, Collections.unmodifiableSet(wcsOps));
 		map.put(ServiceType.WPS, Collections.unmodifiableSet(wpsOps));
+		map.put(ServiceType.W3DS, Collections.unmodifiableSet(w3dsOps));
 
 		// store it in the lookup
 		OPERATIONS_BY_SERVICETYPE = Collections.unmodifiableMap(map);

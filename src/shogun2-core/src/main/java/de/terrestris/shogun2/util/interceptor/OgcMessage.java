@@ -190,6 +190,15 @@ public class OgcMessage {
 	 *
 	 * @return
 	 */
+	public boolean isW3ds() {
+		return this.getService() != null &&
+				this.getService().equals(OgcEnum.ServiceType.W3DS);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
 	public boolean isWmsGetCapabilities() {
 		return this.isWms() &&
 				this.getOperation() != null &&
@@ -356,6 +365,55 @@ public class OgcMessage {
 				this.getOperation().equals(OgcEnum.OperationType.EXECUTE);
 	}
 
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isW3dsGetCapabilities() {
+		return this.isW3ds() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isW3dsGetScene() {
+		return this.isW3ds() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_SCENE);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isW3dsGetFeatureInfo() {
+		return this.isW3ds() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_FEATURE_INFO);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isW3dsGetLayerInfo() {
+		return this.isW3ds() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_LAYER_INFO);
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isW3dsGetTile() {
+		return this.isW3ds() &&
+				this.getOperation() != null &&
+				this.getOperation().equals(OgcEnum.OperationType.GET_TILE);
+	}
 
 	/**
 	 *
