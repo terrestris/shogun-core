@@ -414,7 +414,7 @@ public class GeoServerInterceptorService {
 	 * @throws URISyntaxException
 	 * @throws InterceptorException
 	 */
-	private URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace, boolean useWmsReflector, boolean isWMS)
+	public URI getGeoServerBaseURIFromNameSpace(String geoServerNamespace, boolean useWmsReflector, boolean isWMS)
 			throws URISyntaxException, InterceptorException {
 
 		URI uri = null;
