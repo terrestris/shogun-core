@@ -1207,8 +1207,10 @@ public class HttpUtil {
 	private static Response postParams(HttpPost httpRequest, List<NameValuePair> queryParams, Credentials credentials, Header[] requestHeaders)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 
-		HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
-		httpRequest.setEntity(httpEntity);
+		if (!queryParams.isEmpty()) {
+			HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
+			httpRequest.setEntity(httpEntity);
+		}
 
 		return send(httpRequest, credentials, requestHeaders);
 	}
