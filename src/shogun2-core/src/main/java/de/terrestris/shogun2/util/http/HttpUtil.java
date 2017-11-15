@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -1890,7 +1891,6 @@ public class HttpUtil {
 			response.setStatusCode(httpStatus);
 
 			for (Header header : headers) {
-
 				if (header.getName().equalsIgnoreCase("Transfer-Encoding") &&
 					header.getValue().equalsIgnoreCase("chunked")) {
 					LOG.debug("Removed the header 'Transfer-Encoding:chunked'" +
@@ -1911,27 +1911,13 @@ public class HttpUtil {
 		} finally {
 
 			// cleanup
+			httpRequest.reset();
 
-			httpRequest.releaseConnection();
-
-			try {
-				if (httpResponse != null) {
-					httpResponse.close();
-				}
-			} catch (IOException e) {
-				LOG.error("Could not close CloseableHttpResponse: " + e.getMessage());
-			}
-
-			try {
-				httpClient.close();
-			} catch (IOException e) {
-				LOG.error("Could not close CloseableHttpClient: " + e.getMessage());
-			}
-
+			IOUtils.closeQuietly(httpResponse);
+			IOUtils.closeQuietly(httpClient);
 		}
 
 		return response;
-
 	}
 
 	/**
