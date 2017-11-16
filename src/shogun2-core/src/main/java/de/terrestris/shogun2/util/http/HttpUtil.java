@@ -1861,6 +1861,8 @@ public class HttpUtil {
 			httpContext.setAuthCache(authCache);
 
 			httpClient = HttpClients.custom()
+					// TODO Temporarily workaround!
+					.disableContentCompression()
 					.setDefaultCredentialsProvider(credentialsProvider)
 					.build();
 
