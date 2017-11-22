@@ -53,4 +53,20 @@ public final class ResultSet {
 
 		return returnMap;
 	}
+
+	/**
+	 * Method returning error message and additional return values
+	 * @param errorMsg The error message
+	 * @param additionalReturnValuesMap {@link Map} containing additional information
+	 * @return Map to use e.g. as {@link org.springframework.http.ResponseEntity}
+	 */
+	public static final Map<String, Object> error(String errorMsg, Map additionalReturnValuesMap) {
+
+		Map<String, Object> returnMap = new HashMap<String, Object>(3);
+		returnMap.put("message", errorMsg);
+		returnMap.put("additionalInfo", additionalReturnValuesMap);
+		returnMap.put("success", false);
+
+		return returnMap;
+	}
 }
