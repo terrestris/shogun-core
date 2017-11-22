@@ -74,6 +74,11 @@ public class HttpUtil {
 	private static int httpTimeout;
 
 	/**
+	 * The default timeout given by the config beans.
+	 */
+	private static int defaultHttpTimeout;
+
+	/**
 	 * Performs an HTTP GET on the given URL <i>without authentication</i>
 	 *
 	 * @param url The URL to connect to.
@@ -88,7 +93,7 @@ public class HttpUtil {
 	}
 
 	/**
-	 * Performs an HTTP GET on the given URL <i>without authentication</i> and 
+	 * Performs an HTTP GET on the given URL <i>without authentication</i> and
 	 * additional HTTP request headers.
 	 *
 	 * @param url The URL to connect to.
@@ -126,7 +131,7 @@ public class HttpUtil {
 	 * @param url The URL to connect to.
 	 * @param credentials instance implementing {@link Credentials} interface holding a set of credentials
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
@@ -157,7 +162,7 @@ public class HttpUtil {
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @throws HttpException
 	 * @throws URISyntaxException
 	 */
@@ -258,7 +263,7 @@ public class HttpUtil {
 	 * @param uri The URI to connect to.
 	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
@@ -1982,8 +1987,29 @@ public class HttpUtil {
 	 */
 	@Value("${http.timeout}")
 	@SuppressWarnings("static-method")
-	public void setHttpTimeout(int httpTimeout) {
+	public void setDefaultHttpTimeout(int httpTimeout) {
+		HttpUtil.defaultHttpTimeout = httpTimeout;
 		HttpUtil.httpTimeout = httpTimeout;
 	}
 
+	/**
+	 * @return the httpTimeout
+	 */
+	public static int getHttpTimeout() {
+		return httpTimeout;
+	}
+
+	/**
+	 * @param httpTimeout the httpTimeout to set
+	 */
+	public static void setHttpTimeout(int httpTimeout) {
+		HttpUtil.httpTimeout = httpTimeout;
+	}
+
+	/**
+	 * Resets the http timeout to the default one given by the app config.
+	 */
+	public static void resetHttpTimeout() {
+		HttpUtil.httpTimeout = HttpUtil.defaultHttpTimeout;
+	}
 }
