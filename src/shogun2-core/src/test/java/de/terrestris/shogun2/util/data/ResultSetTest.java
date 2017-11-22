@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,6 +72,26 @@ public class ResultSetTest {
 
 		assertNotNull("Message does not become null", resultSet);
 		makeErrorFieldAssertions(resultSet);
+	}
+
+	@Test
+	public void testErrorWithMessageAndAdditionalInfo() {
+		final String additionalInfoKey = "additionalInfo";
+		final String testKey = "foo";
+		final String testValue = "bar";
+		final Map<String, Object> testMap = new HashMap<>();
+		testMap.put(testKey, testValue);
+		Map<String, Object> resultSet = ResultSet.error("My error message", testMap);
+
+		assertNotNull("Result does not become null", resultSet);
+		makeErrorFieldAssertions(resultSet);
+
+		final Object additionalInfoMapObj = resultSet.get(additionalInfoKey);
+		assertNotNull("Value for key '" + additionalInfoKey + "' is defined", additionalInfoMapObj);
+		assertTrue("Additional info is an instance of map", additionalInfoMapObj instanceof Map);
+
+		final Map additionalInfoMap = (Map) additionalInfoMapObj;
+		assertEquals("Provided additional info matches returned one", additionalInfoMap.get(testKey), testValue);
 	}
 
 
