@@ -265,15 +265,15 @@ public class GeoServerRESTImporter {
 		// check, if it is a list of import tasks (for multiple layers)
 		try {
 			importTaskLists = mapper.readValue(httpResponse.getBody(), RESTImportTaskList.class);
-			LOG.info("Imported file "+ file.getName() + " contains data for multiple layers.");
+			LOG.debug("Imported file "+ file.getName() + " contains data for multiple layers.");
 		} catch (Exception e) {
-			LOG.info("Imported file "+ file.getName() + " likely contains data for single " +
+			LOG.debug("Imported file "+ file.getName() + " likely contains data for single " +
 					"layer. Will check this now.");
 			RESTImportTask helperTask = mapper.readValue(httpResponse.getBody(), RESTImportTask.class);
 			if (helperTask != null) {
 				importTaskLists = new RESTImportTaskList();
 				importTaskLists.add(helperTask);
-				LOG.info("Imported file "+ file.getName() + " contains data for a single layers.");
+				LOG.debug("Imported file "+ file.getName() + " contains data for a single layers.");
 			}
 		}
 
@@ -281,7 +281,7 @@ public class GeoServerRESTImporter {
 	}
 
 	/**
-	 * Modify the "srs" definition of the target layer
+	 * Updates the given import task.
 	 *
 	 * @param importJobId
 	 * @param importTask
@@ -290,39 +290,57 @@ public class GeoServerRESTImporter {
 	 * @return
 	 * @throws Exception
 	 */
-	public RESTImportTask updateSrsForRESTImportTask(Integer importJobId, RESTImportTask importTask,
-			String sourceSrs) throws Exception {
-		Integer taskId = importTask.getId();
+	public boolean updateImportTask(int importJobId, int importTaskId,
+			AbstractRESTEntity updateTaskEntity) throws Exception {
 
-		RESTLayer updatableLayer = new RESTLayer();
-		updatableLayer.setSrs(sourceSrs);
+		LOG.debug("Updating the import task " + importTaskId + " in job " + importJobId +
+				" with " + updateTaskEntity);
 
 		Response httpResponse = HttpUtil.put(
-				this.addEndPoint(importJobId + "/tasks/" + taskId + "/layer"),
-				this.asJSON(updatableLayer),
+				this.addEndPoint(importJobId + "/tasks/" + importTaskId),
+				this.asJSON(updateTaskEntity),
 				ContentType.APPLICATION_JSON,
 				this.username,
 				this.password
 		);
 
-		return (RESTImportTask) this.asEntity(httpResponse.getBody(), RESTImportTask.class);
+		boolean success = httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
+
+		if (success) {
+			LOG.debug("Successfully updated the task " + importTaskId);
+		} else {
+			LOG.error("Unknown error occured while updating the task " + importTaskId);
+		}
+
+		return success;
 	}
 
 	/**
-	 * delete an importJob
+	 * Deletes an importJob.
 	 *
 	 * @param importJobId
 	 * @return
 	 * @throws HttpException
 	 * @throws URISyntaxException
 	 */
-	public boolean deleteImportJob(Integer importJobId) throws URISyntaxException, HttpException{
+	public boolean deleteImportJob(Integer importJobId) throws URISyntaxException, HttpException {
+
+		LOG.debug("Deleting the import job " + importJobId);
+
 		Response httpResponse = HttpUtil.delete(
 			this.addEndPoint(importJobId.toString()),
 			this.username,
 			this.password);
 
-		return httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
+		boolean success = httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
+
+		if (success) {
+			LOG.debug("Successfully deleted the import job " + importJobId);
+		} else {
+			LOG.error("Unknown error occured while deleting the import job " + importJobId);
+		}
+
+		return success;
 	}
 
 	/**
@@ -336,7 +354,7 @@ public class GeoServerRESTImporter {
 	public boolean runImportJob(Integer importJobId) throws
 			UnsupportedEncodingException, URISyntaxException, HttpException {
 
-		LOG.debug("Run import for job " + importJobId);
+		LOG.debug("Starting the import for job " + importJobId);
 
 		Response httpResponse = HttpUtil.post(
 				this.addEndPoint(Integer.toString(importJobId)),
@@ -344,11 +362,15 @@ public class GeoServerRESTImporter {
 				this.password
 		);
 
-		if (httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT)) {
-			return true;
+		boolean success = httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
+
+		if (success) {
+			LOG.debug("Successfully started the import job " + importJobId);
 		} else {
-			return false;
+			LOG.error("Unknown error occured while running the import job " + importJobId);
 		}
+
+		return success;
 	}
 
 	/**
