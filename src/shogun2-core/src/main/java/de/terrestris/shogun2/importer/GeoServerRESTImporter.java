@@ -1,17 +1,25 @@
 package de.terrestris.shogun2.importer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.wkt.Formattable;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +43,11 @@ import de.terrestris.shogun2.importer.transform.RESTReprojectTransform;
 import de.terrestris.shogun2.importer.transform.RESTTransform;
 import de.terrestris.shogun2.util.http.HttpUtil;
 import de.terrestris.shogun2.util.model.Response;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 
 /**
  *
@@ -189,11 +202,11 @@ public class GeoServerRESTImporter {
 	public boolean createGdalAddOverviewTask(Integer importJobId, Integer importTaskId,
 			List<String> opts, List<Integer> levels) throws URISyntaxException, HttpException {
 		RESTGdalAddoTransform transformTask = new RESTGdalAddoTransform();
-		if (! opts.isEmpty()) {
+		if (!opts.isEmpty()) {
 			transformTask.setOptions(opts);
 		}
-		if (! levels.isEmpty()) {
-			transformTask.setLevels(levels);;
+		if (!levels.isEmpty()) {
+			transformTask.setLevels(levels);
 		}
 		return this.createTransformTask(importJobId, importTaskId, transformTask);
 	}
@@ -211,7 +224,7 @@ public class GeoServerRESTImporter {
 	public boolean createGdalWarpTask(Integer importJobId, Integer importTaskId,
 			List<String> optsGdalWarp) throws URISyntaxException, HttpException {
 		RESTGdalWarpTransform transformTask = new RESTGdalWarpTransform();
-		if (! optsGdalWarp.isEmpty()){
+		if (!optsGdalWarp.isEmpty()){
 			transformTask.setOptions(optsGdalWarp);
 		}
 		return this.createTransformTask(importJobId, importTaskId, transformTask);
@@ -230,7 +243,7 @@ public class GeoServerRESTImporter {
 	public boolean createGdalTranslateTask(Integer importJobId, Integer importTaskId,
 			List<String> optsGdalTranslate) throws URISyntaxException, HttpException {
 		RESTGdalTranslateTransform transformTask = new RESTGdalTranslateTransform();
-		if (! optsGdalTranslate.isEmpty()){
+		if (!optsGdalTranslate.isEmpty()){
 			transformTask.setOptions(optsGdalTranslate);
 		}
 		return this.createTransformTask(importJobId, importTaskId, transformTask);
@@ -243,7 +256,7 @@ public class GeoServerRESTImporter {
 	 * @return
 	 * @throws Exception
 	 */
-	public RESTImportTaskList uploadFile(Integer importJobId, File file) throws Exception {
+	public RESTImportTaskList uploadFile(Integer importJobId, File file, String sourceSrs) throws Exception {
 
 		LOG.debug("Uploading file " + file.getName() + " to import job " + importJobId);
 
@@ -261,23 +274,51 @@ public class GeoServerRESTImporter {
 
 		LOG.debug("Successfully uploaded the file to import job " + importJobId);
 
-		RESTImportTaskList importTaskLists =  null;
+		RESTImportTaskList importTaskList =  null;
 		// check, if it is a list of import tasks (for multiple layers)
 		try {
-			importTaskLists = mapper.readValue(httpResponse.getBody(), RESTImportTaskList.class);
+			importTaskList = mapper.readValue(httpResponse.getBody(), RESTImportTaskList.class);
 			LOG.debug("Imported file "+ file.getName() + " contains data for multiple layers.");
+			return importTaskList;
 		} catch (Exception e) {
 			LOG.debug("Imported file "+ file.getName() + " likely contains data for single " +
 					"layer. Will check this now.");
-			RESTImportTask helperTask = mapper.readValue(httpResponse.getBody(), RESTImportTask.class);
-			if (helperTask != null) {
-				importTaskLists = new RESTImportTaskList();
-				importTaskLists.add(helperTask);
-				LOG.debug("Imported file "+ file.getName() + " contains data for a single layers.");
+			try {
+				RESTImportTask importTask = mapper.readValue(httpResponse.getBody(), RESTImportTask.class);
+				if (importTask != null) {
+					importTaskList = new RESTImportTaskList();
+					importTaskList.add(importTask);
+					LOG.debug("Imported file "+ file.getName() + " contains data for a single layer.");
+				}
+				return importTaskList;
+			} catch (Exception ex) {
+				LOG.info("It seems that the SRS definition source file can not be interpreted by " +
+						"GeoServer / GeoTools. Try to set SRS definition to " + sourceSrs + ".");
+
+				File updatedGeoTiff = null;
+				try {
+					if (!StringUtils.isEmpty(sourceSrs)){
+						// "First" recursion: try to add prj file to ZIP.
+						updatedGeoTiff = addPrjFileToArchive(file, sourceSrs);
+					} else {
+						// At least second recursion: throw exception since SRS definition
+						// could not be set.
+						throw new GeoServerRESTImporterException("Could not set SRS definition "
+								+ "of GeoTIFF.");
+					}
+				} catch (ZipException ze) {
+					throw new GeoServerRESTImporterException("No valid ZIP file given containing "
+							+ "GeoTiff datasets.");
+				}
+
+				if (updatedGeoTiff != null) {
+					importTaskList = uploadFile(importJobId, updatedGeoTiff, null);
+					return importTaskList;
+				}
 			}
 		}
 
-		return importTaskLists;
+		return null;
 	}
 
 	/**
@@ -517,6 +558,78 @@ public class GeoServerRESTImporter {
 			LOG.error("Error while creating the transform task");
 			return false;
 		}
+	}
+
+	/**
+	 *
+	 * @param file
+	 * @param targetCrs
+	 * @return
+	 * @throws ZipException
+	 * @throws IOException
+	 * @throws NoSuchAuthorityCodeException
+	 * @throws FactoryException
+	 */
+	public static File addPrjFileToArchive(File file, String targetCrs)
+			throws ZipException, IOException, NoSuchAuthorityCodeException, FactoryException {
+
+		ZipFile zipFile = new ZipFile(file);
+
+		CoordinateReferenceSystem decodedTargetCrs = CRS.decode(targetCrs);
+		String targetCrsWkt = toSingleLineWKT(decodedTargetCrs);
+
+		ArrayList<String> zipFileNames = new ArrayList<String>();
+		List<FileHeader> zipFileHeaders = zipFile.getFileHeaders();
+
+		for (FileHeader zipFileHeader : zipFileHeaders){
+			if (FilenameUtils.getExtension(zipFileHeader.getFileName()).equalsIgnoreCase("prj")) {
+				continue;
+			}
+			zipFileNames.add(FilenameUtils.getBaseName(zipFileHeader.getFileName()));
+		}
+
+		LOG.debug("Following files will be created and added to ZIP file: " + zipFileNames);
+
+		for (String prefix : zipFileNames) {
+			File targetPrj = null;
+			try {
+				targetPrj = File.createTempFile("TMP_" + prefix, ".prj");
+				FileUtils.write(targetPrj, targetCrsWkt, "UTF-8");
+				ZipParameters params = new ZipParameters();
+				params.setSourceExternalStream(true);
+				params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+				params.setFileNameInZip(prefix + ".prj");
+				zipFile.addFile(targetPrj, params);
+			} finally {
+				if (targetPrj != null) {
+					targetPrj.delete();
+				}
+			}
+		}
+
+		return zipFile.getFile();
+	}
+
+	/**
+	 * Turns the CRS into a single line WKT
+	 * The code within this method is a copy
+	 * of {@link ShapefileDataStore#toSingleLineWKT(CoordinateReferenceSystem)}
+	 *
+	 * @param crs CoordinateReferenceSystem which should be formatted
+	 * @return Single line String which can be written to PRJ file
+	 */
+	public static String toSingleLineWKT(CoordinateReferenceSystem crs) {
+		String wkt = null;
+		try {
+			// this is a lenient transformation, works with polar stereographics too
+			Formattable formattable = (Formattable) crs;
+			wkt = formattable.toWKT(0, false);
+		} catch(ClassCastException e) {
+			wkt = crs.toWKT();
+		}
+
+		wkt = wkt.replaceAll("\n", "").replaceAll("  ", "");
+		return wkt;
 	}
 
 	/**
