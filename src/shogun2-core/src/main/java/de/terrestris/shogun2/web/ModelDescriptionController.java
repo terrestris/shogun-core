@@ -2,7 +2,6 @@ package de.terrestris.shogun2.web;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -28,39 +27,14 @@ import de.terrestris.shogun2.util.data.ResultSet;
 @RequestMapping("/describeModel")
 public class ModelDescriptionController {
 
-	/**
-	 * The LOGGER instance (that will be available in all subclasses)
-	 */
-	protected final Logger LOG = Logger.getLogger(getClass());
-
 	@Autowired
 	@Qualifier("modelDescriptionService")
-	private ModelDescriptionService<?> modelDescriptionService;
+	private ModelDescriptionService modelDescriptionService;
 
-	@RequestMapping(value = "/asJson/{className}", method = RequestMethod.GET)
+	@RequestMapping(value = "/asJson/{className}.action", method = RequestMethod.GET)
 	public @ResponseBody Map<String, Object> getJsonSchema(@PathVariable String className) {
 		try {
-
-			// TODO Get these from bean or on instantiation
-			String[] searchPackages = {
-				"de.terrestris.shogun2.model",
-				"de.terrestris.bismap.model"
-			};
-
-			// See https://stackoverflow.com/a/33111503
-			Class<?> foundClass = null;
-			for(int i=0; i < searchPackages.length; i++){
-				try{
-					boolean wasNull = foundClass == null;
-					foundClass = Class.forName(searchPackages[i] + "." + className);
-					if (!wasNull) throw new RuntimeException(className + " exists in multiple packages!");
-				} catch (ClassNotFoundException e){
-					//not in this package, try another
-				}
-			}
-
-			JsonSchema json = modelDescriptionService.getJsonSchema(foundClass);
-
+			JsonSchema json = modelDescriptionService.getJsonSchema(className);
 			return ResultSet.success(json);
 		} catch (Exception e) {
 			return ResultSet.error("Could not get description for " + className + " " + e.getMessage());
