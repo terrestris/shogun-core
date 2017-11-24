@@ -93,7 +93,6 @@ public class GeoServerRESTImporter {
 	/***
 	 *
 	 * @param importerBaseURL
-	 * @param defaultSRS
 	 * @param username
 	 * @param password
 	 * @throws URISyntaxException
@@ -120,7 +119,8 @@ public class GeoServerRESTImporter {
 
 	/**
 	 *
-	 * @param importJob
+	 * @param workSpaceName
+	 * @param dataStoreName
 	 * @return
 	 * @throws Exception
 	 */
