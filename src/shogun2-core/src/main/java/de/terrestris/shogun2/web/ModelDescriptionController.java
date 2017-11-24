@@ -35,6 +35,9 @@ public class ModelDescriptionController {
 	public @ResponseBody Map<String, Object> getJsonSchema(@PathVariable String className) {
 		try {
 			JsonSchema json = modelDescriptionService.getJsonSchema(className);
+			if (json == null) {
+				return ResultSet.error("Modeldescription (json) for model " + className + "is null.");
+			}
 			return ResultSet.success(json);
 		} catch (Exception e) {
 			return ResultSet.error("Could not get description for " + className + " " + e.getMessage());

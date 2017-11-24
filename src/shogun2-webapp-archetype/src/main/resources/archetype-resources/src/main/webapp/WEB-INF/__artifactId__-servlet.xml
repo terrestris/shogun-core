@@ -17,11 +17,11 @@ ${shogun2-parent-package}.*.web" )
 						http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<!-- This tag registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
+	<!-- This tag registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter
 		beans that are required for Spring MVC -->
 	<mvc:annotation-driven
 		content-negotiation-manager="contentNegotiationManager">
-		<!-- Use customized Jackson/JSON Object Mapper, e.g. for a nicer joda date 
+		<!-- Use customized Jackson/JSON Object Mapper, e.g. for a nicer joda date
 			serialization -->
 		<mvc:message-converters>
 			<beans:bean
@@ -34,8 +34,8 @@ ${shogun2-parent-package}.*.web" )
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-	<!-- Use this bean (referenced above) to map our .action extension to the 
-		application/json mime type. This is necessary since Spring 4.2.2 See: https://pivotal.io/security/cve-2015-5211 
+	<!-- Use this bean (referenced above) to map our .action extension to the
+		application/json mime type. This is necessary since Spring 4.2.2 See: https://pivotal.io/security/cve-2015-5211
 		TODO: We should discuss, if this is really what we want. -->
 	<beans:bean id="contentNegotiationManager"
 		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
@@ -47,12 +47,9 @@ ${shogun2-parent-package}.*.web" )
 	</beans:bean>
 
 	<annotation-config />
-	
+
 	<beans:bean id="requestHandlerMapping"
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
-
-	<beans:bean id="jacksonObjectMapper"
-		class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
 
 	<component-scan base-package="${web_packages_to_scan}" use-default-filters="false">
 		<include-filter expression="org.springframework.stereotype.Controller" type="annotation" />

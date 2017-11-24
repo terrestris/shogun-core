@@ -69,6 +69,15 @@
     <!-- The GeoServer Namespace to URI map used in the Interceptor -->
     <util:properties id="geoServerNameSpaces" location="classpath*:META-INF/geoServerNameSpaces.properties" />
 
+    <!-- The Shogun2JsonObjectMapper -->
+    <bean id="jacksonObjectMapper" class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
+
+    <!-- The SearchPackages to be used in the modelDescriptionService -->
+    <util:list id="describeModelSearchPackages" value-type="java.lang.String">
+        <value>de.terrestris.shogun2.model</value>
+        <value>${package}.model</value>
+    </util:list>
+
     <!--
      | The interceptor beans, uncomment to be able to use the interceptor
      | classes for OGC requests
