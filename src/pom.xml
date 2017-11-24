@@ -367,6 +367,8 @@
                 <configuration>
                     <excludes>
                         <exclude>de/terrestris/shogun2/model/**/*.class</exclude>
+                        <exclude>de/terrestris/shogun2/importer/communication/*.class</exclude>
+                        <exclude>de/terrestris/shogun2/importer/transform/*.class</exclude>
                         <exclude>de/terrestris/shogun2/paging/PagingResult.class</exclude>
                     </excludes>
                 </configuration>
