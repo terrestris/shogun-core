@@ -667,6 +667,12 @@
                 <version>${jackson-datatype-jts.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jsonSchema</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
             <!-- CSV -->
             <dependency>
                 <groupId>com.opencsv</groupId>
