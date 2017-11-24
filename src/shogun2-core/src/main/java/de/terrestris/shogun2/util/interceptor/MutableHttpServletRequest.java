@@ -98,7 +98,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 	public static String getRequestParameterValue(HttpServletRequest httpServletRequest,
 			String parameter) throws InterceptorException, IOException {
 
-		LOG.debug("Finding the request parameter [" + parameter + "]");
+		LOG.trace("Finding the request parameter [" + parameter + "]");
 
 		String value = StringUtils.EMPTY;
 
@@ -152,7 +152,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 			}
 		}
 
-		LOG.debug("Found the request parameter value: " + value);
+		LOG.trace("Found the request parameter value: " + value);
 
 		return value;
 	}

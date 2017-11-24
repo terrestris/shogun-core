@@ -1891,7 +1891,7 @@ public class HttpUtil {
 
 				if (header.getName().equalsIgnoreCase("Transfer-Encoding") &&
 					header.getValue().equalsIgnoreCase("chunked")) {
-					LOG.debug("Removed the header 'Transfer-Encoding:chunked'" +
+					LOG.trace("Removed the header 'Transfer-Encoding:chunked'" +
 							" from a response, as its handled by the http-client");
 				} else {
 					headersMap.set(header.getName(), header.getValue());

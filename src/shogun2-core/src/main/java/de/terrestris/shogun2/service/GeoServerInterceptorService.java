@@ -186,7 +186,7 @@ public class GeoServerInterceptorService {
 	private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest)
 			throws InterceptorException, IOException {
 
-		LOG.debug("Building the OGC message from the given request.");
+		LOG.trace("Building the OGC message from the given request.");
 
 		OgcMessage ogcMessage = new OgcMessage();
 
@@ -258,7 +258,7 @@ public class GeoServerInterceptorService {
 			LOG.debug("No interceptor rule found for the response.");
 		}
 
-		LOG.debug("Successfully build the OGC message: " + ogcMessage);
+		LOG.trace("Successfully build the OGC message: " + ogcMessage);
 
 		return ogcMessage;
 	}
@@ -361,8 +361,8 @@ public class GeoServerInterceptorService {
 					"least the basic sets of rules (e.g. ALLOW all WMS " +
 					"requests) when using the interceptor.");
 			throw new InterceptorException("No interceptor rule found.");
-		} else {
-			LOG.debug("Identified the following rule as most the specific " +
+		} else if(LOG.isTraceEnabled()) {
+			LOG.trace("Identified the following rule as most the specific " +
 					"one: " + mostSpecificRule);
 		}
 
@@ -464,7 +464,7 @@ public class GeoServerInterceptorService {
 		// get the namespace from the qualified endPoint name
 		String geoServerNamespace = getGeoServerNameSpace(message.getEndPoint());
 
-		LOG.debug("Found the following GeoServer namespace set in the "
+		LOG.trace("Found the following GeoServer namespace set in the "
 				+ "EndPoint: " + geoServerNamespace);
 
 		// set the GeoServer base URL
