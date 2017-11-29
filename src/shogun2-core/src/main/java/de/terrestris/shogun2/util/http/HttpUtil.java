@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -73,6 +74,11 @@ public class HttpUtil {
 	private static int httpTimeout;
 
 	/**
+	 * The default timeout given by the config beans.
+	 */
+	private static int defaultHttpTimeout;
+
+	/**
 	 * Performs an HTTP GET on the given URL <i>without authentication</i>
 	 *
 	 * @param url The URL to connect to.
@@ -87,7 +93,7 @@ public class HttpUtil {
 	}
 
 	/**
-	 * Performs an HTTP GET on the given URL <i>without authentication</i> and 
+	 * Performs an HTTP GET on the given URL <i>without authentication</i> and
 	 * additional HTTP request headers.
 	 *
 	 * @param url The URL to connect to.
@@ -125,7 +131,7 @@ public class HttpUtil {
 	 * @param url The URL to connect to.
 	 * @param credentials instance implementing {@link Credentials} interface holding a set of credentials
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
@@ -156,7 +162,7 @@ public class HttpUtil {
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @throws HttpException
 	 * @throws URISyntaxException
 	 */
@@ -257,7 +263,7 @@ public class HttpUtil {
 	 * @param uri The URI to connect to.
 	 * @param credentials Instance implementing {@link Credentials} interface holding a set of credentials
 	 * @param requestHeaders Additional HTTP headers added to the request
-	 * 
+	 *
 	 * @return The HTTP response as Response object.
 	 *
 	 * @throws URISyntaxException
@@ -1207,8 +1213,10 @@ public class HttpUtil {
 	private static Response postParams(HttpPost httpRequest, List<NameValuePair> queryParams, Credentials credentials, Header[] requestHeaders)
 			throws URISyntaxException, UnsupportedEncodingException, HttpException {
 
-		HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
-		httpRequest.setEntity(httpEntity);
+		if (!queryParams.isEmpty()) {
+			HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
+			httpRequest.setEntity(httpEntity);
+		}
 
 		return send(httpRequest, credentials, requestHeaders);
 	}
@@ -1888,7 +1896,6 @@ public class HttpUtil {
 			response.setStatusCode(httpStatus);
 
 			for (Header header : headers) {
-
 				if (header.getName().equalsIgnoreCase("Transfer-Encoding") &&
 					header.getValue().equalsIgnoreCase("chunked")) {
 					LOG.trace("Removed the header 'Transfer-Encoding:chunked'" +
@@ -1909,27 +1916,13 @@ public class HttpUtil {
 		} finally {
 
 			// cleanup
+			httpRequest.reset();
 
-			httpRequest.releaseConnection();
-
-			try {
-				if (httpResponse != null) {
-					httpResponse.close();
-				}
-			} catch (IOException e) {
-				LOG.error("Could not close CloseableHttpResponse: " + e.getMessage());
-			}
-
-			try {
-				httpClient.close();
-			} catch (IOException e) {
-				LOG.error("Could not close CloseableHttpClient: " + e.getMessage());
-			}
-
+			IOUtils.closeQuietly(httpResponse);
+			IOUtils.closeQuietly(httpClient);
 		}
 
 		return response;
-
 	}
 
 	/**
@@ -1992,8 +1985,29 @@ public class HttpUtil {
 	 */
 	@Value("${http.timeout}")
 	@SuppressWarnings("static-method")
-	public void setHttpTimeout(int httpTimeout) {
+	public void setDefaultHttpTimeout(int httpTimeout) {
+		HttpUtil.defaultHttpTimeout = httpTimeout;
 		HttpUtil.httpTimeout = httpTimeout;
 	}
 
+	/**
+	 * @return the httpTimeout
+	 */
+	public static int getHttpTimeout() {
+		return httpTimeout;
+	}
+
+	/**
+	 * @param httpTimeout the httpTimeout to set
+	 */
+	public static void setHttpTimeout(int httpTimeout) {
+		HttpUtil.httpTimeout = httpTimeout;
+	}
+
+	/**
+	 * Resets the http timeout to the default one given by the app config.
+	 */
+	public static void resetHttpTimeout() {
+		HttpUtil.httpTimeout = HttpUtil.defaultHttpTimeout;
+	}
 }
