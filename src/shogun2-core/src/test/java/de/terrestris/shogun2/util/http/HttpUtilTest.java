@@ -1,18 +1,16 @@
 package de.terrestris.shogun2.util.http;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -34,6 +32,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.terrestris.shogun2.util.model.Response;
+import org.mockito.Mockito;
+import org.springframework.http.HttpMethod;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -784,6 +788,198 @@ public class HttpUtilTest {
 	@Test
 	public void delete_uri_auth_cred_headers() throws URISyntaxException, HttpException{
 		Response response = HttpUtil.delete(URI, CREDENTIALS, REQ_HEADERS);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void isSaneRequest_returnsFalseForNull() {
+		final boolean result = HttpUtil.isSaneRequest(null);
+		assertFalse("isSamerequest returns true for invalid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isSaneRequest_returnsTrueForDefinedMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.GET.toString());
+
+		final boolean result = HttpUtil.isSaneRequest(mockedRequest);
+		assertTrue("isSamerequest returns true for valid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpGetRequest_returnsFalseForNull() {
+		final boolean result = HttpUtil.isHttpGetRequest(null);
+		assertFalse("isHttpGetRequest returns false for invalid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpGetRequest_returnsFalseForIncorrectMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+
+		final boolean result = HttpUtil.isHttpGetRequest(mockedRequest);
+		assertFalse("isHttpGetRequest returns false for wrong method in HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpGetRequest_returnsTrueForCorrectMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.GET.toString());
+
+		final boolean result = HttpUtil.isHttpGetRequest(mockedRequest);
+		assertTrue("isHttpGetRequest returns true for valid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpPostRequest_returnsFalseForNull() {
+		final boolean result = HttpUtil.isHttpPostRequest(null);
+		assertFalse("isHttpPostRequest returns false for invalid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpPostRequest_returnsFalseForIncorrectMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.GET.toString());
+
+		final boolean result = HttpUtil.isHttpPostRequest(mockedRequest);
+		assertFalse("isHttpPostRequest returns false for wrong method in HttpServletRequest", result);
+	}
+
+	@Test
+	public void isHttpPostRequest_returnsTrueForCorrectMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+
+		final boolean result = HttpUtil.isHttpPostRequest(mockedRequest);
+		assertTrue("isHttpPostRequest returns true for valid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isFormMultipartPost_returnsFalseForNull() {
+		final boolean result = HttpUtil.isFormMultipartPost(null);
+		assertFalse("isFormMultipartPost returns false for invalid HttpServletRequest", result);
+	}
+
+	@Test
+	public void isFormMultipartPost_returnsTrueForCorrectMethod() {
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+		when(mockedRequest.getContentType()).thenReturn("multipart/form-data");
+
+		final boolean result = HttpUtil.isFormMultipartPost(mockedRequest);
+		assertTrue("isFormMultipartPost returns true for valid HttpServletRequest", result);
+	}
+
+	@Test
+	public void forwardGet_notForwardHeaders() throws URISyntaxException, HttpException {
+		final boolean forwardHeaders = false;
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.GET.toString());
+
+
+		final Response response = HttpUtil.forwardGet(URI, mockedRequest, forwardHeaders);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void forwardGet_withForwardHeaders() throws URISyntaxException, HttpException {
+		final boolean forwardHeaders = true;
+		final String headerName = "TEST_HEADER";
+		final String headerVal = "TEST_HEADER_VAL";
+
+		final HashSet<String> headerNames = new HashSet<>();
+		headerNames.add(headerName);
+		final HashSet<String> headerValues = new HashSet<>();
+		headerValues.add(headerVal);
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.GET.toString());
+		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(headerNames));
+		when(mockedRequest.getHeaders(headerName)).thenReturn(Collections.enumeration(headerValues));
+
+		final Response response = HttpUtil.forwardGet(URI, mockedRequest, forwardHeaders);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void forwardFormMultipartPost_withoutForwardHeaders() throws HttpException, IOException, ServletException, URISyntaxException {
+		final boolean forwardHeaders = false;
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+
+
+		final Response response = HttpUtil.forwardFormMultipartPost(URI, mockedRequest, forwardHeaders);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void forwardFormMultipartPost_withForwardHeaders() throws HttpException, IOException, ServletException, URISyntaxException {
+		final boolean forwardHeaders = true;
+		final String headerName = "TEST_HEADER";
+		final String headerVal = "TEST_HEADER_VAL";
+
+		final HashSet<String> headerNames = new HashSet<>();
+		headerNames.add(headerName);
+		headerNames.add("content-length");
+		headerNames.add("content-type");
+		final HashSet<String> headerValues = new HashSet<>();
+		headerValues.add(headerVal);
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+
+		final LinkedList<Part> parts = new LinkedList<>();
+		Part testPart = Mockito.mock(Part.class);
+		when(testPart.getInputStream()).thenReturn(IOUtils.toInputStream("TEST_TEST", "UTF-8"));
+		when(testPart.getContentType()).thenReturn("text/plain");
+		when(testPart.getSubmittedFileName()).thenReturn("testFile.txt");
+		when(testPart.getName()).thenReturn("file");
+		parts.add(testPart);
+
+		when(mockedRequest.getParts()).thenReturn(parts);
+		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(headerNames));
+		when(mockedRequest.getHeaders(headerName)).thenReturn(Collections.enumeration(headerValues));
+		when(mockedRequest.getHeaders("content-length")).thenReturn(Collections.enumeration(headerValues));
+		when(mockedRequest.getHeaders("content-type")).thenReturn(Collections.enumeration(headerValues));
+
+		final Response response = HttpUtil.forwardFormMultipartPost(URI, mockedRequest, forwardHeaders);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void forwardPost_withoutForwardHeaders() throws URISyntaxException, HttpException, IOException {
+		final boolean forwardHeaders = false;
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+		when(mockedRequest.getContentType()).thenReturn("text/plain");
+		when(mockedRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
+
+		final Response response = HttpUtil.forwardPost(URI, mockedRequest, forwardHeaders);
+		assertNotNull(response);
+	}
+
+	@Test
+	public void forwardPost_withForwardHeaders() throws URISyntaxException, HttpException, IOException {
+		final boolean forwardHeaders = true;
+		final String headerName = "TEST_HEADER";
+		final String headerVal = "TEST_HEADER_VAL";
+
+		final HashSet<String> headerNames = new HashSet<>();
+		headerNames.add(headerName);
+		final HashSet<String> headerValues = new HashSet<>();
+		headerValues.add(headerVal);
+
+		HttpServletRequest mockedRequest = Mockito.mock(HttpServletRequest.class);
+		when(mockedRequest.getMethod()).thenReturn(HttpMethod.POST.toString());
+		when(mockedRequest.getContentType()).thenReturn("text/plain");
+		when(mockedRequest.getReader()).thenReturn(Mockito.mock(BufferedReader.class));
+		when(mockedRequest.getHeaderNames()).thenReturn(Collections.enumeration(headerNames));
+		when(mockedRequest.getHeaders(headerName)).thenReturn(Collections.enumeration(headerValues));
+
+		final Response response = HttpUtil.forwardPost(URI, mockedRequest, forwardHeaders);
 		assertNotNull(response);
 	}
 
