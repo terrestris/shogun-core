@@ -311,7 +311,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both and password are not null.
 	 *
-	 * @param uri The URI to connect to.
+	 * @param url The URI to connect to as String.
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 *
@@ -330,7 +330,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both and password are not null.
 	 *
-	 * @param uri The URI to connect to.
+	 * @param url The URI to connect to as String.
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 * @param requestHeaders Additional HTTP headers added to the request
@@ -1936,7 +1936,7 @@ public class HttpUtil {
 	 * an InetSocketAddress ready to be used to pass the proxy to the
 	 * DefaultHttpClient.
 	 *
-	 * @param url
+	 * @param uri
 	 * @return
 	 * @throws UnknownHostException
 	 */
