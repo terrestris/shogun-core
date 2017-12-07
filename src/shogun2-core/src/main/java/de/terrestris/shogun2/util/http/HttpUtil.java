@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.util.http;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -10,9 +11,7 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,20 +37,27 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import de.terrestris.shogun2.util.model.Response;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -77,6 +83,11 @@ public class HttpUtil {
 	 * The default timeout given by the config beans.
 	 */
 	private static int defaultHttpTimeout;
+
+	/**
+	 * The name of the 'authorization' header
+	 */
+	private static String AUTHORIZATION_HEADER = "authorization";
 
 	/**
 	 * Performs an HTTP GET on the given URL <i>without authentication</i>
@@ -275,6 +286,29 @@ public class HttpUtil {
 	}
 
 	/**
+	 * Forward GET request to uri based on given request
+	 *
+	 * @param uri uri The URI to forward to.
+	 * @param request The original {@link HttpServletRequest}
+	 * @param forwardHeaders Should headers of request should be forwarded
+	 * @return The HTTP response as Response object.
+	 *
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response forwardGet(URI uri, HttpServletRequest request, boolean forwardHeaders)
+			throws URISyntaxException, HttpException {
+
+		Header[] headersToForward = null;
+
+		if(request != null && forwardHeaders) {
+			headersToForward = HttpUtil.getHeadersFromRequest(request);
+		}
+
+		return send(new HttpGet(uri), null, headersToForward);
+	}
+
+	/**
 	 * Performs an HTTP POST on the given URL.
 	 *
 	 * @param url The URL to connect to.
@@ -311,7 +345,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both and password are not null.
 	 *
-	 * @param uri The URI to connect to.
+	 * @param url The URI to connect to as String.
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 *
@@ -330,7 +364,7 @@ public class HttpUtil {
 	 * Performs an HTTP POST on the given URL.
 	 * Basic auth is used if both and password are not null.
 	 *
-	 * @param uri The URI to connect to.
+	 * @param url The URI to connect to as String.
 	 * @param username Credentials - username
 	 * @param password Credentials - password
 	 * @param requestHeaders Additional HTTP headers added to the request
@@ -1153,6 +1187,80 @@ public class HttpUtil {
 	}
 
 	/**
+	 * Forward FormMultipartPost (HTTP POST) to uri based on given request
+	 *
+	 * @param uri uri The URI to forward to.
+	 * @param request The original {@link HttpServletRequest}
+	 * @param forwardHeaders Should headers of request should be forwarded
+	 * @return The HTTP response as Response object.
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public static Response forwardFormMultipartPost(URI uri, HttpServletRequest request, boolean forwardHeaders)
+			throws URISyntaxException, HttpException, IllegalStateException, IOException, ServletException {
+		Header[] headersToForward = null;
+
+		if(request != null && forwardHeaders) {
+			headersToForward = HttpUtil.getHeadersFromRequest(request);
+		}
+
+		// remove content headers as http client lib will care about this
+		// when entity is set on the httpPost instance in the postMultiPart method
+		headersToForward = removeHeaders(headersToForward, new String[]{"content-length", "content-type"});
+
+		Collection<Part> parts = request.getParts();
+
+		return HttpUtil.postMultiPart(uri, parts, headersToForward);
+	}
+
+	/**
+	 *
+	 * @param uri The URI to POSt to
+	 * @param parts {@link Part}s of FormMultipartRequest
+	 * @param headersToForward  Should headers of request should be forwarded
+	 * @return The HTTP response as Response object.
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	private static Response postMultiPart(URI uri, Collection<Part> parts, Header[] headersToForward) throws IOException, URISyntaxException, HttpException {
+
+		HttpPost httpPost = new HttpPost(uri);
+
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+		for (Part part: parts) {
+			String name = part.getName();
+			String fileName = part.getSubmittedFileName();
+
+			// we should use a ByteArrayBody instead of InputStreamBody!
+			// when using InputStreamBody, the HttpClient lib will use chunked encoding,
+			// which is not supported by all servers.
+			// by using the ByteArrayBody, the size of the content is known and the lib
+			// will NOT use chunked encoding, but add a content-length header instead.
+			byte[] data = IOUtils.toByteArray(part.getInputStream());
+			final ContentType contentType = ContentType.create(part.getContentType());
+
+			ByteArrayBody byteArrayBody = new ByteArrayBody(data, contentType, fileName);
+
+			// add the part
+			builder.addPart(name, byteArrayBody);
+
+			LOG.debug("Add a form/multipart part with name '" + name + "', content type '" + contentType.getMimeType() + "' and size "
+					+ part.getSize());
+		}
+
+		HttpEntity multiPartEntity = builder.build();
+
+		httpPost.setEntity(multiPartEntity);
+
+		return send(httpPost, null, headersToForward);
+	}
+
+	/**
 	 *
 	 * @param httpRequest
 	 * @param file
@@ -1220,6 +1328,32 @@ public class HttpUtil {
 
 		return send(httpRequest, credentials, requestHeaders);
 	}
+
+	/**
+	 * Forward POST to uri based on given request
+	 *
+	 * @param uri uri The URI to forward to.
+	 * @param request The original {@link HttpServletRequest}
+	 * @param forwardHeaders Should headers of request should be forwarded
+	 * @return The HTTP response as Response object.
+	 *
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws HttpException
+	 */
+	public static Response forwardPost(URI uri, HttpServletRequest request, boolean forwardHeaders) throws URISyntaxException, HttpException {
+		Header[] headersToForward = null;
+		if(request != null && forwardHeaders) {
+			headersToForward = HttpUtil.getHeadersFromRequest(request);
+		}
+
+		String ctString = request.getContentType();
+		ContentType ct = ContentType.parse(ctString);
+		String body = getRequestBody(request);
+
+		return HttpUtil.postBody(new HttpPost(uri), body, ct, null, headersToForward);
+	}
+
 
 	/**
 	 * Perform HTTP PUT with empty body
@@ -1926,6 +2060,150 @@ public class HttpUtil {
 	}
 
 	/**
+	 * Checks if request and request method are not null
+	 * @param request {@link HttpServletRequest} to check
+	 * @return true if sane, false otherwise
+	 */
+	public static boolean isSaneRequest(HttpServletRequest request) {
+		if (request != null && request.getMethod() != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check if provided {@link HttpServletRequest} is a HTTP GET request
+	 * @param request {@link HttpServletRequest} to check
+	 * @return true if HTTP v, false otherwise
+	 */
+	public static boolean isHttpGetRequest(HttpServletRequest request) {
+		boolean isSane = isSaneRequest(request);
+		boolean isGet = isSane && request.getMethod().equals(HttpMethod.GET.toString());
+		return isSane && isGet;
+	}
+
+	/**
+	 * Check if provided {@link HttpServletRequest} is a HTTP POST request
+	 * @param request {@link HttpServletRequest} to check
+	 * @return true if HTTP POST, false otherwise
+	 */
+	public static boolean isHttpPostRequest(HttpServletRequest request) {
+		boolean isSane = isSaneRequest(request);
+		boolean isPost = isSane && request.getMethod().equals(HttpMethod.POST.toString());
+		return isSane && isPost;
+	}
+
+	/**
+	 * Check if provided {@link HttpServletRequest} is a FormMultipartPost
+	 * @param request {@link HttpServletRequest} to check
+	 * @return true if FormMultipartPost, false otherwise
+	 */
+	public static boolean isFormMultipartPost(HttpServletRequest request) {
+		if (!isHttpPostRequest(request)) {
+			return false;
+		}
+
+		String contentType = request.getContentType();
+		if (contentType == null) {
+			return false;
+		}
+
+		if (contentType.toLowerCase().startsWith("multipart/form-data")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Extract headers from {@link HttpServletRequest}
+	 * @param request  {@link HttpServletRequest} to extract headers from
+	 * @return Array with {@link Header}s
+	 */
+	private static Header[] getHeadersFromRequest(HttpServletRequest request) {
+		List<Header> returnHeaderList = new ArrayList<>();
+		Enumeration<String> headerNames = request.getHeaderNames();
+
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+
+			Enumeration<String> headerValues = request.getHeaders(headerName);
+			while(headerValues.hasMoreElements()) {
+				String headerValue = headerValues.nextElement();
+				// as cookies are sent in headers, we'll also have to check for unsupported cookies here
+				if (headerName.toLowerCase().equals("cookie")) {
+					String[] cookies = headerValue.split(";");
+					List<String> newCookieList = new ArrayList<>();
+					for(int i=0; i < cookies.length; i++) {
+						final String cookieFromArray = cookies[i];
+						final String lcCookieName = cookieFromArray.split("=")[0].toLowerCase();
+						newCookieList.add(cookieFromArray);
+					}
+					// rewrite the cookie value
+					headerValue = StringUtils.join(newCookieList, ";");
+				}
+
+				if(headerValue.isEmpty()) {
+					LOG.debug("Skipping request header '" + headerName + "' as it's value is empty (possibly an "
+							+ "unsupported cookie value has been removed)");
+				} else {
+					LOG.debug("Adding request header: " + headerName + "=" + headerValue);
+					returnHeaderList.add(new BasicHeader(headerName, headerValue));
+				}
+			}
+
+		}
+
+		Header [] headersArray = new Header[returnHeaderList.size()];
+		headersArray = returnHeaderList.toArray(headersArray);
+		return headersArray;
+	}
+
+	/**
+	 * Remove headers form header array that match Strings in headersToRemove
+	 * @param headersToClean Array of {@link Header}: Headers to clean up
+	 * @param headersToRemove Header names to remove
+	 */
+	private static Header[] removeHeaders(Header[] headersToClean, String[] headersToRemove) {
+		ArrayList<Header> headers = new ArrayList<>();
+		if (headersToClean == null) {
+			return null;
+		}
+		for (Header header : headersToClean) {
+			if (!StringUtils.equalsAnyIgnoreCase(header.getName(), headersToRemove)) {
+				headers.add(header);
+			}
+		}
+		LOG.debug("Removed the content-length and content-type headers as the HTTP Client lib will care "
+				+ "about them as soon as the entity is set on the POST object.");
+		Header [] headersArray = new Header[headers.size()];
+		headersArray = headers.toArray(headersArray);
+		return headersArray;
+	}
+
+	/**
+	 * Extract Request body as String of {@link HttpServletRequest}
+	 * @param request {@link HttpServletRequest} to extract body from
+	 * @return
+	 */
+	private static String getRequestBody(HttpServletRequest request) {
+		String body = null;
+		try(BufferedReader requestReader = request.getReader()) {
+			StringBuffer bodyLines = new StringBuffer();
+			String bodyLine;
+			while ((bodyLine = requestReader.readLine()) != null) {
+				bodyLines.append(bodyLine);
+			}
+			body = bodyLines.toString();
+		} catch (IOException e) {
+			LOG.info("Failed to obtain a Reader for a potential body of"
+					+ " this POST, assuming KVP");
+		}
+
+		return body;
+	}
+
+	/**
 	 * If the JVM knows about a HTTP proxy, e.g. by specifying
 	 *
 	 * <pre>
@@ -1936,7 +2214,7 @@ public class HttpUtil {
 	 * an InetSocketAddress ready to be used to pass the proxy to the
 	 * DefaultHttpClient.
 	 *
-	 * @param url
+	 * @param uri
 	 * @return
 	 * @throws UnknownHostException
 	 */
