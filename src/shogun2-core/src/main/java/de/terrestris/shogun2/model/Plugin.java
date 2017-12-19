@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -16,6 +17,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +31,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Plugin extends PersistentObject {
 
 	/**
@@ -61,6 +68,8 @@ public class Plugin extends PersistentObject {
 
 	/** A list of assigned {@link PluginUploadFile}s. */
 	@ManyToMany
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "PLUGIN_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "FILE_ID") }

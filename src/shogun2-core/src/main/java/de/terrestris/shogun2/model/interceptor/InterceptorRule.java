@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model.interceptor;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.util.enumeration.HttpEnum;
@@ -34,6 +37,8 @@ import de.terrestris.shogun2.util.enumeration.OgcEnum;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class InterceptorRule extends PersistentObject {
 
 	/**

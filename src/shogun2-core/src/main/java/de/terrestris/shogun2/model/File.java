@@ -3,6 +3,7 @@
  */
 package de.terrestris.shogun2.model;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -11,6 +12,8 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class File extends PersistentObject {
 
 	/**

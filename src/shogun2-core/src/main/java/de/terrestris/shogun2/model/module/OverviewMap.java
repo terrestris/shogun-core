@@ -6,6 +6,7 @@ package de.terrestris.shogun2.model.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,6 +17,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -35,6 +40,8 @@ import de.terrestris.shogun2.model.layer.Layer;
  */
 @Table
 @Entity
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class OverviewMap extends Module {
 
 	/**
@@ -56,6 +63,8 @@ public class OverviewMap extends Module {
 		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<Layer> overviewMapLayers = new ArrayList<Layer>();
 
 	/**
@@ -67,6 +76,8 @@ public class OverviewMap extends Module {
 		property = "name"
 	)
 	@JsonIdentityReference(alwaysAsId = true)
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map parentMapModule;
 
 	/**

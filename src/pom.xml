@@ -135,7 +135,7 @@
         <spring.version>4.3.11.RELEASE</spring.version>
         <spring-security.version>4.2.3.RELEASE</spring-security.version>
         <!-- TODO: Raise log4j to version 2 -->
-        <log4j.version>1.2.17</log4j.version>
+        <log4j.version>2.10.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <jackson.version>2.9.1</jackson.version>
         <opencsv.version>4.0</opencsv.version>
@@ -144,7 +144,7 @@
         <!-- Persistence -->
         <hibernate.version>5.1.10.Final</hibernate.version>
         <hikari-jdk7.version>2.4.11</hikari-jdk7.version>
-        <hikari.version>2.6.1</hikari.version>
+        <hikari.version>2.7.4</hikari.version>
         <h2.version>1.4.196</h2.version>
 
         <!-- Testing -->
@@ -470,16 +470,20 @@
 
         <!-- Logging -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>log4j-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
     </dependencies>
 
     <!-- The dependencyManagement section will make the configured (versions

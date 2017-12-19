@@ -1,5 +1,6 @@
 package de.terrestris.shogun2.model;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -8,6 +9,8 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -21,6 +24,8 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Territory extends PersistentObject {
 
 	/**

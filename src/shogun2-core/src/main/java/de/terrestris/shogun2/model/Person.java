@@ -2,6 +2,7 @@ package de.terrestris.shogun2.model;
 
 import java.util.Locale;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -11,6 +12,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
@@ -21,6 +24,8 @@ import org.joda.time.LocalDate;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Person extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;

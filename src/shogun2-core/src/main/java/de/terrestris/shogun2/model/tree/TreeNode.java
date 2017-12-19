@@ -3,6 +3,7 @@
  */
 package de.terrestris.shogun2.model.tree;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -12,6 +13,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -39,6 +44,8 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonInclude(Include.NON_NULL)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class TreeNode extends PersistentObject {
 
 	/**
@@ -63,6 +70,8 @@ public class TreeNode extends PersistentObject {
 	)
 	@JsonIdentityReference(alwaysAsId = true)
 	@JsonProperty("parentId")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private TreeFolder parentFolder;
 
 	/**

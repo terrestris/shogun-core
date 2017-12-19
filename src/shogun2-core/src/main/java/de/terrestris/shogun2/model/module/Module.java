@@ -6,6 +6,7 @@ package de.terrestris.shogun2.model.module;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -19,6 +20,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.converter.PropertyValueConverter;
 import de.terrestris.shogun2.model.PersistentObject;
@@ -39,6 +44,8 @@ import de.terrestris.shogun2.model.layout.Layout;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Module extends PersistentObject {
 
 	/**
@@ -64,6 +71,8 @@ public class Module extends PersistentObject {
 	@Column(name = "VALUE")
 	@CollectionTable(joinColumns = @JoinColumn(name = "MODULE_ID"))
 	@Convert(converter = PropertyValueConverter.class, attributeName="value")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map<String, Object> properties = new HashMap<String, Object>();
 
 	/**

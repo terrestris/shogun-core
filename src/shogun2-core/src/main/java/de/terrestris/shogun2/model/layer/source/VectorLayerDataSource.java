@@ -1,10 +1,13 @@
 package de.terrestris.shogun2.model.layer.source;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Data source of <a href= "http://openlayers.org/en/master/apidoc/ol.layer.Vector.html">OpenLayers 3 vector layer</a>
@@ -15,6 +18,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class VectorLayerDataSource extends LayerDataSource {
 
 	/**

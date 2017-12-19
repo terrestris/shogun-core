@@ -6,6 +6,7 @@ package de.terrestris.shogun2.model.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -13,6 +14,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * This class represents a (simple) composite {@link TreeNode}, i.e. a folder
@@ -25,6 +30,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class TreeFolder extends TreeNode {
 
 	/**
@@ -42,6 +49,8 @@ public class TreeFolder extends TreeNode {
 	 */
 	@OneToMany(mappedBy = "parentFolder")
 	@OrderBy("index")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<TreeNode> children = new ArrayList<TreeNode>();
 
 	/**

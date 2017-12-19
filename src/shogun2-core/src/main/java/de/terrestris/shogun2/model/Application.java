@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -17,6 +18,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.joda.time.ReadableDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -37,6 +42,8 @@ import de.terrestris.shogun2.model.module.CompositeModule;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Application extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
@@ -83,6 +90,8 @@ public class Application extends PersistentObject {
 	 *
 	 */
 	@ManyToOne
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private CompositeModule viewport;
 
 	/**
@@ -101,6 +110,8 @@ public class Application extends PersistentObject {
 		resolver = PluginIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId = true)
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<Plugin> plugins = new ArrayList<>();
 
 	/**

@@ -19,6 +19,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import de.terrestris.shogun2.model.PersistentObject;
@@ -48,6 +49,9 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 	 */
 	private final Class<E> entityClass;
 
+	@Value("${hibernate.cache.use_query_cache}")
+	private Boolean useQueryCache;
+	
 	/**
 	 * Default constructor
 	 */
@@ -135,6 +139,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 		} else {
 			criteria.add(Restrictions.eq(fieldName, fieldEntity));
 		}
+		criteria.setCacheable(this.useQueryCache);
 
 		return (List<E>) criteria.list();
 	}
@@ -435,6 +440,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 		Criteria criteria = getSession().createCriteria(entityClass);
 		addCriterionsToCriteria(criteria, criterion);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		criteria.setCacheable(this.useQueryCache);
 		return criteria;
 	}
 

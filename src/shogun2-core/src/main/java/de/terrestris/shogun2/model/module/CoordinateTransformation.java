@@ -6,6 +6,7 @@ package de.terrestris.shogun2.model.module;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -16,6 +17,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * The CoordinateTransform module allows the user to transform map coordinates into
@@ -26,6 +31,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class CoordinateTransformation extends Module {
 
 	/**
@@ -42,6 +49,8 @@ public class CoordinateTransformation extends Module {
 		joinColumns = @JoinColumn(name = "COORDTRANS_ID") )
 	@Column(name = "EPSG")
 	@OrderColumn(name = "IDX")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<String> epsgCodes = new ArrayList<String>();
 
 	/**
