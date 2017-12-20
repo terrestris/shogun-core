@@ -28,18 +28,6 @@
     </properties>
 
     <profiles>
-        <!-- A profile for JDK 1.7 -->
-        <profile>
-            <id>jdk7</id>
-            <activation>
-                <jdk>1.7</jdk>
-            </activation>
-            <properties>
-                <jdk.version>1.7</jdk.version>
-                <jetty-maven-plugin.version>9.2.14.v20151106</jetty-maven-plugin.version>
-            </properties>
-        </profile>
-
         <!-- A profile for JDK 1.8 (and later) -->
         <profile>
             <id>jdk8</id>
@@ -50,7 +38,7 @@
                 <jdk.version>1.8</jdk.version>
                 <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
-                <jetty-maven-plugin.version>9.3.6.v20151106</jetty-maven-plugin.version>
+                <jetty-maven-plugin.version>9.4.8.v20171121</jetty-maven-plugin.version>
             </properties>
         </profile>
     </profiles>
@@ -180,5 +168,20 @@
         </dependency>
 
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-servlet-api</artifactId>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
