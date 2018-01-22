@@ -1,6 +1,25 @@
 # Release Notes
 
-## 0.1.4 (xxxx-xx-xx)
+## 0.1.5 (XXXX-XX-XX)
+
+## 0.1.4 (2018-01-22)
+
+* New features:
+  * Basic auth has been enabled for the REST API. See [here](https://github.com/terrestris/shogun2/pull/271).
+  * Support of Oracle 12c databases. See [here](https://github.com/terrestris/shogun2/pull/277).
+  * A simple JPA JSONB converter has been introduced. See [here](https://github.com/terrestris/shogun2/pull/278).
+  * Determination of matching interceptor rules has been enhanced. See [here](https://github.com/terrestris/shogun2/pull/274).
+  * Support for the [GeoServer WMS Reflector](http://docs.geoserver.org/latest/en/user/tutorials/wmsreflector.html) interface has been added to the interceptor. See [here](https://github.com/terrestris/shogun2/pull/280).
+  * Allow (outdated) [W3DS](http://w3ds.org) requests to be intercepted. See [here](https://github.com/terrestris/shogun2/pull/281).
+  * Additional information can be returned in case of errors. See [here](https://github.com/terrestris/shogun2/pull/284).
+  * A model description service has been introduced. See [here](https://github.com/terrestris/shogun2/pull/270).
+  * A `GeoServerRESTImporter` has been introduced to make use of the GeoServer importer extensions REST API. See [here](https://github.com/terrestris/shogun2/pull/285).
+
+* Changes:
+  * `oraclejdk7` is not used anymore on travis CI due to missing support. See [here](https://github.com/terrestris/shogun2/pull/272), [here](https://github.com/travis-ci/travis-ci/issues/7964), [here](https://github.com/travis-ci/travis-ci/issues/7019) and [here](https://github.com/travis-ci/travis-ci/issues/7884). (But `openjdk7` is still in use!)
+  * `toString()` implementations have been simplified to avoid unwanted performance impacts due to lazy loading. See [here](https://github.com/terrestris/shogun2/pull/276).
+  * Interceptor logging has been reduced. See [here](https://github.com/terrestris/shogun2/pull/282).
+  * The HTTP Util has been extended regarding forwarding of GET and POST requests. See [here](https://github.com/terrestris/shogun2/pull/286).
 
 ## 0.1.3 (2017-09-12)
 
