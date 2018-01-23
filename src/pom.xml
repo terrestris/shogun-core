@@ -140,12 +140,12 @@
         <spring-security.version>5.0.0.RELEASE</spring-security.version>
         <log4j.version>2.10.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <jackson.version>2.9.1</jackson.version>
-        <opencsv.version>4.0</opencsv.version>
-        <ehcache.version>2.10.4</ehcache.version>
+        <jackson.version>2.9.3</jackson.version>
+        <opencsv.version>4.1</opencsv.version>
+        <ehcache.version>3.4.0</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.1.10.Final</hibernate.version>
+        <hibernate.version>5.2.12.Final</hibernate.version>
         <hikari-jdk7.version>2.4.11</hikari-jdk7.version>
         <hikari.version>2.7.6</hikari.version>
         <h2.version>1.4.196</h2.version>
@@ -155,7 +155,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>1.10.19</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
-        <greenmail.version>1.5.5</greenmail.version>
+        <greenmail.version>1.5.6</greenmail.version>
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
@@ -164,14 +164,14 @@
         <!-- Apache Commons -->
         <commons-io.version>2.5</commons-io.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <commons-lang3.version>3.6</commons-lang3.version>
+        <commons-lang3.version>3.7</commons-lang3.version>
         <commons-dbutils.version>1.7</commons-dbutils.version>
         <commons-collections4.version>4.1</commons-collections4.version>
 
         <!-- Joda Time -->
         <joda-time.version>2.9.9</joda-time.version>
         <!-- TODO: make use of the release candidate 3.2.0? -->
-        <jadira-usertype-jodatime.version>2.0.1</jadira-usertype-jodatime.version>
+        <jadira-usertype-jodatime.version>6.0.1.GA</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
@@ -198,10 +198,10 @@
         <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
-        <apache-httpclient.version>4.5.3</apache-httpclient.version>
+        <apache-httpclient.version>4.5.5</apache-httpclient.version>
 
         <!-- GeoTools -->
-        <geotools.version>17.3</geotools.version>
+        <geotools.version>18.2</geotools.version>
 
         <!-- Zip4j -->
         <zip4j.version>1.3.2</zip4j.version>
@@ -210,7 +210,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>1.7.1</powermock.version>
+        <powermock.version>1.7.3</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.14.0</jts.version>
@@ -701,7 +701,7 @@
 
             <!-- ehcache -->
             <dependency>
-                <groupId>net.sf.ehcache</groupId>
+                <groupId>org.ehcache</groupId>
                 <artifactId>ehcache</artifactId>
                 <version>${ehcache.version}</version>
             </dependency>
@@ -730,7 +730,7 @@
             <!-- Jadira Usertype (Joda Mapping Classes for Hibernate) -->
             <dependency>
                 <groupId>org.jadira.usertype</groupId>
-                <artifactId>usertype.jodatime</artifactId>
+                <artifactId>usertype.core</artifactId>
                 <version>${jadira-usertype-jodatime.version}</version>
             </dependency>
 
