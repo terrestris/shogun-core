@@ -27,6 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -46,6 +47,7 @@ import de.terrestris.shogun2.util.model.Response;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpUtil.class)
+@PowerMockIgnore("javax.management.*")
 public class GeoServerInterceptorServiceTest {
 
 	private final String TEST_GEOSERVER_BASE_PATH = "http://localhost:1234/geoserver/";
