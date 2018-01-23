@@ -133,7 +133,7 @@
 
         <webapp-archetype-resource-pom>shogun2-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>8.5.20</tomcat.version>
+        <tomcat.version>9.0.2</tomcat.version>
 
         <!-- Core -->
         <spring.version>5.0.2.RELEASE</spring.version>
@@ -176,7 +176,7 @@
         <!-- Maven Plugins -->
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
-        <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -195,7 +195,7 @@
         <jta.version>1.1</jta.version>
 
         <!-- Java Servlet API -->
-        <javax-servlet-api.version>3.1.0</javax-servlet-api.version>
+        <javax-servlet-api.version>4.0.0</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
         <apache-httpclient.version>4.5.5</apache-httpclient.version>
