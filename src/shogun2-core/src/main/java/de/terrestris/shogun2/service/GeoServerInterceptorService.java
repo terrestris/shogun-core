@@ -24,8 +24,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -295,7 +293,7 @@ public class GeoServerInterceptorService {
 
 		LOG.trace("Got " + interceptorRules.size() + " rule(s) from database.");
 
-		if (LogManager.getRootLogger().getLevel().equals(Level.TRACE)) {
+		if (LOG.isTraceEnabled()) {
 			for (InterceptorRule interceptorRule : interceptorRules) {
 				LOG.trace("Returned rule is: " + interceptorRule);
 			}

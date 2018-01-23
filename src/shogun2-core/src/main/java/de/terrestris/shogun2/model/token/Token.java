@@ -2,6 +2,7 @@ package de.terrestris.shogun2.model.token;
 
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -9,6 +10,8 @@ import javax.persistence.InheritanceType;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
@@ -25,6 +28,8 @@ import de.terrestris.shogun2.model.PersistentObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public abstract class Token extends PersistentObject {
 
 	/**

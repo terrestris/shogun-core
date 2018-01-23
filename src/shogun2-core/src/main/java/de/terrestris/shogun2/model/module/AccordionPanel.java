@@ -3,11 +3,14 @@
  */
 package de.terrestris.shogun2.model.module;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * This class represents the an Panel with an accordion layout.
@@ -17,6 +20,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Table
 @Entity
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class AccordionPanel extends CompositeModule {
 
 	/**

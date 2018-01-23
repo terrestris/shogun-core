@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -17,6 +18,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.util.Extent;
@@ -32,6 +37,8 @@ import de.terrestris.shogun2.model.layer.util.Extent;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class MapConfig extends PersistentObject{
 
 	/**
@@ -69,6 +76,8 @@ public class MapConfig extends PersistentObject{
 		joinColumns = @JoinColumn(name = "MAPCONFIG_ID") )
 	@Column(name = "RESOLUTION")
 	@OrderColumn(name = "IDX")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<Double> resolutions;
 
 	/**

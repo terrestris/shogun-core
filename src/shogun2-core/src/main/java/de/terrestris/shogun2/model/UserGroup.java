@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -15,6 +16,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * @author Nils Bühner
@@ -23,6 +28,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
@@ -34,6 +41,8 @@ public class UserGroup extends PersistentObject {
 	private User owner;
 
 	@ManyToMany
+    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+    @Fetch(FetchMode.JOIN)
 	@JoinTable(
 		name = "user_usergroup",
 		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
@@ -42,6 +51,8 @@ public class UserGroup extends PersistentObject {
 	private Set<User> members = new HashSet<User>();
 
 	@ManyToMany
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }

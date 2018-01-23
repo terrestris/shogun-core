@@ -1,10 +1,13 @@
 package de.terrestris.shogun2.model.layer.source;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Class representing a layer data source for WMS servers providing single,
@@ -15,6 +18,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class ImageWmsLayerDataSource extends LayerDataSource {
 
 	/**

@@ -1,11 +1,16 @@
 package de.terrestris.shogun2.model.token;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.model.User;
 
@@ -19,6 +24,8 @@ import de.terrestris.shogun2.model.User;
  *
  */
 @Entity
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public abstract class UserToken extends Token {
 
 	/**
@@ -37,6 +44,8 @@ public abstract class UserToken extends Token {
 	 */
 	@OneToOne
 	@JoinColumn(name = "USER_ID")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private final User user;
 
 	/**

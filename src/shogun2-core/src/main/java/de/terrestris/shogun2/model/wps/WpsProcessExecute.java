@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model.wps;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -18,6 +19,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.converter.PropertyValueConverter;
 
@@ -26,6 +31,8 @@ import de.terrestris.shogun2.converter.PropertyValueConverter;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class WpsProcessExecute extends WpsReference {
 
 	/**
@@ -48,6 +55,8 @@ public class WpsProcessExecute extends WpsReference {
 			inverseJoinColumns = { @JoinColumn(name = "WPSPARAMETER_ID") }
 		)
 	@MapKeyColumn(name="IDENTIFIER")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map<String, WpsParameter> input = new HashMap<>();
 
 	/**
@@ -61,6 +70,8 @@ public class WpsProcessExecute extends WpsReference {
 			joinColumns=@JoinColumn(name="WPSEXECUTEPROCESS_ID")
 		)
 	@Convert(converter = PropertyValueConverter.class, attributeName="value")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map<String, Object> inputDefaultValues = new HashMap<>();
 
 	/**

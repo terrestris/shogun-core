@@ -3,11 +3,14 @@
  */
 package de.terrestris.shogun2.model.module;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import de.terrestris.shogun2.model.Application;
 
@@ -19,6 +22,8 @@ import de.terrestris.shogun2.model.Application;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Button extends Module {
 
 	/**

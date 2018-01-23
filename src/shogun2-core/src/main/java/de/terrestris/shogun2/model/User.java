@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,12 +15,16 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import de.terrestris.shogun2.converter.UserGroupIdResolver;
 
@@ -29,6 +34,8 @@ import de.terrestris.shogun2.converter.UserGroupIdResolver;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class User extends Person {
 
 	private static final long serialVersionUID = 1L;
@@ -44,13 +51,16 @@ public class User extends Person {
 	private boolean active;
 
 	@ManyToMany
+    @Fetch(FetchMode.JOIN)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "USER_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }
 	)
+    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 
 	@ManyToMany
+	@Fetch(FetchMode.JOIN)
 	@JoinTable(
 		name = "user_usergroup",
 		joinColumns = { @JoinColumn(name = "USER_ID") },
@@ -63,6 +73,7 @@ public class User extends Person {
 		resolver = UserGroupIdResolver.class
 	)
 	@JsonIdentityReference(alwaysAsId = true)
+    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 	private Set<UserGroup> userGroups = new HashSet<UserGroup>();
 
 	/**

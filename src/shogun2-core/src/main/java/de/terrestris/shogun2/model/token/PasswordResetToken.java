@@ -1,7 +1,11 @@
 package de.terrestris.shogun2.model.token;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import de.terrestris.shogun2.model.User;
 
@@ -16,6 +20,8 @@ import de.terrestris.shogun2.model.User;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class PasswordResetToken extends UserToken {
 
 	/**

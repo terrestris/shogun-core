@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +11,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.model.PersistentObject;
 
@@ -20,12 +26,16 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class PermissionCollection extends PersistentObject {
 
 	private static final long serialVersionUID = 1L;
 
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Set<Permission> permissions = new HashSet<Permission>();
 
 	/**

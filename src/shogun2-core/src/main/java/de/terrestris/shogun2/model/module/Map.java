@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,6 +19,10 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.terrestris.shogun2.model.layer.Layer;
 import de.terrestris.shogun2.model.map.MapConfig;
@@ -35,6 +40,8 @@ import de.terrestris.shogun2.model.map.MapControl;
  */
 @Entity
 @Table
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Map extends Module {
 
 	/**
@@ -47,6 +54,8 @@ public class Map extends Module {
 	 * or overview maps.
 	 */
 	@ManyToOne
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private MapConfig mapConfig;
 
 	/**
@@ -57,6 +66,8 @@ public class Map extends Module {
 		joinColumns = { @JoinColumn(name = "MAP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
 	)
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Set<MapControl> mapControls = new HashSet<MapControl>();
 
 	/**
@@ -68,6 +79,8 @@ public class Map extends Module {
 		inverseJoinColumns = { @JoinColumn(name = "LAYER_ID") }
 	)
 	@OrderColumn(name = "IDX")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private List<Layer> mapLayers = new ArrayList<Layer>();
 
 	/**

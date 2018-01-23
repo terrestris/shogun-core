@@ -3,6 +3,7 @@ package de.terrestris.shogun2.model.wps;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,6 +16,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -26,6 +31,8 @@ import de.terrestris.shogun2.model.PersistentObject;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "classType")
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public abstract class WpsParameter extends PersistentObject {
 
 	/**
@@ -55,6 +62,8 @@ public abstract class WpsParameter extends PersistentObject {
 	@ElementCollection
 	@CollectionTable(joinColumns = @JoinColumn(name = "WPSPARAM_ID"))
 	@Column(name = "FORMAT_NAME")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Set<String> supportedFormats = new HashSet<String>();
 
 	/**
@@ -64,6 +73,8 @@ public abstract class WpsParameter extends PersistentObject {
 	@ElementCollection
 	@CollectionTable(joinColumns = @JoinColumn(name = "WPSPARAM_ID"))
 	@Column(name = "GEOMTYPE_NAME")
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Set<String> supportedGeometryTypes = new HashSet<String>();
 
 	/**

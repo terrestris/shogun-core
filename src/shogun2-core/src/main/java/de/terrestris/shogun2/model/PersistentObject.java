@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,10 @@ import javax.persistence.MappedSuperclass;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
@@ -39,6 +44,8 @@ import de.terrestris.shogun2.model.security.PermissionCollection;
  *
  */
 @MappedSuperclass
+@Cacheable
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public abstract class PersistentObject implements Serializable {
 
 	/**
@@ -82,6 +89,8 @@ public abstract class PersistentObject implements Serializable {
 		name="USERPERMISSIONS",
 		joinColumns = @JoinColumn(name = "ENTITY_ID"))
 	@JsonIgnore
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map<User, PermissionCollection> userPermissions = new HashMap<User, PermissionCollection>();
 
 	/**
@@ -92,6 +101,8 @@ public abstract class PersistentObject implements Serializable {
 		name="GROUPPERMISSIONS",
 		joinColumns = @JoinColumn(name = "ENTITY_ID"))
 	@JsonIgnore
+	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+	@Fetch(FetchMode.JOIN)
 	private Map<UserGroup, PermissionCollection> groupPermissions = new HashMap<UserGroup, PermissionCollection>();
 
 	/**
