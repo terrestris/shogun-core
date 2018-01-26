@@ -67,7 +67,6 @@ public class Map extends Module {
 		inverseJoinColumns = { @JoinColumn(name = "CONTROL_ID") }
 	)
 	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
 	private Set<MapControl> mapControls = new HashSet<MapControl>();
 
 	/**
