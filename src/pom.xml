@@ -189,6 +189,8 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
         <maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
+        <javassist.version>3.22.0-GA</javassist.version>
+        <objenesis.version>2.6</objenesis.version>
 
         <postgresql.version>42.1.4</postgresql.version>
 
