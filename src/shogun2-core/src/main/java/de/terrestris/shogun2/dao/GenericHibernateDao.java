@@ -13,10 +13,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.PropertyProjection;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
+import org.hibernate.transform.Transformers;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -277,6 +280,47 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 				+ " based on " + criterion.length + " criteria");
 
 		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+		return criteria.list();
+	}
+
+	/**
+	 * Gets the results, that match a variable number of passed criterions, but return a
+	 * stripped version of the entities, where only the fieldNames in <code>restrictFieldNames</code>
+	 * have their actual values set.
+	 *
+	 * You can call this with <code>restrictFieldNames</code> = <code>null</code> to get the full
+	 * entities back.
+	 *
+	 * You can call this method without criterion arguments to find all entities (stripped down to
+	 * the <code>restrictFieldNames</code>).
+	 *
+	 * If this is called as <code>findByCriteriaRestricted(null)</code> the return value equals the
+	 * return value of <code>findByCriteria()</code>.
+	 *
+	 * @param restrictFieldNames
+	 * @param criterion
+	 * @return
+	 * @throws HibernateException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<E> findByCriteriaRestricted(List<String> restrictFieldNames, Criterion... criterion) throws HibernateException {
+		LOG.trace("Finding instances of " + entityClass.getSimpleName()
+				+ " based on " + criterion.length + " criteria");
+
+		Criteria criteria = createDistinctRootEntityCriteria(criterion);
+
+		if (restrictFieldNames != null){
+			ProjectionList projectionList = Projections.projectionList();
+			for (String restrictFieldName : restrictFieldNames) {
+				PropertyProjection pp = Projections.property(restrictFieldName);
+				projectionList.add(pp, restrictFieldName);
+			}
+			criteria.setProjection(projectionList);
+			criteria.setResultTransformer(
+				Transformers.aliasToBean(entityClass)
+			);
+		}
+
 		return criteria.list();
 	}
 

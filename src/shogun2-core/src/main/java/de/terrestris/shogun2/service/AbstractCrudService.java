@@ -106,6 +106,17 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	}
 
 	/**
+	 * Returns all entities, but possibly with only the passed fields set with actual values.
+	 *
+	 * @return
+	 */
+	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+	public List<E> findAllRestricted(MultiValueMap<String,String> restrictToRequest) {
+		List<String> restrictFields = EntityUtil.determineRestrictFields(restrictToRequest, getEntityClass());
+		return dao.findByCriteriaRestricted(restrictFields);
+	}
+
+	/**
 	 * Finds all entities that match the given filter (multi value map).
 	 *
 	 * Each key in the multi value map is the name of a field/property of the
@@ -116,18 +127,28 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	 *
 	 * Example:
 	 *
+	 * <pre>
 	 * int=['1','2']
 	 * string=['foo']
 	 * bool1=['0']
 	 * bool2=['true']
+	 * </pre>
 	 *
 	 * would be translated to a filter like (values are casted to the target type of the field)
 	 *
+	 * <pre>
 	 * (int == 1 || int == 2) && (string == 'foo') && (bool1 == false) && (bool2 == true)
+	 * </pre>
 	 *
 	 * and return all entities that match this condition.
 	 *
 	 * This will only work on simple properties of an entity.
+	 *
+	 * The optional special key {@value EntityUtil.RESTRICT_FIELDS_PARAM} can contain a
+	 * comma separated list of fieldNames you want to be filled with actual values. If you
+	 * e.g. pass <code>output:only=id,Name</code>, the returned object will have all other
+	 * fields being set to null, except for <code>id</code> and <code>name</code> (Notice
+	 * how casing does not matter).
 	 *
 	 * @param requestedFilter
 	 * @return
@@ -135,6 +156,9 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
 	@Transactional(readOnly = true)
 	public List<E> findBySimpleFilter(MultiValueMap<String,String> requestedFilter) {
+
+		List<String> restrictFields = EntityUtil.determineRestrictFields(requestedFilter, getEntityClass());
+		requestedFilter.remove(EntityUtil.RESTRICT_FIELDS_PARAM);
 
 		MultiValueMap<String, Object> origFieldNamesToCastedValues = EntityUtil
 				.validFieldNamesWithCastedValues(requestedFilter, getEntityClass());
@@ -168,7 +192,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 			if(!orPredicates.isEmpty()) {
 				final Criterion[] orArray = orPredicates.toArray(new Criterion[0]);
 				final Conjunction and = Restrictions.and(orArray);
-				results = dao.findByCriteria(and);
+				results = dao.findByCriteriaRestricted(restrictFields, and);
 			}
 		}
 

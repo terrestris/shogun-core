@@ -55,8 +55,8 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<E>> findAll() {
-		final List<E> resultList = this.service.findAll();
+	public ResponseEntity<List<E>> findAll(@RequestParam MultiValueMap<String,String> requestParams) {
+		final List<E> resultList = this.service.findAllRestricted(requestParams);
 
 		if (resultList != null && !resultList.isEmpty()) {
 			LOG.trace("Found a total of " + resultList.size()

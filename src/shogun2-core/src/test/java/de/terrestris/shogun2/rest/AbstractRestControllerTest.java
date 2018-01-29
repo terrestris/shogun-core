@@ -31,6 +31,8 @@ import org.mockito.stubbing.Answer;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -152,7 +154,8 @@ public class AbstractRestControllerTest {
 
 		TestModel second = buildTestInstanceWithValue(secondValue);
 
-		when(serviceMock.findAll()).thenReturn(Arrays.asList(first, second));
+		MultiValueMap<String, String> emptyMap = new LinkedMultiValueMap<>();
+		when(serviceMock.findAllRestricted(emptyMap)).thenReturn(Arrays.asList(first, second));
 
 		// Test GET method
 		mockMvc.perform(get("/tests"))
@@ -163,7 +166,7 @@ public class AbstractRestControllerTest {
 				.andExpect(jsonPath("$[0].testValue", is(firstValue)))
 				.andExpect(jsonPath("$[1].testValue", is(secondValue)));
 
-		verify(serviceMock, times(1)).findAll();
+		verify(serviceMock, times(1)).findAllRestricted(emptyMap);
 		verifyNoMoreInteractions(serviceMock);
 	}
 
