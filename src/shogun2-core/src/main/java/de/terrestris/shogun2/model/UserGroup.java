@@ -1,25 +1,15 @@
 package de.terrestris.shogun2.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Bühner
@@ -52,7 +42,6 @@ public class UserGroup extends PersistentObject {
 
 	@ManyToMany
 	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
 	@JoinTable(
 		joinColumns = { @JoinColumn(name = "USERGROUP_ID") },
 		inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") }

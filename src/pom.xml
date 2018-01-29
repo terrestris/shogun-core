@@ -150,6 +150,8 @@
         <hikari.version>2.7.6</hikari.version>
         <h2.version>1.4.196</h2.version>
 
+        <jdom.version>1.1.3</jdom.version>
+
         <!-- Testing -->
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -167,6 +169,10 @@
         <commons-lang3.version>3.6</commons-lang3.version>
         <commons-dbutils.version>1.7</commons-dbutils.version>
         <commons-collections4.version>4.1</commons-collections4.version>
+        <commons-codec.version>1.9</commons-codec.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-logging.version>1.2</commons-logging.version>
 
         <!-- Joda Time -->
         <joda-time.version>2.9.9</joda-time.version>
@@ -183,6 +189,10 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
         <maven-scm-plugin.version>1.9.5</maven-scm-plugin.version>
+        <javassist.version>3.22.0-GA</javassist.version>
+        <objenesis.version>2.6</objenesis.version>
+
+        <postgresql.version>42.1.4</postgresql.version>
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
@@ -220,7 +230,15 @@
         <!-- JTS Jackson Datatype -->
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
 
-        <project-info-plugin.version>2.9</project-info-plugin.version>
+        <clean-plugin.version>3.0.0</clean-plugin.version>
+        <compiler-plugin.version>3.7.0</compiler-plugin.version>
+        <javadoc-plugin.version>3.0.0</javadoc-plugin.version>
+        <deploy-plugin.version>2.8.2</deploy-plugin.version>
+        <surefire-plugin.version>2.20.1</surefire-plugin.version>
+        <install-plugin.version>2.5.2</install-plugin.version>
+        <site-plugin.version>3.6</site-plugin.version>
+        <resources-plugin.version>3.0.2</resources-plugin.version>
+        <project-info-reports-plugin.version>2.9</project-info-reports-plugin.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
@@ -341,6 +359,55 @@
     </profiles>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${project-info-reports-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
 
             <plugin>
@@ -733,6 +800,12 @@
                 <version>${hibernate.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-ehcache</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+
             <!-- H2 Database -->
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -783,6 +856,30 @@
                 <groupId>commons-dbutils</groupId>
                 <artifactId>commons-dbutils</artifactId>
                 <version>${commons-dbutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging.version}</version>
             </dependency>
 
             <!-- Java -->
@@ -883,6 +980,18 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>${jdom.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
 
         </dependencies>
