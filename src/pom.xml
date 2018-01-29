@@ -220,6 +220,8 @@
         <!-- JTS Jackson Datatype -->
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
 
+        <project-info-plugin.version>2.9</project-info-plugin.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
     </properties>
@@ -327,7 +329,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>2.9</version>
+                        <version>${project-info-plugin.version}</version>
                         <configuration>
                             <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
                             <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
