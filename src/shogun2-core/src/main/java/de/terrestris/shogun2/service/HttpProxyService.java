@@ -65,7 +65,7 @@ public class HttpProxyService {
 			+ " The HttpProxyService could not find the requested service.";
 
 	public static final String ERR_MSG_405 = "ERROR 405: (Method Not Allowed):"
-			+ " The HttpProxyService does not support this request method";
+			+ " The HttpProxyService does not support this request method.";
 
 	public static final String ERR_MSG_500 = "ERROR 500 (Internal Error)";
 
