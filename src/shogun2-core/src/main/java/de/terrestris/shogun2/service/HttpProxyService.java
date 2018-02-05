@@ -67,7 +67,7 @@ public class HttpProxyService {
 	public static final String ERR_MSG_405 = "ERROR 405: (Method Not Allowed):"
 			+ " The HttpProxyService does not support this request method";
 
-	public static final String ERR_MSG_500 = "ERROR 502 (Internal Error)";
+	public static final String ERR_MSG_500 = "ERROR 500 (Internal Error)";
 
 	public static final String ERR_MSG_502 = "ERROR 502 (Bad Gateway):"
 			+ " The HttpProxyService does not allow you to access that location.";
