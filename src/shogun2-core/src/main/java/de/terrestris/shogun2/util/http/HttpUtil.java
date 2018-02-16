@@ -11,7 +11,15 @@ import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,10 +62,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import de.terrestris.shogun2.util.model.Response;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 
 /**
  *
@@ -2120,7 +2124,7 @@ public class HttpUtil {
 	 * @param request  {@link HttpServletRequest} to extract headers from
 	 * @return Array with {@link Header}s
 	 */
-	private static Header[] getHeadersFromRequest(HttpServletRequest request) {
+	public static Header[] getHeadersFromRequest(HttpServletRequest request) {
 		List<Header> returnHeaderList = new ArrayList<>();
 		Enumeration<String> headerNames = request.getHeaderNames();
 
@@ -2136,7 +2140,6 @@ public class HttpUtil {
 					List<String> newCookieList = new ArrayList<>();
 					for(int i=0; i < cookies.length; i++) {
 						final String cookieFromArray = cookies[i];
-						final String lcCookieName = cookieFromArray.split("=")[0].toLowerCase();
 						newCookieList.add(cookieFromArray);
 					}
 					// rewrite the cookie value
