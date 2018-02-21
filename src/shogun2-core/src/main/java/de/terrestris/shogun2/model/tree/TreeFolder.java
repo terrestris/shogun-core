@@ -16,8 +16,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * This class represents a (simple) composite {@link TreeNode}, i.e. a folder
@@ -50,7 +48,6 @@ public class TreeFolder extends TreeNode {
 	@OneToMany(mappedBy = "parentFolder")
 	@OrderBy("index")
 	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
 	private List<TreeNode> children = new ArrayList<TreeNode>();
 
 	/**
