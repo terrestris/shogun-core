@@ -153,13 +153,13 @@
         <!-- Testing -->
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>2.15.0</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
         <greenmail.version>1.5.5</greenmail.version>
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.7.6.201602180812</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-io.version>2.5</commons-io.version>
@@ -175,7 +175,7 @@
 
         <!-- Maven Plugins -->
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -206,17 +206,20 @@
         <!-- Zip4j -->
         <zip4j.version>1.3.2</zip4j.version>
 
+        <xerces.version>2.11.0</xerces.version>
         <!-- Java XML Parser -->
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>1.7.1</powermock.version>
+        <powermock.version>2.0.0-beta.5</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.14.0</jts.version>
 
         <!-- JTS Jackson Datatype -->
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
+        
+        <jaxb.version>2.3.0</jaxb.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
@@ -487,6 +490,26 @@
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- The dependencyManagement section will make the configured (versions
@@ -635,7 +658,7 @@
 
             <dependency>
                 <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
+                <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                   <scope>test</scope>
             </dependency>
@@ -810,7 +833,7 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.xml</groupId>
+                <groupId>javax.xml.parsers</groupId>
                 <artifactId>jaxp-api</artifactId>
                 <version>${jaxp-api.version}</version>
             </dependency>
@@ -846,6 +869,27 @@
                 <version>${zip4j.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xerces.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
