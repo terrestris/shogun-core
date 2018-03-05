@@ -106,7 +106,7 @@ public class MutableHttpServletRequestTest {
 	}
 
 	@Test
-	public void setInputStream_from_StringBody() throws IOException {
+	public void setInputStreamFromStringBody() throws IOException {
 		final String testString = "TEST_STRING";
 		final String testBody = new String(testString.getBytes(), MutableHttpServletRequest.DEFAULT_CHARSET);
 		mutableRequest.setInputStream(testBody);
@@ -121,7 +121,7 @@ public class MutableHttpServletRequestTest {
 	}
 
 	@Test
-	public void setInputStream_fromInputStream() throws IOException {
+	public void setInputStreamFromInputStream() throws IOException {
 		final String testString = "TEST_STRING";
 		final InputStream testStream = new ByteArrayInputStream(testString.getBytes());
 		mutableRequest.setInputStream(testStream);
