@@ -1,9 +1,6 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,12 +21,19 @@ import de.terrestris.shogun2.util.enumeration.OgcEnum;
 /**
  * An implementation of HttpServletRequestWrapper.
  *
- * @see http://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
+ * @see <a href="http://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once">
+ *     This stackoverflow discussion
+ *     </a>
  *
  * @author Daniel Koch
  *
  */
 public class MutableHttpServletRequest extends HttpServletRequestWrapper {
+
+	/**
+	 *
+	 */
+	public static final String DEFAULT_CHARSET = "UTF-8";
 
 	/**
 	 * The Logger.
@@ -65,7 +69,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 	/**
 	 *
 	 * @param httpServletRequest
-	 * @param key
+	 * @param keys
 	 * @return
 	 * @throws InterceptorException
 	 * @throws IOException
@@ -159,7 +163,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 	/**
 	 *
-	 * @param url
+	 * @param url The URI to as instance of {@link String}
 	 */
 	public void setRequestURI(String url) {
 		this.customRequestURI = url;
@@ -167,7 +171,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 	/**
 	 *
-	 * @param url
+	 * @param uri The URI to set as instance of {@link URI}
 	 */
 	public void setRequestURI(URI uri) {
 		this.customRequestURI = uri.toString();
@@ -286,6 +290,34 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 	private void cacheInputStream() throws IOException {
 		cachedInputStream = new ByteArrayOutputStream();
 		IOUtils.copy(super.getInputStream(), cachedInputStream);
+	}
+
+	/**
+	 * Set the cachedInputStream as a copy of UTF-8 encoded {@link ByteArrayInputStream}
+	 * @param body {@link String} body to create the {@link ByteArrayInputStream} from
+	 */
+	public void setInputStream(String body) {
+		try (
+			ByteArrayInputStream stream = new ByteArrayInputStream(body.getBytes(DEFAULT_CHARSET))
+		) {
+			cachedInputStream = new ByteArrayOutputStream();
+			IOUtils.copy(stream, cachedInputStream);
+		} catch (IOException e) {
+			LOG.error("Exception on writing InputStream.", e);
+		}
+	}
+
+	/**
+	 * Set the cachedInputStream as a copy of passed {@link InputStream}
+	 * @param stream The {@link InputStream} to set (copy)
+	 */
+	public void setInputStream(InputStream stream) {
+		try {
+			cachedInputStream = new ByteArrayOutputStream();
+			IOUtils.copy(stream, cachedInputStream);
+		} catch (IOException e) {
+			LOG.error("Exception on writing InputStream.", e);
+		}
 	}
 
 }
