@@ -163,7 +163,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
 	/**
 	 *
-	 * @param url The URI to as instance of {@link String}
+	 * @param url The URI to set as instance of {@link String}
 	 */
 	public void setRequestURI(String url) {
 		this.customRequestURI = url;
