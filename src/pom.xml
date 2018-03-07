@@ -138,6 +138,7 @@
         <!-- Core -->
         <spring.version>5.0.2.RELEASE</spring.version>
         <spring-security.version>5.0.0.RELEASE</spring-security.version>
+        <spring-ldap.version>2.3.1.RELEASE</spring-ldap.version>
         <log4j.version>2.10.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <jackson.version>2.9.3</jackson.version>
@@ -680,6 +681,12 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.ldap</groupId>
+                <artifactId>spring-ldap-core</artifactId>
+                <version>${spring-ldap.version}</version>
             </dependency>
 
             <!-- Hamcrest -->
