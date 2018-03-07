@@ -55,6 +55,9 @@ public class LdapService {
         ldapTemplate.search(query().where("cn").is(username), new AttributesMapper<String>() {
             public String mapFromAttributes(Attributes attrs) throws NamingException {
                 NamingEnumeration<?> ous = attrs.get(property).getAll();
+                // since we can generate multiple values here but may only return a single string, we ignore
+                // the ldapTemplate#search result and just put the values in our own list, returning an empty string
+                // which is effectively ignored
                 while(ous.hasMore()) {
                     result.add((String)ous.next());
                 }
