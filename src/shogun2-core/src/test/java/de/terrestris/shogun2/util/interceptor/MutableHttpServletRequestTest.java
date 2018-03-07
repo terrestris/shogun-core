@@ -1,19 +1,22 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-
-import javax.servlet.ServletInputStream;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.servlet.ServletInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MutableHttpServletRequestTest {
 
@@ -102,4 +105,33 @@ public class MutableHttpServletRequestTest {
 		is_again.close();
 	}
 
+	@Test
+	public void setInputStreamFromStringBody() throws IOException {
+		final String testString = "TEST_STRING";
+		final String testBody = new String(testString.getBytes(), MutableHttpServletRequest.DEFAULT_CHARSET);
+		mutableRequest.setInputStream(testBody);
+
+		ServletInputStream is_again = mutableRequest.getInputStream();
+		assertNotNull(is_again);
+		StringWriter sw = new StringWriter();
+		IOUtils.copy(is_again, sw, MutableHttpServletRequest.DEFAULT_CHARSET);
+		is_again.close();
+
+		assertEquals("String body should be equal.", sw.toString(), testString);
+	}
+
+	@Test
+	public void setInputStreamFromInputStream() throws IOException {
+		final String testString = "TEST_STRING";
+		final InputStream testStream = new ByteArrayInputStream(testString.getBytes());
+		mutableRequest.setInputStream(testStream);
+
+		ServletInputStream is_again = mutableRequest.getInputStream();
+		assertNotNull(is_again);
+		StringWriter sw = new StringWriter();
+		IOUtils.copy(is_again, sw, MutableHttpServletRequest.DEFAULT_CHARSET);
+		is_again.close();
+
+		assertEquals("String body should be equal.", sw.toString(), testString);
+	}
 }
