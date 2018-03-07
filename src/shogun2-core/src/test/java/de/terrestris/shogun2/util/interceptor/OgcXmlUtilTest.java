@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -92,6 +93,17 @@ public class OgcXmlUtilTest {
 		assertNotNull(doc);
 
 		OgcXmlUtil.getPathInDocument(doc, "invalid XPath selector");
+	}
+
+	@Test
+	public void getDocumentElement() throws IOException {
+		Document doc = OgcXmlUtil.getDocumentFromString(XML_STRING);
+		assertNotNull(doc);
+
+		Element element = OgcXmlUtil.getDocumentElement(doc);
+		assertNotNull(element);
+
+		assertEquals("Root name matches", element.getNodeName(), "root");
 	}
 
 }

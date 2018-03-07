@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.util.StreamUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -129,7 +130,6 @@ public class OgcXmlUtil {
 		}
 
 		return result;
-
 	}
 
 	/**
@@ -163,6 +163,24 @@ public class OgcXmlUtil {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Return the document {@link Element} of a {@link Document}
+	 * @param doc The {@link Document} to obtain the document element from
+	 * @return
+	 */
+	public static Element getDocumentElement(Document doc) {
+		Element docElement = null;
+		if (doc != null) {
+			docElement = doc.getDocumentElement();
+			if (docElement != null) {
+				// optional, but recommended
+				// see here: http://bit.ly/1h2Ybzb
+				docElement.normalize();
+			}
+		}
+		return docElement;
 	}
 
 }
