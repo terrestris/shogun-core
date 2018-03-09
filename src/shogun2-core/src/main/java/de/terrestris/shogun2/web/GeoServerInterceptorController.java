@@ -20,82 +20,79 @@ import de.terrestris.shogun2.util.data.ResultSet;
 import de.terrestris.shogun2.util.model.Response;
 
 /**
- *
+ * @param <S>
  * @author Daniel Koch
  * @author Kai Volland
  * @author terrestris GmbH & Co. KG
- *
- * @param <S>
  */
 @Controller
 public class GeoServerInterceptorController<S extends GeoServerInterceptorService> {
 
-	/**
-	 * The Logger.
-	 */
-	private static final Logger LOG = Logger.getLogger(
-			GeoServerInterceptorController.class);
+    /**
+     * The Logger.
+     */
+    private static final Logger LOG = Logger.getLogger(
+        GeoServerInterceptorController.class);
 
-	/**
-	 *
-	 */
-	protected S service;
+    /**
+     *
+     */
+    protected S service;
 
-	/**
-	 *
-	 */
-	private static final String ERROR_MESSAGE = "Error while requesting a " +
-			"GeoServer resource: ";
+    /**
+     *
+     */
+    private static final String ERROR_MESSAGE = "Error while requesting a " +
+        "GeoServer resource: ";
 
-	/**
-	 *
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/geoserver.action", method = {
-			RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<?> interceptGeoServerRequest(HttpServletRequest request) {
+    /**
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/geoserver.action", method = {
+        RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> interceptGeoServerRequest(HttpServletRequest request) {
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-		HttpStatus responseStatus = HttpStatus.OK;
-		byte[] responseBody = null;
-		Response httpResponse = null;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus responseStatus = HttpStatus.OK;
+        byte[] responseBody = null;
+        Response httpResponse = null;
 
-		try {
+        try {
 
-			LOG.trace("Trying to intercept a GeoServer resource.");
+            LOG.trace("Trying to intercept a GeoServer resource.");
 
-			httpResponse = this.service.interceptGeoServerRequest(request);
+            httpResponse = this.service.interceptGeoServerRequest(request);
 
-			responseStatus = httpResponse.getStatusCode();
-			responseBody = httpResponse.getBody();
-			responseHeaders = httpResponse.getHeaders();
+            responseStatus = httpResponse.getStatusCode();
+            responseBody = httpResponse.getBody();
+            responseHeaders = httpResponse.getHeaders();
 
-			LOG.trace("Successfully intercepted a GeoServer resource.");
+            LOG.trace("Successfully intercepted a GeoServer resource.");
 
-			return new ResponseEntity<byte[]>(responseBody,
-					responseHeaders, responseStatus);
+            return new ResponseEntity<byte[]>(responseBody,
+                responseHeaders, responseStatus);
 
-		} catch (Exception e) {
-			LOG.error(ERROR_MESSAGE + e.getMessage());
+        } catch (Exception e) {
+            LOG.error(ERROR_MESSAGE + e.getMessage());
 
-			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-			Map<String, Object> responseMsg = ResultSet.error(
-					ERROR_MESSAGE + e.getMessage());
+            Map<String, Object> responseMsg = ResultSet.error(
+                ERROR_MESSAGE + e.getMessage());
 
-			return new ResponseEntity<Map<String, Object>>(responseMsg,
-					responseHeaders, responseStatus);
-		}
+            return new ResponseEntity<Map<String, Object>>(responseMsg,
+                responseHeaders, responseStatus);
+        }
 
-	}
+    }
 
-	/**
-	 * @param service the service to set
-	 */
-	@Autowired
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * @param service the service to set
+     */
+    @Autowired
+    public void setService(S service) {
+        this.service = service;
+    }
 }

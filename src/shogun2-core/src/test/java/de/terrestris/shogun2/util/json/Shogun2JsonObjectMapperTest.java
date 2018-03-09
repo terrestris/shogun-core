@@ -22,74 +22,73 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
  * @author Nils Bühner
- *
  */
 public class Shogun2JsonObjectMapperTest {
 
-	/**
-	 * The object mapper to test.
-	 */
-	private final ObjectMapper objectMapper = new Shogun2JsonObjectMapper();
+    /**
+     * The object mapper to test.
+     */
+    private final ObjectMapper objectMapper = new Shogun2JsonObjectMapper();
 
-	/**
-	 * Tests whether the JodaModule is registered.
-	 */
-	@Test
-	public void testModules() {
+    /**
+     * Tests whether the JodaModule is registered.
+     */
+    @Test
+    public void testModules() {
 
-		List<Module> modules = Shogun2JsonObjectMapper.findModules();
+        List<Module> modules = Shogun2JsonObjectMapper.findModules();
 
-		assertEquals(2, modules.size());
-		assertThat(modules.get(0), instanceOf(JodaModule.class));
-		assertThat(modules.get(1), instanceOf(JtsModule.class));
-	}
+        assertEquals(2, modules.size());
+        assertThat(modules.get(0), instanceOf(JodaModule.class));
+        assertThat(modules.get(1), instanceOf(JtsModule.class));
+    }
 
-	/**
-	 * Tests whether the dateFormat is ISO8601
-	 */
-	@Test
-	public void testDateFormat() {
+    /**
+     * Tests whether the dateFormat is ISO8601
+     */
+    @Test
+    public void testDateFormat() {
 
-		SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
-		DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
+        SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
+        DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
 
-		DateFormat serializationDateFormat = serializationConfig.getDateFormat();
-		DateFormat deserializationDateFormat = deserializationConfig.getDateFormat();
+        DateFormat serializationDateFormat = serializationConfig.getDateFormat();
+        DateFormat deserializationDateFormat = deserializationConfig.getDateFormat();
 
-		assertThat(serializationDateFormat, instanceOf(StdDateFormat.class));
-		assertThat(deserializationDateFormat, instanceOf(StdDateFormat.class));
-	}
+        assertThat(serializationDateFormat, instanceOf(StdDateFormat.class));
+        assertThat(deserializationDateFormat, instanceOf(StdDateFormat.class));
+    }
 
-	/**
-	 * Tests whether the correct TimeZone is set.
-	 */
-	@Test
-	public void testTimezone() {
+    /**
+     * Tests whether the correct TimeZone is set.
+     */
+    @Test
+    public void testTimezone() {
 
-		TimeZone expectedTimeZone = TimeZone.getDefault();
+        TimeZone expectedTimeZone = TimeZone.getDefault();
 
-		SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
-		DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
+        SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
+        DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
 
-		TimeZone serializationTimeZone = serializationConfig.getTimeZone();
-		TimeZone deserializationTimeZone = deserializationConfig.getTimeZone();
+        TimeZone serializationTimeZone = serializationConfig.getTimeZone();
+        TimeZone deserializationTimeZone = deserializationConfig.getTimeZone();
 
-		assertEquals(expectedTimeZone, serializationTimeZone);
-		assertEquals(expectedTimeZone, deserializationTimeZone);
-	}
+        assertEquals(expectedTimeZone, serializationTimeZone);
+        assertEquals(expectedTimeZone, deserializationTimeZone);
+    }
 
-	/**
-	 * Tests whether the dates are not serialized as timestamps, but as
-	 * their textual representation.
-	 */
-	@Test
-	public void testDateSerialization() {
+    /**
+     * Tests whether the dates are not serialized as timestamps, but as
+     * their textual representation.
+     */
+    @Test
+    public void testDateSerialization() {
 
-		SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
+        SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
 
-		boolean writesDatesAsTimestamps = serializationConfig.isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        boolean writesDatesAsTimestamps = serializationConfig.isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-		assertFalse(writesDatesAsTimestamps);
-	}
+        assertFalse(writesDatesAsTimestamps);
+    }
 
 }

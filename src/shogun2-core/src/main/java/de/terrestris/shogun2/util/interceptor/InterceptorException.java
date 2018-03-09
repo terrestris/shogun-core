@@ -1,43 +1,42 @@
 package de.terrestris.shogun2.util.interceptor;
 
 /**
- *
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
- *
  */
 public class InterceptorException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 *
-	 */
-	public InterceptorException() {}
+    /**
+     *
+     */
+    public InterceptorException() {
+    }
 
-	/**
-	 * @param message
-	 */
-	public InterceptorException(String message) {
-		super(message);
-	}
+    /**
+     * @param message
+     */
+    public InterceptorException(String message) {
+        super(message);
+    }
 
-	/**
-	 * @param cause
-	 */
-	public InterceptorException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * @param cause
+     */
+    public InterceptorException(Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public InterceptorException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * @param message
+     * @param cause
+     */
+    public InterceptorException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

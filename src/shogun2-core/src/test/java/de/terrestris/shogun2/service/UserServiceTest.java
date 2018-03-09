@@ -37,468 +37,467 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
+@ContextConfiguration(locations = {"classpath*:META-INF/spring/test-encoder-bean.xml"})
 public class UserServiceTest extends PermissionAwareCrudServiceTest<User, UserDao<User>, UserService<User, UserDao<User>>> {
 
-	@Mock
-	private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
+    @Mock
+    private RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
 
-	@Mock
-	private RoleService<Role, RoleDao<Role>> roleService;
+    @Mock
+    private RoleService<Role, RoleDao<Role>> roleService;
 
-	@Mock
-	private Role defaultUserRole;
+    @Mock
+    private Role defaultUserRole;
 
-	/**
-	 * The autowired PasswordEncoder
-	 */
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    /**
+     * The autowired PasswordEncoder
+     */
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Override
-	@Before
-	public void setUp() {
-		super.setUp();
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
 
-		// set the pw encoder
-		crudService.setPasswordEncoder(passwordEncoder);
-	}
+        // set the pw encoder
+        crudService.setPasswordEncoder(passwordEncoder);
+    }
 
-	/**
-	 *
-	 * @throws Exception
-	 */
-	public void setUpImplToTest() throws Exception {
-		implToTest = new User();
-	}
+    /**
+     * @throws Exception
+     */
+    public void setUpImplToTest() throws Exception {
+        implToTest = new User();
+    }
 
-	@Override
-	protected UserService<User, UserDao<User>> getCrudService() {
-		return new UserService<User, UserDao<User>>();
-	}
+    @Override
+    protected UserService<User, UserDao<User>> getCrudService() {
+        return new UserService<User, UserDao<User>>();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Class<UserDao<User>> getDaoClass() {
-		return (Class<UserDao<User>>) new UserDao<User>().getClass();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    protected Class<UserDao<User>> getDaoClass() {
+        return (Class<UserDao<User>>) new UserDao<User>().getClass();
+    }
 
-	@Test
-	public void findByAccountName_shouldFindAsExpected() {
-		String accountName = "testaccount";
+    @Test
+    public void findByAccountName_shouldFindAsExpected() {
+        String accountName = "testaccount";
 
-		User expectedUser = new User("Test", "User", accountName);
+        User expectedUser = new User("Test", "User", accountName);
 
-		// mock the dao
-		when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
+        // mock the dao
+        when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
 
-		User actualUser = crudService.findByAccountName(accountName);
+        User actualUser = crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByAccountName(accountName);
-		verifyNoMoreInteractions(dao);
+        verify(dao, times(1)).findByAccountName(accountName);
+        verifyNoMoreInteractions(dao);
 
-		assertEquals(expectedUser, actualUser);
-	}
+        assertEquals(expectedUser, actualUser);
+    }
 
-	@Test
-	public void findByAccountName_shouldFindNothing() {
-		String accountName = "nonexistingaccount";
+    @Test
+    public void findByAccountName_shouldFindNothing() {
+        String accountName = "nonexistingaccount";
 
-		User expectedUser = null;
+        User expectedUser = null;
 
-		// mock the dao
-		when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
+        // mock the dao
+        when(dao.findByAccountName(accountName)).thenReturn(expectedUser);
 
-		User actualUser = crudService.findByAccountName(accountName);
+        User actualUser = crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByAccountName(accountName);
-		verifyNoMoreInteractions(dao);
+        verify(dao, times(1)).findByAccountName(accountName);
+        verifyNoMoreInteractions(dao);
 
-		assertEquals(expectedUser, actualUser);
-	}
+        assertEquals(expectedUser, actualUser);
+    }
 
-	@Test(expected=HibernateException.class)
-	public void findByAccountName_shouldThrowHibernateException() {
-		String accountName = "erroraccount";
+    @Test(expected = HibernateException.class)
+    public void findByAccountName_shouldThrowHibernateException() {
+        String accountName = "erroraccount";
 
-		// mock the dao
-		doThrow(new HibernateException("errormsg"))
-			.when(dao).findByAccountName(accountName);
+        // mock the dao
+        doThrow(new HibernateException("errormsg"))
+            .when(dao).findByAccountName(accountName);
 
-		crudService.findByAccountName(accountName);
+        crudService.findByAccountName(accountName);
 
-		verify(dao, times(1)).findByAccountName(accountName);
-		verifyNoMoreInteractions(dao);
-	}
+        verify(dao, times(1)).findByAccountName(accountName);
+        verifyNoMoreInteractions(dao);
+    }
 
-	@Test
-	public void findByEmail_shouldFindAsExpected() {
-		String eMail = "mail@example.com";
+    @Test
+    public void findByEmail_shouldFindAsExpected() {
+        String eMail = "mail@example.com";
 
-		User expectedUser = new User();
-		expectedUser.setEmail(eMail);
+        User expectedUser = new User();
+        expectedUser.setEmail(eMail);
 
-		// mock the dao
-		when(dao.findByEmail(eMail)).thenReturn(expectedUser);
+        // mock the dao
+        when(dao.findByEmail(eMail)).thenReturn(expectedUser);
 
-		User actualUser = crudService.findByEmail(eMail);
+        User actualUser = crudService.findByEmail(eMail);
 
-		verify(dao, times(1)).findByEmail(eMail);
-		verifyNoMoreInteractions(dao);
+        verify(dao, times(1)).findByEmail(eMail);
+        verifyNoMoreInteractions(dao);
 
-		assertEquals(expectedUser, actualUser);
-	}
+        assertEquals(expectedUser, actualUser);
+    }
+
+    @Test
+    public void findByEmail_shouldFindNothing() {
+        String eMail = "nonexisting@example.com";
+
+        User expectedUser = null;
+
+        // mock the dao
+        when(dao.findByEmail(eMail)).thenReturn(expectedUser);
+
+        User actualUser = crudService.findByEmail(eMail);
+
+        verify(dao, times(1)).findByEmail(eMail);
+        verifyNoMoreInteractions(dao);
+
+        assertEquals(expectedUser, actualUser);
+    }
 
-	@Test
-	public void findByEmail_shouldFindNothing() {
-		String eMail = "nonexisting@example.com";
+    @Test(expected = HibernateException.class)
+    public void findByEmail_shouldThrowHibernateException() {
+        String email = "errormail@example.com";
 
-		User expectedUser = null;
-
-		// mock the dao
-		when(dao.findByEmail(eMail)).thenReturn(expectedUser);
-
-		User actualUser = crudService.findByEmail(eMail);
+        // mock the dao
+        doThrow(new HibernateException("errormsg"))
+            .when(dao).findByEmail(email);
 
-		verify(dao, times(1)).findByEmail(eMail);
-		verifyNoMoreInteractions(dao);
+        crudService.findByEmail(email);
+
+        verify(dao, times(1)).findByEmail(email);
+        verifyNoMoreInteractions(dao);
+    }
+
+    @Test
+    public void registerUser_shouldRegisterNonExistingUserAsExpected() throws Exception {
+        String email = "test@example.com";
+        String rawPassword = "p@sSw0rd";
+        boolean isActive = false;
 
-		assertEquals(expectedUser, actualUser);
-	}
+        // mock the dao
+        // there is no existing user -> return null (in the findByEmail method)
+        when(dao.findByEmail(email)).thenReturn(null);
 
-	@Test(expected=HibernateException.class)
-	public void findByEmail_shouldThrowHibernateException() {
-		String email = "errormail@example.com";
+        // the saveOrUpdate will be called in the persistNewUser method
+        doNothing().when(dao).saveOrUpdate(any(User.class));
 
-		// mock the dao
-		doThrow(new HibernateException("errormsg"))
-			.when(dao).findByEmail(email);
+        // mock the registrationTokenService (which sends the mail)
+        doNothing().when(registrationTokenService)
+            .sendRegistrationActivationMail(
+                any(HttpServletRequest.class),
+                any(User.class));
 
-		crudService.findByEmail(email);
+        HttpServletRequest requestMock = mock(HttpServletRequest.class);
 
-		verify(dao, times(1)).findByEmail(email);
-		verifyNoMoreInteractions(dao);
-	}
+        // create user instance
+        User user = new User();
+        user.setEmail(email);
+        user.setAccountName(email);
+        user.setPassword(rawPassword);
+        user.setActive(isActive);
 
-	@Test
-	public void registerUser_shouldRegisterNonExistingUserAsExpected() throws Exception {
-		String email = "test@example.com";
-		String rawPassword = "p@sSw0rd";
-		boolean isActive = false;
+        // finally call the method that is tested here
+        User registeredUser = crudService.registerUser(user, requestMock);
 
-		// mock the dao
-		// there is no existing user -> return null (in the findByEmail method)
-		when(dao.findByEmail(email)).thenReturn(null);
+        verify(dao, times(1)).findByEmail(email);
+        verify(dao, times(1)).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(dao);
 
-		// the saveOrUpdate will be called in the persistNewUser method
-		doNothing().when(dao).saveOrUpdate(any(User.class));
+        verify(registrationTokenService, times(1))
+            .sendRegistrationActivationMail(
+                any(HttpServletRequest.class),
+                any(User.class));
+        verifyNoMoreInteractions(registrationTokenService);
 
-		// mock the registrationTokenService (which sends the mail)
-		doNothing().when(registrationTokenService)
-				.sendRegistrationActivationMail(
-						any(HttpServletRequest.class),
-						any(User.class));
+        assertTrue(passwordEncoder.matches(rawPassword, registeredUser.getPassword()));
+        assertEquals(email, registeredUser.getAccountName());
+        assertEquals(email, registeredUser.getEmail());
+        assertEquals(isActive, registeredUser.isActive());
+    }
 
-		HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    @Test
+    public void registerUser_shouldThrowExceptionIfUserAlreadyExists() {
+        String email = "test@example.com";
+        String rawPassword = "p@sSw0rd";
+        boolean isActive = false;
 
-		// create user instance
-		User user = new User();
-		user.setEmail(email);
-		user.setAccountName(email);
-		user.setPassword(rawPassword);
-		user.setActive(isActive);
+        User existingUser = new User();
+        existingUser.setEmail(email);
 
-		// finally call the method that is tested here
-		User registeredUser = crudService.registerUser(user, requestMock);
+        // there is an existing user -> return null (in the findByEmail method)
+        when(dao.findByEmail(email)).thenReturn(existingUser);
+
+        HttpServletRequest requestMock = mock(HttpServletRequest.class);
+        // finally call the method that is tested here
+        try {
+            // create user instance
+            User user = new User();
+            user.setEmail(email);
+            user.setAccountName(email);
+            user.setPassword(rawPassword);
+            user.setActive(isActive);
+
+            crudService.registerUser(user, requestMock);
+            fail("Should have thrown Exception, but did not!");
+        } catch (Exception e) {
+            final String msg = e.getMessage();
+            assertEquals("User with eMail '" + email + "' already exists.", msg);
+        }
 
-		verify(dao, times(1)).findByEmail(email);
-		verify(dao, times(1)).saveOrUpdate(any(User.class));
-		verifyNoMoreInteractions(dao);
+    }
 
-		verify(registrationTokenService, times(1))
-				.sendRegistrationActivationMail(
-						any(HttpServletRequest.class),
-						any(User.class));
-		verifyNoMoreInteractions(registrationTokenService);
+    @Test
+    public void activateUser_shouldActivateUserAsExpected() throws Exception {
 
-		assertTrue(passwordEncoder.matches(rawPassword, registeredUser.getPassword()));
-		assertEquals(email, registeredUser.getAccountName());
-		assertEquals(email, registeredUser.getEmail());
-		assertEquals(isActive, registeredUser.isActive());
-	}
+        // an inactive user that is assigend to a token
+        User user = new User();
+        user.setActive(false);
 
-	@Test
-	public void registerUser_shouldThrowExceptionIfUserAlreadyExists() {
-		String email = "test@example.com";
-		String rawPassword = "p@sSw0rd";
-		boolean isActive = false;
+        // create a token that is associated with the user
+        RegistrationToken token = new RegistrationToken(user);
 
-		User existingUser = new User();
-		existingUser.setEmail(email);
+        // the token value that will be used for the call of
+        // activateUser(tokenValue)
+        String tokenValue = token.getToken();
 
-		// there is an existing user -> return null (in the findByEmail method)
-		when(dao.findByEmail(email)).thenReturn(existingUser);
+        // mock the registrationTokenService
+        when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
+        doNothing().when(registrationTokenService).validateToken(token);
+        doNothing().when(registrationTokenService).deleteTokenAfterActivation(token);
 
-		HttpServletRequest requestMock = mock(HttpServletRequest.class);
-		// finally call the method that is tested here
-		try {
-			// create user instance
-			User user = new User();
-			user.setEmail(email);
-			user.setAccountName(email);
-			user.setPassword(rawPassword);
-			user.setActive(isActive);
+        //mock the role service
+        final String defaultUserRoleName = "ROLE_USER";
+        when(defaultUserRole.getName()).thenReturn(defaultUserRoleName);
+        when(roleService.findByRoleName(defaultUserRoleName)).thenReturn(defaultUserRole);
 
-			crudService.registerUser(user, requestMock);
-			fail("Should have thrown Exception, but did not!");
-		} catch (Exception e) {
-			final String msg = e.getMessage();
-			assertEquals("User with eMail '" + email + "' already exists.", msg);
-		}
+        // mock the dao
+        doNothing().when(dao).saveOrUpdate(any(User.class));
 
-	}
+        // be sure that the user is not active before activating
+        assertFalse(user.isActive());
 
-	@Test
-	public void activateUser_shouldActivateUserAsExpected() throws Exception {
+        // finally call the method that is tested here
+        crudService.activateUser(tokenValue);
 
-		// an inactive user that is assigend to a token
-		User user = new User();
-		user.setActive(false);
+        // check first if user is active now
+        assertTrue(user.isActive());
 
-		// create a token that is associated with the user
-		RegistrationToken token = new RegistrationToken(user);
+        // check if user has at least one role
+        assertFalse(user.getRoles().isEmpty());
 
-		// the token value that will be used for the call of
-		// activateUser(tokenValue)
-		String tokenValue = token.getToken();
+        // verify method invocations
+        verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
+        verify(registrationTokenService, times(1)).validateToken(token);
+        verify(registrationTokenService, times(1)).deleteTokenAfterActivation(token);
+        verifyNoMoreInteractions(registrationTokenService);
 
-		// mock the registrationTokenService
-		when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
-		doNothing().when(registrationTokenService).validateToken(token);
-		doNothing().when(registrationTokenService).deleteTokenAfterActivation(token);
+        verify(defaultUserRole, times(1)).getName();
+        verifyNoMoreInteractions(defaultUserRole);
 
-		//mock the role service
-		final String defaultUserRoleName = "ROLE_USER";
-		when(defaultUserRole.getName()).thenReturn(defaultUserRoleName);
-		when(roleService.findByRoleName(defaultUserRoleName)).thenReturn(defaultUserRole);
+        verify(roleService, times(1)).findByRoleName(defaultUserRoleName);
+        verifyNoMoreInteractions(roleService);
 
-		// mock the dao
-		doNothing().when(dao).saveOrUpdate(any(User.class));
+        verify(dao, times(1)).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(dao);
 
-		// be sure that the user is not active before activating
-		assertFalse(user.isActive());
+    }
 
-		// finally call the method that is tested here
-		crudService.activateUser(tokenValue);
+    @Test
+    public void activateUser_shouldThrowExceptionIfTokenCouldNotBeValidated() throws Exception {
+        // an inactive user that is assigend to a token
+        User user = new User();
+        user.setActive(false);
 
-		// check first if user is active now
-		assertTrue(user.isActive());
+        // create a token that is associated with the user
+        RegistrationToken token = new RegistrationToken(user);
 
-		// check if user has at least one role
-		assertFalse(user.getRoles().isEmpty());
+        // the token value that will be used for the call of
+        // activateUser(tokenValue)
+        String tokenValue = token.getToken();
 
-		// verify method invocations
-		verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
-		verify(registrationTokenService, times(1)).validateToken(token);
-		verify(registrationTokenService, times(1)).deleteTokenAfterActivation(token);
-		verifyNoMoreInteractions(registrationTokenService);
+        // mock the registrationTokenService
+        final String expectedErrorMsg = "invalid token";
+        when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
+        doThrow(new Exception(expectedErrorMsg)).when(registrationTokenService).validateToken(token);
 
-		verify(defaultUserRole, times(1)).getName();
-		verifyNoMoreInteractions(defaultUserRole);
+        // finally call the method that is tested here
+        try {
+            crudService.activateUser(tokenValue);
+            fail("Should have thrown Exception, but did not!");
+        } catch (Exception e) {
+            final String actualErrorMsg = e.getMessage();
+            assertEquals(expectedErrorMsg, actualErrorMsg);
 
-		verify(roleService, times(1)).findByRoleName(defaultUserRoleName);
-		verifyNoMoreInteractions(roleService);
+            // verify method invocations
+            verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
+            verify(registrationTokenService, times(1)).validateToken(token);
+            verifyNoMoreInteractions(registrationTokenService);
 
-		verify(dao, times(1)).saveOrUpdate(any(User.class));
-		verifyNoMoreInteractions(dao);
+            verifyNoMoreInteractions(dao);
+        }
+    }
 
-	}
+    @Test
+    public void persistNewUser_shouldPersistAndEncrypt() {
 
-	@Test
-	public void activateUser_shouldThrowExceptionIfTokenCouldNotBeValidated() throws Exception {
-		// an inactive user that is assigend to a token
-		User user = new User();
-		user.setActive(false);
+        String rawPassword = "p@sSw0rd";
+        boolean encryptPassword = true;
 
-		// create a token that is associated with the user
-		RegistrationToken token = new RegistrationToken(user);
+        User unpersistedUser = new User();
+        unpersistedUser.setPassword(rawPassword);
 
-		// the token value that will be used for the call of
-		// activateUser(tokenValue)
-		String tokenValue = token.getToken();
+        // mock the dao
+        doNothing().when(dao).saveOrUpdate(any(User.class));
 
-		// mock the registrationTokenService
-		final String expectedErrorMsg = "invalid token";
-		when(registrationTokenService.findByTokenValue(tokenValue)).thenReturn(token);
-		doThrow(new Exception(expectedErrorMsg)).when(registrationTokenService).validateToken(token);
+        // finally call the method that is tested here
+        User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
-		// finally call the method that is tested here
-		try {
-			crudService.activateUser(tokenValue);
-			fail("Should have thrown Exception, but did not!");
-		} catch (Exception e) {
-			final String actualErrorMsg = e.getMessage();
-			assertEquals(expectedErrorMsg, actualErrorMsg);
+        // verify method invocations
+        verify(dao, times(1)).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(dao);
 
-			// verify method invocations
-			verify(registrationTokenService, times(1)).findByTokenValue(tokenValue);
-			verify(registrationTokenService, times(1)).validateToken(token);
-			verifyNoMoreInteractions(registrationTokenService);
+        // check if the password has been encrypted
+        assertTrue(passwordEncoder.matches(rawPassword, persistedUser.getPassword()));
+    }
 
-			verifyNoMoreInteractions(dao);
-		}
-	}
+    @Test
+    public void persistNewUser_shouldPersistButNotEncrypt() {
 
-	@Test
-	public void persistNewUser_shouldPersistAndEncrypt() {
+        String password = "p@sSw0rd";
+        boolean encryptPassword = false;
 
-		String rawPassword = "p@sSw0rd";
-		boolean encryptPassword = true;
+        User unpersistedUser = new User();
+        unpersistedUser.setPassword(password);
 
-		User unpersistedUser = new User();
-		unpersistedUser.setPassword(rawPassword);
+        // mock the dao
+        doNothing().when(dao).saveOrUpdate(any(User.class));
 
-		// mock the dao
-		doNothing().when(dao).saveOrUpdate(any(User.class));
+        // finally call the method that is tested here
+        User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
-		// finally call the method that is tested here
-		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
+        // verify method invocations
+        verify(dao, times(1)).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(dao);
 
-		// verify method invocations
-		verify(dao, times(1)).saveOrUpdate(any(User.class));
-		verifyNoMoreInteractions(dao);
+        // verify that the password is the same as before and was not encrypted
+        assertEquals(password, persistedUser.getPassword());
+    }
 
-		// check if the password has been encrypted
-		assertTrue(passwordEncoder.matches(rawPassword, persistedUser.getPassword()));
-	}
+    @Test
+    public void persistNewUser_doesNothingIfUserHasId() throws NoSuchFieldException, IllegalAccessException {
 
-	@Test
-	public void persistNewUser_shouldPersistButNotEncrypt() {
+        String rawPassword = "p@sSw0rd";
+        boolean encryptPassword = true;
+        Integer userId = 42;
 
-		String password = "p@sSw0rd";
-		boolean encryptPassword = false;
+        User unpersistedUser = new User("Dummy", "User", "dummyuser");
+        unpersistedUser.setPassword(rawPassword);
 
-		User unpersistedUser = new User();
-		unpersistedUser.setPassword(password);
+        IdHelper.setIdOnPersistentObject(unpersistedUser, userId);
 
-		// mock the dao
-		doNothing().when(dao).saveOrUpdate(any(User.class));
+        // finally call the method that is tested here
+        User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
 
-		// finally call the method that is tested here
-		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
+        // verify method invocations
+        verifyNoMoreInteractions(dao);
 
-		// verify method invocations
-		verify(dao, times(1)).saveOrUpdate(any(User.class));
-		verifyNoMoreInteractions(dao);
+        // verify that nothing else happened (i.e. no password encryption)
+        assertEquals(unpersistedUser, persistedUser);
+    }
 
-		// verify that the password is the same as before and was not encrypted
-		assertEquals(password, persistedUser.getPassword());
-	}
+    @Test
+    public void updatePassword_shouldUpdatePasswordAsExpected() throws Exception {
 
-	@Test
-	public void persistNewUser_doesNothingIfUserHasId() throws NoSuchFieldException, IllegalAccessException {
+        String oldPassword = "eNcrYpt3dOldP4ssw0rd";
+        String newPassword = "r4Wn3Wp@sSw0rd";
+        Integer userId = 42;
 
-		String rawPassword = "p@sSw0rd";
-		boolean encryptPassword = true;
-		Integer userId = 42;
+        User user = new User();
+        user.setPassword(oldPassword);
 
-		User unpersistedUser = new User("Dummy", "User", "dummyuser");
-		unpersistedUser.setPassword(rawPassword);
+        IdHelper.setIdOnPersistentObject(user, userId);
 
-		IdHelper.setIdOnPersistentObject(unpersistedUser, userId);
+        // mock the dao
+        doNothing().when(dao).saveOrUpdate(any(User.class));
 
-		// finally call the method that is tested here
-		User persistedUser = crudService.persistNewUser(unpersistedUser, encryptPassword);
+        // finally call the method that is tested here
+        crudService.updatePassword(user, newPassword);
 
-		// verify method invocations
-		verifyNoMoreInteractions(dao);
+        // verify method invocations
+        verify(dao, times(1)).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(dao);
 
-		// verify that nothing else happened (i.e. no password encryption)
-		assertEquals(unpersistedUser, persistedUser);
-	}
+        // verify password
+        String encryptedNewPassword = user.getPassword();
 
-	@Test
-	public void updatePassword_shouldUpdatePasswordAsExpected() throws Exception {
+        assertFalse(oldPassword.equals(encryptedNewPassword));
+        assertTrue(passwordEncoder.matches(newPassword, encryptedNewPassword));
+    }
 
-		String oldPassword = "eNcrYpt3dOldP4ssw0rd";
-		String newPassword = "r4Wn3Wp@sSw0rd";
-		Integer userId = 42;
+    @Test
+    public void updatePassword_shouldThrowIfUserHasNoId() {
 
-		User user = new User();
-		user.setPassword(oldPassword);
+        String newPassword = "r4Wn3Wp@sSw0rd";
 
-		IdHelper.setIdOnPersistentObject(user, userId );
+        // user without id
+        User user = new User();
 
-		// mock the dao
-		doNothing().when(dao).saveOrUpdate(any(User.class));
+        // call the method that is tested here
+        try {
+            crudService.updatePassword(user, newPassword);
+            fail("Should have thrown Exception, but did not!");
+        } catch (Exception e) {
 
-		// finally call the method that is tested here
-		crudService.updatePassword(user, newPassword);
+            assertEquals("The ID of the user object is null.", e.getMessage());
 
-		// verify method invocations
-		verify(dao, times(1)).saveOrUpdate(any(User.class));
-		verifyNoMoreInteractions(dao);
+            // verify method invocations
+            verifyNoMoreInteractions(dao);
+        }
+    }
 
-		// verify password
-		String encryptedNewPassword = user.getPassword();
+    @Test
+    public void getUserBySession_shouldReturnUserFromSession() throws NoSuchFieldException, IllegalAccessException {
 
-		assertFalse(oldPassword.equals(encryptedNewPassword));
-		assertTrue(passwordEncoder.matches(newPassword, encryptedNewPassword));
-	}
+        // mock a user for the security context
+        User incompleteSecurityContextUser = new User();
+        Integer userId = 42;
+        IdHelper.setIdOnPersistentObject(incompleteSecurityContextUser, userId);
 
-	@Test
-	public void updatePassword_shouldThrowIfUserHasNoId() {
+        // mock a "complete" user equivalent coming from db
+        String accountName = "someUser";
+        String firstName = "John";
+        User completeUserFromDatabase = new User();
+        IdHelper.setIdOnPersistentObject(completeUserFromDatabase, userId);
+        completeUserFromDatabase.setAccountName(accountName);
+        completeUserFromDatabase.setFirstName(firstName);
 
-		String newPassword = "r4Wn3Wp@sSw0rd";
+        // mock the security context
+        Authentication authentication = new UsernamePasswordAuthenticationToken(incompleteSecurityContextUser, "somePw");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		// user without id
-		User user = new User();
+        // mock the dao
+        when(dao.findById(userId)).thenReturn(completeUserFromDatabase);
 
-		// call the method that is tested here
-		try {
-			crudService.updatePassword(user, newPassword);
-			fail("Should have thrown Exception, but did not!");
-		} catch (Exception e) {
+        // finally test/call the method
+        User fullUserBySession = crudService.getUserBySession();
 
-			assertEquals("The ID of the user object is null.", e.getMessage());
+        assertEquals(userId, fullUserBySession.getId());
+        assertEquals(accountName, fullUserBySession.getAccountName());
+        assertEquals(firstName, fullUserBySession.getFirstName());
 
-			// verify method invocations
-			verifyNoMoreInteractions(dao);
-		}
-	}
-
-	@Test
-	public void getUserBySession_shouldReturnUserFromSession() throws NoSuchFieldException, IllegalAccessException {
-
-		// mock a user for the security context
-		User incompleteSecurityContextUser = new User();
-		Integer userId = 42;
-		IdHelper.setIdOnPersistentObject(incompleteSecurityContextUser, userId);
-
-		// mock a "complete" user equivalent coming from db
-		String accountName = "someUser";
-		String firstName = "John";
-		User completeUserFromDatabase = new User();
-		IdHelper.setIdOnPersistentObject(completeUserFromDatabase, userId);
-		completeUserFromDatabase.setAccountName(accountName);
-		completeUserFromDatabase.setFirstName(firstName);
-
-		// mock the security context
-		Authentication authentication = new UsernamePasswordAuthenticationToken(incompleteSecurityContextUser, "somePw");
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-
-		// mock the dao
-		when(dao.findById(userId)).thenReturn(completeUserFromDatabase);
-
-		// finally test/call the method
-		User fullUserBySession = crudService.getUserBySession();
-
-		assertEquals(userId, fullUserBySession.getId());
-		assertEquals(accountName, fullUserBySession.getAccountName());
-		assertEquals(firstName, fullUserBySession.getFirstName());
-
-		verify(dao, times(1)).findById(userId);
-		verifyNoMoreInteractions(dao);
-	}
+        verify(dao, times(1)).findById(userId);
+        verifyNoMoreInteractions(dao);
+    }
 
 }

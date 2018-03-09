@@ -13,37 +13,36 @@ import de.terrestris.shogun2.model.module.Module;
  *
  * @author Nils Bühner
  * @see AbstractCrudService
- *
  */
 @Service("extentService")
 public class ExtentService<E extends Extent, D extends ExtentDao<E>> extends
-		PermissionAwareCrudService<E, D> {
+    PermissionAwareCrudService<E, D> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public ExtentService() {
-		this((Class<E>) Extent.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public ExtentService() {
+        this((Class<E>) Extent.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the service.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected ExtentService(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the service.
+     * Subclasses MUST call this constructor.
+     */
+    protected ExtentService(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct dao here.
-	 * Otherwise, spring can not decide which dao has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("extentDao")
-	public void setDao(D dao) {
-		this.dao = dao;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct dao here.
+     * Otherwise, spring can not decide which dao has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("extentDao")
+    public void setDao(D dao) {
+        this.dao = dao;
+    }
 }

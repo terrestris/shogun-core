@@ -17,55 +17,55 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 
 /**
  * Service class to describe classes model.
- *
+ * <p>
  * terrestris GmbH & Co. KG
+ *
  * @author Kai Volland
  * @date 04.09.2017
- *
  */
 @Service("modelDescriptionService")
 public class ModelDescriptionService {
 
-	/**
-	 * The LOGGER instance (that will be available in all subclasses)
-	 */
-	protected final Logger LOG = Logger.getLogger(getClass());
-	
-	@Resource
-	@Qualifier("describeModelSearchPackages")
-	private List<String> describeModelSearchPackages;
-	
-	/**
-	 *
-	 */
-	@Autowired
-	protected ObjectMapper objectMapper;
+    /**
+     * The LOGGER instance (that will be available in all subclasses)
+     */
+    protected final Logger LOG = Logger.getLogger(getClass());
 
-	public JsonSchema getJsonSchema(String className) throws IOException {
-		
-		Class<?> foundClass = null;
-		for (String searchPackage : describeModelSearchPackages) {
-			LOG.debug(String.format("Search className %s in package %s.", className, searchPackage));
-			try{
-				boolean wasNull = foundClass == null;
-				foundClass = Class.forName(searchPackage + "." + className);
-				if (!wasNull) {
-					LOG.error(String.format("Modelname %s exists in multiple packages! Last one will win.", className));
-				}
-			} catch (ClassNotFoundException e){
-				//not in this package, try another
-			}
-		}
+    @Resource
+    @Qualifier("describeModelSearchPackages")
+    private List<String> describeModelSearchPackages;
 
-		if (foundClass == null) {
-			LOG.warn(String.format("No class found for describing modelname %s", className));
-			return null;
-		}
+    /**
+     *
+     */
+    @Autowired
+    protected ObjectMapper objectMapper;
 
-		JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(objectMapper);
-		JsonSchema schema = schemaGen.generateSchema(foundClass);
+    public JsonSchema getJsonSchema(String className) throws IOException {
 
-		return schema;
-	}
+        Class<?> foundClass = null;
+        for (String searchPackage : describeModelSearchPackages) {
+            LOG.debug(String.format("Search className %s in package %s.", className, searchPackage));
+            try {
+                boolean wasNull = foundClass == null;
+                foundClass = Class.forName(searchPackage + "." + className);
+                if (!wasNull) {
+                    LOG.error(String.format("Modelname %s exists in multiple packages! Last one will win.", className));
+                }
+            } catch (ClassNotFoundException e) {
+                //not in this package, try another
+            }
+        }
+
+        if (foundClass == null) {
+            LOG.warn(String.format("No class found for describing modelname %s", className));
+            return null;
+        }
+
+        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(objectMapper);
+        JsonSchema schema = schemaGen.generateSchema(foundClass);
+
+        return schema;
+    }
 
 }

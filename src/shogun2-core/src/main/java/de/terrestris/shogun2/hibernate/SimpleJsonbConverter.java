@@ -12,10 +12,10 @@ import java.util.Map;
 /**
  * A JPA converter that can be used to convert jsonb fields into a map. Currently only works with 'simple' json
  * content (only one level objects like {"name": "peter", "someprop": 345}).
- *
+ * <p>
  * Please note that you'll need to switch to pgjdbc-ng from https://github.com/impossibl/pgjdbc-ng instead of using the
  * standard postgres driver.
- *
+ * <p>
  * Please also note that if you want optimal performance you'll need to add an index manually, hibernate can only create
  * btree indexes.
  */

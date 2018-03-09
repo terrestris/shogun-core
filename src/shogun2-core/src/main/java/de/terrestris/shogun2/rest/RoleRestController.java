@@ -11,38 +11,37 @@ import de.terrestris.shogun2.service.RoleService;
 
 /**
  * @author Andre Henn
- *
  */
 @RestController
 @RequestMapping("/roles")
 public class RoleRestController<E extends Role, D extends RoleDao<E>, S extends RoleService<E, D>>
-		extends AbstractRestController<E, D, S> {
+    extends AbstractRestController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public RoleRestController() {
-		this((Class<E>) Role.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public RoleRestController() {
+        this((Class<E>) Role.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected RoleRestController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected RoleRestController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("roleService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("roleService")
+    public void setService(S service) {
+        this.service = service;
+    }
 }

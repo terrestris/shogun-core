@@ -29,50 +29,50 @@ import java.util.Map;
  */
 public class HttpProxyControllerTest {
 
-	private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-	@Mock(name = "httpProxyService")
-	private HttpProxyService proxyService;
+    @Mock(name = "httpProxyService")
+    private HttpProxyService proxyService;
 
-	private HttpProxyController httpProxyController;
+    private HttpProxyController httpProxyController;
 
-	private final String PROXY_ENDPOINT = "/proxy.action";
+    private final String PROXY_ENDPOINT = "/proxy.action";
 
-	@Before
-	public void setup() {
-		// Process mock annotations
-		MockitoAnnotations.initMocks(this);
+    @Before
+    public void setup() {
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
 
-		httpProxyController = new HttpProxyController();
-		httpProxyController.setProxyService(proxyService);
+        httpProxyController = new HttpProxyController();
+        httpProxyController.setProxyService(proxyService);
 
-		// Setup Spring test in standalone mode
-		this.mockMvc = MockMvcBuilders.standaloneSetup(httpProxyController).build();
-	}
+        // Setup Spring test in standalone mode
+        this.mockMvc = MockMvcBuilders.standaloneSetup(httpProxyController).build();
+    }
 
-	@Test
-	public void proxyShouldWorkAsExpected() throws Exception {
-		String baseUrl = "https://terrestris.de";
-		final String body = "TEST";
-		ResponseEntity mockedResponse = new ResponseEntity(body, null, HttpStatus.OK);
+    @Test
+    public void proxyShouldWorkAsExpected() throws Exception {
+        String baseUrl = "https://terrestris.de";
+        final String body = "TEST";
+        ResponseEntity mockedResponse = new ResponseEntity(body, null, HttpStatus.OK);
 
-		Mockito.when(proxyService.doProxy(
-				Matchers.any(HttpServletRequest.class),
-				Matchers.any(String.class),
-				Matchers.any(Map.class))
-		).thenReturn(mockedResponse);
+        Mockito.when(proxyService.doProxy(
+            Matchers.any(HttpServletRequest.class),
+            Matchers.any(String.class),
+            Matchers.any(Map.class))
+        ).thenReturn(mockedResponse);
 
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(PROXY_ENDPOINT)
-				.param("baseUrl", baseUrl))
-				.andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(PROXY_ENDPOINT)
+            .param("baseUrl", baseUrl))
+            .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-		String content = result.getResponse().getContentAsString();
-		Assert.assertEquals("Returned body matched mocked one.", body, content);
+        String content = result.getResponse().getContentAsString();
+        Assert.assertEquals("Returned body matched mocked one.", body, content);
 
-		Mockito.verify(proxyService, Mockito.times(1)).
-				doProxy(Matchers.any(HttpServletRequest.class),
-						Matchers.any(String.class),
-						Matchers.any(Map.class));
-		Mockito.verifyNoMoreInteractions(proxyService);
-	}
+        Mockito.verify(proxyService, Mockito.times(1)).
+            doProxy(Matchers.any(HttpServletRequest.class),
+                Matchers.any(String.class),
+                Matchers.any(Map.class));
+        Mockito.verifyNoMoreInteractions(proxyService);
+    }
 }

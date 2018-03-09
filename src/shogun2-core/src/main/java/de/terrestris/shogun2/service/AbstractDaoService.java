@@ -13,58 +13,56 @@ import de.terrestris.shogun2.model.PersistentObject;
  * {@link E} (and a logger).
  *
  * @author Nils Bühner
- *
  */
 @Transactional(value = "transactionManager")
 public abstract class AbstractDaoService<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>> {
 
-	/**
-	 * The LOGGER instance (that will be available in all subclasses)
-	 */
-	protected final Logger LOG = Logger.getLogger(getClass());
+    /**
+     * The LOGGER instance (that will be available in all subclasses)
+     */
+    protected final Logger LOG = Logger.getLogger(getClass());
 
-	/**
-	 * Provides the concrete entity class of the controller.
-	 * Based on the pattern proposed here: http://stackoverflow.com/a/3403987
-	 */
-	private final Class<E> entityClass;
+    /**
+     * Provides the concrete entity class of the controller.
+     * Based on the pattern proposed here: http://stackoverflow.com/a/3403987
+     */
+    private final Class<E> entityClass;
 
-	/**
-	 * Constructor that sets the concrete entity class for the service.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected AbstractDaoService(Class<E> entityClass) {
-		this.entityClass = entityClass;
-	}
+    /**
+     * Constructor that sets the concrete entity class for the service.
+     * Subclasses MUST call this constructor.
+     */
+    protected AbstractDaoService(Class<E> entityClass) {
+        this.entityClass = entityClass;
+    }
 
-	/**
-	 * The data access object
-	 */
-	protected D dao;
+    /**
+     * The data access object
+     */
+    protected D dao;
 
-	/**
-	 * Subclasses must implement this class and annotate it with
-	 * {@link Autowired} and {@link Qualifier}! This is necessary as there may
-	 * be multiple candidates to autowire (due to hierarchy) and we have to
-	 * configure the correct ones.
-	 *
-	 * @param dao
-	 *            the dao to set
-	 */
-	public abstract void setDao(D dao);
+    /**
+     * Subclasses must implement this class and annotate it with
+     * {@link Autowired} and {@link Qualifier}! This is necessary as there may
+     * be multiple candidates to autowire (due to hierarchy) and we have to
+     * configure the correct ones.
+     *
+     * @param dao the dao to set
+     */
+    public abstract void setDao(D dao);
 
-	/**
-	 * @return the dao
-	 */
-	public D getDao() {
-		return dao;
-	}
+    /**
+     * @return the dao
+     */
+    public D getDao() {
+        return dao;
+    }
 
-	/**
-	 * @return the entityClass
-	 */
-	public Class<E> getEntityClass() {
-		return entityClass;
-	}
+    /**
+     * @return the entityClass
+     */
+    public Class<E> getEntityClass() {
+        return entityClass;
+    }
 
 }

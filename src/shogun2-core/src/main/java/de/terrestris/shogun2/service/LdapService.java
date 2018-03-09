@@ -14,9 +14,8 @@ import java.util.List;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
- *
  * terrestris GmbH & Co. KG
- *
+ * <p>
  * Ldap service
  */
 @Service
@@ -28,6 +27,7 @@ public class LdapService {
 
     /**
      * Set the ldap template property for ldap access.
+     *
      * @param ldapTemplate the template to set
      */
     public void setLdapTemplate(LdapTemplate ldapTemplate) {
@@ -35,7 +35,8 @@ public class LdapService {
     }
 
     /**
-     *Authenticate against ldap.
+     * Authenticate against ldap.
+     *
      * @param username the username
      * @param password the password
      */
@@ -46,6 +47,7 @@ public class LdapService {
 
     /**
      * Extract groups from ldap.
+     *
      * @param username username to search for
      * @param property the property to extract the groups from
      * @return a list of group names from ldap
@@ -58,8 +60,8 @@ public class LdapService {
                 // since we can generate multiple values here but may only return a single string, we ignore
                 // the ldapTemplate#search result and just put the values in our own list, returning an empty string
                 // which is effectively ignored
-                while(ous.hasMore()) {
-                    result.add((String)ous.next());
+                while (ous.hasMore()) {
+                    result.add((String) ous.next());
                 }
                 return "";
             }

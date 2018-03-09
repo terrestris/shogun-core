@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Andre Henn
  */
 public class ModuleIdResolver<E extends Module, D extends ModuleDao<E>, S extends ModuleService<E, D>> extends
-		PersistentObjectIdResolver<E, D, S> {
+    PersistentObjectIdResolver<E, D, S> {
 
-	@Override
-	@Autowired
-	@Qualifier("moduleService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    @Override
+    @Autowired
+    @Qualifier("moduleService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
 }

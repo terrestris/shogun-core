@@ -12,37 +12,36 @@ import de.terrestris.shogun2.model.wps.WpsParameter;
  *
  * @author Nils Bühner
  * @see AbstractCrudService
- *
  */
 @Service("wpsParameterService")
 public class WpsParameterService<E extends WpsParameter, D extends WpsParameterDao<E>> extends
-		PermissionAwareCrudService<E, D> {
+    PermissionAwareCrudService<E, D> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public WpsParameterService() {
-		this((Class<E>) WpsParameter.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public WpsParameterService() {
+        this((Class<E>) WpsParameter.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the service.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected WpsParameterService(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the service.
+     * Subclasses MUST call this constructor.
+     */
+    protected WpsParameterService(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct dao here.
-	 * Otherwise, spring can not decide which dao has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("wpsParameterDao")
-	public void setDao(D dao) {
-		this.dao = dao;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct dao here.
+     * Otherwise, spring can not decide which dao has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("wpsParameterDao")
+    public void setDao(D dao) {
+        this.dao = dao;
+    }
 }

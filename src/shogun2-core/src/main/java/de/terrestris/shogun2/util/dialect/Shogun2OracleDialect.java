@@ -15,22 +15,22 @@ import java.sql.Types;
  */
 public class Shogun2OracleDialect extends Oracle12cDialect {
 
-	/**
-	 *
-	 */
-	public Shogun2OracleDialect() {
-		super();
-	}
+    /**
+     *
+     */
+    public Shogun2OracleDialect() {
+        super();
+    }
 
-	/**
-	 *
-	 */
-	@Override
-	protected void registerLargeObjectTypeMappings() {
-		super.registerLargeObjectTypeMappings();
+    /**
+     *
+     */
+    @Override
+    protected void registerLargeObjectTypeMappings() {
+        super.registerLargeObjectTypeMappings();
 
-		registerColumnType( Types.VARBINARY , "blob" );
-		registerColumnType( Types.LONGVARCHAR, "clob" );
-		registerColumnType( Types.LONGVARBINARY, "long raw" );
-	}
+        registerColumnType(Types.VARBINARY, "blob");
+        registerColumnType(Types.LONGVARCHAR, "clob");
+        registerColumnType(Types.LONGVARBINARY, "long raw");
+    }
 }
