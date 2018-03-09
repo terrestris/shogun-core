@@ -110,7 +110,7 @@ public class Application extends PersistentObject {
     )
     @JsonIdentityReference(alwaysAsId = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
     private List<Plugin> plugins = new ArrayList<>();
 
     /**
