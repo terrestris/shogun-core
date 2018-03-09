@@ -17,80 +17,79 @@ import de.terrestris.shogun2.service.PluginService;
 
 /**
  * @author Nils Bühner
- *
  */
 @RestController
 @RequestMapping("/plugins")
 public class PluginRestController<E extends Plugin, D extends PluginDao<E>, S extends PluginService<E, D>>
-		extends AbstractRestController<E, D, S> {
+    extends AbstractRestController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public PluginRestController() {
-		this((Class<E>) Plugin.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public PluginRestController() {
+        this((Class<E>) Plugin.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected PluginRestController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected PluginRestController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 *
-	 * @return
-	 */
-	@RequestMapping(value="/{simpleClassName}.js", method=RequestMethod.GET)
-	public @ResponseBody ResponseEntity<String> getExternalPluginSource(
-			@PathVariable String simpleClassName) {
+    /**
+     * @return
+     */
+    @RequestMapping(value = "/{simpleClassName}.js", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<String> getExternalPluginSource(
+        @PathVariable String simpleClassName) {
 
-		LOG.debug("Requested to return the sourcecode for plugin " + simpleClassName);
+        LOG.debug("Requested to return the sourcecode for plugin " + simpleClassName);
 
-		ResponseEntity<String> responseEntity = null;
-		HttpHeaders responseHeaders = new HttpHeaders();
+        ResponseEntity<String> responseEntity = null;
+        HttpHeaders responseHeaders = new HttpHeaders();
 
-		try {
-			responseHeaders.add("Content-Type", "text/javascript; charset=utf-8");
+        try {
+            responseHeaders.add("Content-Type", "text/javascript; charset=utf-8");
 
-			String classCode = service.getPluginSource(simpleClassName);
+            String classCode = service.getPluginSource(simpleClassName);
 
-			responseEntity = new ResponseEntity<String>(
-					classCode,
-					responseHeaders,
-					HttpStatus.OK
-			);
+            responseEntity = new ResponseEntity<String>(
+                classCode,
+                responseHeaders,
+                HttpStatus.OK
+            );
 
-		} catch(Exception e) {
-			responseHeaders.add("Content-Type", "text/*");
+        } catch (Exception e) {
+            responseHeaders.add("Content-Type", "text/*");
 
-			String errMsg = "Error while returning the class code for "
-					+ "external plugin: " + e.getMessage();
+            String errMsg = "Error while returning the class code for "
+                + "external plugin: " + e.getMessage();
 
-			LOG.error(errMsg);
+            LOG.error(errMsg);
 
-			responseEntity = new ResponseEntity<String>(
-					errMsg,
-					responseHeaders,
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
+            responseEntity = new ResponseEntity<String>(
+                errMsg,
+                responseHeaders,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
 
-		return responseEntity;
-	}
+        return responseEntity;
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("pluginService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("pluginService")
+    public void setService(S service) {
+        this.service = service;
+    }
 }

@@ -17,22 +17,21 @@ import de.terrestris.shogun2.web.EndpointDocController;
 @Service("endpointDocService")
 public class EndpointDocService {
 
-	/**
-	 * Returns all RequestMappingInfo instances from type and
-	 * method-level @RequestMapping annotations in @Controller classes.
-	 *
-	 * @param requestMappingHandlerMapping
-	 *            The RequestMappingInfo collection of Spring
-	 * @return A set of RequestMappingInfo
-	 */
-	@PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())")
-	public Set<RequestMappingInfo> getEndpoints(RequestMappingHandlerMapping requestMappingHandlerMapping) {
+    /**
+     * Returns all RequestMappingInfo instances from type and
+     * method-level @RequestMapping annotations in @Controller classes.
+     *
+     * @param requestMappingHandlerMapping The RequestMappingInfo collection of Spring
+     * @return A set of RequestMappingInfo
+     */
+    @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())")
+    public Set<RequestMappingInfo> getEndpoints(RequestMappingHandlerMapping requestMappingHandlerMapping) {
 
-		if (requestMappingHandlerMapping.getHandlerMethods() != null) {
-			return requestMappingHandlerMapping.getHandlerMethods().keySet();
-		}
+        if (requestMappingHandlerMapping.getHandlerMethods() != null) {
+            return requestMappingHandlerMapping.getHandlerMethods().keySet();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

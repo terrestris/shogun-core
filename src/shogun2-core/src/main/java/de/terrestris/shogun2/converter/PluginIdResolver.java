@@ -8,18 +8,16 @@ import de.terrestris.shogun2.model.Plugin;
 import de.terrestris.shogun2.service.PluginService;
 
 /**
- *
  * @author Nils Buehner
- *
  */
 public class PluginIdResolver<E extends Plugin, D extends PluginDao<E>, S extends PluginService<E, D>> extends
-		PersistentObjectIdResolver<E, D, S> {
+    PersistentObjectIdResolver<E, D, S> {
 
-	@Override
-	@Autowired
-	@Qualifier("pluginService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    @Override
+    @Autowired
+    @Qualifier("pluginService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
 }

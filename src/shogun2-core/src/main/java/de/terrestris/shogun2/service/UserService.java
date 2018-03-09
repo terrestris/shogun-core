@@ -27,283 +27,274 @@ import de.terrestris.shogun2.model.token.RegistrationToken;
  *
  * @author Nils Bühner
  * @see AbstractCrudService
- *
  */
 @Service("userService")
 public class UserService<E extends User, D extends UserDao<E>> extends
-		PersonService<E, D> {
+    PersonService<E, D> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public UserService() {
-		this((Class<E>) User.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public UserService() {
+        this((Class<E>) User.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the service.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected UserService(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the service.
+     * Subclasses MUST call this constructor.
+     */
+    protected UserService(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * Registration token service
-	 */
-	@Autowired
-	protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
+    /**
+     * Registration token service
+     */
+    @Autowired
+    protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
 
-	/**
-	 * Role service
-	 */
-	@Autowired
-	protected RoleService<Role, RoleDao<Role>> roleService;
+    /**
+     * Role service
+     */
+    @Autowired
+    protected RoleService<Role, RoleDao<Role>> roleService;
 
-	/**
-	 * The autowired PasswordEncoder
-	 */
-	@Autowired
-	protected PasswordEncoder passwordEncoder;
+    /**
+     * The autowired PasswordEncoder
+     */
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
 
-	/**
-	 * The default user role that is assigned to a user if he activates his
-	 * account. ATTENTION: This autowired bean will NOT have an ID if the
-	 * system did not boot with hibernate/CREATE mode and SHOGun2-content
-	 * initialization!
-	 *
-	 * TODO: We should only autowire a string with the role name...
-	 */
-	@Autowired(required = false)
-	@Qualifier("userRole")
-	private Role defaultUserRole;
+    /**
+     * The default user role that is assigned to a user if he activates his
+     * account. ATTENTION: This autowired bean will NOT have an ID if the
+     * system did not boot with hibernate/CREATE mode and SHOGun2-content
+     * initialization!
+     * <p>
+     * TODO: We should only autowire a string with the role name...
+     */
+    @Autowired(required = false)
+    @Qualifier("userRole")
+    private Role defaultUserRole;
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct dao here.
-	 * Otherwise, spring can not decide which dao has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("userDao")
-	public void setDao(D dao) {
-		super.setDao(dao);
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct dao here.
+     * Otherwise, spring can not decide which dao has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("userDao")
+    public void setDao(D dao) {
+        super.setDao(dao);
+    }
 
-	/**
-	 * Returns the user for the given (unique) account name.
-	 * If no user was found, null will be returned.
-	 *
-	 * @param accountName A unique account name.
-	 * @return The unique user for the account name or null.
-	 */
-	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#accountName, 'READ')")
-	@Transactional(readOnly = true)
-	public E findByAccountName(String accountName) {
-		return dao.findByAccountName(accountName);
-	}
+    /**
+     * Returns the user for the given (unique) account name.
+     * If no user was found, null will be returned.
+     *
+     * @param accountName A unique account name.
+     * @return The unique user for the account name or null.
+     */
+    @PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#accountName, 'READ')")
+    @Transactional(readOnly = true)
+    public E findByAccountName(String accountName) {
+        return dao.findByAccountName(accountName);
+    }
 
-	/**
-	 *
-	 * @param email
-	 * @return
-	 */
-	@PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#email, 'READ')")
-	@Transactional(readOnly = true)
-	public E findByEmail(String email) {
-		return dao.findByEmail(email);
-	}
+    /**
+     * @param email
+     * @return
+     */
+    @PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#email, 'READ')")
+    @Transactional(readOnly = true)
+    public E findByEmail(String email) {
+        return dao.findByEmail(email);
+    }
 
-	/**
-	 * Registers a new user. Initially, the user will be inactive. An email with
-	 * an activation link will be sent to the user.
-	 *
-	 * @param user A user with an UNencrypted password (!)
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	public E registerUser(E user, HttpServletRequest request) throws Exception {
+    /**
+     * Registers a new user. Initially, the user will be inactive. An email with
+     * an activation link will be sent to the user.
+     *
+     * @param user    A user with an UNencrypted password (!)
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public E registerUser(E user, HttpServletRequest request) throws Exception {
 
-		String email = user.getEmail();
+        String email = user.getEmail();
 
-		// check if a user with the email already exists
-		E existingUser = dao.findByEmail(email);
+        // check if a user with the email already exists
+        E existingUser = dao.findByEmail(email);
 
-		if(existingUser != null) {
-			final String errorMessage = "User with eMail '" + email + "' already exists.";
-			LOG.info(errorMessage);
-			throw new Exception(errorMessage);
-		}
+        if (existingUser != null) {
+            final String errorMessage = "User with eMail '" + email + "' already exists.";
+            LOG.info(errorMessage);
+            throw new Exception(errorMessage);
+        }
 
-		user = (E) this.persistNewUser(user, true);
+        user = (E) this.persistNewUser(user, true);
 
-		// create a token for the user and send an email with an "activation" link
-		registrationTokenService.sendRegistrationActivationMail(request, user);
+        // create a token for the user and send an email with an "activation" link
+        registrationTokenService.sendRegistrationActivationMail(request, user);
 
-		return user;
-	}
+        return user;
+    }
 
-	/**
-	 *
-	 * @param token
-	 * @return
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public void activateUser(String tokenValue) throws Exception {
+    /**
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void activateUser(String tokenValue) throws Exception {
 
-		RegistrationToken token = registrationTokenService.findByTokenValue(tokenValue);
+        RegistrationToken token = registrationTokenService.findByTokenValue(tokenValue);
 
-		LOG.debug("Trying to activate user account with token: " + tokenValue);
+        LOG.debug("Trying to activate user account with token: " + tokenValue);
 
-		// throws Exception if token is not valid
-		registrationTokenService.validateToken(token);
+        // throws Exception if token is not valid
+        registrationTokenService.validateToken(token);
 
-		// set active=true
-		E user = (E) token.getUser();
-		user.setActive(true);
+        // set active=true
+        E user = (E) token.getUser();
+        user.setActive(true);
 
-		// set the persisted default user role if available
-		if(defaultUserRole != null) {
-			final String defaultRoleName = defaultUserRole.getName();
-			Role persistedDefaultUserRole = roleService.findByRoleName(defaultRoleName);
+        // set the persisted default user role if available
+        if (defaultUserRole != null) {
+            final String defaultRoleName = defaultUserRole.getName();
+            Role persistedDefaultUserRole = roleService.findByRoleName(defaultRoleName);
 
-			if (persistedDefaultUserRole != null) {
-				// assign the default user role
-				user.getRoles().add(persistedDefaultUserRole);
-			}
-		}
+            if (persistedDefaultUserRole != null) {
+                // assign the default user role
+                user.getRoles().add(persistedDefaultUserRole);
+            }
+        }
 
-		// update the user
-		dao.saveOrUpdate((E) user);
+        // update the user
+        dao.saveOrUpdate((E) user);
 
-		// delete the token
-		registrationTokenService.deleteTokenAfterActivation(token);
+        // delete the token
+        registrationTokenService.deleteTokenAfterActivation(token);
 
-		LOG.info("The user '" + user.getAccountName()
-				+ "' has successfully been activated.");
-	}
+        LOG.info("The user '" + user.getAccountName()
+            + "' has successfully been activated.");
+    }
 
-	/**
-	 * Persists a new user in the database.
-	 *
-	 * @param user
-	 *            The user to create
-	 * @param encryptPassword
-	 *            Whether or not the current password of the user object should
-	 *            be encrypted or not before the object is persisted in the db
-	 *
-	 * @return The persisted user object (incl. ID value)
-	 */
-	public E persistNewUser(E user, boolean encryptPassword) {
+    /**
+     * Persists a new user in the database.
+     *
+     * @param user            The user to create
+     * @param encryptPassword Whether or not the current password of the user object should
+     *                        be encrypted or not before the object is persisted in the db
+     * @return The persisted user object (incl. ID value)
+     */
+    public E persistNewUser(E user, boolean encryptPassword) {
 
-		if(user.getId() != null) {
-			// to be sure that we are in the
-			// "create" case, the id must be null
-			return user;
-		}
+        if (user.getId() != null) {
+            // to be sure that we are in the
+            // "create" case, the id must be null
+            return user;
+        }
 
-		if(encryptPassword){
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-		}
+        if (encryptPassword) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
-		dao.saveOrUpdate(user);
+        dao.saveOrUpdate(user);
 
-		return user;
-	}
+        return user;
+    }
 
-	/**
-	 *
-	 * @param user
-	 * @param rawPassword
-	 * @throws Exception
-	 */
-	public void updatePassword(E user, String rawPassword) throws Exception {
+    /**
+     * @param user
+     * @param rawPassword
+     * @throws Exception
+     */
+    public void updatePassword(E user, String rawPassword) throws Exception {
 
-		if(user.getId() == null) {
-			throw new Exception("The ID of the user object is null.");
-		}
+        if (user.getId() == null) {
+            throw new Exception("The ID of the user object is null.");
+        }
 
-		user.setPassword(passwordEncoder.encode(rawPassword));
-		dao.saveOrUpdate(user);
-	}
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        dao.saveOrUpdate(user);
+    }
 
-	/**
-	 *
-	 * @param request
-	 * @throws Exception
-	 */
-	@Transactional(readOnly = true)
-	public E getUserBySession() {
+    /**
+     * @param request
+     * @throws Exception
+     */
+    @Transactional(readOnly = true)
+    public E getUserBySession() {
 
-		final Object principal = SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
+        final Object principal = SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
 
-		if(!(principal instanceof User)) {
-			return null;
-		}
+        if (!(principal instanceof User)) {
+            return null;
+        }
 
-		@SuppressWarnings("unchecked")
-		E loggedInUser = (E) principal;
+        @SuppressWarnings("unchecked")
+        E loggedInUser = (E) principal;
 
-		// The SecurityContextHolder holds a static copy of the user from
-		// the moment he logged in. So we need to get the current instance from
-		// dao.
-		Integer id = loggedInUser.getId();
+        // The SecurityContextHolder holds a static copy of the user from
+        // the moment he logged in. So we need to get the current instance from
+        // dao.
+        Integer id = loggedInUser.getId();
 
-		return dao.findById(id);
-	}
+        return dao.findById(id);
+    }
 
-	/**
-	 *
-	 * @param userId
-	 * @return
-	 * @throws Exception
-	 */
-	@PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
-	@Transactional(readOnly = true)
-	public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
+    /**
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
+    @Transactional(readOnly = true)
+    public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
 
-		Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
-		E user = this.findById(userId);
-		if (user != null) {
-			LOG.trace("Found user with ID " + user.getId());
-			userGroupsSet = user.getUserGroups();
-		} else {
-			throw new Exception("The user with id " + userId + " could not be found");
-		}
+        Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
+        E user = this.findById(userId);
+        if (user != null) {
+            LOG.trace("Found user with ID " + user.getId());
+            userGroupsSet = user.getUserGroups();
+        } else {
+            throw new Exception("The user with id " + userId + " could not be found");
+        }
 
-		return userGroupsSet;
-	}
+        return userGroupsSet;
+    }
 
-	/**
-	 * @return the passwordEncoder
-	 */
-	public PasswordEncoder getPasswordEncoder() {
-		return passwordEncoder;
-	}
+    /**
+     * @return the passwordEncoder
+     */
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
 
-	/**
-	 * @param passwordEncoder the passwordEncoder to set
-	 */
-	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-	}
+    /**
+     * @param passwordEncoder the passwordEncoder to set
+     */
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
-	/**
-	 * @return the defaultUserRole
-	 */
-	public Role getDefaultUserRole() {
-		return defaultUserRole;
-	}
+    /**
+     * @return the defaultUserRole
+     */
+    public Role getDefaultUserRole() {
+        return defaultUserRole;
+    }
 
-	/**
-	 * @param defaultUserRole the defaultUserRole to set
-	 */
-	public void setDefaultUserRole(Role defaultUserRole) {
-		this.defaultUserRole = defaultUserRole;
-	}
+    /**
+     * @param defaultUserRole the defaultUserRole to set
+     */
+    public void setDefaultUserRole(Role defaultUserRole) {
+        this.defaultUserRole = defaultUserRole;
+    }
 
 }

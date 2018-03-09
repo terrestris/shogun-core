@@ -25,162 +25,159 @@ import de.terrestris.shogun2.model.UserGroup;
 
 /**
  * @author Nils Bühner
- *
  */
 public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
-	/**
-	 * The Logger
-	 */
-	private static final Logger LOG = Logger
-			.getLogger(Shogun2AuthenticationProvider.class);
+    /**
+     * The Logger
+     */
+    private static final Logger LOG = Logger
+        .getLogger(Shogun2AuthenticationProvider.class);
 
-	@Autowired
-	private UserDao<User> userDao;
+    @Autowired
+    private UserDao<User> userDao;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	/**
-	 *
-	 * This method has to be {@link Transactional} to allow that associated entities
-	 * can be fetched lazily.
-	 *
-	 * @see org.springframework.security.authentication.AuthenticationProvider#
-	 *      authenticate(org.springframework.security.core.Authentication)
-	 */
-	@Override
-	@Transactional(value="transactionManager", readOnly=true)
-	public Authentication authenticate(Authentication authentication)
-			throws AuthenticationException {
+    /**
+     * This method has to be {@link Transactional} to allow that associated entities
+     * can be fetched lazily.
+     *
+     * @see org.springframework.security.authentication.AuthenticationProvider#
+     * authenticate(org.springframework.security.core.Authentication)
+     */
+    @Override
+    @Transactional(value = "transactionManager", readOnly = true)
+    public Authentication authenticate(Authentication authentication)
+        throws AuthenticationException {
 
-		// prepare an exception
-		final String exceptionMessage = "User and password do not match.";
+        // prepare an exception
+        final String exceptionMessage = "User and password do not match.";
 
-		// get username/password
-		String accountName = authentication.getName();
-		String rawPassword = (String) authentication.getCredentials();
+        // get username/password
+        String accountName = authentication.getName();
+        String rawPassword = (String) authentication.getCredentials();
 
-		LOG.debug("Trying to authenticate User '" + accountName + "'");
+        LOG.debug("Trying to authenticate User '" + accountName + "'");
 
-		User user = userDao.findByAccountName(accountName);
+        User user = userDao.findByAccountName(accountName);
 
-		// prepare set of authorities
-		Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+        // prepare set of authorities
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
 
-		String encryptedPassword = null;
+        String encryptedPassword = null;
 
-		if (user == null) {
-			LOG.warn("No user for account name '" + accountName + "' could be found.");
-			throw new UsernameNotFoundException(exceptionMessage);
-		} else if (!user.isActive()) {
-			LOG.warn("The user with the account name '" + accountName + "' is not active.");
-			throw new DisabledException(exceptionMessage);
-		} else {
+        if (user == null) {
+            LOG.warn("No user for account name '" + accountName + "' could be found.");
+            throw new UsernameNotFoundException(exceptionMessage);
+        } else if (!user.isActive()) {
+            LOG.warn("The user with the account name '" + accountName + "' is not active.");
+            throw new DisabledException(exceptionMessage);
+        } else {
 
-			encryptedPassword = user.getPassword();
+            encryptedPassword = user.getPassword();
 
-			// check if rawPassword matches the hash from db
-			if(passwordEncoder.matches(rawPassword, encryptedPassword)) {
+            // check if rawPassword matches the hash from db
+            if (passwordEncoder.matches(rawPassword, encryptedPassword)) {
 
-				Set<Role> allUserRoles = getAllUserRoles(user);
+                Set<Role> allUserRoles = getAllUserRoles(user);
 
-				// create granted authorities for the security context
-				for (Role role : allUserRoles) {
-					grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-				}
+                // create granted authorities for the security context
+                for (Role role : allUserRoles) {
+                    grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+                }
 
-			} else {
-				LOG.warn("The given password for user '" + accountName + "' does not match.");
-				throw new BadCredentialsException(exceptionMessage);
-			}
+            } else {
+                LOG.warn("The given password for user '" + accountName + "' does not match.");
+                throw new BadCredentialsException(exceptionMessage);
+            }
 
-		}
+        }
 
-		// Create corresponding token to forward in Spring Security's filter
-		// chain. We will use the SHOGun2 user as the principal.
-		Authentication authResult = null;
-		if (grantedAuthorities.isEmpty()) {
-			// if the user has no authorities, we will build the
-			// UsernamePasswordAuthenticationToken without authorities, which
-			// leads to an unauthenticated user, i.e. isAuthenticated() of
-			// authenticationToken will return false afterwards.
-			LOG.warn("The user '" + accountName + "' has no authorities and will thereby NOT be authenticated.");
-			authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword);
-		} else {
-			// if we pass some grantedAuthorities, isAuthenticated() of
-			// authenticationToken will return true afterwards
-			authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword, grantedAuthorities);
+        // Create corresponding token to forward in Spring Security's filter
+        // chain. We will use the SHOGun2 user as the principal.
+        Authentication authResult = null;
+        if (grantedAuthorities.isEmpty()) {
+            // if the user has no authorities, we will build the
+            // UsernamePasswordAuthenticationToken without authorities, which
+            // leads to an unauthenticated user, i.e. isAuthenticated() of
+            // authenticationToken will return false afterwards.
+            LOG.warn("The user '" + accountName + "' has no authorities and will thereby NOT be authenticated.");
+            authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword);
+        } else {
+            // if we pass some grantedAuthorities, isAuthenticated() of
+            // authenticationToken will return true afterwards
+            authResult = new UsernamePasswordAuthenticationToken(user, encryptedPassword, grantedAuthorities);
 
-			LOG.debug("The user '" + accountName
-					+ "' got the following (explicit) roles: "
-					+ StringUtils.join(getRawRoleNames(grantedAuthorities), ", "));
-		}
+            LOG.debug("The user '" + accountName
+                + "' got the following (explicit) roles: "
+                + StringUtils.join(getRawRoleNames(grantedAuthorities), ", "));
+        }
 
-		final boolean isAuthenticated = authResult.isAuthenticated();
-		final String authLog = isAuthenticated ? "has succesfully" : "has NOT";
-		LOG.info("The user '" + accountName + "' " + authLog  + " been authenticated.");
+        final boolean isAuthenticated = authResult.isAuthenticated();
+        final String authLog = isAuthenticated ? "has succesfully" : "has NOT";
+        LOG.info("The user '" + accountName + "' " + authLog + " been authenticated.");
 
-		return authResult;
-	}
+        return authResult;
+    }
 
-	/**
-	 *
-	 * @see org.springframework.security.authentication.AuthenticationProvider#supports
-	 *      (java.lang.Class)
-	 */
-	@Override
-	public boolean supports(Class<?> authentication) {
-		return (UsernamePasswordAuthenticationToken.class
-				.isAssignableFrom(authentication));
-	}
+    /**
+     * @see org.springframework.security.authentication.AuthenticationProvider#supports
+     * (java.lang.Class)
+     */
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return (UsernamePasswordAuthenticationToken.class
+            .isAssignableFrom(authentication));
+    }
 
-	/**
-	 * @param user
-	 * @param userGroups
-	 * @return
-	 */
-	private Set<Role> getAllUserRoles(User user) {
-		Set<Role> allUserRoles = new HashSet<Role>();
+    /**
+     * @param user
+     * @param userGroups
+     * @return
+     */
+    private Set<Role> getAllUserRoles(User user) {
+        Set<Role> allUserRoles = new HashSet<Role>();
 
-		// user roles
-		if(user != null) {
-			allUserRoles.addAll(user.getRoles());
-		}
+        // user roles
+        if (user != null) {
+            allUserRoles.addAll(user.getRoles());
+        }
 
-		Set<UserGroup> userGroups = user.getUserGroups();
-		// userGroup roles
-		if(userGroups != null) {
-			for (UserGroup userGroup : userGroups) {
-				allUserRoles.addAll(userGroup.getRoles());
-			}
-		}
-		return allUserRoles;
-	}
+        Set<UserGroup> userGroups = user.getUserGroups();
+        // userGroup roles
+        if (userGroups != null) {
+            for (UserGroup userGroup : userGroups) {
+                allUserRoles.addAll(userGroup.getRoles());
+            }
+        }
+        return allUserRoles;
+    }
 
-	/**
-	 * @param grantedAuthorities
-	 * @return
-	 */
-	private Set<String> getRawRoleNames(Set<GrantedAuthority> grantedAuthorities) {
-		Set<String> grantedRoles = new HashSet<String>();
-		for (GrantedAuthority auth : grantedAuthorities) {
-			grantedRoles.add(auth.getAuthority());
-		}
-		return grantedRoles;
-	}
+    /**
+     * @param grantedAuthorities
+     * @return
+     */
+    private Set<String> getRawRoleNames(Set<GrantedAuthority> grantedAuthorities) {
+        Set<String> grantedRoles = new HashSet<String>();
+        for (GrantedAuthority auth : grantedAuthorities) {
+            grantedRoles.add(auth.getAuthority());
+        }
+        return grantedRoles;
+    }
 
-	/**
-	 * @return the passwordEncoder
-	 */
-	public PasswordEncoder getPasswordEncoder() {
-		return passwordEncoder;
-	}
+    /**
+     * @return the passwordEncoder
+     */
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
 
-	/**
-	 * @param passwordEncoder the passwordEncoder to set
-	 */
-	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-	}
+    /**
+     * @param passwordEncoder the passwordEncoder to set
+     */
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 }

@@ -16,120 +16,119 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  * The Image Module is the Ext JS representation of an HTML img element.
  *
  * @author Kai Volland
- *
  */
 @Entity
 @Table
 @Cacheable
-@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Image extends Module {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The path to the image;
-	 */
-	private String src;
+    /**
+     * The path to the image;
+     */
+    private String src;
 
-	/**
-	 * An optional link, if the image is clickable.
-	 */
-	private String link;
+    /**
+     * An optional link, if the image is clickable.
+     */
+    private String link;
 
-	/**
-	 * The alternative Text for the Image.
-	 */
-	private String altText;
+    /**
+     * The alternative Text for the Image.
+     */
+    private String altText;
 
-	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public Image() {
-	}
+    /**
+     * Explicitly adding the default constructor as this is important, e.g. for
+     * Hibernate: http://goo.gl/3Cr1pw
+     */
+    public Image() {
+    }
 
-	/**
-	 * @return the src
-	 */
-	public String getSrc() {
-		return src;
-	}
+    /**
+     * @return the src
+     */
+    public String getSrc() {
+        return src;
+    }
 
-	/**
-	 * @param src the src to set
-	 */
-	public void setSrc(String src) {
-		this.src = src;
-	}
+    /**
+     * @param src the src to set
+     */
+    public void setSrc(String src) {
+        this.src = src;
+    }
 
-	/**
-	 * @return the link
-	 */
-	public String getLink() {
-		return link;
-	}
+    /**
+     * @return the link
+     */
+    public String getLink() {
+        return link;
+    }
 
-	/**
-	 * @param link the link to set
-	 */
-	public void setLink(String link) {
-		this.link = link;
-	}
+    /**
+     * @param link the link to set
+     */
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	/**
-	 * @return the altText
-	 */
-	public String getAltText() {
-		return altText;
-	}
+    /**
+     * @return the altText
+     */
+    public String getAltText() {
+        return altText;
+    }
 
-	/**
-	 * @param altText the altText to set
-	 */
-	public void setAltText(String altText) {
-		this.altText = altText;
-	}
+    /**
+     * @param altText the altText to set
+     */
+    public void setAltText(String altText) {
+        this.altText = altText;
+    }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
-	 */
-	public int hashCode() {
-		// two randomly chosen prime numbers
-		return new HashCodeBuilder(7, 3).
-				appendSuper(super.hashCode()).
-				append(getSrc()).
-				append(getLink()).
-				append(getAltText()).
-				toHashCode();
-	}
+    /**
+     * @see java.lang.Object#hashCode()
+     * <p>
+     * According to
+     * http://stackoverflow.com/questions/27581/overriding-equals
+     * -and-hashcode-in-java it is recommended only to use getter-methods
+     * when using ORM like Hibernate
+     */
+    public int hashCode() {
+        // two randomly chosen prime numbers
+        return new HashCodeBuilder(7, 3).
+            appendSuper(super.hashCode()).
+            append(getSrc()).
+            append(getLink()).
+            append(getAltText()).
+            toHashCode();
+    }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
-	 */
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Image))
-			return false;
-		Image other = (Image) obj;
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     * <p>
+     * According to
+     * http://stackoverflow.com/questions/27581/overriding-equals
+     * -and-hashcode-in-java it is recommended only to use getter-methods
+     * when using ORM like Hibernate
+     */
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Image))
+            return false;
+        Image other = (Image) obj;
 
-		return new EqualsBuilder().
-				appendSuper(super.equals(other)).
-				append(getSrc(), other.getSrc()).
-				append(getLink(), other.getLink()).
-				append(getAltText(), other.getAltText()).
-				isEquals();
-	}
+        return new EqualsBuilder().
+            appendSuper(super.equals(other)).
+            append(getSrc(), other.getSrc()).
+            append(getLink(), other.getLink()).
+            append(getAltText(), other.getAltText()).
+            isEquals();
+    }
 
 }

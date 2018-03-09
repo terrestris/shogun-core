@@ -24,59 +24,58 @@ import de.terrestris.shogun2.security.access.entity.UserPermissionEvaluator;
 
 /**
  * @author Nils Bühner
- *
  */
 public class EntityPermissionEvaluatorFactory<E extends PersistentObject> {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public PersistentObjectPermissionEvaluator<E> getEntityPermissionEvaluator(
-			final Class<E> entityClass) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public PersistentObjectPermissionEvaluator<E> getEntityPermissionEvaluator(
+        final Class<E> entityClass) {
 
-		if(PermissionCollection.class.isAssignableFrom(entityClass)) {
-			return new PermissionCollectionPermissionEvaluator();
-		}
+        if (PermissionCollection.class.isAssignableFrom(entityClass)) {
+            return new PermissionCollectionPermissionEvaluator();
+        }
 
-		if(User.class.isAssignableFrom(entityClass)) {
-			return new UserPermissionEvaluator();
-		}
+        if (User.class.isAssignableFrom(entityClass)) {
+            return new UserPermissionEvaluator();
+        }
 
-		if(UserGroup.class.isAssignableFrom(entityClass)) {
-			return new UserGroupPermissionEvaluator();
-		}
+        if (UserGroup.class.isAssignableFrom(entityClass)) {
+            return new UserGroupPermissionEvaluator();
+        }
 
-		// The following types (and subclasses) may be READ by everyone
-		// by default. If a type is not listed here, explicit Permissions
-		// have to be set for the entities of these types.
-		//
-		// NOT listed here (and therefore "fully secured") are the following
-		// classes AND (!) their subclasses:
-		//
-		// * Layer
-		// * Application
-		// * File
-		// * Person
-		// * UserGroup
-		if(Extent.class.isAssignableFrom(entityClass) ||
-			InterceptorRule.class.isAssignableFrom(entityClass) ||
-			LayerAppearance.class.isAssignableFrom(entityClass) ||
-			LayerDataSource.class.isAssignableFrom(entityClass) ||
-			Layout.class.isAssignableFrom(entityClass) ||
-			MapConfig.class.isAssignableFrom(entityClass) ||
-			MapControl.class.isAssignableFrom(entityClass) ||
-			Module.class.isAssignableFrom(entityClass) ||
-			Role.class.isAssignableFrom(entityClass) ||
-			TileGrid.class.isAssignableFrom(entityClass) ||
-			Token.class.isAssignableFrom(entityClass)) {
+        // The following types (and subclasses) may be READ by everyone
+        // by default. If a type is not listed here, explicit Permissions
+        // have to be set for the entities of these types.
+        //
+        // NOT listed here (and therefore "fully secured") are the following
+        // classes AND (!) their subclasses:
+        //
+        // * Layer
+        // * Application
+        // * File
+        // * Person
+        // * UserGroup
+        if (Extent.class.isAssignableFrom(entityClass) ||
+            InterceptorRule.class.isAssignableFrom(entityClass) ||
+            LayerAppearance.class.isAssignableFrom(entityClass) ||
+            LayerDataSource.class.isAssignableFrom(entityClass) ||
+            Layout.class.isAssignableFrom(entityClass) ||
+            MapConfig.class.isAssignableFrom(entityClass) ||
+            MapControl.class.isAssignableFrom(entityClass) ||
+            Module.class.isAssignableFrom(entityClass) ||
+            Role.class.isAssignableFrom(entityClass) ||
+            TileGrid.class.isAssignableFrom(entityClass) ||
+            Token.class.isAssignableFrom(entityClass)) {
 
-			// always grants READ permission (but no other permission)
-			// project specific requirements require implementations
-			// of custom permission evaluators
-			return new AlwaysAllowReadPermissionEvaluator();
-		}
+            // always grants READ permission (but no other permission)
+            // project specific requirements require implementations
+            // of custom permission evaluators
+            return new AlwaysAllowReadPermissionEvaluator();
+        }
 
-		// fall back on default implementation
-		return new PersistentObjectPermissionEvaluator<E>(entityClass);
+        // fall back on default implementation
+        return new PersistentObjectPermissionEvaluator<E>(entityClass);
 
-	}
+    }
 
 }

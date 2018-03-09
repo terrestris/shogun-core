@@ -37,137 +37,132 @@ import de.terrestris.shogun2.model.module.Module;
  * ({@link Module#setProperties(java.util.Map)})
  *
  * @author Nils Bühner
- *
  */
 @Entity
 @Table
 @Inheritance(strategy = InheritanceType.JOINED)
 @Cacheable
-@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Layout extends PersistentObject {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The type of the layout, e.g. "border", "absolute", "hbox" or "vbox".
-	 */
-	private String type;
+    /**
+     * The type of the layout, e.g. "border", "absolute", "hbox" or "vbox".
+     */
+    private String type;
 
-	/**
-	 * A set of property names that are <b>recommended</b> for the use in the
-	 * related child modules. {@link CompositeModule#getSubModules()}.
-	 */
-	@ElementCollection
-	@CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
-	@Column(name = "PROPERTYNAME")
-	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
-	private Set<String> propertyHints = new HashSet<String>();
+    /**
+     * A set of property names that are <b>recommended</b> for the use in the
+     * related child modules. {@link CompositeModule#getSubModules()}.
+     */
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
+    @Column(name = "PROPERTYNAME")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @Fetch(FetchMode.JOIN)
+    private Set<String> propertyHints = new HashSet<String>();
 
-	/**
-	 * A set of property names that are <b>required</b> for the use in the
-	 * related child modules. {@link CompositeModule#getSubModules()}.
-	 */
-	@ElementCollection
-	@CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
-	@Column(name = "PROPERTYNAME")
-	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
-	private Set<String> propertyMusts = new HashSet<String>();
+    /**
+     * A set of property names that are <b>required</b> for the use in the
+     * related child modules. {@link CompositeModule#getSubModules()}.
+     */
+    @ElementCollection
+    @CollectionTable(joinColumns = @JoinColumn(name = "LAYOUT_ID"))
+    @Column(name = "PROPERTYNAME")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @Fetch(FetchMode.JOIN)
+    private Set<String> propertyMusts = new HashSet<String>();
 
-	/**
-	 * Explicitly adding the default constructor as this is important, e.g. for
-	 * Hibernate: http://goo.gl/3Cr1pw
-	 */
-	public Layout() {
-	}
+    /**
+     * Explicitly adding the default constructor as this is important, e.g. for
+     * Hibernate: http://goo.gl/3Cr1pw
+     */
+    public Layout() {
+    }
 
-	/**
-	 *
-	 * @return
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * @return
+     */
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 *
-	 * @param type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	/**
-	 * @return the propertyHints
-	 */
-	public Set<String> getPropertyHints() {
-		return propertyHints;
-	}
+    /**
+     * @return the propertyHints
+     */
+    public Set<String> getPropertyHints() {
+        return propertyHints;
+    }
 
-	/**
-	 * @param propertyHints
-	 *            the propertyHints to set
-	 */
-	public void setPropertyHints(Set<String> propertyHints) {
-		this.propertyHints = propertyHints;
-	}
+    /**
+     * @param propertyHints the propertyHints to set
+     */
+    public void setPropertyHints(Set<String> propertyHints) {
+        this.propertyHints = propertyHints;
+    }
 
-	/**
-	 * @return the propertyMusts
-	 */
-	public Set<String> getPropertyMusts() {
-		return propertyMusts;
-	}
+    /**
+     * @return the propertyMusts
+     */
+    public Set<String> getPropertyMusts() {
+        return propertyMusts;
+    }
 
-	/**
-	 * @param propertyMusts
-	 *            the propertyMusts to set
-	 */
-	public void setPropertyMusts(Set<String> propertyMusts) {
-		this.propertyMusts = propertyMusts;
-	}
+    /**
+     * @param propertyMusts the propertyMusts to set
+     */
+    public void setPropertyMusts(Set<String> propertyMusts) {
+        this.propertyMusts = propertyMusts;
+    }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
-	 */
-	public int hashCode() {
-		// two randomly chosen prime numbers
-		return new HashCodeBuilder(13, 7).
-				appendSuper(super.hashCode()).
-				append(getType()).
-				append(getPropertyHints()).
-				append(getPropertyMusts()).
-				toHashCode();
-	}
+    /**
+     * @see java.lang.Object#hashCode()
+     * <p>
+     * According to
+     * http://stackoverflow.com/questions/27581/overriding-equals
+     * -and-hashcode-in-java it is recommended only to use getter-methods
+     * when using ORM like Hibernate
+     */
+    public int hashCode() {
+        // two randomly chosen prime numbers
+        return new HashCodeBuilder(13, 7).
+            appendSuper(super.hashCode()).
+            append(getType()).
+            append(getPropertyHints()).
+            append(getPropertyMusts()).
+            toHashCode();
+    }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 *
-	 *      According to
-	 *      http://stackoverflow.com/questions/27581/overriding-equals
-	 *      -and-hashcode-in-java it is recommended only to use getter-methods
-	 *      when using ORM like Hibernate
-	 */
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Layout))
-			return false;
-		Layout other = (Layout) obj;
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     * <p>
+     * According to
+     * http://stackoverflow.com/questions/27581/overriding-equals
+     * -and-hashcode-in-java it is recommended only to use getter-methods
+     * when using ORM like Hibernate
+     */
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Layout))
+            return false;
+        Layout other = (Layout) obj;
 
-		return new EqualsBuilder().
-				appendSuper(super.equals(other)).
-				append(getType(), other.getType()).
-				append(getPropertyHints(), other.getPropertyHints()).
-				append(getPropertyMusts(), other.getPropertyMusts()).
-				isEquals();
-	}
+        return new EqualsBuilder().
+            appendSuper(super.equals(other)).
+            append(getType(), other.getType()).
+            append(getPropertyHints(), other.getPropertyHints()).
+            append(getPropertyMusts(), other.getPropertyMusts()).
+            isEquals();
+    }
 
 }

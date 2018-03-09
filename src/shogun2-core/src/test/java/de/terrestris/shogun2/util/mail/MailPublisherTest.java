@@ -27,439 +27,428 @@ import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/mail-test-context.xml" })
+@ContextConfiguration(locations = {"classpath*:META-INF/spring/mail-test-context.xml"})
 public class MailPublisherTest {
 
-	/**
-	 * The class to test.
-	 */
-	@Autowired
-	private MailPublisher mailPublisher;
-
-	/**
-	 * A simple mail template
-	 */
-	@Autowired
-	private SimpleMailMessage registrationMailMessageTemplate;
-
-	/**
-	 * The test-suite mail server.
-	 */
-	private static GreenMail greenMail;
-
-	/**
-	 * Start the mail server before each test.
-	 */
-	@BeforeClass
-	public static void startMailServer() {
-		ServerSetup smtp = ServerSetupTest.SMTP;
-
-		// set timeout as we ran into this issue with CI:
-		// https://github.com/greenmail-mail-test/greenmail/issues/76
-		smtp.setServerStartupTimeout(3000L);
-
-		greenMail = new GreenMail(smtp);
-		greenMail.start();
-	}
-
-	/**
-	 * Stop the mail server after each test.
-	 */
-	@AfterClass
-	public static void stopMailServer() {
-		greenMail.stop();
-	}
+    /**
+     * The class to test.
+     */
+    @Autowired
+    private MailPublisher mailPublisher;
+
+    /**
+     * A simple mail template
+     */
+    @Autowired
+    private SimpleMailMessage registrationMailMessageTemplate;
 
-	/**
-	 *
-	 */
-	@After
-	@SuppressWarnings("static-method")
-	public void resetMailServer() {
-		greenMail.reset();
-	}
+    /**
+     * The test-suite mail server.
+     */
+    private static GreenMail greenMail;
+
+    /**
+     * Start the mail server before each test.
+     */
+    @BeforeClass
+    public static void startMailServer() {
+        ServerSetup smtp = ServerSetupTest.SMTP;
+
+        // set timeout as we ran into this issue with CI:
+        // https://github.com/greenmail-mail-test/greenmail/issues/76
+        smtp.setServerStartupTimeout(3000L);
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMail_minimal_configuration() throws Exception, MessagingException {
+        greenMail = new GreenMail(smtp);
+        greenMail.start();
+    }
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
+    /**
+     * Stop the mail server after each test.
+     */
+    @AfterClass
+    public static void stopMailServer() {
+        greenMail.stop();
+    }
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
+    /**
+     *
+     */
+    @After
+    @SuppressWarnings("static-method")
+    public void resetMailServer() {
+        greenMail.reset();
+    }
 
-		mailPublisher.sendMail(from, null, to, null, null, subject, msg);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMail_minimal_configuration() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMail(from, null, to, null, null, subject, msg);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(subject, messages[0].getSubject());
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-		assertEquals(msg, GreenMailUtil.getBody(messages[0]).trim());
-	}
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMail_replyTo() throws Exception, MessagingException {
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
-		String replyTo = "reply@shogun2.de";
+        assertEquals(subject, messages[0].getSubject());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
+        assertEquals(msg, GreenMailUtil.getBody(messages[0]).trim());
+    }
 
-		mailPublisher.sendMail(from, replyTo, to, null, null, subject, msg);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMail_replyTo() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
+        String replyTo = "reply@shogun2.de";
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMail(from, replyTo, to, null, null, subject, msg);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(replyTo, messages[0].getReplyTo()[0].toString());
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-	}
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMail_cc() throws Exception, MessagingException {
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
-		String[] cc = {"cc1@shogun2.de", "cc2@shogun2.de"};
+        assertEquals(replyTo, messages[0].getReplyTo()[0].toString());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
+    }
 
-		mailPublisher.sendMail(from, null, to, cc, null, subject, msg);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMail_cc() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
+        String[] cc = {"cc1@shogun2.de", "cc2@shogun2.de"};
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(3, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMail(from, null, to, cc, null, subject, msg);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(cc[0], messages[1].getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals(cc[1], messages[2].getRecipients(Message.RecipientType.CC)[1].toString());
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(3, messages.length);
 
-	}
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMail_bcc() throws Exception, MessagingException {
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {};
-		String[] bcc = {"bcc1@shogun2.de", "bcc2@shogun2.de"};
+        assertEquals(cc[0], messages[1].getRecipients(Message.RecipientType.CC)[0].toString());
+        assertEquals(cc[1], messages[2].getRecipients(Message.RecipientType.CC)[1].toString());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
+    }
 
-		mailPublisher.sendMail(from, null, to, null, bcc, subject, msg);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMail_bcc() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {};
+        String[] bcc = {"bcc1@shogun2.de", "bcc2@shogun2.de"};
 
-		// the BCC header isn't carried in the message-header, therefore we
-		// can't access it directly and we can only test if two mails were
-		// sent without having a TO-header set
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(2, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMail(from, null, to, null, bcc, subject, msg);
 
-		assertNull(messages[0].getRecipients(Message.RecipientType.TO));
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-	}
+        // the BCC header isn't carried in the message-header, therefore we
+        // can't access it directly and we can only test if two mails were
+        // sent without having a TO-header set
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(2, messages.length);
 
-	/**
-	 * @throws MessagingException
-	 *
-	 */
-	@Test
-	public void sendMail_template() throws Exception, MessagingException {
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-		String to = "to@shogun2.de";
+        assertNull(messages[0].getRecipients(Message.RecipientType.TO));
 
-		String str1 = "The Username";
-		String str2 = "http://tokenized-registration-shogun2.de";
+    }
 
-		registrationMailMessageTemplate.setTo(to);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMail_template() throws Exception, MessagingException {
 
-		registrationMailMessageTemplate.setText(
-				String.format(
-						registrationMailMessageTemplate.getText(),
-						str1,
-						str2
-				)
-		);
+        String to = "to@shogun2.de";
 
-		mailPublisher.sendMail(registrationMailMessageTemplate);
+        String str1 = "The Username";
+        String str2 = "http://tokenized-registration-shogun2.de";
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        registrationMailMessageTemplate.setTo(to);
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        registrationMailMessageTemplate.setText(
+            String.format(
+                registrationMailMessageTemplate.getText(),
+                str1,
+                str2
+            )
+        );
 
-		assertEquals(mailPublisher.getDefaultMailSender(),
-				messages[0].getFrom()[0].toString());
+        mailPublisher.sendMail(registrationMailMessageTemplate);
 
-		assertEquals(to, messages[0].getRecipients(
-				Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertTrue(GreenMailUtil.getBody(
-				messages[0]).contains(str1));
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-		assertTrue(GreenMailUtil.getBody(
-				messages[0]).contains(str2));
-	}
+        assertEquals(mailPublisher.getDefaultMailSender(),
+            messages[0].getFrom()[0].toString());
 
-	/**
-	 * @throws MessagingException
-	 *
-	 */
-	@Test
-	public void sendMimeMail_minimal_configuration() throws Exception, MessagingException {
+        assertEquals(to, messages[0].getRecipients(
+            Message.RecipientType.TO)[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
+        assertTrue(GreenMailUtil.getBody(
+            messages[0]).contains(str1));
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = false;
+        assertTrue(GreenMailUtil.getBody(
+            messages[0]).contains(str2));
+    }
 
-		mailPublisher.sendMimeMail(from, null, to, null, null, subject,
-				msg, html, null, null);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMimeMail_minimal_configuration() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = false;
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMimeMail(from, null, to, null, null, subject,
+            msg, html, null, null);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(subject, messages[0].getSubject());
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-		assertEquals(msg, GreenMailUtil.getBody(messages[0]).trim());
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-		assertEquals("text/plain; charset=us-ascii", messages[0].getContentType());
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-	}
+        assertEquals(subject, messages[0].getSubject());
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMimeMail_replyTo() throws Exception, MessagingException {
+        assertEquals(msg, GreenMailUtil.getBody(messages[0]).trim());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
-		String replyTo = "reply@shogun2.de";
+        assertEquals("text/plain; charset=us-ascii", messages[0].getContentType());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = false;
+    }
 
-		mailPublisher.sendMimeMail(from, replyTo, to, null, null, subject,
-				msg, html, null, null);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMimeMail_replyTo() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
+        String replyTo = "reply@shogun2.de";
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = false;
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMimeMail(from, replyTo, to, null, null, subject,
+            msg, html, null, null);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(replyTo, messages[0].getReplyTo()[0].toString());
-	}
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMimeMail_cc() throws Exception, MessagingException {
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
-		String[] cc = {"cc1@shogun2.de", "cc2@shogun2.de"};
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = false;
+        assertEquals(replyTo, messages[0].getReplyTo()[0].toString());
+    }
 
-		mailPublisher.sendMimeMail(from, null, to, cc, null, subject,
-				msg, html, null, null);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMimeMail_cc() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
+        String[] cc = {"cc1@shogun2.de", "cc2@shogun2.de"};
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(3, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = false;
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMimeMail(from, null, to, cc, null, subject,
+            msg, html, null, null);
 
-		assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-		assertEquals(cc[0], messages[1].getRecipients(Message.RecipientType.CC)[0].toString());
-		assertEquals(cc[1], messages[2].getRecipients(Message.RecipientType.CC)[1].toString());
-	}
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(3, messages.length);
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMimeMail_bcc() throws Exception, MessagingException {
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {};
-		String[] bcc = {"bcc1@shogun2.de", "bcc2@shogun2.de"};
+        assertEquals(to[0], messages[0].getRecipients(Message.RecipientType.TO)[0].toString());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = true;
+        assertEquals(cc[0], messages[1].getRecipients(Message.RecipientType.CC)[0].toString());
+        assertEquals(cc[1], messages[2].getRecipients(Message.RecipientType.CC)[1].toString());
+    }
 
-		mailPublisher.sendMimeMail(from, null, to, null, bcc, subject,
-				msg, html, null, null);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMimeMail_bcc() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {};
+        String[] bcc = {"bcc1@shogun2.de", "bcc2@shogun2.de"};
 
-		// the BCC header isn't carried in the message-header, therefore we
-		// can't access it directly and we can only test if two mails were
-		// sent without having a TO-header set
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(2, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = true;
 
-		assertEquals(from, messages[0].getFrom()[0].toString());
+        mailPublisher.sendMimeMail(from, null, to, null, bcc, subject,
+            msg, html, null, null);
 
-		assertNull(messages[0].getRecipients(Message.RecipientType.TO));
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-	}
+        // the BCC header isn't carried in the message-header, therefore we
+        // can't access it directly and we can only test if two mails were
+        // sent without having a TO-header set
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(2, messages.length);
 
-	/**
-	 *
-	 * @throws MessagingException
-	 */
-	@Test
-	public void sendMimeMail_html() throws Exception, MessagingException {
+        assertEquals(from, messages[0].getFrom()[0].toString());
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
+        assertNull(messages[0].getRecipients(Message.RecipientType.TO));
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = true;
+    }
 
-		mailPublisher.sendMimeMail(from, null, to, null, null, subject,
-				msg, html, null, null);
+    /**
+     * @throws MessagingException
+     */
+    @Test
+    public void sendMimeMail_html() throws Exception, MessagingException {
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = true;
 
-		assertEquals("text/html; charset=us-ascii", messages[0].getContentType());
+        mailPublisher.sendMimeMail(from, null, to, null, null, subject,
+            msg, html, null, null);
 
-	}
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-	/**
-	 *
-	 * @throws MessagingException
-	 * @throws IOException
-	 */
-	@Test
-	public void sendMimeMail_attachment() throws Exception, MessagingException, IOException {
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
 
-		String from = "from@shogun2.de";
-		String[] to = {"to@shogun2.de"};
+        assertEquals("text/html; charset=us-ascii", messages[0].getContentType());
 
-		String subject = "Kagawa!";
-		String msg = "Shinji!";
-		Boolean html = false;
+    }
 
-		ClassLoader classLoader = getClass().getClassLoader();
+    /**
+     * @throws MessagingException
+     * @throws IOException
+     */
+    @Test
+    public void sendMimeMail_attachment() throws Exception, MessagingException, IOException {
 
-		String attachmentFilename = "logo.png";
-		File attachmentFile = new File(classLoader.getResource(
-				"META-INF/logo.png").getFile());
+        String from = "from@shogun2.de";
+        String[] to = {"to@shogun2.de"};
 
-		assertTrue(attachmentFile.exists());
+        String subject = "Kagawa!";
+        String msg = "Shinji!";
+        Boolean html = false;
 
-		mailPublisher.sendMimeMail(from, null, to, null, null, subject,
-				msg, html, attachmentFilename, attachmentFile);
+        ClassLoader classLoader = getClass().getClassLoader();
 
-		// wait for max 5s for 1 email to arrive
-		// waitForIncomingEmail() is useful if you're sending stuff
-		// asynchronously in a separate thread
-		assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        String attachmentFilename = "logo.png";
+        File attachmentFile = new File(classLoader.getResource(
+            "META-INF/logo.png").getFile());
 
-		Message[] messages = greenMail.getReceivedMessages();
-		assertEquals(1, messages.length);
+        assertTrue(attachmentFile.exists());
 
-		Multipart multiPart = (Multipart) messages[0].getContent();
+        mailPublisher.sendMimeMail(from, null, to, null, null, subject,
+            msg, html, attachmentFilename, attachmentFile);
 
-		assertEquals(attachmentFilename, multiPart.getBodyPart(1).getFileName());
+        // wait for max 5s for 1 email to arrive
+        // waitForIncomingEmail() is useful if you're sending stuff
+        // asynchronously in a separate thread
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
 
-	}
+        Message[] messages = greenMail.getReceivedMessages();
+        assertEquals(1, messages.length);
+
+        Multipart multiPart = (Multipart) messages[0].getContent();
+
+        assertEquals(attachmentFilename, multiPart.getBodyPart(1).getFileName());
+
+    }
 
 }

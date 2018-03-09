@@ -26,161 +26,156 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- *
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
- *
  */
 public class OgcXmlUtil {
 
-	/**
-	 * The Logger.
-	 */
-	private static final Logger LOG = Logger.getLogger(OgcXmlUtil.class);
+    /**
+     * The Logger.
+     */
+    private static final Logger LOG = Logger.getLogger(OgcXmlUtil.class);
 
-	/**
-	 * The default charset.
-	 */
-	private static final String DEFAULT_CHARSET = "UTF-8";
+    /**
+     * The default charset.
+     */
+    private static final String DEFAULT_CHARSET = "UTF-8";
 
-	/**
-	 *
-	 * @param request
-	 * @return
-	 */
-	public static String getRequestBody(HttpServletRequest request){
+    /**
+     * @param request
+     * @return
+     */
+    public static String getRequestBody(HttpServletRequest request) {
 
-		ServletInputStream in = null;
-		String body = null;
+        ServletInputStream in = null;
+        String body = null;
 
-		try {
-			in = request.getInputStream();
+        try {
+            in = request.getInputStream();
 
-			String encoding = request.getCharacterEncoding();
-			Charset charset;
-			if (!StringUtils.isEmpty(encoding)) {
-				charset = Charset.forName(encoding);
-			} else {
-				charset = Charset.forName(DEFAULT_CHARSET);
-			}
-			body = StreamUtils.copyToString(in, charset);
-		} catch (IOException e) {
-			LOG.error("Could not read the InputStream as String: " +
-					e.getMessage());
-		} finally {
-			IOUtils.closeQuietly(in);
-		}
+            String encoding = request.getCharacterEncoding();
+            Charset charset;
+            if (!StringUtils.isEmpty(encoding)) {
+                charset = Charset.forName(encoding);
+            } else {
+                charset = Charset.forName(DEFAULT_CHARSET);
+            }
+            body = StreamUtils.copyToString(in, charset);
+        } catch (IOException e) {
+            LOG.error("Could not read the InputStream as String: " +
+                e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
 
-		return body;
+        return body;
 
-	}
+    }
 
-	/**
-	 *
-	 * @param xml
-	 * @return
-	 * @throws IOException
-	 */
-	public static Document getDocumentFromString(String xml) throws IOException {
+    /**
+     * @param xml
+     * @return
+     * @throws IOException
+     */
+    public static Document getDocumentFromString(String xml) throws IOException {
 
-		Document document = null;
+        Document document = null;
 
-		try {
-			InputSource source = new InputSource(new StringReader(xml));
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			document = builder.parse(source);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new IOException("Could not parse input body " +
-					"as XML: " + e.getMessage());
-		}
+        try {
+            InputSource source = new InputSource(new StringReader(xml));
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            document = builder.parse(source);
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new IOException("Could not parse input body " +
+                "as XML: " + e.getMessage());
+        }
 
-		return document;
+        return document;
 
-	}
+    }
 
-	/**
-	 *
-	 * @param document
-	 * @param path
-	 * @return
-	 * @throws InterceptorException
-	 */
-	public static String getPathInDocument(Document document, String path)
-			throws InterceptorException {
+    /**
+     * @param document
+     * @param path
+     * @return
+     * @throws InterceptorException
+     */
+    public static String getPathInDocument(Document document, String path)
+        throws InterceptorException {
 
-		if (document == null) {
-			throw new InterceptorException("Document may not be null");
-		}
+        if (document == null) {
+            throw new InterceptorException("Document may not be null");
+        }
 
-		if (StringUtils.isEmpty(path)) {
-			throw new InterceptorException("Missing parameter path");
-		}
+        if (StringUtils.isEmpty(path)) {
+            throw new InterceptorException("Missing parameter path");
+        }
 
-		String result;
+        String result;
 
-		try {
-			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr = xpath.compile(path);
-			result = expr.evaluate(document, XPathConstants.STRING).toString();
-		} catch (XPathExpressionException e) {
-			throw new InterceptorException("Error while selecting document " +
-					"element with XPath: " + e.getMessage());
-		}
+        try {
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            XPathExpression expr = xpath.compile(path);
+            result = expr.evaluate(document, XPathConstants.STRING).toString();
+        } catch (XPathExpressionException e) {
+            throw new InterceptorException("Error while selecting document " +
+                "element with XPath: " + e.getMessage());
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 *
-	 * @param document
-	 * @param path
-	 * @return
-	 * @throws InterceptorException
-	 */
-	public static NodeList getPathInDocumentAsNodeList(Document document, String path)
-			throws InterceptorException {
+    /**
+     * @param document
+     * @param path
+     * @return
+     * @throws InterceptorException
+     */
+    public static NodeList getPathInDocumentAsNodeList(Document document, String path)
+        throws InterceptorException {
 
-		if (document == null) {
-			throw new InterceptorException("Document may not be null");
-		}
+        if (document == null) {
+            throw new InterceptorException("Document may not be null");
+        }
 
-		if (StringUtils.isEmpty(path)) {
-			throw new InterceptorException("Missing parameter path");
-		}
+        if (StringUtils.isEmpty(path)) {
+            throw new InterceptorException("Missing parameter path");
+        }
 
-		NodeList result;
+        NodeList result;
 
-		try {
-			XPathFactory xPathfactory = XPathFactory.newInstance();
-			XPath xpath = xPathfactory.newXPath();
-			XPathExpression expr = xpath.compile(path);
-			result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-		} catch (XPathExpressionException e) {
-			throw new InterceptorException("Error while selecting document " +
-					"element with XPath: " + e.getMessage());
-		}
+        try {
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            XPathExpression expr = xpath.compile(path);
+            result = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+        } catch (XPathExpressionException e) {
+            throw new InterceptorException("Error while selecting document " +
+                "element with XPath: " + e.getMessage());
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * Return the document {@link Element} of a {@link Document}
-	 * @param doc The {@link Document} to obtain the document element from
-	 * @return
-	 */
-	public static Element getDocumentElement(Document doc) {
-		Element docElement = null;
-		if (doc != null) {
-			docElement = doc.getDocumentElement();
-			if (docElement != null) {
-				// optional, but recommended
-				// see here: http://bit.ly/1h2Ybzb
-				docElement.normalize();
-			}
-		}
-		return docElement;
-	}
+    /**
+     * Return the document {@link Element} of a {@link Document}
+     *
+     * @param doc The {@link Document} to obtain the document element from
+     * @return
+     */
+    public static Element getDocumentElement(Document doc) {
+        Element docElement = null;
+        if (doc != null) {
+            docElement = doc.getDocumentElement();
+            if (docElement != null) {
+                // optional, but recommended
+                // see here: http://bit.ly/1h2Ybzb
+                docElement.normalize();
+            }
+        }
+        return docElement;
+    }
 
 }

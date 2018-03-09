@@ -12,31 +12,31 @@ import de.terrestris.shogun2.model.module.Map;
 
 @Repository("mapDao")
 public class MapDao<E extends Map> extends
-		ModuleDao<E> {
+    ModuleDao<E> {
 
-	/**
-	 * Public default constructor for this DAO.
-	 */
-	@SuppressWarnings("unchecked")
-	public MapDao() {
-		super((Class<E>) Map.class);
-	}
+    /**
+     * Public default constructor for this DAO.
+     */
+    @SuppressWarnings("unchecked")
+    public MapDao() {
+        super((Class<E>) Map.class);
+    }
 
-	/**
-	 * Constructor that has to be called by subclasses.
-	 *
-	 * @param clazz
-	 */
-	protected MapDao(Class<E> clazz) {
-		super(clazz);
-	}
+    /**
+     * Constructor that has to be called by subclasses.
+     *
+     * @param clazz
+     */
+    protected MapDao(Class<E> clazz) {
+        super(clazz);
+    }
 
-	/**
-	 *
-	 */
-	public Set<E> findMapsWithLayer(Layer layer) throws HibernateException {
-		final List<E> resultList = this.findAllWithCollectionContaining("mapLayers", layer);
-		return new HashSet<>(resultList);
-	}
+    /**
+     *
+     */
+    public Set<E> findMapsWithLayer(Layer layer) throws HibernateException {
+        final List<E> resultList = this.findAllWithCollectionContaining("mapLayers", layer);
+        return new HashSet<>(resultList);
+    }
 
 }

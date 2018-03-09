@@ -21,27 +21,30 @@ import java.util.Map;
 @Controller
 public class HttpProxyController {
 
-	@Autowired
-	@Qualifier("httpProxyService")
-	private HttpProxyService proxyService;
+    @Autowired
+    @Qualifier("httpProxyService")
+    private HttpProxyService proxyService;
 
-	/**
-	 * Web controller mapping <i>proxy.action</i> to doProxy method. Provided parameters are passed to {@link HttpProxyService}
-	 * @param request {@link HttpServletRequest} to use in proxy (e.g. to obtain headers from)
-	 * @param baseUrl The base url of request
-	 * @param params Request params
-	 * @return ResponseEntity
-	 */
-	@RequestMapping("/proxy.action")
-	public @ResponseBody ResponseEntity<?> doProxy(HttpServletRequest request, @RequestParam String baseUrl, @RequestParam(required = false) Map<String, String> params){
-		return proxyService.doProxy(request, baseUrl, params);
-	}
+    /**
+     * Web controller mapping <i>proxy.action</i> to doProxy method. Provided parameters are passed to {@link HttpProxyService}
+     *
+     * @param request {@link HttpServletRequest} to use in proxy (e.g. to obtain headers from)
+     * @param baseUrl The base url of request
+     * @param params  Request params
+     * @return ResponseEntity
+     */
+    @RequestMapping("/proxy.action")
+    public @ResponseBody
+    ResponseEntity<?> doProxy(HttpServletRequest request, @RequestParam String baseUrl, @RequestParam(required = false) Map<String, String> params) {
+        return proxyService.doProxy(request, baseUrl, params);
+    }
 
-	/**
-	 * The setter method of {@link HttpProxyService}
-	 * @param proxyService {@link HttpProxyService} to set
-	 */
-	public void setProxyService(HttpProxyService proxyService) {
-		this.proxyService = proxyService;
-	}
+    /**
+     * The setter method of {@link HttpProxyService}
+     *
+     * @param proxyService {@link HttpProxyService} to set
+     */
+    public void setProxyService(HttpProxyService proxyService) {
+        this.proxyService = proxyService;
+    }
 }

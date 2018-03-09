@@ -21,45 +21,44 @@ import de.terrestris.shogun2.service.EndpointDocService;
 @Controller
 public class EndpointDocController {
 
-	/**
-	 * Creates RequestMappingInfo instances from type and
-	 * method-level @RequestMapping annotations in @Controller classes.
-	 */
-	@Autowired
-	@Qualifier("requestHandlerMapping")
-	private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    /**
+     * Creates RequestMappingInfo instances from type and
+     * method-level @RequestMapping annotations in @Controller classes.
+     */
+    @Autowired
+    @Qualifier("requestHandlerMapping")
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-	/**
-	 * The service layer instance
-	 */
-	@Autowired
-	@Qualifier("endpointDocService")
-	private EndpointDocService service;
+    /**
+     * The service layer instance
+     */
+    @Autowired
+    @Qualifier("endpointDocService")
+    private EndpointDocService service;
 
-	/**
-	 * Provides an overview of all mapped endpoints.
-	 */
-	@RequestMapping(value = "/endpointdoc", method = RequestMethod.GET)
-	public @ResponseBody Set<RequestMappingInfo> getEndpoints() {
+    /**
+     * Provides an overview of all mapped endpoints.
+     */
+    @RequestMapping(value = "/endpointdoc", method = RequestMethod.GET)
+    public @ResponseBody
+    Set<RequestMappingInfo> getEndpoints() {
 
-		return this.service.getEndpoints(requestMappingHandlerMapping);
-	}
+        return this.service.getEndpoints(requestMappingHandlerMapping);
+    }
 
 
-	/**
-	 * @param service
-	 *            the service to set
-	 */
-	public void setService(EndpointDocService service) {
-		this.service = service;
-	}
+    /**
+     * @param service the service to set
+     */
+    public void setService(EndpointDocService service) {
+        this.service = service;
+    }
 
-	/**
-	 * @param requestMappingHandlerMapping
-	 *            the requestMappingHandlerMapping to set
-	 */
-	public void setRequestMappingHandlerMapping(RequestMappingHandlerMapping requestMappingHandlerMapping) {
-		this.requestMappingHandlerMapping = requestMappingHandlerMapping;
-	}
+    /**
+     * @param requestMappingHandlerMapping the requestMappingHandlerMapping to set
+     */
+    public void setRequestMappingHandlerMapping(RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+    }
 
 }

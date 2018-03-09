@@ -9,40 +9,39 @@ import de.terrestris.shogun2.model.User;
 @Repository("userDao")
 public class UserDao<E extends User> extends PersonDao<E> {
 
-	/**
-	 * Public default constructor for this DAO.
-	 */
-	@SuppressWarnings("unchecked")
-	public UserDao() {
-		super((Class<E>) User.class);
-	}
+    /**
+     * Public default constructor for this DAO.
+     */
+    @SuppressWarnings("unchecked")
+    public UserDao() {
+        super((Class<E>) User.class);
+    }
 
-	/**
-	 * Constructor that has to be called by subclasses.
-	 *
-	 * @param clazz
-	 */
-	protected UserDao(Class<E> clazz) {
-		super(clazz);
-	}
+    /**
+     * Constructor that has to be called by subclasses.
+     *
+     * @param clazz
+     */
+    protected UserDao(Class<E> clazz) {
+        super(clazz);
+    }
 
-	/**
-	 *
-	 * @param accountName
-	 * @return
-	 */
-	public E findByAccountName(String accountName) {
-		SimpleExpression eqAccountName =
-			Restrictions.eq("accountName", accountName);
-		return this.findByUniqueCriteria(eqAccountName);
-	}
-	/**
-	 *
-	 * @param email
-	 * @return
-	 */
-	public E findByEmail(String email) {
-		SimpleExpression eqEmail = Restrictions.eq("email", email);
-		return this.findByUniqueCriteria(eqEmail);
-	}
+    /**
+     * @param accountName
+     * @return
+     */
+    public E findByAccountName(String accountName) {
+        SimpleExpression eqAccountName =
+            Restrictions.eq("accountName", accountName);
+        return this.findByUniqueCriteria(eqAccountName);
+    }
+
+    /**
+     * @param email
+     * @return
+     */
+    public E findByEmail(String email) {
+        SimpleExpression eqEmail = Restrictions.eq("email", email);
+        return this.findByUniqueCriteria(eqEmail);
+    }
 }

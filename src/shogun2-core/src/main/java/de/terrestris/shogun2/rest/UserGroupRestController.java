@@ -19,57 +19,56 @@ import de.terrestris.shogun2.service.UserGroupService;
 /**
  * @author Johannes Weskamm
  * @author Nils Bühner
- *
  */
 @RestController
 @RequestMapping("/groups")
 public class UserGroupRestController<E extends UserGroup, D extends UserGroupDao<E>, S extends UserGroupService<E, D>>
-		extends AbstractRestController<E, D, S> {
+    extends AbstractRestController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public UserGroupRestController() {
-		this((Class<E>) UserGroup.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public UserGroupRestController() {
+        this((Class<E>) UserGroup.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected UserGroupRestController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected UserGroupRestController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("userGroupService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("userGroupService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
-	/**
-	 * Get the users of a specific group.
-	 *
-	 * @param groupId
-	 * @return
-	 */
-	@RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
-	public ResponseEntity<Set<User>> findUsersOfGroup(@PathVariable Integer groupId) {
+    /**
+     * Get the users of a specific group.
+     *
+     * @param groupId
+     * @return
+     */
+    @RequestMapping(value = "/{groupId}/users", method = RequestMethod.GET)
+    public ResponseEntity<Set<User>> findUsersOfGroup(@PathVariable Integer groupId) {
 
-		try {
-			Set<User> groupUsersSet = this.service.getUsersOfGroup(groupId);
-			return new ResponseEntity<Set<User>>(groupUsersSet, HttpStatus.OK);
-		} catch (Exception e) {
-			LOG.error("Error finding group with id " + groupId + ": "
-					+ e.getMessage());
-			return new ResponseEntity<Set<User>>(HttpStatus.NOT_FOUND);
-		}
-	}
+        try {
+            Set<User> groupUsersSet = this.service.getUsersOfGroup(groupId);
+            return new ResponseEntity<Set<User>>(groupUsersSet, HttpStatus.OK);
+        } catch (Exception e) {
+            LOG.error("Error finding group with id " + groupId + ": "
+                + e.getMessage());
+            return new ResponseEntity<Set<User>>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

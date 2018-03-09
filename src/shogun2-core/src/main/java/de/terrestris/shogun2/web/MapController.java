@@ -22,58 +22,57 @@ import de.terrestris.shogun2.util.data.ResultSet;
 /**
  * @author Johannes Weskamm
  * @author Kai Volland
- *
  */
 @Controller
 @RequestMapping("/maps")
-public class MapController<E extends Map, D extends MapDao<E>, S extends MapService<E, D>>{
+public class MapController<E extends Map, D extends MapDao<E>, S extends MapService<E, D>> {
 
-	protected S service;
+    protected S service;
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Autowired
-	@Qualifier("mapService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Autowired
+    @Qualifier("mapService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public MapController() {
-		this((Class<E>) Map.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public MapController() {
+        this((Class<E>) Map.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete type for this controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected MapController(Class<E> type) {
-		super();
-	}
+    /**
+     * Constructor that sets the concrete type for this controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected MapController(Class<E> type) {
+        super();
+    }
 
-	/**
-	 *
-	 * @param moduleId
-	 * @param toolIds
-	 * @return
-	 */
-	@RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
-	public @ResponseBody java.util.Map<String, Object> setLayersForMap(
-			@RequestParam("mapModuleId") Integer mapModuleId,
-			@RequestParam("layerIds") List<Integer> layerIds) {
+    /**
+     * @param moduleId
+     * @param toolIds
+     * @return
+     */
+    @RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
+    public @ResponseBody
+    java.util.Map<String, Object> setLayersForMap(
+        @RequestParam("mapModuleId") Integer mapModuleId,
+        @RequestParam("layerIds") List<Integer> layerIds) {
 
-		try {
-			List<Layer> layers = this.service.setLayersForMap(mapModuleId, layerIds);
-			return ResultSet.success(layers);
-		} catch (Exception e) {
-			return ResultSet.error("Could not set Layers for Map");
-		}
-	}
+        try {
+            List<Layer> layers = this.service.setLayersForMap(mapModuleId, layerIds);
+            return ResultSet.success(layers);
+        } catch (Exception e) {
+            return ResultSet.error("Could not set Layers for Map");
+        }
+    }
 
 }

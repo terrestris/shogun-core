@@ -22,113 +22,111 @@ import de.terrestris.shogun2.service.FileService;
 import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
- *
  * @author Johannes Weskamm
  * @author Daniel Koch
- *
  */
 @Controller
 @RequestMapping("/file")
 public class FileController<E extends File, D extends FileDao<E>, S extends FileService<E, D>>
-		extends AbstractWebController<E, D, S> {
+    extends AbstractWebController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public FileController() {
-		this((Class<E>) File.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public FileController() {
+        this((Class<E>) File.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected FileController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected FileController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("fileService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("fileService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
-	/**
-	 * Persists a file as bytearray in the database
-	 *
-	 * @param uploadedFile
-	 * @return
-	 */
-	@RequestMapping(value = "/upload.action", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadFile(
-			@RequestParam("file") MultipartFile uploadedFile) {
+    /**
+     * Persists a file as bytearray in the database
+     *
+     * @param uploadedFile
+     * @return
+     */
+    @RequestMapping(value = "/upload.action", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadFile(
+        @RequestParam("file") MultipartFile uploadedFile) {
 
-		LOG.debug("Requested to upload a multipart-file");
+        LOG.debug("Requested to upload a multipart-file");
 
-		// build response map
-		Map<String, Object> responseMap = new HashMap<String, Object>();
-		try {
-			E file = service.uploadFile(uploadedFile);
-			LOG.info("Successfully uploaded file " + file.getFileName());
-			responseMap = ResultSet.success(file);
-		} catch (Exception e) {
-			LOG.error("Could not upload the file: " + e.getMessage());
-			responseMap = ResultSet.error("Could not upload the file: " +
-					e.getMessage());
-		}
+        // build response map
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        try {
+            E file = service.uploadFile(uploadedFile);
+            LOG.info("Successfully uploaded file " + file.getFileName());
+            responseMap = ResultSet.success(file);
+        } catch (Exception e) {
+            LOG.error("Could not upload the file: " + e.getMessage());
+            responseMap = ResultSet.error("Could not upload the file: " +
+                e.getMessage());
+        }
 
-		final HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
-		// rewrite the response-Map as String
-		return new ResponseEntity<>(responseMap, responseHeaders, HttpStatus.OK);
-	}
+        // rewrite the response-Map as String
+        return new ResponseEntity<>(responseMap, responseHeaders, HttpStatus.OK);
+    }
 
-	/**
-	 * Gets a file from the database by the given id
-	 *
-	 * @return
-	 * @throws SQLException
-	 */
-	@RequestMapping(value = "/get.action", method=RequestMethod.GET)
-	public ResponseEntity<?> getFile(@RequestParam Integer id) {
+    /**
+     * Gets a file from the database by the given id
+     *
+     * @return
+     * @throws SQLException
+     */
+    @RequestMapping(value = "/get.action", method = RequestMethod.GET)
+    public ResponseEntity<?> getFile(@RequestParam Integer id) {
 
-		final HttpHeaders responseHeaders = new HttpHeaders();
-		Map<String, Object> responseMap = new HashMap<String, Object>();
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        Map<String, Object> responseMap = new HashMap<String, Object>();
 
-		try {
-			File file = service.findById(id);
+        try {
+            File file = service.findById(id);
 
-			if(file == null) {
-				throw new Exception("Could not find the file with id " + id);
-			}
+            if (file == null) {
+                throw new Exception("Could not find the file with id " + id);
+            }
 
-			byte[] fileBytes = file.getFile();
+            byte[] fileBytes = file.getFile();
 
-			responseHeaders.setContentType(
-					MediaType.parseMediaType(file.getFileType()));
+            responseHeaders.setContentType(
+                MediaType.parseMediaType(file.getFileType()));
 
-			LOG.info("Successfully got the file " + file.getFileName());
+            LOG.info("Successfully got the file " + file.getFileName());
 
-			responseMap = ResultSet.success(file);
-			return new ResponseEntity<byte[]>(
-					fileBytes, responseHeaders, HttpStatus.OK);
-		} catch (Exception e) {
-			LOG.error("Could not get the file: " + e.getMessage());
-			responseMap = ResultSet.error("Could not get the file: " +
-					e.getMessage());
+            responseMap = ResultSet.success(file);
+            return new ResponseEntity<byte[]>(
+                fileBytes, responseHeaders, HttpStatus.OK);
+        } catch (Exception e) {
+            LOG.error("Could not get the file: " + e.getMessage());
+            responseMap = ResultSet.error("Could not get the file: " +
+                e.getMessage());
 
-			responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-			return new ResponseEntity<Map<String, Object>>(
-					responseMap, responseHeaders, HttpStatus.OK);
-		}
-	}
+            return new ResponseEntity<Map<String, Object>>(
+                responseMap, responseHeaders, HttpStatus.OK);
+        }
+    }
 }

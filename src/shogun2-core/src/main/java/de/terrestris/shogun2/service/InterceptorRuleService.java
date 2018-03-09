@@ -11,55 +11,52 @@ import de.terrestris.shogun2.dao.InterceptorRuleDao;
 import de.terrestris.shogun2.model.interceptor.InterceptorRule;
 
 /**
- *
+ * @param <E>
+ * @param <D>
  * @author Daniel Koch
  * @author Kai Volland
  * @author terrestris GmbH & Co. KG
- *
- * @param <E>
- * @param <D>
  */
 @Service("interceptorRuleService")
 public class InterceptorRuleService<E extends InterceptorRule, D extends InterceptorRuleDao<E>>
-		extends PermissionAwareCrudService<E, D> {
+    extends PermissionAwareCrudService<E, D> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public InterceptorRuleService() {
-		this((Class<E>) InterceptorRule.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public InterceptorRuleService() {
+        this((Class<E>) InterceptorRule.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the service.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected InterceptorRuleService(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the service.
+     * Subclasses MUST call this constructor.
+     */
+    protected InterceptorRuleService(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 *
-	 * @param service
-	 * @param event
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public List<E> findAllRulesForServiceAndEvent(String service, String event) {
-		return this.dao.findAllRulesForServiceAndEvent(service, event);
-	}
+    /**
+     * @param service
+     * @param event
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<E> findAllRulesForServiceAndEvent(String service, String event) {
+        return this.dao.findAllRulesForServiceAndEvent(service, event);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct dao here.
-	 * Otherwise, spring can not decide which dao has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("interceptorRuleDao")
-	public void setDao(D dao) {
-		this.dao = dao;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct dao here.
+     * Otherwise, spring can not decide which dao has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("interceptorRuleDao")
+    public void setDao(D dao) {
+        this.dao = dao;
+    }
 
 }
