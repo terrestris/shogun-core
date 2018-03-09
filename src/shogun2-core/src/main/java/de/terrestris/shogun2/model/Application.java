@@ -1,21 +1,11 @@
 package de.terrestris.shogun2.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import de.terrestris.shogun2.converter.PluginIdResolver;
+import de.terrestris.shogun2.model.module.CompositeModule;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -24,13 +14,10 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.joda.time.ReadableDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import de.terrestris.shogun2.converter.PluginIdResolver;
-import de.terrestris.shogun2.model.module.CompositeModule;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * This class represents a (GIS-)application, which can be opened in a browser.
@@ -110,7 +97,7 @@ public class Application extends PersistentObject {
     )
     @JsonIdentityReference(alwaysAsId = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Plugin> plugins = new ArrayList<>();
 
     /**
