@@ -79,7 +79,6 @@ public class Map extends Module {
 	)
 	@OrderColumn(name = "IDX")
 	@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-	@Fetch(FetchMode.JOIN)
 	private List<Layer> mapLayers = new ArrayList<Layer>();
 
 	/**

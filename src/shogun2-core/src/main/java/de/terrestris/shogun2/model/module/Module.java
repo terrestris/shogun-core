@@ -43,7 +43,7 @@ import de.terrestris.shogun2.model.layout.Layout;
  */
 @Entity
 @Table
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Cacheable
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Module extends PersistentObject {
