@@ -5,15 +5,17 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import de.terrestris.shogun2.util.http.HttpUtil;
-import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
@@ -26,6 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import de.terrestris.shogun2.util.http.HttpUtil;
+import de.terrestris.shogun2.util.model.Response;
 
 /**
  *
@@ -184,6 +189,18 @@ public class HttpProxyService {
 	 * @return
 	 */
 	public ResponseEntity<?> doProxy(HttpServletRequest request, String baseUrl, Map<String, String> params) {
+		return doProxy(request, baseUrl, params, true);
+	}
+
+	/**
+	 *
+	 * @param request
+	 * @param baseUrl
+	 * @param params
+	 * @return
+	 */
+	public ResponseEntity<?> doProxy(HttpServletRequest request, String baseUrl, Map<String, String> params,
+			boolean useWhitelist) {
 		LOG.debug("Intercepting a request against service '" + baseUrl + "' with parameters: " + params);
 
 		if (StringUtils.isEmpty(baseUrl) || request == null) {
@@ -206,12 +223,14 @@ public class HttpProxyService {
 			return RESPONSE_404_NOT_FOUND;
 		}
 
-		// check if URI is contained in whitelist
-		final boolean isInWhiteList = isInWhiteList(url);
+		if (useWhitelist) {
+			// check if URI is contained in whitelist
+			final boolean isInWhiteList = isInWhiteList(url);
 
-		if (!isInWhiteList) {
-			LOG.warn(ERR_MSG_502);
-			return RESPONSE_502_BAD_GATEWAY;
+			if (!isInWhiteList) {
+				LOG.warn(ERR_MSG_502);
+				return RESPONSE_502_BAD_GATEWAY;
+			}
 		}
 
 		// build request for params and baseUrl;
