@@ -1,11 +1,14 @@
 package de.terrestris.shogun2.model.layer.util;
 
-import de.terrestris.shogun2.model.layer.util.TileGrid;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * Class representing a WMTS tile grid
@@ -16,52 +19,54 @@ import javax.persistence.Table;
 @Table
 public class WmtsTileGrid extends TileGrid {
 
-	// String array holding the matrix IDs.
-	private String[] matrixIds;
+    // String list holding the matrix IDs.
+    @ElementCollection(targetClass = String.class)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private List<String> matrixIds;
 
-	/**
-	 *
-	 * @return the matrix IDs.
-	 */
-	public String[] getMatrixIds() {
-		return matrixIds;
-	}
+    /**
+     * @return the matrix IDs.
+     */
+    public List<String> getMatrixIds() {
+        return matrixIds;
+    }
 
-	/**
-	 * Setter for matrix IDs
-	 * @param matrixIds The matrix IDs to set
-	 */
-	public void setMatrixIds(String[] matrixIds) {
-		this.matrixIds = matrixIds;
-	}
+    /**
+     * Setter for matrix IDs
+     *
+     * @param matrixIds The list of matrix IDs to set
+     */
+    public void setMatrixIds(List<String> matrixIds) {
+        this.matrixIds = matrixIds;
+    }
 
-	@Override
-	public int hashCode() {
-		// two randomly chosen prime numbers
-		return new HashCodeBuilder(89, 29).
-				appendSuper(super.hashCode()).
-				append(getMatrixIds()).
-				toHashCode();
-	}
+    @Override
+    public int hashCode() {
+        // two randomly chosen prime numbers
+        return new HashCodeBuilder(89, 29).
+            appendSuper(super.hashCode()).
+            append(getMatrixIds()).
+            toHashCode();
+    }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * <p>
-	 * According to
-	 * http://stackoverflow.com/questions/27581/overriding-equals
-	 * -and-hashcode-in-java it is recommended only to use getter-methods
-	 * when using ORM like Hibernate
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof WmtsTileGrid))
-			return false;
-		WmtsTileGrid other = (WmtsTileGrid) obj;
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     * <p>
+     * According to
+     * http://stackoverflow.com/questions/27581/overriding-equals
+     * -and-hashcode-in-java it is recommended only to use getter-methods
+     * when using ORM like Hibernate
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof WmtsTileGrid))
+            return false;
+        WmtsTileGrid other = (WmtsTileGrid) obj;
 
-		return new EqualsBuilder().
-				appendSuper(super.equals(other)).
-				append(getMatrixIds(), other.getMatrixIds()).
-				isEquals();
-	}
+        return new EqualsBuilder().
+            appendSuper(super.equals(other)).
+            append(getMatrixIds(), other.getMatrixIds()).
+            isEquals();
+    }
 
 }
