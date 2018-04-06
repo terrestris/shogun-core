@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.0.1 (2018-04-06)
+* Changes:
+  * Enhance models of WMTS layers. See [here](https://github.com/terrestris/shogun2/pull/310).
+  * Make usage of whitelist in HTTPProxy optional. See [here](https://github.com/terrestris/shogun2/pull/308).
+
 ## 1.0.0 (2018-03-09)
 * Changes:
   * Use different hibernate inheritance strategy to fix scaling issues. See [here](https://github.com/terrestris/shogun2/pull/303).
