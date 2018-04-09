@@ -1,21 +1,16 @@
 package de.terrestris.shogun2.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
+import de.terrestris.shogun2.dao.InterceptorRuleDao;
+import de.terrestris.shogun2.model.interceptor.InterceptorRule;
+import de.terrestris.shogun2.util.enumeration.HttpEnum;
+import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
+import de.terrestris.shogun2.util.http.HttpUtil;
+import de.terrestris.shogun2.util.interceptor.InterceptorException;
+import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
+import de.terrestris.shogun2.util.interceptor.OgcMessage;
+import de.terrestris.shogun2.util.interceptor.OgcMessageDistributor;
+import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.http.HttpException;
@@ -33,17 +28,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import de.terrestris.shogun2.dao.InterceptorRuleDao;
-import de.terrestris.shogun2.model.interceptor.InterceptorRule;
-import de.terrestris.shogun2.util.enumeration.HttpEnum;
-import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
-import de.terrestris.shogun2.util.enumeration.OgcEnum;
-import de.terrestris.shogun2.util.http.HttpUtil;
-import de.terrestris.shogun2.util.interceptor.InterceptorException;
-import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
-import de.terrestris.shogun2.util.interceptor.OgcMessage;
-import de.terrestris.shogun2.util.interceptor.OgcMessageDistributor;
-import de.terrestris.shogun2.util.model.Response;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpUtil.class)
@@ -555,6 +552,7 @@ public class GeoServerInterceptorServiceTest {
 		}
 
 		String[] testRules = new String[] {
+            service + ",,," + event + ",DENY",
 				service + ",GetMap,bvb:hummels," + event + ",ALLOW",
 				service + ",GetFeatureInfo,bvb:shinji," + event + ",MODIFY",
 				service + ",GetMap,bvb:shinji," + event + ",DENY",
@@ -563,7 +561,6 @@ public class GeoServerInterceptorServiceTest {
 				service + ",GetMap,," + event + ",ALLOW",
 				service + ",GetFeatureInfo,," + event + ",DENY",
 				service + ",GetStyles,bvb:yarmolenko," + event + ",MODIFY",
-				service + ",,," + event + ",DENY",
 		};
 
 		for (String testRule : testRules) {

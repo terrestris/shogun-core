@@ -1,23 +1,13 @@
 package de.terrestris.shogun2.service;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.Predicate;
+import de.terrestris.shogun2.model.interceptor.InterceptorRule;
+import de.terrestris.shogun2.util.enumeration.HttpEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
+import de.terrestris.shogun2.util.enumeration.OgcEnum.OperationType;
+import de.terrestris.shogun2.util.enumeration.OgcEnum.ServiceType;
+import de.terrestris.shogun2.util.http.HttpUtil;
+import de.terrestris.shogun2.util.interceptor.*;
+import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.NameValuePair;
@@ -30,18 +20,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.model.interceptor.InterceptorRule;
-import de.terrestris.shogun2.util.enumeration.HttpEnum;
-import de.terrestris.shogun2.util.enumeration.OgcEnum;
-import de.terrestris.shogun2.util.enumeration.OgcEnum.OperationType;
-import de.terrestris.shogun2.util.enumeration.OgcEnum.ServiceType;
-import de.terrestris.shogun2.util.http.HttpUtil;
-import de.terrestris.shogun2.util.interceptor.InterceptorException;
-import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
-import de.terrestris.shogun2.util.interceptor.OgcMessage;
-import de.terrestris.shogun2.util.interceptor.OgcMessageDistributor;
-import de.terrestris.shogun2.util.interceptor.OgcXmlUtil;
-import de.terrestris.shogun2.util.model.Response;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -307,51 +295,42 @@ public class GeoServerInterceptorService {
 		// and the service type at all as the rule candidates are filtered by
 		// the DAO method already. the last check for service specificity found
 		// here is a fallback only.
-		Predicate<InterceptorRule> condition = new Predicate<InterceptorRule>() {
-			@Override
-			public boolean evaluate(InterceptorRule rule) {
-				// most specific: we have a rule with a matching endPoint, service and operation
-				if (Objects.equals(rule.getEndPoint(), endPoint) &&
-						Objects.equals(rule.getOperation(), operation) &&
-						Objects.equals(rule.getService(), service)) {
-					LOG.trace("  * " + rule + " is endPoint, service and operation specific.");
-					return true;
-				// service and endpoint specific: if we have a rule with a matching endPoint and
-				// service, but not with a matching operation
-				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
-						Objects.equals(rule.getService(), service)) {
-					LOG.trace("  * " + rule + " is endPoint and service specific.");
-					return true;
-				// endPoint and operation specific: if we have a rule with a matching endPoint
-				// and operation, but not with a matching service
-				} else if (Objects.equals(rule.getEndPoint(), endPoint) &&
-						Objects.equals(rule.getOperation(), operation)) {
-					LOG.trace("  * " + rule + " is endPoint and operation specific.");
-					return true;
-				// operation specific: if we have a rule with no matching
-				// endPoint, but a matching operation
-				} else if (Objects.equals(rule.getEndPoint(), null) &&
-						Objects.equals(rule.getOperation(), operation)) {
-					LOG.trace("  * " + rule + " is operation specific.");
-					return true;
-				// service specific: if we have a rule with neither a matching
-				//                   endPoint and service, but a matching service
-				} else if (Objects.equals(rule.getEndPoint(), null) &&
-						Objects.equals(rule.getOperation(), null) &&
-						Objects.equals(rule.getService(), service)) {
-					LOG.trace("  * " + rule + " rule is service specific.");
-					return true;
-				// no match at all
-				} else {
-					LOG.trace("  * " + rule + " has no match.");
-					return false;
+        HashMap<InterceptorRule, Integer> ruleMap = new HashMap<>();
+        interceptorRules.stream().forEach((rule) -> {
+            int score = 0;
+            if (!Objects.equals(rule.getEndPoint(), null) && !Objects.equals(rule.getEndPoint(), endPoint) &&
+                endPoint != null) {
+                return;
+            }
+            if (!Objects.equals(rule.getService(), null) && !Objects.equals(rule.getService(), service) &&
+                service != null) {
+                return;
+            }
+            if (!Objects.equals(rule.getOperation(), null) && !Objects.equals(rule.getOperation(), operation) &&
+                operation != null) {
+                return;
+            }
+            if (endPoint != null && Objects.equals(rule.getEndPoint(), endPoint)) {
+                ++score;
 				}
+            if (operation != null && Objects.equals(rule.getOperation(), operation)) {
+                ++score;
 			}
-		};
+            if (service != null && Objects.equals(rule.getService(), service)) {
+                ++score;
+            }
+            ruleMap.put(rule, score);
+        });
 
-		// filter the input rules to get the most specific one
-		InterceptorRule mostSpecificRule = IterableUtils.find(
-				interceptorRules, condition);
+        AtomicReference<Integer> biggestScore = new AtomicReference<>(0);
+        AtomicReference<InterceptorRule> mostSpecific = new AtomicReference<>();
+
+        ruleMap.entrySet().stream().forEach((entry) -> {
+            if (entry.getValue() > biggestScore.get()) {
+                mostSpecific.set(entry.getKey());
+                biggestScore.set(entry.getValue());
+            }
+        });
 
 		if (interceptorRules.size() == 0) {
 			LOG.error("Got no interceptor rules for this request/response. " +
@@ -361,10 +340,10 @@ public class GeoServerInterceptorService {
 			throw new InterceptorException("No interceptor rule found.");
 		} else if(LOG.isTraceEnabled()) {
 			LOG.trace("Identified the following rule as most the specific " +
-					"one: " + mostSpecificRule);
+                "one: " + mostSpecific.get());
 		}
 
-		return mostSpecificRule;
+        return mostSpecific.get();
 	}
 
 	/**
