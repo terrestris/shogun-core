@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.0.2 (2018-04-09)
+
+* Changes:
+  * Fix determination of most specific rule. See [here](https://github.com/terrestris/shogun2/pull/312).
+
 ## 1.0.1 (2018-04-06)
 * Changes:
   * Enhance models of WMTS layers. See [here](https://github.com/terrestris/shogun2/pull/310).
