@@ -292,24 +292,37 @@ public class GeoServerInterceptorService {
         HashMap<InterceptorRule, Integer> ruleMap = new HashMap<>();
         interceptorRules.stream().forEach((rule) -> {
             int score = 0;
-            if (rule.getEndPoint() != null) {
+            if (!Objects.equals(rule.getEndPoint(), null) && !Objects.equals(rule.getEndPoint(), endPoint) &&
+                endPoint != null) {
+                return;
+            }
+            if (!Objects.equals(rule.getService(), null) && !Objects.equals(rule.getService(), service) &&
+                service != null) {
+                return;
+            }
+            if (!Objects.equals(rule.getOperation(), null) && !Objects.equals(rule.getOperation(), operation) &&
+                operation != null) {
+                return;
+            }
+            if (endPoint != null && Objects.equals(rule.getEndPoint(), endPoint)) {
                 ++score;
             }
-            if (rule.getOperation() != null) {
+            if (operation != null && Objects.equals(rule.getOperation(), operation)) {
                 ++score;
             }
-            if (rule.getService() != null) {
+            if (service != null && Objects.equals(rule.getService(), service)) {
                 ++score;
             }
             ruleMap.put(rule, score);
         });
 
-        int biggestScore = 0;
+        AtomicReference<Integer> biggestScore = new AtomicReference<>(0);
         AtomicReference<InterceptorRule> mostSpecific = new AtomicReference<>();
 
         ruleMap.entrySet().stream().forEach((entry) -> {
-            if (entry.getValue() > biggestScore) {
+            if (entry.getValue() > biggestScore.get()) {
                 mostSpecific.set(entry.getKey());
+                biggestScore.set(entry.getValue());
             }
         });
 
