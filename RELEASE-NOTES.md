@@ -1,6 +1,30 @@
 # Release Notes
 
-## 0.1.5 (XXXX-XX-XX)
+## 0.1.7 (2018-04-09)
+
+* Changes:
+  * Fix determination of most specific rule. See [here](https://github.com/terrestris/shogun2/pull/313).
+
+## 0.1.6 (2018-03-27)
+
+* Changes:
+  * Make usage of whitelist in HTTPProxy optional. See [here](https://github.com/terrestris/shogun2/pull/308).
+
+## 0.1.5 (2018-03-07)
+
+* New features:
+  * Added simple ldap service. See [here](https://github.com/terrestris/shogun2/pull/305).
+  * Enhanced XML utils. See [here](https://github.com/terrestris/shogun2/pull/306).
+  * Allow configurable sparse output of REST GET requests. See [here](https://github.com/terrestris/shogun2/pull/235).
+  * Introduce HTTP-forward-proxy. See [here](https://github.com/terrestris/shogun2/pull/287).
+  * Updated dependencies. See [here](https://github.com/terrestris/shogun2/pull/293), [here](https://github.com/terrestris/shogun2/pull/296) and [here](https://github.com/terrestris/shogun2/pull/297).
+  * Added hibernate caching. See [here](https://github.com/terrestris/shogun2/pull/295) and [here](https://github.com/terrestris/shogun2/pull/289).
+* Changes:
+  * Made #getHeadersFromRequest public. See [here](https://github.com/terrestris/shogun2/pull/301).
+  * Removed unused version property. See [here](https://github.com/terrestris/shogun2/pull/302).
+  * Fixed proxy messages. See [here](https://github.com/terrestris/shogun2/pull/300) and [here](https://github.com/terrestris/shogun2/pull/299).
+  * Avoid exceptions during tests. See [here](https://github.com/terrestris/shogun2/pull/292).
+  * Fixed used repositories. See [here](https://github.com/terrestris/shogun2/pull/291).
 
 ## 0.1.4 (2018-01-22)
 
