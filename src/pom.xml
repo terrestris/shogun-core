@@ -27,7 +27,7 @@
         <url>https://github.com/terrestris/shogun2</url>
         <connection>scm:git:git://github.com/terrestris/shogun2.git</connection>
         <developerConnection>scm:git:git@github.com:terrestris/shogun2.git</developerConnection>
-        <tag>v1.0.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <ciManagement>
