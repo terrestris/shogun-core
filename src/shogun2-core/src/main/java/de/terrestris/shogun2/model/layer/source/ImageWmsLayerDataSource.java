@@ -1,6 +1,7 @@
 package de.terrestris.shogun2.model.layer.source;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -32,11 +33,13 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
     /**
      *
      */
+    @Column(length = 2048)
     private String layerNames;
 
     /**
      *
      */
+    @Column(length = 2048)
     private String layerStyles;
 
     /**
