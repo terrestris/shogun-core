@@ -42,9 +42,9 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
-            <id>ossrh</id>
-            <name>Nexus Snapshot Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>nexus.terrestris.de</id>
+            <name>SHOGun Snapshot Repository</name>
+            <url>https://nexus.terrestris.de/repository/SHOGun/</url>
         </snapshotRepository>
     </distributionManagement>
 
