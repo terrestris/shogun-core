@@ -10,7 +10,7 @@
   <pluginGroups/>
   <servers>
     <server>
-      <id>ossrh</id>
+      <id>nexus.terrestris.de</id>
       <username>${env.DEPLOY_USERNAME}</username>
       <password>${env.DEPLOY_PASSWORD}</password>
     </server>
