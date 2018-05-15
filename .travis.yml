@@ -1,25 +1,28 @@
 language: java
+
 cache:
   directories:
   - "$HOME/.m2"
 sudo: false
+
 jdk:
-- oraclejdk8
-- openjdk8
+  - oraclejdk8
+  - openjdk8
+
 env:
   global:
   - secure: mzasMrOR0nb+KjHMiOgYCHhZJKZdLeTyWO77Cau0Qlp/GJ5Brwt24zEVQr7Z7KjB92zN6lxZAXNqAyS4MTrMDRTI2wR9d1XAYCvtejhQLhRbZkxcAtJUlo/bxgptSZp6lFZJEIHMulrFsiwWEsT1R8IYML9ZIXIVvRA6WFGheXKME38K9xZTyV7ug1ORGKzjpTCTdV850q3UjKSPjpGdixRl3Eb6kVWjtAqTQV/iUVQPykAnjsQ+gb2jmaXy8T24NjMVw1BEWcW3vjTC8MnH+5FfurfERksgTIxXRmdYBstUsSaliPkaW/hYRxK+MyEABhnBV174+z8nSsSwQHo+mtH9LjqraGBAfFqmU2xcC3NKgdF9JAYb+xJ/rO300kuyZA7kXICZOT7zCw8mgkn40QBFd80Cx9O961/iNp5q88pPinz3OtSibc4zVZvlIVYZunR00mI4PP0PWPiimRSo4ziVDyd0tM/T86kBjeHjIQfgZstPg94LJKwaAwcplMzXythvuUZxnOHHXCw3e3zDnMY8L1nsDypDQ+Jv3xL930eA9+uhtGDy33VLU6fukW+x68MRMXBWJAvDv81R+JAkR+d49AtSuzitWJalceHRek4Q27duFdyfs0Pa2GNCS7hE8L48qXSBzJRS4LNBrMCBPkgSrOC3c/p1LcsIqpw3q8g=
   - secure: aYWtZoBT0rBgEbnQalut2gRS8Zpo2XKUxENLwBY+W1gdBqV5iTrM+nt1oYrre97vEZYM6ltNhzVTSiwosMJS5SzP9FOM4kDenD2AkLqP4jH8uQjtBkXi0riAjcf446j7RZ/3vvFS9Z363xUJ0KqLA0dBVp+TWiFXQYrMCA6lB4CubkvQi7q2U4EAnE6PSqvZtY5t33R+QpZ1ajXmhwdLViG6szZwlrgQQvJAcZ+CoCzWmmXwXVn/D35oS6GleO57C6yJsnAqkWvCOwrSlZ8+qZmMrDurSQW/mtuMZlWuSM5eXnxBDViIJkodKNVcsHrCuUJz76sHYmzeGAv2M9baK8fqzBW1JcCuPyXHhANohUUaHChmTSYLHhWnBiu1nc+VJgec9hI01Q2gcWMyoOMBy7g1NbE+OTlCpJLnvcFXY78KoLe41a6l6hGS7G7+nzrYFWOIGe8Ne8mQqoHtwwPrs45pz8HeDhxn66stIaeXd/VMZFJRXBqMg+neN4HtnUwTeVTG2I+DzlZZsmrzwUbZJEUtkL/H3euJWsgH3e7hj7NV71NMa9k1zkkgNb8vHfVkfXtOt44b6+XYN0of+Jn65w72eTxx/PvB5q67aebcPGQ8CeS/Yrl2SSJPk8cGeyCfh9HPWVTHNBsmq9Oruoo1U3aHBdlBHBkOYIzAq4AbeBY=
 before_script:
-- cd src/
-- mvn --batch-mode --threads 2.0C -DskipTests=true install
+  - cd src/
+  - mvn --batch-mode --threads 2.0C -DskipTests=true install
 script:
-- mvn --batch-mode --threads 2.0C --show-version clean test
+  - mvn --batch-mode --threads 2.0C --show-version clean test
 after_success:
-- mvn clean test jacoco:report coveralls:report
-- "../scripts/snapshot-release.sh > /dev/null 2>&1"
+  - mvn clean test jacoco:report coveralls:report
+  - "../scripts/snapshot-release.sh > /dev/null 2>&1"
 after_script:
-- cd ..
+  - cd ..
 notifications:
   email:
     on_success: never
