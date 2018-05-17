@@ -20,61 +20,59 @@ import de.terrestris.shogun2.service.PluginService;
 import de.terrestris.shogun2.util.data.ResultSet;
 
 /**
- *
  * @author Nils Bühner
- *
  */
 @Controller
 @RequestMapping("/plugins")
 public class PluginController<E extends Plugin, D extends PluginDao<E>, S extends PluginService<E, D>>
-		extends AbstractWebController<E, D, S> {
+    extends AbstractWebController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public PluginController() {
-		this((Class<E>) Plugin.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public PluginController() {
+        this((Class<E>) Plugin.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected PluginController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected PluginController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("pluginService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("pluginService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
-	/**
-	 * Checks in which applications the given plugin is contained (and from which it
-	 * would be removed in case of deletion).
-	 * 
-	 * @param pluginId
-	 * @return
-	 */
-	@RequestMapping(value="preCheckDelete.action", method = RequestMethod.POST)
-	public ResponseEntity<?> preCheckDelete(@RequestParam("pluginId") Integer pluginId) {
-		List<String> result = null;
-		try {
-			result = service.preCheckDelete(pluginId);
-		} catch (Exception e) {
-			final String msg = e.getMessage();
-			LOG.error("Could not pre-check plugin deletion: " + msg);
-			return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);
-	}
+    /**
+     * Checks in which applications the given plugin is contained (and from which it
+     * would be removed in case of deletion).
+     *
+     * @param pluginId
+     * @return
+     */
+    @RequestMapping(value = "preCheckDelete.action", method = RequestMethod.POST)
+    public ResponseEntity<?> preCheckDelete(@RequestParam("pluginId") Integer pluginId) {
+        List<String> result = null;
+        try {
+            result = service.preCheckDelete(pluginId);
+        } catch (Exception e) {
+            final String msg = e.getMessage();
+            LOG.error("Could not pre-check plugin deletion: " + msg);
+            return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);
+    }
 
 }

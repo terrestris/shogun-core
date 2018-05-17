@@ -5,46 +5,43 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
 
 /**
- *
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
- *
  */
 @JsonRootName(value = "workspace")
 public class RESTWorkspace extends AbstractRESTEntity {
 
-	/**
-	 *
-	 */
-	private String name;
+    /**
+     *
+     */
+    private String name;
 
-	/**
-	 * Default constructor.
-	 */
-	public RESTWorkspace() {
+    /**
+     * Default constructor.
+     */
+    public RESTWorkspace() {
 
-	}
+    }
 
-	/**
-	 * 
-	 * @param name
-	 */
-	public RESTWorkspace(String name) {
-		this.name = name;
-	}
+    /**
+     * @param name
+     */
+    public RESTWorkspace(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

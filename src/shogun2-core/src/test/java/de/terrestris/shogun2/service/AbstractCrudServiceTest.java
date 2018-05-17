@@ -41,360 +41,355 @@ import de.terrestris.shogun2.model.PersistentObject;
  * Abstract (parent) test for the {@link AbstractCrudService}.
  *
  * @author Nils Bühner
- *
  */
 public abstract class AbstractCrudServiceTest<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>> {
 
-	/**
-	 * Object that holds concrete implementations of {@link PersistentObject}
-	 * for the tests.
-	 */
-	protected E implToTest = null;
-
-	protected D dao;
-
-	@InjectMocks
-	protected S crudService;
-
-	@Before
-	public void setUp() {
-		// see here why we are mocking this way:
-		// http://stackoverflow.com/a/24302622
-		dao = mock(getDaoClass());
-		this.crudService = getCrudService();
-		// Process mock annotations
-		MockitoAnnotations.initMocks(this);
-	}
-
-	/**
-	 * This method has to be implemented by subclasses.
-	 *
-	 * @throws Exception
-	 */
-	@Before
-	public abstract void setUpImplToTest() throws Exception;
-
-	/**
-	 * This method has to be implemented by subclasses to return a concrete
-	 * implementation of the tested service.
-	 *
-	 * @return
-	 */
-	protected abstract S getCrudService();
-
-	/**
-	 * This method has to be implemented by subclasses to return the concrete
-	 * class of the dao.
-	 *
-	 * @return
-	 */
-	protected abstract Class<D> getDaoClass();
-
-
-	@After
-	public void tearDownAfterEachTest() throws Exception {
-		implToTest = null;
-	}
-
-	/**
-	 * Test whether the saveOrUpdate method <i>saves</i> a
-	 * {@link PersistentObject}, which initially has no id value.
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void saveOrUpdate_shouldSave() {
-
-		doAnswer(new Answer<Void>() {
-			public Void answer(InvocationOnMock invocation)
-					throws NoSuchFieldException, SecurityException,
-					IllegalArgumentException, IllegalAccessException {
-				E po = (E) invocation.getArguments()[0];
-
-				// set id like the dao does
-				IdHelper.setIdOnPersistentObject(po, 1);
-
-				return null;
-			}
-		}).when(dao).saveOrUpdate(implToTest);
-
-		// id has to be NULL before the service method is called
-		assertNull(implToTest.getId());
-
-		crudService.saveOrUpdate(implToTest);
-
-		// id must not be NULL after the service method is called
-		assertNotNull(implToTest.getId());
-		assertTrue(implToTest.getId() > 0);
-
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).saveOrUpdate(implToTest);
-	}
-
-	/**
-	 * Test whether
-	 * {@link AbstractCrudService#saveOrUpdate(PersistentObject)}
-	 * <i>updates</i> the modified value of a {@link PersistentObject}.
-	 *
-	 *
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void saveOrUpdate_shouldUpdate() throws NoSuchFieldException,
-			SecurityException, IllegalArgumentException,
-			IllegalAccessException, InterruptedException {
-
-		Integer id = 42;
-		ReadableDateTime created = implToTest.getCreated();
-		ReadableDateTime modified = implToTest.getModified();
-
-		IdHelper.setIdOnPersistentObject(implToTest, id);
+    /**
+     * Object that holds concrete implementations of {@link PersistentObject}
+     * for the tests.
+     */
+    protected E implToTest = null;
+
+    protected D dao;
+
+    @InjectMocks
+    protected S crudService;
+
+    @Before
+    public void setUp() {
+        // see here why we are mocking this way:
+        // http://stackoverflow.com/a/24302622
+        dao = mock(getDaoClass());
+        this.crudService = getCrudService();
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
+    }
+
+    /**
+     * This method has to be implemented by subclasses.
+     *
+     * @throws Exception
+     */
+    @Before
+    public abstract void setUpImplToTest() throws Exception;
+
+    /**
+     * This method has to be implemented by subclasses to return a concrete
+     * implementation of the tested service.
+     *
+     * @return
+     */
+    protected abstract S getCrudService();
+
+    /**
+     * This method has to be implemented by subclasses to return the concrete
+     * class of the dao.
+     *
+     * @return
+     */
+    protected abstract Class<D> getDaoClass();
+
+
+    @After
+    public void tearDownAfterEachTest() throws Exception {
+        implToTest = null;
+    }
+
+    /**
+     * Test whether the saveOrUpdate method <i>saves</i> a
+     * {@link PersistentObject}, which initially has no id value.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void saveOrUpdate_shouldSave() {
+
+        doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation)
+                throws NoSuchFieldException, SecurityException,
+                IllegalArgumentException, IllegalAccessException {
+                E po = (E) invocation.getArguments()[0];
+
+                // set id like the dao does
+                IdHelper.setIdOnPersistentObject(po, 1);
+
+                return null;
+            }
+        }).when(dao).saveOrUpdate(implToTest);
+
+        // id has to be NULL before the service method is called
+        assertNull(implToTest.getId());
+
+        crudService.saveOrUpdate(implToTest);
+
+        // id must not be NULL after the service method is called
+        assertNotNull(implToTest.getId());
+        assertTrue(implToTest.getId() > 0);
+
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).saveOrUpdate(implToTest);
+    }
+
+    /**
+     * Test whether
+     * {@link AbstractCrudService#saveOrUpdate(PersistentObject)}
+     * <i>updates</i> the modified value of a {@link PersistentObject}.
+     *
+     * @throws NoSuchFieldException
+     * @throws SecurityException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws InterruptedException
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void saveOrUpdate_shouldUpdate() throws NoSuchFieldException,
+        SecurityException, IllegalArgumentException,
+        IllegalAccessException, InterruptedException {
+
+        Integer id = 42;
+        ReadableDateTime created = implToTest.getCreated();
+        ReadableDateTime modified = implToTest.getModified();
 
-		doAnswer(new Answer<Void>() {
-			public Void answer(InvocationOnMock invocation)
-					throws NoSuchFieldException, SecurityException,
-					IllegalArgumentException, IllegalAccessException,
-					InterruptedException {
-				E po = (E) invocation.getArguments()[0];
+        IdHelper.setIdOnPersistentObject(implToTest, id);
 
-				// wait and can change the modified value
-				Thread.sleep(1);
-				po.setModified(DateTime.now());
+        doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation)
+                throws NoSuchFieldException, SecurityException,
+                IllegalArgumentException, IllegalAccessException,
+                InterruptedException {
+                E po = (E) invocation.getArguments()[0];
 
-				return null;
-			}
-		}).when(dao).saveOrUpdate(implToTest);
+                // wait and can change the modified value
+                Thread.sleep(1);
+                po.setModified(DateTime.now());
 
-		// now call the method to test
-		crudService.saveOrUpdate(implToTest);
+                return null;
+            }
+        }).when(dao).saveOrUpdate(implToTest);
 
-		// id and created should not have changed
-		assertEquals(id, implToTest.getId());
-		assertEquals(created, implToTest.getCreated());
+        // now call the method to test
+        crudService.saveOrUpdate(implToTest);
 
-		// modified should have changed
-		assertTrue(implToTest.getModified().isAfter(modified));
+        // id and created should not have changed
+        assertEquals(id, implToTest.getId());
+        assertEquals(created, implToTest.getCreated());
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).saveOrUpdate(implToTest);
-	}
-
-	/**
-	 * @throws IllegalAccessException
-	 * @throws NoSuchFieldException
-	 *
-	 */
-	@Test
-	public void findById_shouldFindExistingId() throws NoSuchFieldException,
-			IllegalAccessException {
+        // modified should have changed
+        assertTrue(implToTest.getModified().isAfter(modified));
 
-		Integer existingId = 17;
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).saveOrUpdate(implToTest);
+    }
 
-		IdHelper.setIdOnPersistentObject(implToTest, existingId);
+    /**
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
+    @Test
+    public void findById_shouldFindExistingId() throws NoSuchFieldException,
+        IllegalAccessException {
 
-		// mock dao behavior
-		doReturn(implToTest).when(dao).findById(existingId);
+        Integer existingId = 17;
 
-		// actually test
-		E result = crudService.findById(existingId);
+        IdHelper.setIdOnPersistentObject(implToTest, existingId);
 
-		assertNotNull(result);
-		assertEquals(existingId, result.getId());
+        // mock dao behavior
+        doReturn(implToTest).when(dao).findById(existingId);
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findById(existingId);
-	}
+        // actually test
+        E result = crudService.findById(existingId);
 
-	/**
-	 *
-	 */
-	@Test
-	public void saveOrUpdate_shouldReturnNullForNonExistingId() {
+        assertNotNull(result);
+        assertEquals(existingId, result.getId());
 
-		Integer nonExistingId = 42;
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findById(existingId);
+    }
 
-		// mock behaviour of dao, which is called in the service
-		doReturn(null).when(dao).findById(nonExistingId);
+    /**
+     *
+     */
+    @Test
+    public void saveOrUpdate_shouldReturnNullForNonExistingId() {
 
-		// actually test
-		E result = crudService.findById(nonExistingId);
+        Integer nonExistingId = 42;
 
-		assertNull(result);
+        // mock behaviour of dao, which is called in the service
+        doReturn(null).when(dao).findById(nonExistingId);
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findById(nonExistingId);
-	}
+        // actually test
+        E result = crudService.findById(nonExistingId);
 
-	/**
-	 * @throws IllegalAccessException
-	 * @throws NoSuchFieldException
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws InstantiationException
-	 *
-	 */
-	@SuppressWarnings({ "unchecked" })
-	@Test
-	public void findAll_shouldFindAll() throws NoSuchFieldException,
-			IllegalAccessException, InstantiationException,
-			InvocationTargetException, NoSuchMethodException {
+        assertNull(result);
 
-		final Integer id1 = 17;
-		final Integer id2 = 42;
-		List<E> persistedObjectList = new ArrayList<E>();
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findById(nonExistingId);
+    }
 
-		E obj1 = implToTest;
-		E obj2 = (E) BeanUtils.cloneBean(obj1);
+    /**
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
+    @SuppressWarnings({"unchecked"})
+    @Test
+    public void findAll_shouldFindAll() throws NoSuchFieldException,
+        IllegalAccessException, InstantiationException,
+        InvocationTargetException, NoSuchMethodException {
 
-		IdHelper.setIdOnPersistentObject(obj1, id1);
-		IdHelper.setIdOnPersistentObject(obj2, id2);
+        final Integer id1 = 17;
+        final Integer id2 = 42;
+        List<E> persistedObjectList = new ArrayList<E>();
 
-		persistedObjectList.add((E) obj1);
-		persistedObjectList.add((E) obj2);
+        E obj1 = implToTest;
+        E obj2 = (E) BeanUtils.cloneBean(obj1);
 
-		// mock dao behaviour
-		doReturn(persistedObjectList).when(dao).findAll();
+        IdHelper.setIdOnPersistentObject(obj1, id1);
+        IdHelper.setIdOnPersistentObject(obj2, id2);
 
-		// actually test
-		List<E> resultList = crudService.findAll();
+        persistedObjectList.add((E) obj1);
+        persistedObjectList.add((E) obj2);
 
-		assertNotNull(resultList);
-		assertEquals(2, resultList.size());
+        // mock dao behaviour
+        doReturn(persistedObjectList).when(dao).findAll();
 
-		Matcher<E> m1 = hasProperty("id", is(id1));
-		Matcher<E> m2 = hasProperty("id", is(id2));
+        // actually test
+        List<E> resultList = crudService.findAll();
 
-		assertThat(resultList,
-				IsIterableContainingInAnyOrder.<E> containsInAnyOrder(m1, m2));
-
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findAll();
-	}
+        assertNotNull(resultList);
+        assertEquals(2, resultList.size());
 
-	/**
-	 * @throws IllegalAccessException
-	 * @throws NoSuchFieldException
-	 *
-	 */
-	@Test
-	public void delete_shouldDelete() throws NoSuchFieldException,
-			IllegalAccessException {
+        Matcher<E> m1 = hasProperty("id", is(id1));
+        Matcher<E> m2 = hasProperty("id", is(id2));
 
-		Set<E> persistedObjects = new HashSet<E>();
-		persistedObjects.add(implToTest);
-
-		doNothing().when(dao).delete(implToTest);
+        assertThat(resultList,
+            IsIterableContainingInAnyOrder.<E>containsInAnyOrder(m1, m2));
 
-		// actually test
-		crudService.delete(implToTest);
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findAll();
+    }
 
-		// be sure that dao.delete() has been executed exactly once
-		verify(dao, times(1)).delete(implToTest);
+    /**
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
+    @Test
+    public void delete_shouldDelete() throws NoSuchFieldException,
+        IllegalAccessException {
 
-		// maybe this test can be enhanced...
-	}
+        Set<E> persistedObjects = new HashSet<E>();
+        persistedObjects.add(implToTest);
 
-	/**
-	 *
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void findAllWhereFieldEquals_shouldWorkAsExpected_withValues() {
+        doNothing().when(dao).delete(implToTest);
 
-		final String fieldName = "id";
-		final Integer value = 42;
+        // actually test
+        crudService.delete(implToTest);
 
-		doAnswer(new Answer<List<E>>() {
-			public List<E> answer(InvocationOnMock invocation)
-					throws InstantiationException, IllegalAccessException, NoSuchFieldException {
-				E po = (E) implToTest.getClass().newInstance();
+        // be sure that dao.delete() has been executed exactly once
+        verify(dao, times(1)).delete(implToTest);
 
-				// set id like the dao does
-				IdHelper.setIdOnPersistentObject(po, value);
+        // maybe this test can be enhanced...
+    }
 
-				List<E> r = new ArrayList<>();
-				r.add(po);
-				return r ;
-			}
-		}).when(dao).findAllWhereFieldEquals(fieldName, value);
+    /**
+     *
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findAllWhereFieldEquals_shouldWorkAsExpected_withValues() {
 
-		List<E> resultList = crudService.findAllWhereFieldEquals(fieldName, value);
+        final String fieldName = "id";
+        final Integer value = 42;
 
-		assertNotNull(resultList);
-		assertTrue(resultList.size() == 1);
+        doAnswer(new Answer<List<E>>() {
+            public List<E> answer(InvocationOnMock invocation)
+                throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+                E po = (E) implToTest.getClass().newInstance();
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findAllWhereFieldEquals(fieldName, value);
-	}
+                // set id like the dao does
+                IdHelper.setIdOnPersistentObject(po, value);
 
-	/**
-	 *
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void findAllWhereFieldEquals_shouldWorkAsExpected_withNull() {
+                List<E> r = new ArrayList<>();
+                r.add(po);
+                return r;
+            }
+        }).when(dao).findAllWhereFieldEquals(fieldName, value);
 
-		final String fieldName = "id";
-		final Integer value = null;
+        List<E> resultList = crudService.findAllWhereFieldEquals(fieldName, value);
 
-		doAnswer(new Answer<List<E>>() {
-			public List<E> answer(InvocationOnMock invocation)
-					throws InstantiationException, IllegalAccessException, NoSuchFieldException {
-				E po = (E) implToTest.getClass().newInstance();
+        assertNotNull(resultList);
+        assertTrue(resultList.size() == 1);
 
-				// set id like the dao does
-				IdHelper.setIdOnPersistentObject(po, value);
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findAllWhereFieldEquals(fieldName, value);
+    }
 
-				List<E> r = new ArrayList<>();
-				r.add(po);
-				return r ;
-			}
-		}).when(dao).findAllWhereFieldEquals(fieldName, value);
+    /**
+     *
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findAllWhereFieldEquals_shouldWorkAsExpected_withNull() {
 
-		List<E> resultList = crudService.findAllWhereFieldEquals(fieldName, value);
+        final String fieldName = "id";
+        final Integer value = null;
 
-		assertNotNull(resultList);
-		assertTrue(resultList.size() == 1);
+        doAnswer(new Answer<List<E>>() {
+            public List<E> answer(InvocationOnMock invocation)
+                throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+                E po = (E) implToTest.getClass().newInstance();
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findAllWhereFieldEquals(fieldName, value);
-	}
+                // set id like the dao does
+                IdHelper.setIdOnPersistentObject(po, value);
 
-	/**
-	 *
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void findAllWithCollectionContaining_shouldWorkAsExpected() {
+                List<E> r = new ArrayList<>();
+                r.add(po);
+                return r;
+            }
+        }).when(dao).findAllWhereFieldEquals(fieldName, value);
 
-		final String fieldName = "id";
-		final Integer value = 42;
+        List<E> resultList = crudService.findAllWhereFieldEquals(fieldName, value);
 
-		doAnswer(new Answer<List<E>>() {
-			public List<E> answer(InvocationOnMock invocation)
-					throws InstantiationException, IllegalAccessException, NoSuchFieldException {
-				E po = (E) implToTest.getClass().newInstance();
+        assertNotNull(resultList);
+        assertTrue(resultList.size() == 1);
 
-				// set id like the dao does
-				IdHelper.setIdOnPersistentObject(po, value);
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findAllWhereFieldEquals(fieldName, value);
+    }
 
-				List<E> r = new ArrayList<>();
-				r.add(po);
-				return r ;
-			}
-		}).when(dao).findAllWithCollectionContaining(fieldName, implToTest);
+    /**
+     *
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void findAllWithCollectionContaining_shouldWorkAsExpected() {
 
-		List<E> resultList = crudService.findAllWithCollectionContaining(fieldName, implToTest);
+        final String fieldName = "id";
+        final Integer value = 42;
 
-		assertNotNull(resultList);
-		assertTrue(resultList.size() == 1);
+        doAnswer(new Answer<List<E>>() {
+            public List<E> answer(InvocationOnMock invocation)
+                throws InstantiationException, IllegalAccessException, NoSuchFieldException {
+                E po = (E) implToTest.getClass().newInstance();
 
-		// be sure that dao method has been executed exactly once
-		verify(dao, times(1)).findAllWithCollectionContaining(fieldName, implToTest);
-	}
+                // set id like the dao does
+                IdHelper.setIdOnPersistentObject(po, value);
+
+                List<E> r = new ArrayList<>();
+                r.add(po);
+                return r;
+            }
+        }).when(dao).findAllWithCollectionContaining(fieldName, implToTest);
+
+        List<E> resultList = crudService.findAllWithCollectionContaining(fieldName, implToTest);
+
+        assertNotNull(resultList);
+        assertTrue(resultList.size() == 1);
+
+        // be sure that dao method has been executed exactly once
+        verify(dao, times(1)).findAllWithCollectionContaining(fieldName, implToTest);
+    }
 
 }

@@ -10,9 +10,9 @@
   <pluginGroups/>
   <servers>
     <server>
-      <id>ossrh</id>
-      <username>${env.SONATYPE_USERNAME}</username>
-      <password>${env.SONATYPE_PASSWORD}</password>
+      <id>nexus.terrestris.de</id>
+      <username>${env.DEPLOY_USERNAME}</username>
+      <password>${env.DEPLOY_PASSWORD}</password>
     </server>
   </servers>
   <mirrors/>

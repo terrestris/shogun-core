@@ -39,201 +39,200 @@ import de.terrestris.shogun2.service.UserService;
 
 /**
  * @author Nils Bühner
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:META-INF/spring/test-encoder-bean.xml" })
+@ContextConfiguration(locations = {"classpath*:META-INF/spring/test-encoder-bean.xml"})
 public class UserControllerTest {
 
-	private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-	@Mock(name="passwordResetTokenService")
-	private PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> tokenService;
+    @Mock(name = "passwordResetTokenService")
+    private PasswordResetTokenService<PasswordResetToken, PasswordResetTokenDao<PasswordResetToken>> tokenService;
 
-	@Mock(name="service")
-	private UserService<User, UserDao<User>> userService;
+    @Mock(name = "service")
+    private UserService<User, UserDao<User>> userService;
 
-	/**
-	 * The controller to test
-	 */
-	private UserController<User, UserDao<User>, UserService<User, UserDao<User>>> userController;
+    /**
+     * The controller to test
+     */
+    private UserController<User, UserDao<User>, UserService<User, UserDao<User>>> userController;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
 
-		// Process mock annotations
-		MockitoAnnotations.initMocks(this);
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
 
-		// init the controller to test. this is necessary as InjectMocks
-		// annotation will not work with the constructors of the controllers
-		// (entityClass). see https://goo.gl/jLbMZe
-		userController = new UserController<User, UserDao<User>, UserService<User, UserDao<User>>>();
-		userController.setService(userService);
-		userController.setPasswordResetTokenService(tokenService);
+        // init the controller to test. this is necessary as InjectMocks
+        // annotation will not work with the constructors of the controllers
+        // (entityClass). see https://goo.gl/jLbMZe
+        userController = new UserController<User, UserDao<User>, UserService<User, UserDao<User>>>();
+        userController.setService(userService);
+        userController.setPasswordResetTokenService(tokenService);
 
-		// Setup Spring test in standalone mode
-		this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
-	}
+        // Setup Spring test in standalone mode
+        this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+    }
 
-	@Test
-	public void registerUser_shouldWorkAsExpected() throws Exception {
+    @Test
+    public void registerUser_shouldWorkAsExpected() throws Exception {
 
-		String email = "test@example.com";
-		String rawPassword = "p@sSw0rd";
-		boolean isActive = false;
+        String email = "test@example.com";
+        String rawPassword = "p@sSw0rd";
+        boolean isActive = false;
 
-		// mock result
-		User registeredUser = new User();
-		registeredUser.setEmail(email);
-		registeredUser.setAccountName(email);
-		registeredUser.setPassword(passwordEncoder.encode(rawPassword));
-		registeredUser.setActive(isActive);
+        // mock result
+        User registeredUser = new User();
+        registeredUser.setEmail(email);
+        registeredUser.setAccountName(email);
+        registeredUser.setPassword(passwordEncoder.encode(rawPassword));
+        registeredUser.setActive(isActive);
 
-		// mock service
-		when(userService.registerUser(any(User.class), any(HttpServletRequest.class)))
-			.thenReturn(registeredUser);
-
-
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/register.action")
-				.param("email", email)
-				.param("password", rawPassword))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(3)))
-			.andExpect(jsonPath("$.success", is(true)))
-			.andExpect(jsonPath("$.total", is(1)))
-			.andExpect(jsonPath("$.data", containsString("You have been registered.")))
-			.andExpect(jsonPath("$.data", containsString(email)));
-
-		verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
-		verifyNoMoreInteractions(userService);
-	}
-
-	@Test
-	public void registerUser_shouldCatchExceptions() throws Exception {
-
-		String email = "test@example.com";
-		String rawPassword = "p@sSw0rd";
-
-		// mock service
-		doThrow(new Exception("errormsg"))
-			.when(userService).registerUser(any(User.class), any(HttpServletRequest.class));
+        // mock service
+        when(userService.registerUser(any(User.class), any(HttpServletRequest.class)))
+            .thenReturn(registeredUser);
 
 
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/register.action")
-				.param("email", email)
-				.param("password", rawPassword))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(2)))
-			.andExpect(jsonPath("$.success", is(false)))
-			.andExpect(jsonPath("$.message", is("Could not register a new user.")));
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/register.action")
+            .param("email", email)
+            .param("password", rawPassword))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(3)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.total", is(1)))
+            .andExpect(jsonPath("$.data", containsString("You have been registered.")))
+            .andExpect(jsonPath("$.data", containsString(email)));
 
-		verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
-		verifyNoMoreInteractions(userService);
-	}
+        verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
+        verifyNoMoreInteractions(userService);
+    }
 
-	@Test
-	public void resetPassword_shouldSendMailAsExpected() throws Exception {
+    @Test
+    public void registerUser_shouldCatchExceptions() throws Exception {
 
-		String email = "test@example.com";
+        String email = "test@example.com";
+        String rawPassword = "p@sSw0rd";
 
-		// mock service
-		doNothing()
-			.when(tokenService)
-				.sendResetPasswordMail(
-					any(HttpServletRequest.class),
-					eq(email)
-				);
+        // mock service
+        doThrow(new Exception("errormsg"))
+            .when(userService).registerUser(any(User.class), any(HttpServletRequest.class));
 
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/resetPassword.action").param("email", email))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(3)))
-			.andExpect(jsonPath("$.success", is(true)))
-			.andExpect(jsonPath("$.total", is(1)))
-			.andExpect(jsonPath("$.data", containsString("Password reset has been requested.")));
 
-		verify(tokenService, times(1)).sendResetPasswordMail(any(HttpServletRequest.class), eq(email));
-		verifyNoMoreInteractions(tokenService);
-	}
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/register.action")
+            .param("email", email)
+            .param("password", rawPassword))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(2)))
+            .andExpect(jsonPath("$.success", is(false)))
+            .andExpect(jsonPath("$.message", is("Could not register a new user.")));
 
-	@Test
-	public void resetPassword_shouldCatchExceptions() throws Exception {
+        verify(userService, times(1)).registerUser(any(User.class), any(HttpServletRequest.class));
+        verifyNoMoreInteractions(userService);
+    }
 
-		String email = "test@example.com";
+    @Test
+    public void resetPassword_shouldSendMailAsExpected() throws Exception {
 
-		// mock service
-		final String exceptionMsg = "errormsg";
-		doThrow(new RuntimeException(exceptionMsg))
-			.when(tokenService)
-				.sendResetPasswordMail(
-					any(HttpServletRequest.class),
-					eq(email)
-				);
+        String email = "test@example.com";
 
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/resetPassword.action").param("email", email))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(2)))
-			.andExpect(jsonPath("$.success", is(false)))
-			.andExpect(jsonPath("$.message", is(exceptionMsg)));
+        // mock service
+        doNothing()
+            .when(tokenService)
+            .sendResetPasswordMail(
+                any(HttpServletRequest.class),
+                eq(email)
+            );
 
-		verify(tokenService, times(1)).sendResetPasswordMail(any(HttpServletRequest.class), eq(email));
-		verifyNoMoreInteractions(tokenService);
-	}
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/resetPassword.action").param("email", email))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(3)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.total", is(1)))
+            .andExpect(jsonPath("$.data", containsString("Password reset has been requested.")));
 
-	@Test
-	public void changePassword_shouldResetPasswordAsExpected() throws Exception {
+        verify(tokenService, times(1)).sendResetPasswordMail(any(HttpServletRequest.class), eq(email));
+        verifyNoMoreInteractions(tokenService);
+    }
 
-		String password = "secret";
-		String token = "token";
+    @Test
+    public void resetPassword_shouldCatchExceptions() throws Exception {
 
-		// mock service
-		doNothing().when(tokenService).validateTokenAndUpdatePassword(password, token);
+        String email = "test@example.com";
 
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/changePassword.action")
-				.param("password", password)
-				.param("token", token))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(3)))
-			.andExpect(jsonPath("$.success", is(true)))
-			.andExpect(jsonPath("$.total", is(1)))
-			.andExpect(jsonPath("$.data", is("Your password was changed successfully.")));
+        // mock service
+        final String exceptionMsg = "errormsg";
+        doThrow(new RuntimeException(exceptionMsg))
+            .when(tokenService)
+            .sendResetPasswordMail(
+                any(HttpServletRequest.class),
+                eq(email)
+            );
 
-		verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
-		verifyNoMoreInteractions(tokenService);
-	}
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/resetPassword.action").param("email", email))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(2)))
+            .andExpect(jsonPath("$.success", is(false)))
+            .andExpect(jsonPath("$.message", is(exceptionMsg)));
 
-	@Test
-	public void changePassword_shouldCatchExceptions() throws Exception {
+        verify(tokenService, times(1)).sendResetPasswordMail(any(HttpServletRequest.class), eq(email));
+        verifyNoMoreInteractions(tokenService);
+    }
 
-		String password = "secret";
-		String token = "token";
+    @Test
+    public void changePassword_shouldResetPasswordAsExpected() throws Exception {
 
-		// mock service
-		doThrow(new RuntimeException("errormsg")).when(tokenService).validateTokenAndUpdatePassword(password, token);
+        String password = "secret";
+        String token = "token";
 
-		// Perform and test the POST-Request
-		mockMvc.perform(post("/user/changePassword.action")
-				.param("password", password)
-				.param("token", token))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(jsonPath("$.*", hasSize(2)))
-			.andExpect(jsonPath("$.success", is(false)))
-			.andExpect(jsonPath("$.message", containsString("Could not change the password.")));
+        // mock service
+        doNothing().when(tokenService).validateTokenAndUpdatePassword(password, token);
 
-		verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
-		verifyNoMoreInteractions(tokenService);
-	}
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/changePassword.action")
+            .param("password", password)
+            .param("token", token))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(3)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.total", is(1)))
+            .andExpect(jsonPath("$.data", is("Your password was changed successfully.")));
+
+        verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
+        verifyNoMoreInteractions(tokenService);
+    }
+
+    @Test
+    public void changePassword_shouldCatchExceptions() throws Exception {
+
+        String password = "secret";
+        String token = "token";
+
+        // mock service
+        doThrow(new RuntimeException("errormsg")).when(tokenService).validateTokenAndUpdatePassword(password, token);
+
+        // Perform and test the POST-Request
+        mockMvc.perform(post("/user/changePassword.action")
+            .param("password", password)
+            .param("token", token))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.*", hasSize(2)))
+            .andExpect(jsonPath("$.success", is(false)))
+            .andExpect(jsonPath("$.message", containsString("Could not change the password.")));
+
+        verify(tokenService, times(1)).validateTokenAndUpdatePassword(password, token);
+        verifyNoMoreInteractions(tokenService);
+    }
 }

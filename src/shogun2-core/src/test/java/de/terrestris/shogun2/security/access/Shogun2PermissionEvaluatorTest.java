@@ -26,297 +26,293 @@ import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFa
 
 /**
  * @author Nils Bühner
- *
  */
 public class Shogun2PermissionEvaluatorTest {
 
-	@SuppressWarnings("rawtypes")
-	@Mock
-	private EntityPermissionEvaluatorFactory permissionEvaluatorFactoryMock;
-
-	@Mock
-	private UserDao<User> userDao;
-
-	@InjectMocks
-	private Shogun2PermissionEvaluator permissionEvaluator;
-
-	@Before
-	public void setUp() {
-		// Process mock annotations
-		MockitoAnnotations.initMocks(this);
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void hasPermission_ShouldRestrictAccessIfAuthenticationIsNull() {
-		Authentication authentication = null;
-		Object targetDomainObject = new Application("Test", "Test");
-		Object permissionObject = "READ";
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
-
-		// verify
-		assertFalse(permissionResult);
-	}
-
-	/**
-	 *
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void hasPermission_ShouldRestrictAccessIfPrinicipalIsNotAUser() {
-		// mock auth object
-		Authentication authentication = mock(Authentication.class);
-		when(authentication.getPrincipal()).thenReturn("Not a User object");
-
-		PersistentObject targetDomainObject = new Application("Test", "Test");
-		String permissionObject = "READ";
-
-		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(null, targetDomainObject, Permission.fromString(permissionObject))).thenReturn(false);
-
-		// mock factory (with previously mocked evaluator)
-		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(targetDomainObject.getClass())).thenReturn(persistentObjectEvaluatorMock);
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
-
-		// verify
-		assertFalse(permissionResult);
-		verify(authentication, times(1)).getPrincipal();
-		verifyNoMoreInteractions(authentication);
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNull() {
-		// mock auth object
-		Authentication authentication = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		when(authentication.getPrincipal()).thenReturn(user);
-
-		Object targetDomainObject = null;
-		Object permissionObject = "READ";
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
-
-		// verify
-		assertFalse(permissionResult);
-		verify(authentication, times(0)).getPrincipal();
-		verifyNoMoreInteractions(authentication);
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNotAPersistentObject() {
-		// mock auth object
-		Authentication authentication = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		when(authentication.getPrincipal()).thenReturn(user);
-
-		Object targetDomainObject = "Not a persistent object";
-		Object permissionObject = "READ";
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
-
-		// verify
-		assertFalse(permissionResult);
-		verify(authentication, times(0)).getPrincipal();
-		verifyNoMoreInteractions(authentication);
-	}
-
-	/**
-	 *
-	 */
-	@Test
-	public void hasPermission_ShouldRestrictAccessIfPermissionObjectIsNotAString() {
-		// mock auth object
-		Authentication authentication = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		when(authentication.getPrincipal()).thenReturn(user);
-
-		Object targetDomainObject = new Application("Test", "Test");
-		Object permissionObject = 42; // not a string
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
-
-		// verify
-		assertFalse(permissionResult);
-		verify(authentication, times(0)).getPrincipal();
-		verifyNoMoreInteractions(authentication);
-	}
-
-	/**
-	 *
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void hasPermission_ShouldRestrictAccessForSecuredTargetDomainObjectWithoutPermissions() throws NoSuchFieldException, IllegalAccessException {
-
-		// mock auth object with user
-		Authentication authenticationMock = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		IdHelper.setIdOnPersistentObject(user, 42);
-		final Integer userId = user.getId();
-
-		when(authenticationMock.getPrincipal()).thenReturn(user);
-
-		PersistentObject targetDomainObject = new Application("Test", "Test");
-		final Class<?> domainObjectClass = targetDomainObject.getClass();
-
-		String permissionObject = "READ";
-		final Permission permission = Permission.fromString(permissionObject);
-
-		// mock evaluator for persistent object
-		final boolean expectedPermission = false;
-		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
-
-		// mock factory (with previously mocked evaluator)
-		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
-
-		// mock user service
-		when(userDao.findById(userId)).thenReturn(user);
-
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
-
-		// verify
-		assertEquals(expectedPermission, permissionResult);
-
-		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
-		verifyNoMoreInteractions(persistentObjectEvaluatorMock);
-
-		verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
-		verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
-
-		verify(userDao, times(1)).findById(userId);
-		verifyNoMoreInteractions(userDao);
-
-		verify(authenticationMock, times(1)).getPrincipal();
-		verifyNoMoreInteractions(authenticationMock);
-	}
+    @SuppressWarnings("rawtypes")
+    @Mock
+    private EntityPermissionEvaluatorFactory permissionEvaluatorFactoryMock;
+
+    @Mock
+    private UserDao<User> userDao;
+
+    @InjectMocks
+    private Shogun2PermissionEvaluator permissionEvaluator;
+
+    @Before
+    public void setUp() {
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void hasPermission_ShouldRestrictAccessIfAuthenticationIsNull() {
+        Authentication authentication = null;
+        Object targetDomainObject = new Application("Test", "Test");
+        Object permissionObject = "READ";
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
+
+        // verify
+        assertFalse(permissionResult);
+    }
+
+    /**
+     *
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Test
+    public void hasPermission_ShouldRestrictAccessIfPrinicipalIsNotAUser() {
+        // mock auth object
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn("Not a User object");
+
+        PersistentObject targetDomainObject = new Application("Test", "Test");
+        String permissionObject = "READ";
+
+        PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
+        when(persistentObjectEvaluatorMock.hasPermission(null, targetDomainObject, Permission.fromString(permissionObject))).thenReturn(false);
+
+        // mock factory (with previously mocked evaluator)
+        when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(targetDomainObject.getClass())).thenReturn(persistentObjectEvaluatorMock);
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
+
+        // verify
+        assertFalse(permissionResult);
+        verify(authentication, times(1)).getPrincipal();
+        verifyNoMoreInteractions(authentication);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNull() {
+        // mock auth object
+        Authentication authentication = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        Object targetDomainObject = null;
+        Object permissionObject = "READ";
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
+
+        // verify
+        assertFalse(permissionResult);
+        verify(authentication, times(0)).getPrincipal();
+        verifyNoMoreInteractions(authentication);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void hasPermission_ShouldRestrictAccessIfTargetDomainObjectIsNotAPersistentObject() {
+        // mock auth object
+        Authentication authentication = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        Object targetDomainObject = "Not a persistent object";
+        Object permissionObject = "READ";
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
+
+        // verify
+        assertFalse(permissionResult);
+        verify(authentication, times(0)).getPrincipal();
+        verifyNoMoreInteractions(authentication);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void hasPermission_ShouldRestrictAccessIfPermissionObjectIsNotAString() {
+        // mock auth object
+        Authentication authentication = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        Object targetDomainObject = new Application("Test", "Test");
+        Object permissionObject = 42; // not a string
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authentication, targetDomainObject, permissionObject);
+
+        // verify
+        assertFalse(permissionResult);
+        verify(authentication, times(0)).getPrincipal();
+        verifyNoMoreInteractions(authentication);
+    }
+
+    /**
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Test
+    public void hasPermission_ShouldRestrictAccessForSecuredTargetDomainObjectWithoutPermissions() throws NoSuchFieldException, IllegalAccessException {
+
+        // mock auth object with user
+        Authentication authenticationMock = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        IdHelper.setIdOnPersistentObject(user, 42);
+        final Integer userId = user.getId();
+
+        when(authenticationMock.getPrincipal()).thenReturn(user);
+
+        PersistentObject targetDomainObject = new Application("Test", "Test");
+        final Class<?> domainObjectClass = targetDomainObject.getClass();
+
+        String permissionObject = "READ";
+        final Permission permission = Permission.fromString(permissionObject);
+
+        // mock evaluator for persistent object
+        final boolean expectedPermission = false;
+        PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
+        when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
 
-	/**
-	 *
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void hasPermission_ShouldRestrictAccessForSecuredTargetDomainObjectWithPermissions() throws NoSuchFieldException, IllegalAccessException {
+        // mock factory (with previously mocked evaluator)
+        when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
 
-		// mock auth object with user
-		Authentication authenticationMock = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		IdHelper.setIdOnPersistentObject(user, 42);
-		final Integer userId = user.getId();
+        // mock user service
+        when(userDao.findById(userId)).thenReturn(user);
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
+
+        // verify
+        assertEquals(expectedPermission, permissionResult);
 
-		when(authenticationMock.getPrincipal()).thenReturn(user);
+        verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
+        verifyNoMoreInteractions(persistentObjectEvaluatorMock);
 
-		PersistentObject targetDomainObject = new Application("Test", "Test");
-		final Class<?> domainObjectClass = targetDomainObject.getClass();
+        verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
+        verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
 
-		String permissionObject = "READ";
-		final Permission permission = Permission.fromString(permissionObject);
+        verify(userDao, times(1)).findById(userId);
+        verifyNoMoreInteractions(userDao);
 
-		// mock evaluator for persistent object
-		final boolean expectedPermission = true;
-		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
+        verify(authenticationMock, times(1)).getPrincipal();
+        verifyNoMoreInteractions(authenticationMock);
+    }
 
-		// mock factory (with previously mocked evaluator)
-		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
+    /**
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Test
+    public void hasPermission_ShouldRestrictAccessForSecuredTargetDomainObjectWithPermissions() throws NoSuchFieldException, IllegalAccessException {
 
-		// mock user service
-		when(userDao.findById(userId)).thenReturn(user);
+        // mock auth object with user
+        Authentication authenticationMock = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        IdHelper.setIdOnPersistentObject(user, 42);
+        final Integer userId = user.getId();
 
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
+        when(authenticationMock.getPrincipal()).thenReturn(user);
 
-		// verify
-		assertEquals(expectedPermission, permissionResult);
+        PersistentObject targetDomainObject = new Application("Test", "Test");
+        final Class<?> domainObjectClass = targetDomainObject.getClass();
 
-		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
-		verifyNoMoreInteractions(persistentObjectEvaluatorMock);
+        String permissionObject = "READ";
+        final Permission permission = Permission.fromString(permissionObject);
 
-		verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
-		verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
+        // mock evaluator for persistent object
+        final boolean expectedPermission = true;
+        PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
+        when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
 
-		verify(userDao, times(1)).findById(userId);
-		verifyNoMoreInteractions(userDao);
+        // mock factory (with previously mocked evaluator)
+        when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
 
-		verify(authenticationMock, times(1)).getPrincipal();
-		verifyNoMoreInteractions(authenticationMock);
-	}
+        // mock user service
+        when(userDao.findById(userId)).thenReturn(user);
 
-	/**
-	 *
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test
-	public void hasPermission_ShouldUsePlainPrincipalObject() throws NoSuchFieldException, IllegalAccessException {
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
 
-		// set usePlainPrincipal to true to NOT invoke the DAO (what we want to test here)
-		permissionEvaluator.setUsePlainPrincipal(true);
+        // verify
+        assertEquals(expectedPermission, permissionResult);
 
-		// mock auth object with user
-		Authentication authenticationMock = mock(Authentication.class);
-		final User user = new User("First name", "Last Name", "accountName");
-		IdHelper.setIdOnPersistentObject(user, 42);
-		final Integer userId = user.getId();
+        verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
+        verifyNoMoreInteractions(persistentObjectEvaluatorMock);
 
-		when(authenticationMock.getPrincipal()).thenReturn(user);
+        verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
+        verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
 
-		PersistentObject targetDomainObject = new Application("Test", "Test");
-		final Class<?> domainObjectClass = targetDomainObject.getClass();
+        verify(userDao, times(1)).findById(userId);
+        verifyNoMoreInteractions(userDao);
 
-		String permissionObject = "READ";
-		final Permission permission = Permission.fromString(permissionObject);
+        verify(authenticationMock, times(1)).getPrincipal();
+        verifyNoMoreInteractions(authenticationMock);
+    }
 
-		// mock evaluator for persistent object
-		final boolean expectedPermission = true;
-		PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
-		when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
+    /**
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Test
+    public void hasPermission_ShouldUsePlainPrincipalObject() throws NoSuchFieldException, IllegalAccessException {
 
-		// mock factory (with previously mocked evaluator)
-		when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
+        // set usePlainPrincipal to true to NOT invoke the DAO (what we want to test here)
+        permissionEvaluator.setUsePlainPrincipal(true);
 
-		// mock user service
-		when(userDao.findById(userId)).thenReturn(user);
+        // mock auth object with user
+        Authentication authenticationMock = mock(Authentication.class);
+        final User user = new User("First name", "Last Name", "accountName");
+        IdHelper.setIdOnPersistentObject(user, 42);
+        final Integer userId = user.getId();
 
-		// execute method that is tested here
-		boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
+        when(authenticationMock.getPrincipal()).thenReturn(user);
 
-		// verify
-		assertEquals(expectedPermission, permissionResult);
+        PersistentObject targetDomainObject = new Application("Test", "Test");
+        final Class<?> domainObjectClass = targetDomainObject.getClass();
 
-		verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
-		verifyNoMoreInteractions(persistentObjectEvaluatorMock);
+        String permissionObject = "READ";
+        final Permission permission = Permission.fromString(permissionObject);
 
-		verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
-		verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
+        // mock evaluator for persistent object
+        final boolean expectedPermission = true;
+        PersistentObjectPermissionEvaluator persistentObjectEvaluatorMock = mock(PersistentObjectPermissionEvaluator.class);
+        when(persistentObjectEvaluatorMock.hasPermission(user, targetDomainObject, permission)).thenReturn(expectedPermission);
 
-		// the DAO should NEVER been called as we expect the plain principal
-		verify(userDao, times(0)).findById(userId);
-		verifyNoMoreInteractions(userDao);
+        // mock factory (with previously mocked evaluator)
+        when(permissionEvaluatorFactoryMock.getEntityPermissionEvaluator(domainObjectClass)).thenReturn(persistentObjectEvaluatorMock);
 
-		verify(authenticationMock, times(1)).getPrincipal();
-		verifyNoMoreInteractions(authenticationMock);
-	}
+        // mock user service
+        when(userDao.findById(userId)).thenReturn(user);
+
+        // execute method that is tested here
+        boolean permissionResult = permissionEvaluator.hasPermission(authenticationMock, targetDomainObject, permissionObject);
+
+        // verify
+        assertEquals(expectedPermission, permissionResult);
+
+        verify(persistentObjectEvaluatorMock, times(1)).hasPermission(user, targetDomainObject, permission);
+        verifyNoMoreInteractions(persistentObjectEvaluatorMock);
+
+        verify(permissionEvaluatorFactoryMock, times(1)).getEntityPermissionEvaluator(domainObjectClass);
+        verifyNoMoreInteractions(permissionEvaluatorFactoryMock);
+
+        // the DAO should NEVER been called as we expect the plain principal
+        verify(userDao, times(0)).findById(userId);
+        verifyNoMoreInteractions(userDao);
+
+        verify(authenticationMock, times(1)).getPrincipal();
+        verifyNoMoreInteractions(authenticationMock);
+    }
 
 }

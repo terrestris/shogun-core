@@ -12,38 +12,37 @@ import de.terrestris.shogun2.service.ExtentService;
 /**
  * @author Kai Volland
  * @author Nils Bühner
- *
  */
 @RestController
 @RequestMapping("/extents")
 public class ExtentRestController<E extends Extent, D extends ExtentDao<E>, S extends ExtentService<E, D>>
-		extends AbstractRestController<E, D, S> {
+    extends AbstractRestController<E, D, S> {
 
-	/**
-	 * Default constructor, which calls the type-constructor
-	 */
-	@SuppressWarnings("unchecked")
-	public ExtentRestController() {
-		this((Class<E>) Extent.class);
-	}
+    /**
+     * Default constructor, which calls the type-constructor
+     */
+    @SuppressWarnings("unchecked")
+    public ExtentRestController() {
+        this((Class<E>) Extent.class);
+    }
 
-	/**
-	 * Constructor that sets the concrete entity class for the controller.
-	 * Subclasses MUST call this constructor.
-	 */
-	protected ExtentRestController(Class<E> entityClass) {
-		super(entityClass);
-	}
+    /**
+     * Constructor that sets the concrete entity class for the controller.
+     * Subclasses MUST call this constructor.
+     */
+    protected ExtentRestController(Class<E> entityClass) {
+        super(entityClass);
+    }
 
-	/**
-	 * We have to use {@link Qualifier} to define the correct service here.
-	 * Otherwise, spring can not decide which service has to be autowired here
-	 * as there are multiple candidates.
-	 */
-	@Override
-	@Autowired
-	@Qualifier("extentService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Override
+    @Autowired
+    @Qualifier("extentService")
+    public void setService(S service) {
+        this.service = service;
+    }
 }

@@ -8,18 +8,16 @@ import de.terrestris.shogun2.model.tree.TreeFolder;
 import de.terrestris.shogun2.service.TreeFolderService;
 
 /**
- *
  * @author Nils Buehner
- *
  */
 public class TreeFolderIdResolver<E extends TreeFolder, D extends TreeFolderDao<E>, S extends TreeFolderService<E, D>> extends
-		PersistentObjectIdResolver<E, D, S> {
+    PersistentObjectIdResolver<E, D, S> {
 
-	@Override
-	@Autowired
-	@Qualifier("treeFolderService")
-	public void setService(S service) {
-		this.service = service;
-	}
+    @Override
+    @Autowired
+    @Qualifier("treeFolderService")
+    public void setService(S service) {
+        this.service = service;
+    }
 
 }
