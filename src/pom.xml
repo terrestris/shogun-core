@@ -147,7 +147,6 @@
 
         <!-- Persistence -->
         <hibernate.version>5.2.12.Final</hibernate.version>
-        <hikari-jdk7.version>2.4.11</hikari-jdk7.version>
         <hikari.version>2.7.6</hikari.version>
         <h2.version>1.4.196</h2.version>
 
@@ -247,30 +246,10 @@
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
+        <jdk.version>1.8</jdk.version>
     </properties>
 
     <profiles>
-        <!-- A profile for JDK 1.8 (and later) -->
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <jdk.version>1.8</jdk.version>
-                <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-            <dependencies>
-                <!-- Connection Pooling -->
-                <dependency>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>HikariCP</artifactId>
-                    <version>${hikari.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <!-- A profile to configure the build of the Javadocs with UMLGraph.
             This requires that 'graphviz' is installed on your system: sudo apt-get install
             graphviz -->
@@ -290,11 +269,13 @@
                                 <artifactId>umlgraph</artifactId>
                                 <version>5.6.6</version>
                             </docletArtifact>
-                            <additionalparam>${javadoc.opts}
+                            <doclint>none</doclint>
+                            <failOnError>false</failOnError>
+                            <additionalOptions>
                                 -collapsible -hide
                                 'java.*|org.joda.*|org.apache.log4j.*'
                                 -inferdep -inferrel -inferreltype
-                                'assoc' -collpackages 'java.util.*'</additionalparam>
+                                'assoc' -collpackages 'java.util.*'</additionalOptions>
                             <useStandardDocletOptions>true</useStandardDocletOptions>
                         </configuration>
                     </plugin>
@@ -468,7 +449,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <additionalparam>${javadoc.opts}</additionalparam>
+                    <doclint>none</doclint>
+                    <failOnError>false</failOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -587,6 +569,10 @@
         <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
     </dependencies>
 
@@ -1057,6 +1043,11 @@
                 <groupId>javax.cache</groupId>
                 <artifactId>cache-api</artifactId>
                 <version>${cache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
             </dependency>
 
         </dependencies>

@@ -54,9 +54,6 @@ public class FileService<E extends File, D extends FileDao<E>>
      * Method persists a given MultipartFile as a bytearray in the database
      *
      * @param file
-     * @param resize
-     * @param imageSize
-     * @return
      * @throws Exception
      */
     @PreAuthorize("isAuthenticated()")

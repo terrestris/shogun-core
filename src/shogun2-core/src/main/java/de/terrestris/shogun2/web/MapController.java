@@ -3,8 +3,11 @@
  */
 package de.terrestris.shogun2.web;
 
-import java.util.List;
-
+import de.terrestris.shogun2.dao.MapDao;
+import de.terrestris.shogun2.model.layer.Layer;
+import de.terrestris.shogun2.model.module.Map;
+import de.terrestris.shogun2.service.MapService;
+import de.terrestris.shogun2.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -13,11 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.dao.MapDao;
-import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.module.Map;
-import de.terrestris.shogun2.service.MapService;
-import de.terrestris.shogun2.util.data.ResultSet;
+import java.util.List;
 
 /**
  * @author Johannes Weskamm
@@ -57,9 +56,7 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
     }
 
     /**
-     * @param moduleId
-     * @param toolIds
-     * @return
+     *
      */
     @RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
     public @ResponseBody

@@ -1,27 +1,21 @@
 package de.terrestris.shogun2.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.util.entity.EntityUtil;
+import org.hibernate.criterion.*;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.terrestris.shogun2.dao.GenericHibernateDao;
-import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.util.entity.EntityUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This abstract service class provides basic CRUD functionality.
@@ -42,7 +36,6 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 
     /**
      * @param e
-     * @return
      */
     @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())"
         + " or (#e.id == null and hasPermission(#e, 'CREATE'))"
@@ -71,7 +64,6 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
      * not exist.
      *
      * @param id
-     * @return
      */
     @PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
     @Transactional(readOnly = true)
@@ -85,7 +77,6 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
      * non-existence would be an actual error.
      *
      * @param id
-     * @return
      */
     @PostAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(returnObject, 'READ')")
     @Transactional(readOnly = true)
@@ -94,7 +85,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
     }
 
     /**
-     * @return
+     *
      */
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
@@ -105,7 +96,7 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
     /**
      * Returns all entities, but possibly with only the passed fields set with actual values.
      *
-     * @return
+     *
      */
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     public List<E> findAllRestricted(MultiValueMap<String, String> restrictToRequest) {
@@ -134,14 +125,14 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
      * would be translated to a filter like (values are casted to the target type of the field)
      * <p>
      * <pre>
-     * (int == 1 || int == 2) && (string == 'foo') && (bool1 == false) && (bool2 == true)
+     * (int == 1 || int == 2) &amp;&amp; (string == 'foo') &amp;&amp; (bool1 == false) &amp;&amp; (bool2 == true)
      * </pre>
      * <p>
      * and return all entities that match this condition.
      * <p>
      * This will only work on simple properties of an entity.
      * <p>
-     * The optional special key {@value EntityUtil.RESTRICT_FIELDS_PARAM} can contain a
+     * The optional special key {@value EntityUtil#RESTRICT_FIELDS_PARAM} can contain a
      * comma separated list of fieldNames you want to be filled with actual values. If you
      * e.g. pass <code>output:only=id,Name</code>, the returned object will have all other
      * fields being set to null, except for <code>id</code> and <code>name</code> (Notice

@@ -137,9 +137,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
     }
 
     /**
-     * @param registrationToken
      * @param user
-     * @return
      * @throws URISyntaxException
      * @throws InvocationTargetException
      * @throws IllegalArgumentException

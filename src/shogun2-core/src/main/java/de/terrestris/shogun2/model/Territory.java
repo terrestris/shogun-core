@@ -51,8 +51,6 @@ public class Territory extends PersistentObject {
 
     /**
      * @param name
-     * @param type
-     * @param url
      */
     public Territory(String name, MultiPolygon geometry) {
         super();

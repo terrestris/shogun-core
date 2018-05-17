@@ -60,8 +60,6 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
     /**
      * Gets an image from the database by the given id
      *
-     * @return
-     * @throws SQLException
      */
     @RequestMapping(value = "/getThumbnail.action", method = RequestMethod.GET)
     public ResponseEntity<?> getThumbnail(@RequestParam Integer id) {

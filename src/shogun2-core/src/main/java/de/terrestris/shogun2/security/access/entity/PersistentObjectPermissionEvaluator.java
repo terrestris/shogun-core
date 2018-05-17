@@ -1,16 +1,15 @@
 package de.terrestris.shogun2.security.access.entity;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.model.security.PermissionCollection;
+import org.apache.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Nils Bühner
@@ -36,10 +35,8 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     }
 
     /**
-     * @param userId
      * @param entity
      * @param permission
-     * @return
      */
     public boolean hasPermission(User user, E entity, Permission permission) {
 
@@ -81,9 +78,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     }
 
     /**
-     * @param userId
      * @param userPermissionsMap
-     * @return
      */
     protected PermissionCollection extractUserPermissions(User user,
                                                           Map<User, PermissionCollection> userPermissionsMap) {
@@ -99,9 +94,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     }
 
     /**
-     * @param userId
      * @param groupPermissionsMap
-     * @return
      */
     protected PermissionCollection extractGroupPermissions(User user,
                                                            Map<UserGroup, PermissionCollection> groupPermissionsMap) {

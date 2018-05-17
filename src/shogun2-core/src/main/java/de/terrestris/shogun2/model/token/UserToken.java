@@ -1,10 +1,6 @@
 package de.terrestris.shogun2.model.token;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
+import de.terrestris.shogun2.model.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -12,7 +8,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shogun2.model.User;
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  * A {@link UserToken} instance that has a one-to-one relation to a {@link User}
@@ -56,7 +55,7 @@ public abstract class UserToken extends Token {
     /**
      * Constructor. Uses the {@link #DEFAULT_EXPIRATION_MINUTES} value.
      *
-     * @param The user.
+     * @param user The user.
      */
     protected UserToken(User user) {
         this(user, DEFAULT_EXPIRATION_MINUTES);

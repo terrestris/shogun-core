@@ -47,8 +47,6 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
 
     /**
      * @param request
-     * @return
-     * @throws IOException
      */
     @RequestMapping(value = "/geoserver.action", method = {
         RequestMethod.GET, RequestMethod.POST})

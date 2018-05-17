@@ -60,8 +60,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
     }
 
     /**
-     * @param user
-     * @return
+     *
      */
     @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#layer, 'READ')")
     @Transactional(readOnly = true)
@@ -72,9 +71,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
     /**
      * TODO secure this method!?
      *
-     * @param MapModuleId
      * @param layerIds
-     * @return
      * @throws Exception
      */
     @SuppressWarnings("unchecked")

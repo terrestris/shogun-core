@@ -3,20 +3,9 @@
  */
 package de.terrestris.shogun2.model.module;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shogun2.model.layer.Layer;
+import de.terrestris.shogun2.model.map.MapConfig;
+import de.terrestris.shogun2.model.map.MapControl;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -24,9 +13,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shogun2.model.layer.Layer;
-import de.terrestris.shogun2.model.map.MapConfig;
-import de.terrestris.shogun2.model.map.MapControl;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Class represents a
@@ -119,7 +110,7 @@ public class Map extends Module {
     }
 
     /**
-     * @param controls the controls to set
+     * @param mapControls the controls to set
      */
     public void setMapControls(Set<MapControl> mapControls) {
         this.mapControls = mapControls;

@@ -1,13 +1,18 @@
 package de.terrestris.shogun2.importer;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import de.terrestris.shogun2.importer.communication.*;
+import de.terrestris.shogun2.importer.transform.*;
+import de.terrestris.shogun2.util.http.HttpUtil;
+import de.terrestris.shogun2.util.model.Response;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.util.Zip4jConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,31 +28,13 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-import de.terrestris.shogun2.importer.communication.RESTData;
-import de.terrestris.shogun2.importer.communication.RESTImport;
-import de.terrestris.shogun2.importer.communication.RESTImportTask;
-import de.terrestris.shogun2.importer.communication.RESTImportTaskList;
-import de.terrestris.shogun2.importer.communication.RESTLayer;
-import de.terrestris.shogun2.importer.communication.RESTTargetDataStore;
-import de.terrestris.shogun2.importer.communication.RESTTargetWorkspace;
-import de.terrestris.shogun2.importer.transform.RESTGdalAddoTransform;
-import de.terrestris.shogun2.importer.transform.RESTGdalTranslateTransform;
-import de.terrestris.shogun2.importer.transform.RESTGdalWarpTransform;
-import de.terrestris.shogun2.importer.transform.RESTReprojectTransform;
-import de.terrestris.shogun2.importer.transform.RESTTransform;
-import de.terrestris.shogun2.util.http.HttpUtil;
-import de.terrestris.shogun2.util.model.Response;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.FileHeader;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Daniel Koch
@@ -89,11 +76,7 @@ public class GeoServerRESTImporter {
     }
 
     /***
-     *
-     * @param importerBaseURL
-     * @param username
-     * @param password
-     * @throws URISyntaxException
+     * Constructs a new importer with values set.
      */
     public GeoServerRESTImporter(String importerBaseURL, String username,
                                  String password) throws URISyntaxException {
@@ -116,10 +99,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param workSpaceName
-     * @param dataStoreName
-     * @return
-     * @throws Exception
+     * Create a new import job.
      */
     public RESTImport createImportJob(String workSpaceName, String dataStoreName)
         throws Exception {
@@ -167,11 +147,8 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @param taskId
-     * @param transformTask
-     * @throws HttpException
-     * @throws URISyntaxException
+     * Create a reprojection task.
+     *
      */
     public boolean createReprojectTransformTask(Integer importJobId, Integer taskId,
                                                 String sourceSrs, String targetSrs) throws URISyntaxException, HttpException {
@@ -186,14 +163,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Create and append importer task for <code>gdaladdo</code>
-     *
-     * @param importJobId
-     * @param importTaskId
-     * @param opts
-     * @param levels
-     * @return
-     * @throws HttpException
-     * @throws URISyntaxException
      */
     public boolean createGdalAddOverviewTask(Integer importJobId, Integer importTaskId,
                                              List<String> opts, List<Integer> levels) throws URISyntaxException, HttpException {
@@ -209,13 +178,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Create and append importer task for <code>gdalwarp</code>
-     *
-     * @param importJobId
-     * @param importTaskId
-     * @param optsGdalWarp
-     * @return
-     * @throws HttpException
-     * @throws URISyntaxException
      */
     public boolean createGdalWarpTask(Integer importJobId, Integer importTaskId,
                                       List<String> optsGdalWarp) throws URISyntaxException, HttpException {
@@ -228,13 +190,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Create and append importer task for <code>gdal_translate</code>
-     *
-     * @param importJobId
-     * @param importTaskId
-     * @param opts
-     * @return
-     * @throws HttpException
-     * @throws URISyntaxException
      */
     public boolean createGdalTranslateTask(Integer importJobId, Integer importTaskId,
                                            List<String> optsGdalTranslate) throws URISyntaxException, HttpException {
@@ -246,10 +201,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @param file
-     * @return
-     * @throws Exception
+     * Upload an import file.
      */
     public RESTImportTaskList uploadFile(Integer importJobId, File file, String sourceSrs) throws Exception {
 
@@ -318,12 +270,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Updates the given import task.
-     *
-     * @param importJobId
-     * @param importTask
-     * @param sourceSrs
-     * @return
-     * @throws Exception
      */
     public boolean updateImportTask(int importJobId, int importTaskId,
                                     AbstractRESTEntity updateTaskEntity) throws Exception {
@@ -352,11 +298,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Deletes an importJob.
-     *
-     * @param importJobId
-     * @return
-     * @throws HttpException
-     * @throws URISyntaxException
      */
     public boolean deleteImportJob(Integer importJobId) throws URISyntaxException, HttpException {
 
@@ -379,11 +320,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @return
-     * @throws UnsupportedEncodingException
-     * @throws URISyntaxException
-     * @throws HttpException
+     * Run a previously configured import job.
      */
     public boolean runImportJob(Integer importJobId) throws
         UnsupportedEncodingException, URISyntaxException, HttpException {
@@ -408,10 +345,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @param taskId
-     * @return
-     * @throws Exception
+     * Get a layer.
      */
     public RESTLayer getLayer(Integer importJobId, Integer taskId) throws Exception {
         Response httpResponse = HttpUtil.get(
@@ -425,10 +359,6 @@ public class GeoServerRESTImporter {
 
     /**
      * fetch all created Layers of import job
-     *
-     * @param importJobId
-     * @return
-     * @throws Exception
      */
     public List<RESTLayer> getAllImportedLayers(Integer importJobId, List<RESTImportTask> tasks) throws Exception {
         ArrayList<RESTLayer> layers = new ArrayList<RESTLayer>();
@@ -454,10 +384,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @param taskId
-     * @return
-     * @throws Exception
+     * Get the data of an import task.
      */
     public RESTData getDataOfImportTask(Integer importJobId, Integer taskId)
         throws Exception {
@@ -483,10 +410,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param importJobId
-     * @param taskId
-     * @return
-     * @throws Exception
+     * Get an import task.
      */
     public RESTImportTask getRESTImportTask(Integer importJobId, Integer taskId) throws
         Exception {
@@ -501,7 +425,6 @@ public class GeoServerRESTImporter {
 
     /**
      * @param importJobId
-     * @return
      * @throws Exception
      */
     public RESTImportTaskList getRESTImportTasks(Integer importJobId) throws Exception {
@@ -515,13 +438,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Helper method to create an importer transformTask
-     *
-     * @param importJobId
-     * @param taskId
-     * @param transformTask
-     * @return
-     * @throws URISyntaxException
-     * @throws HttpException
      */
     private boolean createTransformTask(Integer importJobId, Integer taskId, RESTTransform transformTask)
         throws URISyntaxException, HttpException {
@@ -550,13 +466,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param file
-     * @param targetCrs
-     * @return
-     * @throws ZipException
-     * @throws IOException
-     * @throws NoSuchAuthorityCodeException
-     * @throws FactoryException
+     * Add a projection file to a shapefile zip archive.
      */
     public static File addPrjFileToArchive(File file, String targetCrs)
         throws ZipException, IOException, NoSuchAuthorityCodeException, FactoryException {
@@ -600,8 +510,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Turns the CRS into a single line WKT
-     * The code within this method is a copy
-     * of {@link ShapefileDataStore#toSingleLineWKT(CoordinateReferenceSystem)}
      *
      * @param crs CoordinateReferenceSystem which should be formatted
      * @return Single line String which can be written to PRJ file
@@ -621,10 +529,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param responseBody
-     * @param clazz
-     * @return
-     * @throws Exception
+     * Convert a byte array to an importer REST entity.
      */
     private AbstractRESTEntity asEntity(byte[] responseBody, Class<?> clazz)
         throws Exception {
@@ -637,8 +542,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param entity
-     * @return
+     * Convert an object to json.
      */
     private String asJSON(Object entity) {
 
@@ -654,9 +558,7 @@ public class GeoServerRESTImporter {
     }
 
     /**
-     * @param endPoint
-     * @return
-     * @throws URISyntaxException
+     * Add an endpoint.
      */
     private URI addEndPoint(String endPoint) throws URISyntaxException {
 

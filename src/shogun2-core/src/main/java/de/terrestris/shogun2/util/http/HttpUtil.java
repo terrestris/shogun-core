@@ -792,7 +792,6 @@ public class HttpUtil {
      * @return The HTTP response as Response object.
      * @throws URISyntaxException
      * @throws HttpException
-     * @throws UnsupportedEncodingException
      */
     public static Response post(URI uri, String body, ContentType contentType)
         throws URISyntaxException, HttpException {
@@ -809,7 +808,6 @@ public class HttpUtil {
      * @return The HTTP response as Response object.
      * @throws URISyntaxException
      * @throws HttpException
-     * @throws UnsupportedEncodingException
      */
     public static Response post(URI uri, String body, ContentType contentType, Header[] requestHeaders)
         throws URISyntaxException, HttpException {

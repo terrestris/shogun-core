@@ -1,10 +1,5 @@
 package de.terrestris.shogun2.util.mail;
 
-import java.io.File;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +9,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 
 /**
  * @author Daniel Koch
@@ -88,7 +87,6 @@ public class MailPublisher {
      * @param attachmentFilename The attachment file name.
      * @param attachmentFile     The file resource to be applied to the mail.
      * @throws MessagingException
-     * @throws Exception
      */
     public void sendMimeMail(String from, String replyTo, String[] to, String[] cc,
                              String[] bcc, String subject, String msg, Boolean html,
@@ -142,7 +140,6 @@ public class MailPublisher {
 
     /**
      * @param mailMessage
-     * @throws Exception
      */
     public void sendMail(SimpleMailMessage mailMessage) throws MailException {
         final String subject = mailMessage.getSubject();
@@ -156,7 +153,6 @@ public class MailPublisher {
     /**
      * @param mimeMessage
      * @throws MessagingException
-     * @throws Exception
      */
     public void sendMail(MimeMessage mimeMessage) throws MailException, MessagingException {
         final String subject = mimeMessage.getSubject();

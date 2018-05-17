@@ -3,14 +3,10 @@
  */
 package de.terrestris.shogun2.model.tree;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import de.terrestris.shogun2.converter.TreeFolderIdResolver;
+import de.terrestris.shogun2.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -18,16 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import de.terrestris.shogun2.converter.TreeFolderIdResolver;
-import de.terrestris.shogun2.model.PersistentObject;
+import javax.persistence.*;
 
 /**
  * A class representing a node in a tree. This class can be used for leaf nodes.
@@ -75,7 +62,7 @@ public class TreeNode extends PersistentObject {
 
     /**
      * The position of the node inside its parent. When parent has 4 children
-     * and the node is third amongst them, index will be 2 -> starting with
+     * and the node is third amongst them, index will be 2 -&gt; starting with
      * index 0
      */
     private int index;

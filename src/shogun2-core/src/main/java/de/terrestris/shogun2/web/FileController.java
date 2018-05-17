@@ -62,7 +62,6 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
      * Persists a file as bytearray in the database
      *
      * @param uploadedFile
-     * @return
      */
     @RequestMapping(value = "/upload.action", method = RequestMethod.POST)
     public ResponseEntity<?> uploadFile(
@@ -92,8 +91,6 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
     /**
      * Gets a file from the database by the given id
      *
-     * @return
-     * @throws SQLException
      */
     @RequestMapping(value = "/get.action", method = RequestMethod.GET)
     public ResponseEntity<?> getFile(@RequestParam Integer id) {
