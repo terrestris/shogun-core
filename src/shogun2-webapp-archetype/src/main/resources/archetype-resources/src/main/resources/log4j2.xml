@@ -7,46 +7,46 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="de.terrestris" level="info">
+        <Logger additivity="false" name="de.terrestris" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.springframework" level="info">
+        <Logger additivity="false" name="org.springframework" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate" level="info">
+        <Logger additivity="false" name="org.hibernate" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="com.zaxxer.hikari" level="info">
+        <Logger additivity="false" name="com.zaxxer.hikari" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.apache.http" level="info">
+        <Logger additivity="false" name="org.apache.http" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.hql.ast.AST" level="debug">
+        <Logger additivity="false" name="org.hibernate.hql.ast.AST" level="debug">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.SQL" level="debug">
+        <Logger additivity="false" name="org.hibernate.SQL" level="debug">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.type" level="info">
+        <Logger additivity="false" name="org.hibernate.type" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.tool.hbm2ddl" level="info">
+        <Logger additivity="false" name="org.hibernate.tool.hbm2ddl" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.hql" level="debug">
+        <Logger additivity="false" name="org.hibernate.hql" level="debug">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.cache" level="info">
+        <Logger additivity="false" name="org.hibernate.cache" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.transaction" level="debug">
+        <Logger additivity="false" name="org.hibernate.transaction" level="debug">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.jdbc" level="info">
+        <Logger additivity="false" name="org.hibernate.jdbc" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <!-- <Logger name="org.hibernate.connection.DriverManagerConnectionProvider" level="trace">
+        <!-- <Logger additivity="false" name="org.hibernate.connection.DriverManagerConnectionProvider" level="trace">
             <AppenderRef ref="Console" />
         </Logger> -->
         <Root level="trace">
