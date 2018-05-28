@@ -1,5 +1,11 @@
 # Release Notes
 
+## 1.0.4 (2018-05-28)
+
+* Changes:
+  * Add additivity parameter to avoid duplicate logs. See [here](https://github.com/terrestris/shogun2/pull/321).
+  * Use log4j2 logging interfaces. See [here](https://github.com/terrestris/shogun2/pull/322).
+
 ## 1.0.3 (2018-04-17)
 
 * Changes:
