@@ -1,27 +1,13 @@
 package de.terrestris.shogun2.service;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
+import de.terrestris.shogun2.util.http.HttpUtil;
+import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,8 +15,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import de.terrestris.shogun2.util.http.HttpUtil;
-import de.terrestris.shogun2.util.model.Response;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * Simple HTTP Proxy service (forward proxy)
@@ -44,7 +40,7 @@ public class HttpProxyService {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    private static final Logger LOG = Logger.getLogger(HttpProxyService.class);
+    private static final Logger LOG = getLogger(HttpProxyService.class);
 
     /* +--------------------------------------------------------------------+ */
     /* | Generic constants                                                  | */

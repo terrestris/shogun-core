@@ -14,7 +14,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +31,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 /**
  * @author Daniel Koch
  * @author Kai Volland
@@ -42,7 +44,7 @@ public class GeoServerInterceptorService {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(
+    private static final Logger LOG = getLogger(
         GeoServerInterceptorService.class);
 
     /**

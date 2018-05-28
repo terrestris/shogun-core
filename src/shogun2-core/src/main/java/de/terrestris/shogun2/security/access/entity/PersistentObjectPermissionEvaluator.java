@@ -4,13 +4,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.model.security.PermissionCollection;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Nils Bühner
@@ -21,7 +23,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * The LOGGER instance
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      * Represents the class of the entity

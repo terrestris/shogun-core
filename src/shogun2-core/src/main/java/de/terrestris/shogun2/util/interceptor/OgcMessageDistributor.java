@@ -1,13 +1,14 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import java.text.MessageFormat;
-
-import org.apache.log4j.Logger;
+import de.terrestris.shogun2.util.model.Response;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import de.terrestris.shogun2.util.model.Response;
+import java.text.MessageFormat;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Daniel Koch
@@ -19,8 +20,7 @@ public class OgcMessageDistributor {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(
-        OgcMessageDistributor.class);
+    private static final Logger LOG = getLogger(OgcMessageDistributor.class);
 
     /**
      *
