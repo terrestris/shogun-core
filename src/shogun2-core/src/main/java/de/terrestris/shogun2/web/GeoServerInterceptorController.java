@@ -1,11 +1,9 @@
 package de.terrestris.shogun2.web;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
+import de.terrestris.shogun2.service.GeoServerInterceptorService;
+import de.terrestris.shogun2.util.data.ResultSet;
+import de.terrestris.shogun2.util.model.Response;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import de.terrestris.shogun2.service.GeoServerInterceptorService;
-import de.terrestris.shogun2.util.data.ResultSet;
-import de.terrestris.shogun2.util.model.Response;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @param <S>
@@ -31,8 +31,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(
-        GeoServerInterceptorController.class);
+    private static final Logger LOG = getLogger(GeoServerInterceptorController.class);
 
     /**
      *
