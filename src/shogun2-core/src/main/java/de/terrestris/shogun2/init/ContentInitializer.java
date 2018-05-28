@@ -1,16 +1,16 @@
 package de.terrestris.shogun2.init;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.service.InitializationService;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * Class to initialize an initial set of content based on bean definitions.
@@ -22,7 +22,7 @@ public class ContentInitializer {
     /**
      * The Logger
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      * Flag symbolizing if content initialization should be active on startup

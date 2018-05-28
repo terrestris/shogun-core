@@ -7,7 +7,7 @@ import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.security.access.entity.PersistentObjectPermissionEvaluator;
 import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFactory;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import java.io.Serializable;
 import java.util.Collection;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 /**
  * @author Nils Bühner
  */
@@ -25,7 +27,7 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
     /**
      * The LOGGER instance
      */
-    private final static Logger LOG = Logger.getLogger(Shogun2PermissionEvaluator.class);
+    private final static Logger LOG = getLogger(Shogun2PermissionEvaluator.class);
 
     @Autowired
     private ApplicationContext appContext;

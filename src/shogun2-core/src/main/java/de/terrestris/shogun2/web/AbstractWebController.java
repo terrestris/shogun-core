@@ -1,12 +1,14 @@
 package de.terrestris.shogun2.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * This abstract controller class provides basic web controller functionality:
@@ -19,7 +21,7 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      * Provides the concrete entity class of the controller.

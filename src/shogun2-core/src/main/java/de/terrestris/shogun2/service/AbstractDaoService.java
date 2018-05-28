@@ -1,12 +1,14 @@
 package de.terrestris.shogun2.service;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * This abstract service class simply provides a data access object for the type
@@ -20,7 +22,7 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      * Provides the concrete entity class of the controller.

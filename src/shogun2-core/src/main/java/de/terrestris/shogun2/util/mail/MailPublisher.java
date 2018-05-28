@@ -1,12 +1,7 @@
 package de.terrestris.shogun2.util.mail;
 
-import java.io.File;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.MailException;
@@ -14,6 +9,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Daniel Koch
@@ -24,7 +25,7 @@ public class MailPublisher {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(MailPublisher.class);
+    private static final Logger LOG = getLogger(MailPublisher.class);
 
     /**
      * The autowired JavaMailSender class.
