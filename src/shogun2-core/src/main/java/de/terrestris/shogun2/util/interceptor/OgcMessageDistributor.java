@@ -85,6 +85,13 @@ public class OgcMessageDistributor {
      *
      */
     @Autowired(required = false)
+    @Qualifier("wpsRequestInterceptor")
+    private WpsRequestInterceptorInterface wpsRequestInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
     @Qualifier("wmsResponseInterceptor")
     private WmsResponseInterceptorInterface wmsResponseInterceptor;
 
@@ -101,6 +108,13 @@ public class OgcMessageDistributor {
     @Autowired(required = false)
     @Qualifier("wcsResponseInterceptor")
     private WcsResponseInterceptorInterface wcsResponseInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
+    @Qualifier("wpsResponseInterceptor")
+    private WpsResponseInterceptorInterface wpsResponseInterceptor;
 
     /**
      * @param request
@@ -200,6 +214,26 @@ public class OgcMessageDistributor {
             } else {
                 throw new InterceptorException(operationErrMsg);
             }
+
+        } else if (message.isWps()) {
+
+            // check if the wpsRequestInterceptor is available
+            if (this.wpsRequestInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return request;
+            }
+
+            if (message.isWpsGetCapabilities()) {
+                request = this.wpsRequestInterceptor.interceptGetCapabilities(request);
+            } else if (message.isWpsDescribeProcess()) {
+                request = this.wpsRequestInterceptor.interceptDescribeProcess(request);
+            } else if (message.isWpsExecute()) {
+                request = this.wpsRequestInterceptor.interceptExecute(request);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
+
+            return request;
 
         } else {
             throw new InterceptorException(serviceErrMsg);
@@ -313,6 +347,26 @@ public class OgcMessageDistributor {
                 throw new InterceptorException(operationErrMsg);
             }
 
+        } else if (message.isWps()) {
+
+            // check if the wpsResponseInterceptor is available
+            if (this.wpsResponseInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return response;
+            }
+
+            LOG.debug(infoMsg);
+
+            if (message.isWpsGetCapabilities()) {
+                response = this.wpsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
+            } else if (message.isWpsDescribeProcess()) {
+                response = this.wpsResponseInterceptor.interceptDescribeProcess(mutableRequest, response);
+            } else if (message.isWpsExecute()) {
+                response = this.wpsResponseInterceptor.interceptExecute(mutableRequest, response);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
+
         } else {
             throw new InterceptorException(serviceErrMsg);
         }
@@ -350,6 +404,20 @@ public class OgcMessageDistributor {
     }
 
     /**
+     * @return the wpsRequestInterceptor
+     */
+    public WpsRequestInterceptorInterface getWpsRequestInterceptor() {
+        return wpsRequestInterceptor;
+    }
+
+    /**
+     * @param wpsRequestInterceptor the wpsRequestInterceptor to set
+     */
+    public void setWpsRequestInterceptor(WpsRequestInterceptorInterface wpsRequestInterceptor) {
+        this.wpsRequestInterceptor = wpsRequestInterceptor;
+    }
+
+    /**
      * @param wmsResponseInterceptor the wmsResponseInterceptor to set
      */
     public void setWmsResponseInterceptor(
@@ -371,5 +439,19 @@ public class OgcMessageDistributor {
     public void setWcsResponseInterceptor(
         WcsResponseInterceptorInterface wcsResponseInterceptor) {
         this.wcsResponseInterceptor = wcsResponseInterceptor;
+    }
+
+    /**
+     * @return the wpsResponseInterceptor
+     */
+    public WpsResponseInterceptorInterface getWpsResponseInterceptor() {
+        return wpsResponseInterceptor;
+    }
+
+    /**
+     * @param wpsResponseInterceptor the wpsResponseInterceptor to set
+     */
+    public void setWpsResponseInterceptor(WpsResponseInterceptorInterface wpsResponseInterceptor) {
+        this.wpsResponseInterceptor = wpsResponseInterceptor;
     }
 }
