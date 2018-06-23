@@ -1,24 +1,18 @@
 package de.terrestris.shogun2.model.layer;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
+import de.terrestris.shogun2.annotations.RootObject;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.layer.appearance.LayerAppearance;
 import de.terrestris.shogun2.model.layer.source.LayerDataSource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
+
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Representation of a layer which consists a corresponding data source
@@ -33,6 +27,7 @@ import de.terrestris.shogun2.model.layer.source.LayerDataSource;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@RootObject
 public class Layer extends PersistentObject {
 
     /**

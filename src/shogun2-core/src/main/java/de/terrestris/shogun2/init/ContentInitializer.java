@@ -54,7 +54,6 @@ public class ContentInitializer {
      * The method called on initialization
      */
     public void initializeDatabaseContent() {
-
         if (this.shogunInitEnabled) {
 
             LOG.info("Initializing SHOGun2 content");
@@ -71,6 +70,7 @@ public class ContentInitializer {
         } else {
             LOG.info("Not initializing anything for SHOGun2.");
         }
+        initService.initializeJsonStorage();
     }
 
 }

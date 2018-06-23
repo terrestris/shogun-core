@@ -3,19 +3,15 @@
  */
 package de.terrestris.shogun2.model.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
+import de.terrestris.shogun2.annotations.RootObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a (simple) composite {@link TreeNode}, i.e. a folder
@@ -29,6 +25,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@RootObject
 public class TreeFolder extends TreeNode {
 
     /**

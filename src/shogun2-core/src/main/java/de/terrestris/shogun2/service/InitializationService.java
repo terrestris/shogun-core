@@ -1,16 +1,33 @@
 package de.terrestris.shogun2.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import de.terrestris.shogun2.annotations.RootObject;
+import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.dao.RootObjectDao;
+import de.terrestris.shogun2.init.ContentInitializer;
+import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shogun2.dao.GenericHibernateDao;
-import de.terrestris.shogun2.init.ContentInitializer;
-import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.model.User;
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -22,7 +39,8 @@ import static org.apache.logging.log4j.LogManager.getLogger;
  */
 @Service("initializationService")
 @Transactional(value = "transactionManager")
-public class InitializationService {
+@DependsOn("userService")
+public class InitializationService implements ApplicationContextAware {
 
     /**
      * The Logger
@@ -37,11 +55,17 @@ public class InitializationService {
     @Qualifier("genericDao")
     private GenericHibernateDao<PersistentObject, Integer> dao;
 
+    @Autowired
+    @Qualifier("rootObjectDao")
+    private RootObjectDao<de.terrestris.shogun2.model.storage.RootObject> rootObjectDao;
+
     /**
      * The password encoder that is used to encode the password of a user.
      */
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private ApplicationContext applicationContext;
 
     /**
      * A "generic" method to save an arbitrary {@link PersistentObject}.
@@ -70,4 +94,40 @@ public class InitializationService {
         LOG.info("Created the user " + user.getAccountName());
     }
 
+    public void initializeJsonStorage() {
+        Shogun2JsonObjectMapper mapper = applicationContext.getBean(Shogun2JsonObjectMapper.class);
+        Reflections reflections = new Reflections("de.terrestris");
+        Set<Class<? extends GenericHibernateDao>> daos = reflections.getSubTypesOf(GenericHibernateDao.class);
+        daos.stream().forEach(cls -> {
+            Map<String, ? extends GenericHibernateDao> daoMap = applicationContext.getBeansOfType(cls);
+            daoMap.values().stream().forEach(dao -> {
+                if (dao.getEntityClass().isAnnotationPresent(RootObject.class)) {
+                    List<? extends PersistentObject> all = dao.findAll();
+                    Map<Integer, String> jsons = new LinkedHashMap<>();
+                    all.stream().forEach(entity -> {
+                        try {
+                            String json = mapper.writeValueAsString(entity);
+                            de.terrestris.shogun2.model.storage.RootObject blob = new de.terrestris.shogun2.model.storage.RootObject();
+                            blob.setJson(new SerialBlob(json.getBytes("UTF-8")));
+                            blob.setType(dao.getEntityClass().getCanonicalName());
+                            rootObjectDao.saveOrUpdate(blob);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        } catch (SerialException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

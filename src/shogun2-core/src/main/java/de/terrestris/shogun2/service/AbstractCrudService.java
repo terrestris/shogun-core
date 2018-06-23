@@ -1,27 +1,23 @@
 package de.terrestris.shogun2.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.terrestris.shogun2.annotations.RootObject;
+import de.terrestris.shogun2.dao.GenericHibernateDao;
+import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.util.entity.EntityUtil;
+import org.hibernate.criterion.*;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.terrestris.shogun2.dao.GenericHibernateDao;
-import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.util.entity.EntityUtil;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This abstract service class provides basic CRUD functionality.

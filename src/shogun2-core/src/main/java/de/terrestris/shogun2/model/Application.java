@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import de.terrestris.shogun2.annotations.RootObject;
 import de.terrestris.shogun2.converter.PluginIdResolver;
 import de.terrestris.shogun2.model.module.CompositeModule;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -30,6 +31,7 @@ import java.util.Locale;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@RootObject
 public class Application extends PersistentObject {
 
     private static final long serialVersionUID = 1L;
