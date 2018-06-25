@@ -1,5 +1,11 @@
 # Release Notes
 
+## 1.0.5 (2018-06-25)
+
+* Changes:
+  * Allow forwarding of request headers in interceptor. See [here](https://github.com/terrestris/shogun2/pull/324).
+  * Add WPS request and response interceptors. See [here](https://github.com/terrestris/shogun2/pull/323).
+
 ## 1.0.4 (2018-05-28)
 
 * Changes:
