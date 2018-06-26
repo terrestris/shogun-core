@@ -87,11 +87,11 @@ you want to deploy from a linux machine.
 * Open https://oss.sonatype.org/ and login as user `shogun2` (password on
   request).
   * Go to `Staging Repositories` in the `Build Promotion` section.
-  * Scroll down the list on the right until you see two repositories named
-    `deterrestris-1011` and `deterrestris-1012`. One was created by the
-    above command from your machine, and the other one was autocreated from
-    some other process we don't care about.
-  * Find the repository *you* created by clicking the reposoitory row and
+  * Scroll down the list on the right until you see a repository named
+    `deterrestris-xxxx`. If you see two or more repositories, you may
+    have been uploading with changing IPs. Make sure you use a single
+    IP to upload all files.
+  * Find the repository you created by clicking the reposoitory row and
     examining the details. Look at the `Owner` property. If the listed
     IP-address matches your IP, you found the correct repo.
   * Once you have selected the correct row, click the `Close`-button at the
@@ -112,6 +112,15 @@ you want to deploy from a linux machine.
   * You can check if the release was successful by searching in the `Artifact
     Search` for `de.terrestris`; all artifacts (currently 10) should list the
     just released version.
+
+### Release an already tagged version
+
+* If you accidentally used multiple IPs or something else went wrong
+  during the release, you can perform the following steps to release
+  an already tagged version:
+  * Check out the tag: `git checkout vx.y.z`
+  * Build and upload the artifacts: `mvn clean install deploy -P release-artifact`
+  * Repeat the steps described above on https://oss.sonatype.org/
 
 ### That's it…
 
