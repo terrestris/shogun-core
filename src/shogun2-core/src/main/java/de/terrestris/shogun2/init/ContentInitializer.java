@@ -70,7 +70,6 @@ public class ContentInitializer {
         } else {
             LOG.info("Not initializing anything for SHOGun2.");
         }
-        initService.initializeJsonStorage();
     }
 
 }

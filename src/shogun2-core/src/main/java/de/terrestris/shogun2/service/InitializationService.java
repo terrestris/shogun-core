@@ -1,6 +1,13 @@
 package de.terrestris.shogun2.service;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.type.WritableTypeId;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import de.terrestris.shogun2.annotations.RootObject;
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.dao.RootObjectDao;
@@ -21,13 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -39,7 +43,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
  */
 @Service("initializationService")
 @Transactional(value = "transactionManager")
-@DependsOn("userService")
+@DependsOn({"userService", "jacksonObjectMapper"})
 public class InitializationService implements ApplicationContextAware {
 
     /**
@@ -95,29 +99,57 @@ public class InitializationService implements ApplicationContextAware {
     }
 
     public void initializeJsonStorage() {
-        Shogun2JsonObjectMapper mapper = applicationContext.getBean(Shogun2JsonObjectMapper.class);
         Reflections reflections = new Reflections("de.terrestris");
+        Set<Class<?>> rootClasses = reflections.getTypesAnnotatedWith(RootObject.class);
+        Map<Class<?>, StdSerializer<PersistentObject>> serializers = new HashMap<>();
+        rootClasses.forEach(rootClass -> {
+            serializers.put(rootClass, new StdSerializer<PersistentObject>((Class<PersistentObject>) rootClass) {
+                @Override
+                public void serialize(PersistentObject value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+                    gen.writeStartObject();
+                    gen.writeObjectField("id", value.getId());
+                    gen.writeObjectField("isRootObject", true);
+                    gen.writeObjectField("@class", value.getClass().getCanonicalName());
+                    gen.writeEndObject();
+                }
+
+                @Override
+                public void serializeWithType(PersistentObject value, JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
+                    WritableTypeId typeId = typeSer.typeId(value, JsonToken.START_OBJECT);
+                    typeSer.writeTypePrefix(gen, typeId);
+                    gen.writeObjectField("id", value.getId());
+                    gen.writeObjectField("isRootObject", true);
+                    gen.writeObjectField("@class", value.getClass().getCanonicalName());
+                    typeSer.writeTypeSuffix(gen, typeId);
+                }
+            });
+        });
+
         Set<Class<? extends GenericHibernateDao>> daos = reflections.getSubTypesOf(GenericHibernateDao.class);
-        daos.stream().forEach(cls -> {
+
+        daos.forEach(cls -> {
             Map<String, ? extends GenericHibernateDao> daoMap = applicationContext.getBeansOfType(cls);
-            daoMap.values().stream().forEach(dao -> {
+            daoMap.values().forEach(dao -> {
                 if (dao.getEntityClass().isAnnotationPresent(RootObject.class)) {
+                    Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+                    SimpleModule module = new SimpleModule();
+                    serializers.forEach((clazz, serializer) -> {
+                        if (!dao.getEntityClass().isAssignableFrom(clazz) && !clazz.isAssignableFrom(dao.getEntityClass())) {
+                            module.addSerializer((Class<PersistentObject>)clazz, serializer);
+                        }
+                    });
+                    mapper.registerModule(module);
                     List<? extends PersistentObject> all = dao.findAll();
                     Map<Integer, String> jsons = new LinkedHashMap<>();
-                    all.stream().forEach(entity -> {
+                    all.forEach(entity -> {
                         try {
                             String json = mapper.writeValueAsString(entity);
                             de.terrestris.shogun2.model.storage.RootObject blob = new de.terrestris.shogun2.model.storage.RootObject();
-                            blob.setJson(new SerialBlob(json.getBytes("UTF-8")));
+                            blob.setJson(new SerialBlob(json.getBytes(StandardCharsets.UTF_8)));
                             blob.setType(dao.getEntityClass().getCanonicalName());
+                            blob.setReferencedId(entity.getId());
                             rootObjectDao.saveOrUpdate(blob);
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        } catch (SerialException e) {
-                            e.printStackTrace();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
+                        } catch (JsonProcessingException | SQLException e) {
                             e.printStackTrace();
                         }
                     });

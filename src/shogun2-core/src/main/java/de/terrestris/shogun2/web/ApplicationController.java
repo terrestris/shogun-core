@@ -1,7 +1,9 @@
 package de.terrestris.shogun2.web;
 
-import java.util.List;
-
+import de.terrestris.shogun2.dao.ApplicationDao;
+import de.terrestris.shogun2.model.Application;
+import de.terrestris.shogun2.service.ApplicationService;
+import de.terrestris.shogun2.service.InitializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.dao.ApplicationDao;
-import de.terrestris.shogun2.model.Application;
-import de.terrestris.shogun2.service.ApplicationService;
+import java.util.List;
 
 /**
  * @author Nils Bühner
@@ -20,6 +20,9 @@ import de.terrestris.shogun2.service.ApplicationService;
 @RequestMapping("/application")
 public class ApplicationController<E extends Application, D extends ApplicationDao<E>, S extends ApplicationService<E, D>>
     extends AbstractWebController<E, D, S> {
+
+    @Autowired
+    protected InitializationService initService;
 
     /**
      * Default constructor, which calls the type-constructor
@@ -55,6 +58,11 @@ public class ApplicationController<E extends Application, D extends ApplicationD
         LOG.info("Trying to find all Applications.");
 
         return service.findAll();
+    }
+
+    @RequestMapping(value = "/migrate", method = RequestMethod.GET)
+    public void migrate() {
+        initService.initializeJsonStorage();
     }
 
 }

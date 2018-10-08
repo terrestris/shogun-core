@@ -15,6 +15,9 @@ public class RootObject extends PersistentObject {
     private Integer id = null;
 
     @Column
+    private Integer referencedId;
+
+    @Column
     private String type;
 
     @Column
@@ -26,6 +29,14 @@ public class RootObject extends PersistentObject {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getReferencedId() {
+        return referencedId;
+    }
+
+    public void setReferencedId(Integer referencedId) {
+        this.referencedId = referencedId;
     }
 
     public String getType() {
