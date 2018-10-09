@@ -472,7 +472,7 @@ public class GeoServerInterceptorService {
      * @throws InterceptorException
      * @throws HttpException
      */
-    private static Response sendRequest(MutableHttpServletRequest request)
+    public static Response sendRequest(MutableHttpServletRequest request)
         throws InterceptorException, HttpException {
 
         Response httpResponse = new Response();
