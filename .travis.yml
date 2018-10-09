@@ -24,12 +24,12 @@ matrix:
       install: ./install-jdk.sh -f 11
 before_script:
   - cd src/
-  - export JAVA_HOME=$(echo $HOME/*jdk*)
+  - export JAVA_HOME=$(for file in $HOME/*jdk*; do if (test -d "$file") then; echo $file; fi; done)
   - mvn -v
   - mvn --batch-mode --threads 2.0C -DskipTests=true install
 script:
   - mvn -v
-  - export JAVA_HOME=$(echo $HOME/*jdk*)
+  - export JAVA_HOME=$(for file in $HOME/*jdk*; do if (test -d "$file") then; echo $file; fi; done)
   - mvn --batch-mode --threads 2.0C --show-version clean test
 after_success:
   - mvn clean test jacoco:report coveralls:report
