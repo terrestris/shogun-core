@@ -15,7 +15,7 @@ before_install:
 matrix:
   include:
     - env: JDK='openjdk8'
-      install: ./install-jdk.sh -f 8
+      install: echo 'using built in jdk'
     - env: JDK='openjdk9'
       install: ./install-jdk.sh -f 9
     - env: JDK='openjdk10'
