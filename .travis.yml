@@ -27,8 +27,10 @@ matrix:
       install: ./install-jdk.sh -f 11
 before_script:
   - cd src/
+  - mvn -v
   - mvn --batch-mode --threads 2.0C -DskipTests=true install
 script:
+  - mvn -v
   - mvn --batch-mode --threads 2.0C --show-version clean test
 after_success:
   - mvn clean test jacoco:report coveralls:report
