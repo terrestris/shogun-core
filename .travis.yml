@@ -26,11 +26,11 @@ before_script:
   - cd src/
   - export JAVA_HOME=$(for file in $HOME/*jdk*; do if (test -d "$file") then echo $file; fi; done)
   - mvn -v
-  - mvn --batch-mode --threads 2.0C -DskipTests=true install
+  - mvn --batch-mode -DskipTests=true install
 script:
   - mvn -v
   - export JAVA_HOME=$(for file in $HOME/*jdk*; do if (test -d "$file") then echo $file; fi; done)
-  - mvn --batch-mode --threads 2.0C --show-version clean test
+  - mvn --batch-mode --show-version clean test
 after_success:
   - mvn clean test jacoco:report coveralls:report
   - "../scripts/snapshot-release.sh"
