@@ -7,13 +7,13 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="de.terrestris" level="info">
+        <Logger additivity="false" name="de.terrestris" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate" level="info">
+        <Logger additivity="false" name="org.hibernate" level="info">
             <AppenderRef ref="Console" />
         </Logger>
-        <Logger name="org.hibernate.cache" level="info">
+        <Logger additivity="false" name="org.hibernate.cache" level="info">
             <AppenderRef ref="Console" />
         </Logger>
         <Root level="error">

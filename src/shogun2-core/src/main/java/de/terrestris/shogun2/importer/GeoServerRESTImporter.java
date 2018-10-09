@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpException;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.wkt.Formattable;
 import org.opengis.referencing.FactoryException;
@@ -36,6 +36,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 /**
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG
@@ -46,7 +48,7 @@ public class GeoServerRESTImporter {
     /**
      * The Logger.
      */
-    private final static Logger LOG = Logger.getLogger(GeoServerRESTImporter.class);
+    private final static Logger LOG = getLogger(GeoServerRESTImporter.class);
 
     /**
      *

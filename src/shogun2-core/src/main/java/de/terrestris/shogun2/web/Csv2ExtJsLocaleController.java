@@ -1,9 +1,7 @@
 package de.terrestris.shogun2.web;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
+import de.terrestris.shogun2.service.Csv2ExtJsLocaleService;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.service.Csv2ExtJsLocaleService;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Nils Bühner
@@ -23,7 +24,7 @@ public class Csv2ExtJsLocaleController {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      *

@@ -1,22 +1,14 @@
 package de.terrestris.shogun2.dao;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.PropertyProjection;
-import org.hibernate.criterion.Restrictions;
+import de.terrestris.shogun2.model.PersistentObject;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
+import de.terrestris.shogun2.model.security.PermissionCollection;
+import de.terrestris.shogun2.paging.PagingResult;
+import de.terrestris.shogun2.util.entity.EntityUtil;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.*;
+import org.hibernate.criterion.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import org.hibernate.transform.Transformers;
@@ -25,12 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import de.terrestris.shogun2.model.PersistentObject;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.model.security.PermissionCollection;
-import de.terrestris.shogun2.paging.PagingResult;
-import de.terrestris.shogun2.util.entity.EntityUtil;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * The superclass for all data access objects. Provides basic CRUD
@@ -44,7 +36,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     /**
      * Represents the class of the entity
