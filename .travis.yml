@@ -5,11 +5,6 @@ cache:
   - "$HOME/.m2"
 sudo: false
 
-jdk:
-  - oraclejdk8
-  - oraclejdk9
-  - openjdk8
-
 env:
   global:
   - secure: Njr6RXyoqC3fJuuKCXD9h02UoKXDy9JOLNFT7aqYx7ALmfaqJ22zXRAKjGd4LxRL4EZfnHEHuF8IlLFf2kjEUdTN9jnLYmVfUXgrjn2jzdcXOMrHh+g1DarVERa8uyn4Smnqqr/PJtONjhmhQprEN9z8e2kEWE4tI7pNv5mPycU=
@@ -19,6 +14,8 @@ before_install:
   - chmod 755 install-jdk.sh
 matrix:
   include:
+    - env: JDK='openjdk8'
+      install: ./install-jdk.sh -f 8
     - env: JDK='openjdk9'
       install: ./install-jdk.sh -f 9
     - env: JDK='openjdk10'
@@ -27,10 +24,12 @@ matrix:
       install: ./install-jdk.sh -f 11
 before_script:
   - cd src/
+  - export JAVA_HOME=$(echo $HOME/*jdk*)
   - mvn -v
   - mvn --batch-mode --threads 2.0C -DskipTests=true install
 script:
   - mvn -v
+  - export JAVA_HOME=$(echo $HOME/*jdk*)
   - mvn --batch-mode --threads 2.0C --show-version clean test
 after_success:
   - mvn clean test jacoco:report coveralls:report
