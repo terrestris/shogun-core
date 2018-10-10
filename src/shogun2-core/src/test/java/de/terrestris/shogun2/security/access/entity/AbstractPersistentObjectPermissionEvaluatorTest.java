@@ -1,22 +1,18 @@
 package de.terrestris.shogun2.security.access.entity;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-
 import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import de.terrestris.shogun2.model.security.Permission;
 import de.terrestris.shogun2.model.security.PermissionCollection;
+import org.junit.Test;
+
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Bühner
@@ -150,6 +146,11 @@ public abstract class AbstractPersistentObjectPermissionEvaluatorTest<E extends 
             assertThat(permissionResult, equalTo(true));
         }
 
+    }
+
+    @Test
+    public void testEntityClass() {
+        assertEquals(persistentObjectPermissionEvaluator.getEntityClass(), entityClass);
     }
 
     /**

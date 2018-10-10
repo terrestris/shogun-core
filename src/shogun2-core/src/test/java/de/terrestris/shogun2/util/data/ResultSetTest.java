@@ -1,19 +1,10 @@
 package de.terrestris.shogun2.util.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.junit.Test;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Marc Jansen
@@ -120,6 +111,11 @@ public class ResultSetTest {
         }
         assertFalse("Key '" + KEY_SUCCESS + "' is false",
             (boolean) resultSet.get(KEY_SUCCESS));
+    }
+
+    @Test
+    public void testInstantiation() {
+        assertNotNull(new ResultSet());
     }
 
 }

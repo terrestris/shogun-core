@@ -1,17 +1,13 @@
 package de.terrestris.shogun2.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
+import de.terrestris.shogun2.dao.FileDao;
+import de.terrestris.shogun2.model.File;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-import de.terrestris.shogun2.dao.FileDao;
-import de.terrestris.shogun2.model.File;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 public class FileServiceTest extends PermissionAwareCrudServiceTest<File, FileDao<File>, FileService<File, FileDao<File>>> {
 
@@ -61,6 +57,25 @@ public class FileServiceTest extends PermissionAwareCrudServiceTest<File, FileDa
         assertEquals(new String(persistedFile.getFile()), new String(mockupBytes));
         assertEquals(persistedFile.getFileName(), fileName);
         assertEquals(persistedFile.getFileType(), fileType);
+    }
+
+    @Test(expected = Exception.class)
+    public void upload_withError() throws Exception {
+        final String fileName = "fileName.txt";
+        final String fileType = "text/plain";
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "fileData",
+                fileName,
+                fileType,
+                (byte[])null);
+
+        doNothing().when(dao).saveOrUpdate(any(File.class));
+
+        crudService.uploadFile(mockMultipartFile);
+
+        verify(dao, times(1)).saveOrUpdate(any(File.class));
+        verifyNoMoreInteractions(dao);
     }
 
     /**
