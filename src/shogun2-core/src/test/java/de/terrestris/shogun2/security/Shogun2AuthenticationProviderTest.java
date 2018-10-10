@@ -257,4 +257,9 @@ public class Shogun2AuthenticationProviderTest {
         return userToAuth;
     }
 
+    @Test
+    public void authentication_supportsUsernamePassword() {
+        authProvider.supports(UsernamePasswordAuthenticationToken.class);
+    }
+
 }
