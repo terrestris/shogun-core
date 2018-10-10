@@ -62,6 +62,14 @@
         </repository>
     </repositories>
 
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus.terrestris.de-plugins</id>
+            <url>https://nexus.terrestris.de/repository/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <developers>
         <developer>
             <!-- the developers github username -->
