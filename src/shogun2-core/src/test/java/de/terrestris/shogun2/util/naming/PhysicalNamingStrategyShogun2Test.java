@@ -1,10 +1,5 @@
 package de.terrestris.shogun2.util.naming;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.sql.SQLException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.dialect.Dialect;
@@ -15,6 +10,11 @@ import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Nils Bühner
@@ -219,6 +219,15 @@ public class PhysicalNamingStrategyShogun2Test {
         String actualPhysicalName = namingStrategy.toPhysicalColumnName(classIdentifier, context).getText();
 
         assertEquals(expectedPhysicalColumnName, actualPhysicalName);
+    }
+
+    public void passesIdentifiersThrough() {
+        Identifier identifier = Identifier.toIdentifier("someName");
+        assertEquals(namingStrategy.toPhysicalColumnName(identifier, null), identifier);
+        assertEquals(namingStrategy.toPhysicalTableName(identifier, null), identifier);
+        assertEquals(namingStrategy.toPhysicalCatalogName(identifier, null), identifier);
+        assertEquals(namingStrategy.toPhysicalSchemaName(identifier, null), identifier);
+        assertEquals(namingStrategy.toPhysicalSequenceName(identifier, null), identifier);
     }
 
 }
