@@ -1,17 +1,11 @@
 package de.terrestris.shogun2.security;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyCollectionOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.dao.UserGroupDao;
+import de.terrestris.shogun2.model.Role;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
+import de.terrestris.shogun2.service.UserGroupService;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,12 +26,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.dao.UserGroupDao;
-import de.terrestris.shogun2.model.Role;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.service.UserGroupService;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyCollectionOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Nils Bühner
@@ -134,6 +130,40 @@ public class Shogun2AuthenticationProviderTest {
                 .<GrantedAuthority>containsInAnyOrder(adminAuthority, userAuthority));
     }
 
+    @Test
+    public void authenticate_shouldNotAuthenticateIfNoAuthorities() {
+        // 1. Mock an authentication request object
+        final String shogun2UserName = "user";
+        final String shogun2UserPass = "password";
+        final User userToAuth = createUserMock(shogun2UserName, shogun2UserPass);
+
+        final UserGroup userGroup = new UserGroup();
+
+        // set user as active
+        userToAuth.setActive(true);
+
+        Authentication authRequest = mock(Authentication.class);
+        when(authRequest.getName()).thenReturn(shogun2UserName);
+        when(authRequest.getCredentials()).thenReturn(shogun2UserPass);
+
+        // 2. Mock the userDao
+        when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+
+        // 3. Mock the roleHierarchy (return empty collection)
+        when(
+                roleHierarchy
+                        .getReachableGrantedAuthorities(anyCollectionOf(GrantedAuthority.class)))
+                .thenReturn(new HashSet<GrantedAuthority>());
+
+        // 4. Call the authenticate method with the mocked object
+        Authentication authResult = authProvider.authenticate(authRequest);
+
+        // 5. Assert that the authResult is valid
+        assertNotNull(authResult);
+        assertThat(authResult, instanceOf(UsernamePasswordAuthenticationToken.class));
+        assertFalse(authResult.isAuthenticated());
+    }
+
     /**
      * Tests whether a {@link UsernameNotFoundException} is thrown when a user
      * could not be found.
@@ -225,6 +255,16 @@ public class Shogun2AuthenticationProviderTest {
         final String encryptedPassword = passwordEncoder.encode(password);
         final User userToAuth = new User("firstName", "lastName", accountName, encryptedPassword);
         return userToAuth;
+    }
+
+    @Test
+    public void authentication_supportsUsernamePassword() {
+        authProvider.supports(UsernamePasswordAuthenticationToken.class);
+    }
+
+    @Test
+    public void hasPasswordEncoderSet() {
+        assertNotNull(authProvider.getPasswordEncoder());
     }
 
 }

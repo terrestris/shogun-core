@@ -1,16 +1,17 @@
 package de.terrestris.shogun2.util.application;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class Shogun2ContextUtilTest {
 
@@ -63,4 +64,10 @@ public class Shogun2ContextUtilTest {
         assertEquals(expected, actual);
 
     }
+
+    @Test
+    public void testInstantiation() {
+        assertNotNull(new Shogun2ContextUtil());
+    }
+
 }

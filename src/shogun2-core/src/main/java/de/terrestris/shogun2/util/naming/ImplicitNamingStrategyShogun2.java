@@ -1,10 +1,10 @@
 package de.terrestris.shogun2.util.naming;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Convert to plural form. Should only be used if class names are in singular
@@ -128,10 +128,6 @@ public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaComp
      * @return
      */
     private String transformToPluralForm(String singular) {
-        if (singular == null) {
-            return null;
-        }
-
         String lowercaseSingular = singular.toLowerCase();
         if (IRREGULAR_NOUNS.containsKey(lowercaseSingular)) {
             // e.g. "Woman" -> "Women", "Ox" -> "Oxen" …

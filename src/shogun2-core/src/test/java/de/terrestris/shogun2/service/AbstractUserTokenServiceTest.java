@@ -1,25 +1,17 @@
 package de.terrestris.shogun2.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.InvocationTargetException;
-
+import de.terrestris.shogun2.dao.AbstractUserTokenDao;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.UserToken;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.SimpleExpression;
 import org.junit.Test;
 
-import de.terrestris.shogun2.dao.AbstractUserTokenDao;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.token.UserToken;
+import java.lang.reflect.InvocationTargetException;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for the {@link AbstractUserTokenService}.
