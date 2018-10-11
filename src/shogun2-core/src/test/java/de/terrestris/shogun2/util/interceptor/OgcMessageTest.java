@@ -4,8 +4,7 @@ import de.terrestris.shogun2.util.enumeration.InterceptorEnum;
 import de.terrestris.shogun2.util.enumeration.OgcEnum;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * @author Daniel Koch
@@ -268,14 +267,21 @@ public class OgcMessageTest {
     public void is_request_modified() {
         OgcMessage message = new OgcMessage(null, null, null,
             InterceptorEnum.RuleType.MODIFY, null);
-        assertEquals(true, message.isRequestModified());
+        assertTrue(message.isRequestModified());
     }
 
     @Test
     public void is_response_modified() {
         OgcMessage message = new OgcMessage(null, null, null, null,
             InterceptorEnum.RuleType.MODIFY);
-        assertEquals(true, message.isResponseModified());
+        assertTrue(message.isResponseModified());
+    }
+
+    @Test
+    public void testNonEquality() {
+        OgcMessage message = new OgcMessage(null, null, null, null,
+                InterceptorEnum.RuleType.MODIFY);
+        assertNotEquals("Non OGC message", message);
     }
 
 }

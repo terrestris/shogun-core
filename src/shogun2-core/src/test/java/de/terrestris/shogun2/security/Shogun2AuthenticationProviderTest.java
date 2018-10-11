@@ -262,4 +262,9 @@ public class Shogun2AuthenticationProviderTest {
         authProvider.supports(UsernamePasswordAuthenticationToken.class);
     }
 
+    @Test
+    public void hasPasswordEncoderSet() {
+        assertNotNull(authProvider.getPasswordEncoder());
+    }
+
 }
