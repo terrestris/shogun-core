@@ -1,5 +1,14 @@
 package de.terrestris.shogun2.util.interceptor;
 
+import de.terrestris.shogun2.util.enumeration.OgcEnum;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
@@ -7,16 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-
-import de.terrestris.shogun2.util.enumeration.OgcEnum;
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * An implementation of HttpServletRequestWrapper.
@@ -36,7 +36,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(MutableHttpServletRequest.class);
+    private static final Logger LOG = getLogger(MutableHttpServletRequest.class);
 
     /**
      * Holds custom parameter mapping

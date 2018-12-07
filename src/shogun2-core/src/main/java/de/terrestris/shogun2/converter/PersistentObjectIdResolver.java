@@ -1,15 +1,15 @@
 package de.terrestris.shogun2.converter;
 
-import org.apache.log4j.Logger;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
 import com.fasterxml.jackson.annotation.ObjectIdGenerator.IdKey;
 import com.fasterxml.jackson.annotation.ObjectIdResolver;
 import com.fasterxml.jackson.annotation.SimpleObjectIdResolver;
-
 import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
+import org.apache.logging.log4j.Logger;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * An ID resolver for {@link PersistentObject}s when deserializing only on the
@@ -21,7 +21,7 @@ import de.terrestris.shogun2.service.AbstractCrudService;
 public abstract class PersistentObjectIdResolver<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
     extends SimpleObjectIdResolver {
 
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     protected S service;
 

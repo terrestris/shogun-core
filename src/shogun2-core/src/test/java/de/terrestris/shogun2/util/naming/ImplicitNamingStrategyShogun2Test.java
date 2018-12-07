@@ -1,9 +1,9 @@
 package de.terrestris.shogun2.util.naming;
 
-import static org.junit.Assert.assertEquals;
-
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Nils Bühner

@@ -5,7 +5,7 @@ import de.terrestris.shogun2.model.Role;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.UserGroup;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 /**
  * @author Nils Bühner
  */
@@ -30,8 +32,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
     /**
      * The Logger
      */
-    private static final Logger LOG = Logger
-        .getLogger(Shogun2AuthenticationProvider.class);
+    private static final Logger LOG = getLogger(Shogun2AuthenticationProvider.class);
 
     @Autowired
     private UserDao<User> userDao;

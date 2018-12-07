@@ -1,18 +1,18 @@
 package de.terrestris.shogun2.service;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.List;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 
 /**
@@ -29,7 +29,7 @@ public class ModelDescriptionService {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = Logger.getLogger(getClass());
+    protected final Logger LOG = getLogger(getClass());
 
     @Resource
     @Qualifier("describeModelSearchPackages")

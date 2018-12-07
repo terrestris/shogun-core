@@ -1,6 +1,6 @@
 package de.terrestris.shogun2.service;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +11,8 @@ import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.init.ContentInitializer;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.model.User;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * This service class will be used by the {@link ContentInitializer} to create content
@@ -25,8 +27,7 @@ public class InitializationService {
     /**
      * The Logger
      */
-    private static final Logger LOG = Logger
-        .getLogger(InitializationService.class);
+    private static final Logger LOG = getLogger(InitializationService.class);
 
     /**
      * A generic dao that can easily be used for any entity that extends

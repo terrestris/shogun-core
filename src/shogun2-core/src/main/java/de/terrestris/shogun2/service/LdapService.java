@@ -1,6 +1,6 @@
 package de.terrestris.shogun2.service;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -11,6 +11,7 @@ import javax.naming.directory.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -21,7 +22,7 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 @Service
 public class LdapService {
 
-    private static final Logger LOGGER = Logger.getLogger(LdapService.class);
+    private static final Logger LOGGER = getLogger(LdapService.class);
 
     private LdapTemplate ldapTemplate;
 

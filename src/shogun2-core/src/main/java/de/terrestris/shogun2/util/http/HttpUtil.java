@@ -54,7 +54,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -62,6 +62,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import de.terrestris.shogun2.util.model.Response;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Daniel Koch
@@ -74,7 +76,7 @@ public class HttpUtil {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(HttpUtil.class);
+    private static final Logger LOG = getLogger(HttpUtil.class);
 
     /**
      * The timeout for all outgoing HTTP connections.

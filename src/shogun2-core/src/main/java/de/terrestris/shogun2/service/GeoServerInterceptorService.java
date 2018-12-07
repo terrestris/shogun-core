@@ -9,12 +9,14 @@ import de.terrestris.shogun2.util.http.HttpUtil;
 import de.terrestris.shogun2.util.interceptor.*;
 import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +33,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 /**
  * @author Daniel Koch
  * @author Kai Volland
@@ -42,7 +46,7 @@ public class GeoServerInterceptorService {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(
+    private static final Logger LOG = getLogger(
         GeoServerInterceptorService.class);
 
     /**
@@ -56,7 +60,14 @@ public class GeoServerInterceptorService {
     /**
      * An array of whitelisted Headers to forward within the Interceptor.
      */
-    private static final String[] FORWARD_HEADER_KEYS = new String[]{
+    private static final String[] FORWARD_REQUEST_HEADER_KEYS = new String[]{
+        HttpHeaders.AUTHORIZATION
+    };
+
+    /**
+     * An array of whitelisted Headers to forward within the Interceptor.
+     */
+    private static final String[] FORWARD_RESPONSE_HEADER_KEYS = new String[]{
         "Content-Type",
         "Content-Disposition",
         "Content-Language",
@@ -125,7 +136,7 @@ public class GeoServerInterceptorService {
 
         // finally filter the white-listed response headers
         // TODO: Move to global proxy class
-        HttpHeaders forwardingHeaders = getHeadersToForward(
+        HttpHeaders forwardingHeaders = getResponseHeadersToForward(
             interceptedResponse.getHeaders()
         );
         interceptedResponse.setHeaders(forwardingHeaders);
@@ -475,6 +486,8 @@ public class GeoServerInterceptorService {
             // get the request URI
             URI requestUri = new URI(request.getRequestURI());
 
+            Header[] requestHeaders = getRequestHeadersToForward(request);
+
             // get the query parameters provided by the GET/POST request and
             // convert to a list of NameValuePairs
             List<NameValuePair> allQueryParams = createQueryParams(request.getParameterMap());
@@ -486,7 +499,7 @@ public class GeoServerInterceptorService {
                 // if we're called via GET method
 
                 // perform the request with the given parameters
-                httpResponse = HttpUtil.get(fullRequestUri);
+                httpResponse = HttpUtil.get(fullRequestUri, requestHeaders);
 
             } else if (postRequest) {
                 // if we're called via POST method
@@ -513,11 +526,11 @@ public class GeoServerInterceptorService {
                     }
 
                     // perform the POST request to the URI with queryString and with the given body
-                    httpResponse = HttpUtil.post(requestUri, body, contentType);
+                    httpResponse = HttpUtil.post(requestUri, body, contentType, requestHeaders);
                 } else {
 
                     // perform the POST request with the given name value pairs,
-                    httpResponse = HttpUtil.post(requestUri, allQueryParams);
+                    httpResponse = HttpUtil.post(requestUri, allQueryParams, requestHeaders);
                 }
 
             } else {
@@ -530,6 +543,25 @@ public class GeoServerInterceptorService {
         }
 
         return httpResponse;
+    }
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    private static Header[] getRequestHeadersToForward(MutableHttpServletRequest request) {
+        List<Header> requestHeaderList = new ArrayList<>();
+
+        // add all headers that should be involved in the request
+        for (String headerName : FORWARD_REQUEST_HEADER_KEYS) {
+            String headerValue = request.getHeader(headerName);
+            if (headerValue != null) {
+                requestHeaderList.add(new BasicHeader(headerName, headerValue));
+            }
+        }
+
+        return requestHeaderList.toArray(new Header[0]);
     }
 
     /**
@@ -567,7 +599,7 @@ public class GeoServerInterceptorService {
      * @return
      * @throws UnsupportedEncodingException
      */
-    private static HttpHeaders getHeadersToForward(HttpHeaders headers)
+    private static HttpHeaders getResponseHeadersToForward(HttpHeaders headers)
         throws UnsupportedEncodingException {
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -585,7 +617,7 @@ public class GeoServerInterceptorService {
 
             LOG.trace("  * Header: " + headerKey);
 
-            if (Arrays.asList(FORWARD_HEADER_KEYS).contains(headerKey)) {
+            if (Arrays.asList(FORWARD_RESPONSE_HEADER_KEYS).contains(headerKey)) {
 
                 // the GeoServer response may contain a subtype in the
                 // "Content-Type" header without double quotes surrounding the

@@ -1,29 +1,26 @@
 package de.terrestris.shogun2.util.interceptor;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.util.StreamUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 /**
  * @author Daniel Koch
@@ -34,7 +31,7 @@ public class OgcXmlUtil {
     /**
      * The Logger.
      */
-    private static final Logger LOG = Logger.getLogger(OgcXmlUtil.class);
+    private static final Logger LOG = getLogger(OgcXmlUtil.class);
 
     /**
      * The default charset.

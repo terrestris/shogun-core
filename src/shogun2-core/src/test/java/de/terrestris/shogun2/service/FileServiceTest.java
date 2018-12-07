@@ -59,6 +59,25 @@ public class FileServiceTest extends PermissionAwareCrudServiceTest<File, FileDa
         assertEquals(persistedFile.getFileType(), fileType);
     }
 
+    @Test(expected = Exception.class)
+    public void upload_withError() throws Exception {
+        final String fileName = "fileName.txt";
+        final String fileType = "text/plain";
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "fileData",
+                fileName,
+                fileType,
+                (byte[])null);
+
+        doNothing().when(dao).saveOrUpdate(any(File.class));
+
+        crudService.uploadFile(mockMultipartFile);
+
+        verify(dao, times(1)).saveOrUpdate(any(File.class));
+        verifyNoMoreInteractions(dao);
+    }
+
     /**
      * @throws Exception
      */
