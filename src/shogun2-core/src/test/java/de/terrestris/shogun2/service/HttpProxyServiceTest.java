@@ -36,7 +36,7 @@ import java.util.List;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpUtil.class)
-@PowerMockIgnore({"javax.management.*", "org.mockito.*", "org.powermock.*", "org.apache.commons.*", "org.junit.*", "javax.xml.*", "org.xml.*"})
+@PowerMockIgnore({"javax.management.*", "org.mockito.*", "org.powermock.*", "org.apache.commons.*", "org.junit.*", "javax.xml.*", "org.xml.*", "org.apache.logging.log4j.*"})
 public class HttpProxyServiceTest {
 
     @InjectMocks
