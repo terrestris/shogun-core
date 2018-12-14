@@ -1,5 +1,13 @@
 # Release Notes
 
+## 1.1.0 (2018-12-14)
+
+* Changes:
+  * https://nexus.terrestris.de/repository/public/ is now being used as maven repo. See [here](https://github.com/terrestris/shogun2/pull/327).
+  * SHOGun2 now provides default interceptors that use basic auth. See [here](https://github.com/terrestris/shogun2/pull/330).
+  * The project has been migrated to be compatible to the latest JTS versions, which is necessary, if we want to make use of the latest
+  GeoTools/GeoServer releases. See [here](https://github.com/terrestris/shogun2/pull/331).
+
 ## 1.0.5 (2018-06-25)
 
 * Changes:
