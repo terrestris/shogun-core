@@ -29,13 +29,13 @@ public class WpsRequestInterceptor implements WpsRequestInterceptorInterface {
 	/**
 	 *
 	 */
-	@Value("${geoserver.username}")
+	@Value("${geoserver.username:}")
 	private String gsUser;
 
 	/**
 	 *
 	 */
-	@Value("${geoserver.password}")
+	@Value("${geoserver.password:}")
 	private String gsPass;
 
 	/**

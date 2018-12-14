@@ -29,13 +29,13 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
 	/**
 	 *
 	 */
-	@Value("${geoserver.username}")
+	@Value("${geoserver.username:}")
 	private String gsUser;
 
 	/**
 	 *
 	 */
-	@Value("${geoserver.password}")
+	@Value("${geoserver.password:}")
 	private String gsPass;
 
 	/**
