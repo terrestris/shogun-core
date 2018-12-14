@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.locationtech.jts.geom.MultiPolygon;
 
-import com.vividsolutions.jts.geom.MultiPolygon;
 
 /**
  * @author Nils Bühner
