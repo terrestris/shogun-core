@@ -13,8 +13,8 @@ import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.interceptor.WfsRequestInterceptorInterface;
 
 /**
- * Interceptor class for WFS requests.
- * Adds basic auth headers based on the GS properties by default.
+ * Interceptor class for WFS requests. Adds basic auth headers based on the GS
+ * properties by default.
  *
  * @author Nils Bühner
  *
@@ -38,45 +38,45 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
 	@Value("${geoserver.password}")
 	private String gsPass;
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	@Override
 	public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WFS GetCapabilities and adding Basic auth credentials.");
 		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	@Override
 	public MutableHttpServletRequest interceptDescribeFeatureType(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WFS DescribeFeatureType and adding Basic auth credentials.");
 		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	@Override
 	public MutableHttpServletRequest interceptGetFeature(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WFS GetFeature and adding Basic auth credentials.");
 		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	@Override
 	public MutableHttpServletRequest interceptLockFeature(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WFS LockFeature and adding Basic auth credentials.");
 		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 	@Override
 	public MutableHttpServletRequest interceptTransaction(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WFS Transaction and adding Basic auth credentials.");

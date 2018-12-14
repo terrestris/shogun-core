@@ -13,8 +13,8 @@ import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shogun2.util.interceptor.WmsRequestInterceptorInterface;
 
 /**
- * Interceptor class for WMS requests.
- * Adds basic auth headers based on the GS properties by default.
+ * Interceptor class for WMS requests. Adds basic auth headers based on the GS
+ * properties by default.
  *
  * @author Nils Bühner
  *
