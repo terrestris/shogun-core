@@ -4,34 +4,20 @@
  */
 package de.terrestris.shogun2.model;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.terrestris.shogun2.model.security.PermissionCollection;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import de.terrestris.shogun2.model.security.PermissionCollection;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the abstract superclass for all entities that are
@@ -188,8 +174,8 @@ public abstract class PersistentObject implements Serializable {
     public int hashCode() {
         // two randomly chosen prime numbers
         return new HashCodeBuilder(17, 43).
-            append(getCreated()).
-            append(getModified()).
+            append(getClass()).
+            append(getId()).
             toHashCode();
     }
 
@@ -207,8 +193,8 @@ public abstract class PersistentObject implements Serializable {
         PersistentObject other = (PersistentObject) obj;
 
         return new EqualsBuilder().
-            append(getCreated(), other.getCreated()).
-            append(getModified(), other.getModified()).
+            append(getClass(), other.getClass()).
+            append(getId(), other.getId()).
             isEquals();
     }
 
