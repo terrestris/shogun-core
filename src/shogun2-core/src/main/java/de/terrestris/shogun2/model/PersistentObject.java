@@ -175,7 +175,6 @@ public abstract class PersistentObject implements Serializable {
         // two randomly chosen prime numbers
         return new HashCodeBuilder(17, 43).
             append(getClass()).
-            append(getId()).
             toHashCode();
     }
 
@@ -194,7 +193,6 @@ public abstract class PersistentObject implements Serializable {
 
         return new EqualsBuilder().
             append(getClass(), other.getClass()).
-            append(getId(), other.getId()).
             isEquals();
     }
 
