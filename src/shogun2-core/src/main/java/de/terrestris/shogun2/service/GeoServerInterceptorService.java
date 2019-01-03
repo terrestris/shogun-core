@@ -75,7 +75,8 @@ public class GeoServerInterceptorService {
         "geowebcache-crs",
         "geowebcache-gridset",
         "geowebcache-tile-bounds",
-        "geowebcache-tile-index"
+        "geowebcache-tile-index",
+        "geowebcache-miss-reason"
     };
 
     private final String WMS_REFLECT_ENDPOINT = "/reflect";
@@ -550,7 +551,7 @@ public class GeoServerInterceptorService {
     }
 
     /**
-     * 
+     *
      * @param request
      * @return
      */
