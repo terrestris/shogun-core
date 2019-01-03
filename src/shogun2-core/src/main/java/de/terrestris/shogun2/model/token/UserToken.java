@@ -22,7 +22,6 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public abstract class UserToken extends Token {
 
     /**

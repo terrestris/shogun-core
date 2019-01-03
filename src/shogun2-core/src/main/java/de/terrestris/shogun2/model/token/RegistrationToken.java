@@ -19,7 +19,6 @@ import de.terrestris.shogun2.model.User;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class RegistrationToken extends UserToken {
 
     /**

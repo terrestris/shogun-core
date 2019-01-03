@@ -22,7 +22,6 @@ import de.terrestris.shogun2.model.Application;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Button extends Module {
 
     /**

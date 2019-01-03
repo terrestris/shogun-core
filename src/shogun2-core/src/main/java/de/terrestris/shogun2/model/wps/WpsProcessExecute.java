@@ -32,7 +32,6 @@ import de.terrestris.shogun2.converter.PropertyValueConverter;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class WpsProcessExecute extends WpsReference {
 
     /**

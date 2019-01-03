@@ -60,6 +60,7 @@
                 <prop key="hibernate.generate_statistics">${symbol_dollar}{hibernate.cache.statistics}</prop>
                 <prop key="hibernate.cache.use_reference_entries">true</prop>
                 <prop key="hibernate.cache.use_structured_entries">true</prop>
+                <prop key="hibernate.javax.cache.missing_cache_strategy">create</prop>
             </props>
         </property>
     </bean>

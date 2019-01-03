@@ -30,7 +30,6 @@ import java.util.Set;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Map extends Module {
 
     /**

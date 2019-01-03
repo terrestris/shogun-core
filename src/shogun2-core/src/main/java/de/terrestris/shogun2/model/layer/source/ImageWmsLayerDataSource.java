@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ImageWmsLayerDataSource extends LayerDataSource {
 
     /**

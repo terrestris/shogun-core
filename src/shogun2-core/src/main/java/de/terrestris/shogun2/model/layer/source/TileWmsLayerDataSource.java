@@ -20,7 +20,6 @@ import javax.persistence.Table;
 @Table
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 
     /**

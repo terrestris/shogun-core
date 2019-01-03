@@ -39,7 +39,6 @@ import de.terrestris.shogun2.model.layer.Layer;
 @Table
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OverviewMap extends Module {
 
     /**
