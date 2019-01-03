@@ -91,7 +91,7 @@ you want to deploy from a linux machine.
     `deterrestris-xxxx`. If you see two or more repositories, you may
     have been uploading with changing IPs. Make sure you use a single
     IP to upload all files.
-  * Find the repository you created by clicking the reposoitory row and
+  * Find the repository you created by clicking the repository row and
     examining the details. Look at the `Owner` property. If the listed
     IP-address matches your IP, you found the correct repo.
   * Once you have selected the correct row, click the `Close`-button at the
@@ -107,8 +107,6 @@ you want to deploy from a linux machine.
     left checked.
   * If everything went well (and some time has passed), the repository should
     no longer be listed in the grid of `Staging Repositories`.
-  * Next, please drop the other automatically created repository (Select, click
-    `Drop`-button, confirm, be happy).
   * You can check if the release was successful by searching in the `Artifact
     Search` for `de.terrestris`; all artifacts (currently 10) should list the
     just released version.

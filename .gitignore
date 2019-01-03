@@ -18,3 +18,8 @@ release.properties
 .idea/
 *.iml
 *.iws
+
+##### Visual Studio Code #####
+.vscode
+.factorypath
+

@@ -78,16 +78,10 @@
         <value>${package}.model</value>
     </util:list>
 
-    <!--
-     | The interceptor beans, uncomment to be able to use the interceptor
-     | classes for OGC requests
-     |
-    <bean id="wmsRequestInterceptor" class="${package}.util.WmsRequestInterceptor" />
-    <bean id="wmsResponseInterceptor" class="${package}.util.WmsResponseInterceptor" />
-    <bean id="wfsRequestInterceptor" class="${package}.util.WfsRequestInterceptor" />
-    <bean id="wfsResponseInterceptor" class="${package}.util.WfsResponseInterceptor" />
-    <bean id="wcsRequestInterceptor" class="${package}.util.WcsRequestInterceptor" />
-    <bean id="wcsResponseInterceptor" class="${package}.util.WcsResponseInterceptor" />
-     |
-     +-->
+    <!-- The default shogun2 OWS request interceptors -->
+    <bean id="wfsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WfsRequestInterceptor" />
+    <bean id="wcsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WcsRequestInterceptor" />
+    <bean id="wmsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WmsRequestInterceptor" />
+    <bean id="wpsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WpsRequestInterceptor" />
+
 </beans>
