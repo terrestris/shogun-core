@@ -34,7 +34,6 @@ import de.terrestris.shogun2.converter.UserGroupIdResolver;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends Person {
 
     private static final long serialVersionUID = 1L;

@@ -1,21 +1,15 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import de.terrestris.shogun2.model.layer.util.TileGrid;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shogun2.model.layer.util.TileGrid;
+import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Data source of layers for tile data from WMS servers.
@@ -26,7 +20,6 @@ import de.terrestris.shogun2.model.layer.util.TileGrid;
 @Table
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
 
     /**
@@ -60,8 +53,6 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
      * @param width
      * @param height
      * @param version
-     * @param layers
-     * @param styles
      * @param tileGrid
      */
     public TileWmsLayerDataSource(String name, String type, String url, int width,

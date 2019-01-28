@@ -1,8 +1,9 @@
 package de.terrestris.shogun2.security;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.model.Role;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.model.Role;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.UserGroup;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -45,8 +44,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
      * This method has to be {@link Transactional} to allow that associated entities
      * can be fetched lazily.
      *
-     * @see org.springframework.security.authentication.AuthenticationProvider#
-     * authenticate(org.springframework.security.core.Authentication)
+     * @see org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.core.Authentication)
      */
     @Override
     @Transactional(value = "transactionManager", readOnly = true)
@@ -135,7 +133,6 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
 
     /**
      * @param user
-     * @param userGroups
      * @return
      */
     private Set<Role> getAllUserRoles(User user) {

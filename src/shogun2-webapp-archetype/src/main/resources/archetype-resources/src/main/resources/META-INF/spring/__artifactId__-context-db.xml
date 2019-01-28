@@ -55,11 +55,12 @@
                 <prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
                 <prop key="hibernate.hbm2ddl.auto">${symbol_dollar}{hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
-                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.jcache.JCacheRegionFactory</prop>
                 <prop key="org.hibernate.cache.ehcache.configurationResourceName">/ehcache.xml</prop>
                 <prop key="hibernate.generate_statistics">${symbol_dollar}{hibernate.cache.statistics}</prop>
                 <prop key="hibernate.cache.use_reference_entries">true</prop>
                 <prop key="hibernate.cache.use_structured_entries">true</prop>
+                <prop key="hibernate.javax.cache.missing_cache_strategy">create</prop>
             </props>
         </property>
     </bean>

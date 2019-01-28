@@ -20,7 +20,6 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class WpsReference extends WpsParameter {
 
     /**

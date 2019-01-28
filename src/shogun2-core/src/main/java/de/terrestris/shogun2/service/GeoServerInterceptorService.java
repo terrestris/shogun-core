@@ -390,7 +390,6 @@ public class GeoServerInterceptorService {
      * @param geoServerNamespace
      * @param useWmsReflector
      * @param isWMS
-     * @return
      * @throws URISyntaxException
      * @throws InterceptorException
      */
@@ -430,7 +429,6 @@ public class GeoServerInterceptorService {
 
     /**
      * @param message
-     * @return
      * @throws URISyntaxException
      * @throws InterceptorException
      */
@@ -456,7 +454,6 @@ public class GeoServerInterceptorService {
 
     /**
      * @param endPoint
-     * @return
      */
     private static String getGeoServerNameSpace(String endPoint) {
 
@@ -473,11 +470,10 @@ public class GeoServerInterceptorService {
 
     /**
      * @param request
-     * @return
      * @throws InterceptorException
      * @throws HttpException
      */
-    private static Response sendRequest(MutableHttpServletRequest request)
+    public static Response sendRequest(MutableHttpServletRequest request)
         throws InterceptorException, HttpException {
 
         Response httpResponse = new Response();
@@ -570,13 +566,11 @@ public class GeoServerInterceptorService {
     }
 
     /**
-     * Returns a new URI with the passed queryString (e.g. foo=bar&baz=123) appended to the passed URI. Adjusted from
+     * Returns a new URI with the passed queryString (e.g. foo=bar&amp;baz=123) appended to the passed URI. Adjusted from
      * http://stackoverflow.com/a/26177982.
      *
      * @param uri
      * @param appendQuery
-     * @return
-     * @throws URISyntaxException
      */
     public static URI appendQueryString(URI uri, String appendQuery) {
         if (uri == null || appendQuery == null || appendQuery.isEmpty()) {

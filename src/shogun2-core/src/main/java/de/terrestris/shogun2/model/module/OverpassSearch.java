@@ -35,7 +35,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OverpassSearch extends Module {
 
     /**

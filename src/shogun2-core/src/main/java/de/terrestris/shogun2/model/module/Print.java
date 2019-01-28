@@ -20,7 +20,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Print extends Module {
 
     /**

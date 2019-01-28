@@ -13,6 +13,7 @@ import de.terrestris.shogun2.util.interceptor.OgcMessageDistributor;
 import de.terrestris.shogun2.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.entity.ContentType;
 import org.junit.Before;
@@ -38,13 +39,13 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(HttpUtil.class)
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "org.mockito.*", "org.powermock.*", "org.apache.commons.*", "org.junit.*", "javax.xml.*", "org.xml.*", "org.apache.logging.log4j.*"})
 public class GeoServerInterceptorServiceTest {
 
     private final String TEST_GEOSERVER_BASE_PATH = "http://localhost:1234/geoserver/";
@@ -88,7 +89,7 @@ public class GeoServerInterceptorServiceTest {
         httpRequest.setMethod("GET");
 
         PowerMockito.mockStatic(HttpUtil.class);
-        when(HttpUtil.get(any(String.class))).thenReturn(resp);
+        when(HttpUtil.get(any(URI.class), any(Header[].class))).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
@@ -101,9 +102,7 @@ public class GeoServerInterceptorServiceTest {
         when(ruleService.findAllRulesForServiceAndEvent(
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
-
         Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
-
         assertEquals(resp, got);
     }
 
@@ -119,7 +118,7 @@ public class GeoServerInterceptorServiceTest {
 
         PowerMockito.mockStatic(HttpUtil.class);
         Response resp = new Response();
-        when(HttpUtil.get(any(String.class))).thenReturn(resp);
+        when(HttpUtil.get(any(URI.class), any(Header[].class))).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
@@ -153,7 +152,7 @@ public class GeoServerInterceptorServiceTest {
         httpRequest.setMethod("POST");
 
         PowerMockito.mockStatic(HttpUtil.class);
-        when(HttpUtil.post(any(String.class), any(List.class))).thenReturn(resp);
+        when(HttpUtil.post(any(URI.class), any(List.class), any(Header[].class))).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
@@ -180,7 +179,7 @@ public class GeoServerInterceptorServiceTest {
 
         String url = "http://example.com/geoserver.action";
         String queryString = "FC=effzeh&HUMPTY=dumpty";
-        String expectedPostUrl = url + "?" + queryString;
+        URI expectedPostUrl = new URI(url + "?" + queryString);
 
         MockHttpServletRequest httpRequest = new MockHttpServletRequest();
         httpRequest.setRequestURI(url); // Set the raw URL …
@@ -193,7 +192,7 @@ public class GeoServerInterceptorServiceTest {
         PowerMockito.mockStatic(HttpUtil.class);
         when(
             // …but only return the created resp when the expected URL is requested
-            HttpUtil.post(eq(expectedPostUrl), any(List.class))
+            HttpUtil.post(eq(expectedPostUrl), any(List.class), any(Header[].class))
         ).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
@@ -238,7 +237,7 @@ public class GeoServerInterceptorServiceTest {
         httpRequest.setMethod("POST");
 
         PowerMockito.mockStatic(HttpUtil.class);
-        when(HttpUtil.post(any(String.class), any(String.class), any(ContentType.class))).thenReturn(resp);
+        when(HttpUtil.post(any(URI.class), any(List.class), any(Header[].class))).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
@@ -264,7 +263,7 @@ public class GeoServerInterceptorServiceTest {
 
         String url = "http://example.com/geoserver.action";
         String queryString = "FC=effzeh&HUMPTY=dumpty";
-        String expectedPostUrl = url + "?" + queryString;
+        URI expectedPostUrl = new URI(url + "?" + queryString);
 
         Response resp = new Response();
 
@@ -289,7 +288,7 @@ public class GeoServerInterceptorServiceTest {
         PowerMockito.mockStatic(HttpUtil.class);
         when(
             // …but only return the created resp when the expected URL is requested
-            HttpUtil.post(eq(expectedPostUrl), any(String.class), any(ContentType.class))
+            HttpUtil.post(eq(expectedPostUrl), any(List.class), any(Header[].class))
         ).thenReturn(resp);
 
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);

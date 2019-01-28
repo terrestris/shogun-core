@@ -38,7 +38,6 @@ import de.terrestris.shogun2.model.module.CompositeModule;
 @Table
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AbsoluteLayout extends Layout {
 
     /**

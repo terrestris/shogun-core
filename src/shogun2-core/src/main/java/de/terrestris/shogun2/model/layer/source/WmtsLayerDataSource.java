@@ -20,7 +20,6 @@ import java.util.List;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class WmtsLayerDataSource extends LayerDataSource {
 
     /**

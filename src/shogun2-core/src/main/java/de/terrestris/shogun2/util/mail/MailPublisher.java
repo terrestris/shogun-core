@@ -89,7 +89,6 @@ public class MailPublisher {
      * @param attachmentFilename The attachment file name.
      * @param attachmentFile     The file resource to be applied to the mail.
      * @throws MessagingException
-     * @throws Exception
      */
     public void sendMimeMail(String from, String replyTo, String[] to, String[] cc,
                              String[] bcc, String subject, String msg, Boolean html,
@@ -143,7 +142,6 @@ public class MailPublisher {
 
     /**
      * @param mailMessage
-     * @throws Exception
      */
     public void sendMail(SimpleMailMessage mailMessage) throws MailException {
         final String subject = mailMessage.getSubject();
@@ -157,7 +155,6 @@ public class MailPublisher {
     /**
      * @param mimeMessage
      * @throws MessagingException
-     * @throws Exception
      */
     public void sendMail(MimeMessage mimeMessage) throws MailException, MessagingException {
         final String subject = mimeMessage.getSubject();

@@ -144,13 +144,13 @@
         <!-- Testing -->
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>2.23.0</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
         <greenmail.version>1.5.6</greenmail.version>
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.1.0</coveralls-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.7.6.201602180812</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-io.version>2.5</commons-io.version>
@@ -164,12 +164,11 @@
 
         <!-- Joda Time -->
         <joda-time.version>2.10.1</joda-time.version>
-        <!-- TODO: make use of the release candidate 3.2.0? -->
-        <jadira-usertype-jodatime.version>6.0.1.GA</jadira-usertype-jodatime.version>
+        <jadira-usertype-jodatime.version>7.0.0.CR1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -206,11 +205,12 @@
         <!-- Zip4j -->
         <zip4j.version>1.3.2</zip4j.version>
 
+        <xerces.version>2.11.0</xerces.version>
         <!-- Java XML Parser -->
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>1.7.4</powermock.version>
+        <powermock.version>2.0.0-beta.5</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.16.0</jts.version>
@@ -218,6 +218,7 @@
         <!-- JTS Jackson Datatype -->
         <jackson-datatype-jts.version>0.10-2.5-2</jackson-datatype-jts.version>
 
+        <jaxb.version>2.3.0</jaxb.version>
         <clean-plugin.version>3.1.0</clean-plugin.version>
         <compiler-plugin.version>3.8.0</compiler-plugin.version>
         <javadoc-plugin.version>3.0.1</javadoc-plugin.version>
@@ -228,51 +229,16 @@
         <resources-plugin.version>3.0.2</resources-plugin.version>
         <project-info-reports-plugin.version>3.0.0</project-info-reports-plugin.version>
 
+        <bytebuddy.version>1.7.9</bytebuddy.version>
+        <xmlapi.version>1.4.01</xmlapi.version>
+        <cache.version>1.1.0</cache.version>
+
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
+        <jdk.version>1.8</jdk.version>
     </properties>
 
     <profiles>
-        <!-- A profile for JDK 1.7 -->
-        <profile>
-            <id>jdk7</id>
-            <activation>
-                <jdk>1.7</jdk>
-            </activation>
-            <properties>
-                <jdk.version>1.7</jdk.version>
-            </properties>
-            <dependencies>
-                <!-- Connection Pooling -->
-                <dependency>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>HikariCP-java7</artifactId>
-                    <version>${hikari-jdk7.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- A profile for JDK 1.8 (and later) -->
-        <profile>
-            <id>jdk8</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <jdk.version>1.8</jdk.version>
-                <!-- Make Javadocs work in 1.8. Credits go to http://stackoverflow.com/a/26806103 -->
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-            <dependencies>
-                <!-- Connection Pooling -->
-                <dependency>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>HikariCP</artifactId>
-                    <version>${hikari.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <!-- A profile to configure the build of the Javadocs with UMLGraph.
             This requires that 'graphviz' is installed on your system: sudo apt-get install
             graphviz -->
@@ -292,11 +258,13 @@
                                 <artifactId>umlgraph</artifactId>
                                 <version>5.6.6</version>
                             </docletArtifact>
-                            <additionalparam>${javadoc.opts}
+                            <doclint>none</doclint>
+                            <failOnError>false</failOnError>
+                            <additionalOptions>
                                 -collapsible -hide
                                 'java.*|org.joda.*|org.apache.log4j.*'
                                 -inferdep -inferrel -inferreltype
-                                'assoc' -collpackages 'java.util.*'</additionalparam>
+                                'assoc' -collpackages 'java.util.*'</additionalOptions>
                             <useStandardDocletOptions>true</useStandardDocletOptions>
                         </configuration>
                     </plugin>
@@ -470,7 +438,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <additionalparam>${javadoc.opts}</additionalparam>
+                    <failOnError>false</failOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -561,6 +529,38 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
         </dependency>
     </dependencies>
 
@@ -716,7 +716,7 @@
 
             <dependency>
                 <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
+                <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
                   <scope>test</scope>
             </dependency>
@@ -792,12 +792,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-ehcache</artifactId>
-                <version>${hibernate.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.logging</groupId>
+                        <artifactId>jboss-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- H2 Database -->
@@ -921,7 +921,7 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.xml</groupId>
+                <groupId>javax.xml.parsers</groupId>
                 <artifactId>jaxp-api</artifactId>
                 <version>${jaxp-api.version}</version>
             </dependency>
@@ -958,6 +958,28 @@
             </dependency>
 
             <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xerces.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>${jaxb.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
@@ -986,6 +1008,34 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy-agent</artifactId>
+                <version>${bytebuddy.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>${xmlapi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-jcache</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.cache</groupId>
+                <artifactId>cache-api</artifactId>
+                <version>${cache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
             </dependency>
 
         </dependencies>

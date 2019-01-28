@@ -1,9 +1,12 @@
 package de.terrestris.shogun2.web;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import de.terrestris.shogun2.dao.PasswordResetTokenDao;
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.token.PasswordResetToken;
+import de.terrestris.shogun2.service.PasswordResetTokenService;
+import de.terrestris.shogun2.service.UserService;
+import de.terrestris.shogun2.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -12,13 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shogun2.dao.PasswordResetTokenDao;
-import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.token.PasswordResetToken;
-import de.terrestris.shogun2.service.PasswordResetTokenService;
-import de.terrestris.shogun2.service.UserService;
-import de.terrestris.shogun2.util.data.ResultSet;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author Daniel Koch
@@ -65,7 +63,6 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     /**
      * @param email
      * @param password
-     * @return
      */
     @RequestMapping(value = "/register.action", method = RequestMethod.POST)
     public @ResponseBody
@@ -95,7 +92,6 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 
     /**
      * @param token
-     * @return
      */
     @RequestMapping(value = "/activate.action", method = RequestMethod.GET)
     public @ResponseBody
@@ -112,7 +108,6 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
 
     /**
      * @param email
-     * @return
      */
     @RequestMapping(value = "/resetPassword.action", method = RequestMethod.POST)
     public @ResponseBody
@@ -133,9 +128,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     }
 
     /**
-     * @param id
      * @param token
-     * @return
      */
     @RequestMapping(value = "/changePassword.action", method = RequestMethod.POST)
     public @ResponseBody
@@ -157,7 +150,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     }
 
     /**
-     * @return
+     *
      */
     @RequestMapping(value = "/getUserBySession.action", method = RequestMethod.GET)
     public @ResponseBody

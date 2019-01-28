@@ -27,7 +27,6 @@ import de.terrestris.shogun2.model.Plugin;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class WpsPlugin extends Plugin {
 
     /**

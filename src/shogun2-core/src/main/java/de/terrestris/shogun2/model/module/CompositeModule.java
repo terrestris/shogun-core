@@ -33,7 +33,6 @@ import de.terrestris.shogun2.model.layout.Layout;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CompositeModule extends Module {
 
     /**

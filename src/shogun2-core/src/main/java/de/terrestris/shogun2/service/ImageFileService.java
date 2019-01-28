@@ -64,7 +64,6 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
 
     /**
      * @param file
-     * @return
      * @throws Exception
      */
     @Override
@@ -94,7 +93,6 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
      * @param file
      * @param createThumbnail
      * @param thumbnailTargetSize
-     * @return
      * @throws Exception
      */
     @PreAuthorize("isAuthenticated()")
@@ -152,10 +150,8 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
     /**
      * Scales an image by the given dimensions
      *
-     * @param is
      * @param outputFormat
      * @param targetSize   width/height in px (square)
-     * @return
      * @throws Exception
      */
     public static byte[] scaleImage(byte[] imageBytes, String outputFormat,

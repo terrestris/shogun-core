@@ -1,10 +1,12 @@
 package de.terrestris.shogun2.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
+import de.terrestris.shogun2.dao.RegistrationTokenDao;
+import de.terrestris.shogun2.dao.RoleDao;
+import de.terrestris.shogun2.dao.UserDao;
+import de.terrestris.shogun2.model.Role;
+import de.terrestris.shogun2.model.User;
+import de.terrestris.shogun2.model.UserGroup;
+import de.terrestris.shogun2.model.token.RegistrationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -14,13 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shogun2.dao.RegistrationTokenDao;
-import de.terrestris.shogun2.dao.RoleDao;
-import de.terrestris.shogun2.dao.UserDao;
-import de.terrestris.shogun2.model.Role;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.UserGroup;
-import de.terrestris.shogun2.model.token.RegistrationToken;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Service class for the {@link User} model.
@@ -119,7 +117,6 @@ public class UserService<E extends User, D extends UserDao<E>> extends
      *
      * @param user    A user with an UNencrypted password (!)
      * @param request
-     * @return
      * @throws Exception
      */
     public E registerUser(E user, HttpServletRequest request) throws Exception {
@@ -144,8 +141,6 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     }
 
     /**
-     * @param token
-     * @return
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -224,8 +219,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     }
 
     /**
-     * @param request
-     * @throws Exception
+     *
      */
     @Transactional(readOnly = true)
     public E getUserBySession() {
@@ -250,7 +244,6 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 
     /**
      * @param userId
-     * @return
      * @throws Exception
      */
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")

@@ -50,8 +50,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 
     /**
      * Find all entities.
-     *
-     * @return
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<E>> findAll(@RequestParam MultiValueMap<String, String> requestParams) {
@@ -70,8 +68,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      * Find all entities that match the conditions from the query string.
      * <p>
      * The requestParams MultiValueMap contains all information from the query String @see {@link RequestParam}
-     *
-     * @return
      */
     @RequestMapping(value = "/filter", method = RequestMethod.GET)
     public ResponseEntity<List<E>> findBySimpleFilter(@RequestParam MultiValueMap<String, String> requestParams) {
@@ -91,7 +87,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      * Get an entity by id.
      *
      * @param id
-     * @return
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<E> findById(@PathVariable Integer id) {
@@ -110,9 +105,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 
     /**
      * Create/save an entity.
-     *
-     * @param entity
-     * @return
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<E> save(HttpServletRequest request) {
@@ -152,8 +144,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      * Updates an entity by id.
      *
      * @param id
-     * @param entity
-     * @return
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<E> update(@PathVariable int id, HttpServletRequest request) {
@@ -213,7 +203,6 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      * Deletes an entity by id.
      *
      * @param id
-     * @return
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<E> delete(@PathVariable int id) {

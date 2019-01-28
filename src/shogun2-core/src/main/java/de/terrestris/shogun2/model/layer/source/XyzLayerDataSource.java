@@ -37,7 +37,6 @@ import de.terrestris.shogun2.model.layer.util.Extent;
 @Table
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class XyzLayerDataSource extends LayerDataSource {
 
     /**

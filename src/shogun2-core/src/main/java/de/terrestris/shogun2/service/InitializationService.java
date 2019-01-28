@@ -59,7 +59,6 @@ public class InitializationService {
      * Used to create a user. Implements special logic by encoding the password.
      *
      * @param user
-     * @return
      */
     public void saveUser(User user) {
         LOG.trace("Trying to create a new user");

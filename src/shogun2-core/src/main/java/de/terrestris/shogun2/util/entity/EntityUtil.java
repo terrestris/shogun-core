@@ -1,21 +1,15 @@
 package de.terrestris.shogun2.util.entity;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 /**
  * @author Nils Bühner
@@ -33,7 +27,6 @@ public class EntityUtil {
      * @param fieldName
      * @param fieldEntityType
      * @param forceAccess
-     * @return
      */
     public static boolean isField(Class<?> clazz, String fieldName, Class<?> fieldEntityType, boolean forceAccess) {
         Field field = FieldUtils.getField(clazz, fieldName, forceAccess);
@@ -87,8 +80,8 @@ public class EntityUtil {
      * Returns a list of fieldNames of the passed class that can be used to either
      * <p>
      * <ul>
-     * <li>filter results with, see {@link validFieldNamesWithCastedValues}, or</li>
-     * <li>restrict output of queries, see {@link determineRestrictFields} </li>
+     * <li>filter results with, see {@link #validFieldNamesWithCastedValues}, or</li>
+     * <li>restrict output of queries, see {@link #determineRestrictFields} </li>
      * </ul>
      *
      * @param entityClass
@@ -123,6 +116,7 @@ public class EntityUtil {
      * Examples:
      * <p>
      * <table>
+     *     <caption>Examples:</caption>
      * <thead>
      * <tr>
      * <th>in</th><th>out</th><th>in.size()</th><th>out.size()</th>
@@ -160,7 +154,6 @@ public class EntityUtil {
      * </table>
      *
      * @param listOfCommaSeparatedValues
-     * @return
      */
     public static List<String> listFromCommaSeparatedStringList(List<String> listOfCommaSeparatedValues) {
         if (listOfCommaSeparatedValues == null) {
@@ -194,7 +187,6 @@ public class EntityUtil {
      *
      * @param requestedFilter
      * @param entityClass
-     * @return
      */
     public static List<String> determineRestrictFields(MultiValueMap<String, String> requestedFilter, Class<?> entityClass) {
         if (requestedFilter == null) {

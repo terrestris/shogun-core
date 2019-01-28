@@ -39,7 +39,6 @@ import de.terrestris.shogun2.model.layer.Layer;
 @Entity
 @Table
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class WfsSearch extends Module {
 
     /**
