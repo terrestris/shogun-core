@@ -1,6 +1,3 @@
-/**
- *
- */
 package de.terrestris.shogun2.web;
 
 import de.terrestris.shogun2.dao.MapDao;
@@ -25,6 +22,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/maps")
 public class MapController<E extends Map, D extends MapDao<E>, S extends MapService<E, D>> {
+
+    public static final String COULD_NOT_SET_ERROR_MSG = "Could not set layers for Map";
 
     protected S service;
 
@@ -56,19 +55,25 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
     }
 
     /**
+     * Set layers for map
      *
+     * @param mapModuleId The map module id
+     * @param layerIds The list of layer ids
+     * @return
      */
     @RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)
     public @ResponseBody
     java.util.Map<String, Object> setLayersForMap(
         @RequestParam("mapModuleId") Integer mapModuleId,
         @RequestParam("layerIds") List<Integer> layerIds) {
-
         try {
+            if (mapModuleId == null || layerIds == null || layerIds.isEmpty()) {
+                throw new Exception();
+            }
             List<Layer> layers = this.service.setLayersForMap(mapModuleId, layerIds);
             return ResultSet.success(layers);
         } catch (Exception e) {
-            return ResultSet.error("Could not set Layers for Map");
+            return ResultSet.error(COULD_NOT_SET_ERROR_MSG);
         }
     }
 
