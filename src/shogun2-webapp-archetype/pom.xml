@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.terrestris</groupId>
         <artifactId>shogun2</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>2.0.0</version>
     </parent>
 
     <artifactId>shogun2-webapp-archetype</artifactId>
