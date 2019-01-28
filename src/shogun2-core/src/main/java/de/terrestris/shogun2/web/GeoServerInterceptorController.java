@@ -41,7 +41,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
     /**
      *
      */
-    private static final String ERROR_MESSAGE = "Error while requesting a " +
+    public static final String ERROR_MESSAGE = "Error while requesting a " +
         "GeoServer resource: ";
 
     /**
@@ -57,7 +57,6 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
         Response httpResponse = null;
 
         try {
-
             LOG.trace("Trying to intercept a GeoServer resource.");
 
             httpResponse = this.service.interceptGeoServerRequest(request);
