@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LogManager.class})
-@PowerMockIgnore({"javax.management.*","javax.net.ssl.*"})
+@PowerMockIgnore({"javax.management.*", "javax.xml.*", "org.apache.xerces.*", "org.w3c.dom.*", "org.xml.sax.*"})
 public class ContentInitializerTest {
 
     @Mock
