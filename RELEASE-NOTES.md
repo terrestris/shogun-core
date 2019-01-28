@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.0.0 (2019-01-28)
+
+* Changes:
+  * We are now compatible to Java 11. See [here](https://github.com/terrestris/shogun2/pull/320)
+
 ## 1.1.0 (2018-12-14)
 
 * Changes:
