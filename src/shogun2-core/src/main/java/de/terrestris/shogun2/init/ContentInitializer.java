@@ -54,11 +54,8 @@ public class ContentInitializer {
      * The method called on initialization
      */
     public void initializeDatabaseContent() {
-
         if (this.shogunInitEnabled) {
-
             LOG.info("Initializing SHOGun2 content");
-
             for (PersistentObject object : objectsToCreate) {
                 if (object instanceof User) {
                     // special handling of users to encrypt the password!
@@ -67,10 +64,32 @@ public class ContentInitializer {
                     initService.savePersistentObject(object);
                 }
             }
-
         } else {
             LOG.info("Not initializing anything for SHOGun2.");
         }
     }
 
+    /**
+     *
+     * @param shogunInitEnabled
+     */
+    public void setShogunInitEnabled(Boolean shogunInitEnabled) {
+        this.shogunInitEnabled = shogunInitEnabled;
+    }
+
+    /**
+     *
+     * @param initService
+     */
+    public void setInitService(InitializationService initService) {
+        this.initService = initService;
+    }
+
+    /**
+     *
+     * @param objectsToCreate
+     */
+    public void setObjectsToCreate(List<PersistentObject> objectsToCreate) {
+        this.objectsToCreate = objectsToCreate;
+    }
 }

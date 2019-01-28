@@ -105,19 +105,13 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
     @Transactional(readOnly = true)
     public List<String> preCheckDelete(Integer pluginId) {
         List<String> result = new ArrayList<>();
-
         E plugin = this.dao.findById(pluginId);
-
         if (plugin != null) {
-
             List<Application> appsWithPlugin = applicationService.findAllWithCollectionContaining("plugins", plugin);
-
             for (Application application : appsWithPlugin) {
                 result.add(application.getName());
             }
-
         }
-
         return result;
     }
 

@@ -35,7 +35,7 @@ public class ModelDescriptionController {
         try {
             JsonSchema json = modelDescriptionService.getJsonSchema(className);
             if (json == null) {
-                return ResultSet.error("Modeldescription (json) for model " + className + "is null.");
+                return ResultSet.error("Model description (json) for model " + className + " is null.");
             }
             return ResultSet.success(json);
         } catch (Exception e) {
@@ -43,4 +43,11 @@ public class ModelDescriptionController {
         }
     }
 
+    /**
+     * The setter for modelDescriptionService
+     * @param modelDescriptionService
+     */
+    public void setModelDescriptionService(ModelDescriptionService modelDescriptionService) {
+        this.modelDescriptionService = modelDescriptionService;
+    }
 }

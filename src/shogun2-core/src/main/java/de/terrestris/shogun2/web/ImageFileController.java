@@ -65,7 +65,7 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
     public ResponseEntity<?> getThumbnail(@RequestParam Integer id) {
 
         final HttpHeaders responseHeaders = new HttpHeaders();
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+        Map<String, Object> responseMap;
 
         try {
             // try to get the image
