@@ -1,29 +1,24 @@
 package de.terrestris.shogun2.hibernate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.HashMap;
 
 
 /**
- * Generic jsonb user type. Annotate your entities with javax.json.JsonObject as the type.
+ * Generic jsonb user type. Annotate your entities with Map&lt;String, Object&gt; as the type.
  */
 public class JsonbUserType implements UserType {
-
-    private static final int[] SQL_TYPES = { Types.LONGVARCHAR };
 
     @Override
     public Object assemble(Serializable cached, Object owner) throws HibernateException {
@@ -35,21 +30,24 @@ public class JsonbUserType implements UserType {
         if (value == null) {
             return null;
         }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        JsonWriter writer =  Json.createWriter(bos);
-        writer.writeObject((JsonObject) value);
-        writer.close();
-        byte[] bs = bos.toByteArray();
-        JsonReader reader = Json.createReader(new ByteArrayInputStream(bs));
-        return reader.readObject();
+        Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+        if (value instanceof String) {
+            try {
+                return mapper.readValue(value.toString(), HashMap.class);
+            } catch (IOException e) {
+                throw new HibernateException(e);
+            }
+        }
+        try {
+            return mapper.readValue(mapper.writeValueAsString(value), HashMap.class);
+        } catch (IOException e) {
+            throw new HibernateException(e);
+        }
     }
 
     @Override
     public Serializable disassemble(Object value) throws HibernateException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        JsonWriter writer = Json.createWriter(bos);
-        writer.close();
-        return new String(bos.toByteArray(), StandardCharsets.UTF_8);
+        return (Serializable) this.deepCopy(value);
     }
 
     @Override
@@ -64,24 +62,40 @@ public class JsonbUserType implements UserType {
 
     @Override
     public Class returnedClass() {
-        return JsonObject.class;
+        return HashMap.class;
     }
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
+        if (x != null && y != null) {
+            return x.equals(y);
+        }
+        return false;
     }
 
     @Override
     public int hashCode(Object x) throws HibernateException {
-        return x.hashCode();
+        if (x != null) {
+            return x.hashCode();
+        }
+        return 0;
     }
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
         if (!rs.wasNull()) {
-            JsonReader reader = Json.createReader(rs.getBinaryStream(names[0]));
-            return reader.readObject();
+            Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+            try {
+                String string = rs.getString(names[0]);
+                if (string == null) {
+                    return null;
+                }
+                HashMap map = mapper.readValue(string, HashMap.class);
+                System.out.println(map);
+                return map;
+            } catch (IOException e) {
+                throw new HibernateException(e);
+            }
         }
         return null;
     }
@@ -91,17 +105,19 @@ public class JsonbUserType implements UserType {
         if (value == null) {
             st.setNull(index, Types.OTHER);
         } else {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            JsonWriter writer = Json.createWriter(bos);
-            writer.write((JsonObject) value);
-            writer.close();
-            st.setString(index, new String(bos.toByteArray(), StandardCharsets.UTF_8));
+            Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+            try {
+                String string = mapper.writeValueAsString(value);
+                st.setObject(index, string, Types.OTHER);
+            } catch (JsonProcessingException e) {
+                throw new HibernateException(e);
+            }
         }
     }
 
     @Override
     public int[] sqlTypes() {
-        return SQL_TYPES;
+        return new int[]{ Types.OTHER };
     }
 
 }
