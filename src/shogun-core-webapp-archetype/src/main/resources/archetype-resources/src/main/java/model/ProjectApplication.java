@@ -6,7 +6,7 @@ package ${package}.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import de.terrestris.shogun2.model.Application;
+import de.terrestris.shoguncore.model.Application;
 
 /**
  * This is a demo extension of a SHOGun-Core model.

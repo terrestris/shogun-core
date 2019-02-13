@@ -43,10 +43,10 @@
         <property name="dataSource" ref="shogunCoreDataSource" />
         <property name="packagesToScan" value="${model_packages_to_scan}" />
         <property name="implicitNamingStrategy">
-            <bean class="de.terrestris.shogun2.util.naming.ImplicitNamingStrategyShogunCore" />
+            <bean class="de.terrestris.shoguncore.util.naming.ImplicitNamingStrategyShogunCore" />
         </property>
         <property name="physicalNamingStrategy">
-            <bean class="de.terrestris.shogun2.util.naming.PhysicalNamingStrategyShogunCore" />
+            <bean class="de.terrestris.shoguncore.util.naming.PhysicalNamingStrategyShogunCore" />
         </property>
         <property name="hibernateProperties">
             <props>

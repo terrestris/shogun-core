@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 {package}.model.ProjectApplication;
 import ${package}.dao.ProjectApplicationDao;
-import de.terrestris.shogun2.service.ApplicationService;
+import de.terrestris.shoguncore.service.ApplicationService;
 
 /**
  * This is a demo service that demonstrates how a SHOGun-Core service can be

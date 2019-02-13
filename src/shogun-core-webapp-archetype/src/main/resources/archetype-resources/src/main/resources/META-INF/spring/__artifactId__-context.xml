@@ -70,18 +70,18 @@
     <util:properties id="geoServerNameSpaces" location="classpath*:META-INF/geoServerNameSpaces.properties" />
 
     <!-- The ShogunCoreJsonObjectMapper -->
-    <bean id="jacksonObjectMapper" class="de.terrestris.shogun2.util.json.ShogunCoreJsonObjectMapper" />
+    <bean id="jacksonObjectMapper" class="de.terrestris.shoguncore.util.json.ShogunCoreJsonObjectMapper" />
 
     <!-- The SearchPackages to be used in the modelDescriptionService -->
     <util:list id="describeModelSearchPackages" value-type="java.lang.String">
-        <value>de.terrestris.shogun2.model</value>
+        <value>de.terrestris.shoguncore.model</value>
         <value>${package}.model</value>
     </util:list>
 
     <!-- The default shoguncore OWS request interceptors -->
-    <bean id="wfsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WfsRequestInterceptor" />
-    <bean id="wcsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WcsRequestInterceptor" />
-    <bean id="wmsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WmsRequestInterceptor" />
-    <bean id="wpsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WpsRequestInterceptor" />
+    <bean id="wfsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WfsRequestInterceptor" />
+    <bean id="wcsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WcsRequestInterceptor" />
+    <bean id="wmsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WmsRequestInterceptor" />
+    <bean id="wpsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WpsRequestInterceptor" />
 
 </beans>

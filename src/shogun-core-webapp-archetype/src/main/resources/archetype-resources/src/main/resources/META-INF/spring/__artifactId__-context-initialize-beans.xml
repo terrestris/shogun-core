@@ -85,17 +85,17 @@
     </util:list>
 
     <!-- Define roles -->
-    <bean id="adminRole" class="de.terrestris.shogun2.model.Role">
+    <bean id="adminRole" class="de.terrestris.shoguncore.model.Role">
         <property name="name" value="${symbol_dollar}{role.superAdminRoleName}"/>
         <property name="description" value="Administrator Role"/>
     </bean>
-    <bean id="userRole" class="de.terrestris.shogun2.model.Role">
+    <bean id="userRole" class="de.terrestris.shoguncore.model.Role">
         <property name="name" value="${symbol_dollar}{role.defaultUserRoleName}"/>
         <property name="description" value="User Role"/>
     </bean>
 
     <!-- Define users -->
-    <bean id="adminUser" class="de.terrestris.shogun2.model.User">
+    <bean id="adminUser" class="de.terrestris.shoguncore.model.User">
         <property name="firstName" value="Admins first name"/>
         <property name="lastName" value="Admins last name"/>
         <property name="accountName" value="admin"/>
@@ -108,7 +108,7 @@
             </util:set>
         </property>
     </bean>
-    <bean id="defaultUser" class="de.terrestris.shogun2.model.User">
+    <bean id="defaultUser" class="de.terrestris.shoguncore.model.User">
         <property name="firstName" value="Users first name"/>
         <property name="lastName" value="Users last name"/>
         <property name="accountName" value="user"/>
@@ -123,7 +123,7 @@
     </bean>
 
     <!-- Define userGroups -->
-    <bean id="adminUserGroup" class="de.terrestris.shogun2.model.UserGroup">
+    <bean id="adminUserGroup" class="de.terrestris.shoguncore.model.UserGroup">
         <property name="name" value="Admin User Group"/>
         <property name="owner" ref="adminUser"/>
         <property name="members">
@@ -137,7 +137,7 @@
             </util:set>
         </property>
     </bean>
-    <bean id="defaultUserGroup" class="de.terrestris.shogun2.model.UserGroup">
+    <bean id="defaultUserGroup" class="de.terrestris.shoguncore.model.UserGroup">
         <property name="name" value="Default User Group"/>
         <property name="owner" ref="adminUser"/>
         <property name="members">
@@ -153,7 +153,7 @@
     </bean>
 
     <!-- The Border layout -->
-    <bean id="borderLayout" class="de.terrestris.shogun2.model.layout.BorderLayout">
+    <bean id="borderLayout" class="de.terrestris.shoguncore.model.layout.BorderLayout">
         <property name="propertyHints">
             <util:set id="propertyHints">
                 <value>title</value>
@@ -176,7 +176,7 @@
     </bean>
 
     <!-- The Absolute layout -->
-    <bean id="absoluteLayout" class="de.terrestris.shogun2.model.layout.AbsoluteLayout">
+    <bean id="absoluteLayout" class="de.terrestris.shoguncore.model.layout.AbsoluteLayout">
         <property name="propertyMusts">
             <util:set id="propertyMusts">
                 <value>x</value>
@@ -187,7 +187,7 @@
     </bean>
 
     <!-- The HBOX layout -->
-    <bean id="hboxLayout" class="de.terrestris.shogun2.model.layout.Layout">
+    <bean id="hboxLayout" class="de.terrestris.shoguncore.model.layout.Layout">
         <property name="type" value="hbox" />
         <property name="propertyHints">
             <util:set id="propertyHints">
@@ -261,7 +261,7 @@
     </bean>
 
     <!-- Default extent -->
-    <bean id="mapConfigExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
+    <bean id="mapConfigExtent" class="de.terrestris.shoguncore.model.layer.util.Extent">
         <property name="lowerLeft">
             <bean class="java.awt.geom.Point2D$Double">
                 <constructor-arg index="0" value="-20026376.39" />
@@ -277,7 +277,7 @@
     </bean>
 
     <!-- Define the MapConfig -->
-    <bean id="mapConfig" class="de.terrestris.shogun2.model.map.MapConfig">
+    <bean id="mapConfig" class="de.terrestris.shoguncore.model.map.MapConfig">
         <property name="name" value="default" />
         <property name="center">
             <bean class="java.awt.geom.Point2D$Double">
@@ -319,23 +319,23 @@
     </bean>
 
     <!-- Define map controls -->
-    <bean id="controlAttribution" class="de.terrestris.shogun2.model.map.MapControl">
+    <bean id="controlAttribution" class="de.terrestris.shoguncore.model.map.MapControl">
         <property name="mapControlName" value="Attribution" />
     </bean>
 
-    <bean id="controlZoom" class="de.terrestris.shogun2.model.map.MapControl">
+    <bean id="controlZoom" class="de.terrestris.shoguncore.model.map.MapControl">
         <property name="mapControlName" value="Zoom" />
     </bean>
 
-    <bean id="controlRotate" class="de.terrestris.shogun2.model.map.MapControl">
+    <bean id="controlRotate" class="de.terrestris.shoguncore.model.map.MapControl">
         <property name="mapControlName" value="Rotate" />
     </bean>
 
-    <bean id="controlZoomSlider" class="de.terrestris.shogun2.model.map.MapControl">
+    <bean id="controlZoomSlider" class="de.terrestris.shoguncore.model.map.MapControl">
         <property name="mapControlName" value="ZoomSlider" />
     </bean>
 
-    <bean id="controlScaleLine" class="de.terrestris.shogun2.model.map.MapControl">
+    <bean id="controlScaleLine" class="de.terrestris.shoguncore.model.map.MapControl">
         <property name="mapControlName" value="ScaleLine" />
         <property name="mapControlProperties">
             <util:map>
@@ -345,7 +345,7 @@
     </bean>
 
     <!-- Define the Layers -->
-    <bean id="osmWmsLayerTileGridExtent" class="de.terrestris.shogun2.model.layer.util.Extent">
+    <bean id="osmWmsLayerTileGridExtent" class="de.terrestris.shoguncore.model.layer.util.Extent">
         <property name="lowerLeft">
             <bean class="java.awt.geom.Point2D$Double">
                 <constructor-arg index="0" value="-20026376.39" />
@@ -360,7 +360,7 @@
         </property>
     </bean>
 
-    <bean id="osmWmsLayerTileGrid" class="de.terrestris.shogun2.model.layer.util.TileGrid">
+    <bean id="osmWmsLayerTileGrid" class="de.terrestris.shoguncore.model.layer.util.TileGrid">
         <property name="type" value="TileGrid" />
         <property name="tileGridOrigin">
             <bean class="java.awt.geom.Point2D$Double">
@@ -395,7 +395,7 @@
         </property>
     </bean>
 
-    <bean id="tileWMSDataSourceTemplate" class="de.terrestris.shogun2.model.layer.source.TileWmsLayerDataSource">
+    <bean id="tileWMSDataSourceTemplate" class="de.terrestris.shoguncore.model.layer.source.TileWmsLayerDataSource">
         <property name="type" value="TileWMS" />
         <property name="width" value="256" />
         <property name="height" value="256" />
@@ -415,7 +415,7 @@
         <property name="layerStyles" value="" />
     </bean>
 
-    <bean id="osmWmsLayerAppearance" class="de.terrestris.shogun2.model.layer.appearance.LayerAppearance">
+    <bean id="osmWmsLayerAppearance" class="de.terrestris.shoguncore.model.layer.appearance.LayerAppearance">
         <property name="attribution" value="© &lt;a href='http://www.openstreetmap.org/copyright'&gt;OpenStreetMap contributors&lt;/a&gt; &lt;br&gt;" />
         <property name="maxResolution" ref="res01" />
         <property name="minResolution" ref="res19" />
@@ -423,20 +423,20 @@
         <property name="visible" value="true" />
     </bean>
 
-    <bean id="osmWmsLayer" class="de.terrestris.shogun2.model.layer.Layer">
+    <bean id="osmWmsLayer" class="de.terrestris.shoguncore.model.layer.Layer">
         <property name="name" value="OSM-WMS" />
         <property name="source" ref="osmWmsLayerDataSource" />
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
-    <bean id="osmWmsLayerGray" class="de.terrestris.shogun2.model.layer.Layer">
+    <bean id="osmWmsLayerGray" class="de.terrestris.shoguncore.model.layer.Layer">
         <property name="name" value="OSM-WMS GRAY" />
         <property name="source" ref="osmWmsLayerGrayDataSource" />
         <property name="appearance" ref="osmWmsLayerAppearance" />
     </bean>
 
     <!-- Define the Map -->
-    <bean id="mapModule" class="de.terrestris.shogun2.model.module.Map">
+    <bean id="mapModule" class="de.terrestris.shoguncore.model.module.Map">
         <property name="name" value="Main Map" />
         <property name="xtype" value="shogun-component-map" />
         <property name="mapConfig" ref="mapConfig" />
@@ -463,7 +463,7 @@
     </bean>
 
     <!-- Define the Header -->
-    <bean id="headerLogoModule" class="de.terrestris.shogun2.model.module.Image">
+    <bean id="headerLogoModule" class="de.terrestris.shoguncore.model.module.Image">
         <property name="name" value="Logo Image" />
         <property name="xtype" value="imagecomponent" />
         <property name="properties">
@@ -476,7 +476,7 @@
         </property>
     </bean>
 
-    <bean id="headerTitleModule" class="de.terrestris.shogun2.model.module.Module">
+    <bean id="headerTitleModule" class="de.terrestris.shoguncore.model.module.Module">
         <property name="name" value="Logo Title" />
         <property name="xtype" value="displayfield" />
         <property name="properties">
@@ -488,7 +488,7 @@
         </property>
     </bean>
 
-    <bean id="headerModule" class="de.terrestris.shogun2.model.module.CompositeModule">
+    <bean id="headerModule" class="de.terrestris.shoguncore.model.module.CompositeModule">
         <property name="name" value="Viewport Header" />
         <property name="xtype" value="panel" />
         <property name="layout" ref="hboxLayout" />
@@ -500,7 +500,7 @@
             </util:map>
         </property>
         <property name="subModules">
-            <util:list value-type="de.terrestris.shogun2.model.module.Module">
+            <util:list value-type="de.terrestris.shoguncore.model.module.Module">
                 <ref bean="headerLogoModule" />
                 <ref bean="headerTitleModule" />
             </util:list>
@@ -508,7 +508,7 @@
     </bean>
 
     <!-- Define the LayerTree -->
-    <bean id="layerTreeModule" class="de.terrestris.shogun2.model.module.CompositeModule">
+    <bean id="layerTreeModule" class="de.terrestris.shoguncore.model.module.CompositeModule">
         <property name="name" value="Legend Tree" />
         <property name="xtype" value="shogun-view-panel-legendtree" />
         <property name="properties">
@@ -521,11 +521,11 @@
     </bean>
 
     <!-- Define the Viewport -->
-    <bean id="viewportModule" class="de.terrestris.shogun2.model.module.CompositeModule">
+    <bean id="viewportModule" class="de.terrestris.shoguncore.model.module.CompositeModule">
         <property name="name" value="Viewport with Border Layout" />
         <property name="layout" ref="borderLayout" />
         <property name="subModules">
-            <util:list value-type="de.terrestris.shogun2.model.module.Module">
+            <util:list value-type="de.terrestris.shoguncore.model.module.Module">
                 <ref bean="mapModule" />
                 <ref bean="headerModule" />
                 <ref bean="layerTreeModule" />
@@ -533,7 +533,7 @@
         </property>
     </bean>
 
-    <bean id="defaultUserPermissionCollection" class="de.terrestris.shogun2.model.security.PermissionCollection">
+    <bean id="defaultUserPermissionCollection" class="de.terrestris.shoguncore.model.security.PermissionCollection">
         <property name="permissions">
             <util:set>
                 <value>READ</value>
@@ -542,7 +542,7 @@
     </bean>
 
     <!-- Define applications -->
-    <bean id="defaultApplication" class="de.terrestris.shogun2.model.Application">
+    <bean id="defaultApplication" class="de.terrestris.shoguncore.model.Application">
         <property name="name" value="Default Application" />
         <property name="description" value="Default Application" />
         <property name="viewport" ref="viewportModule" />
@@ -555,37 +555,37 @@
     </bean>
 
     <!-- The default interceptor rules -->
-    <bean id="defaultWMSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWMSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WMS"/>
     </bean>
 
-    <bean id="defaultWMSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWMSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WMS"/>
     </bean>
 
-    <bean id="defaultWFSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWFSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WFS"/>
     </bean>
 
-    <bean id="defaultWFSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWFSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WFS"/>
     </bean>
 
-    <bean id="defaultWCSRequestInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWCSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WCS"/>
     </bean>
 
-    <bean id="defaultWCSResponseInterceptorRule" class="de.terrestris.shogun2.model.interceptor.InterceptorRule">
+    <bean id="defaultWCSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
         <property name="rule" value="ALLOW"/>
         <property name="service" value="WCS"/>

@@ -70,7 +70,7 @@
     </beans:bean>
 
     <!-- Custom Authentication Provider -->
-    <beans:bean id="shogunCoreAuthenticationProvider" class="de.terrestris.shogun2.security.ShogunCoreAuthenticationProvider">
+    <beans:bean id="shogunCoreAuthenticationProvider" class="de.terrestris.shoguncore.security.ShogunCoreAuthenticationProvider">
         <beans:property name="passwordEncoder" ref="bcryptEncoder" />
     </beans:bean>
 
@@ -94,7 +94,7 @@
          <beans:property name = "roleHierarchy" ref="roleHierarchy"/>
     </beans:bean>
 
-    <beans:bean id="permissionEvaluator" class="de.terrestris.shogun2.security.access.ShogunCorePermissionEvaluator">
+    <beans:bean id="permissionEvaluator" class="de.terrestris.shoguncore.security.access.ShogunCorePermissionEvaluator">
         <beans:property name="permissionEvaluatorFactory">
             <!-- This is how project specific permission evaluators can be used/configured -->
             <beans:bean class="${package}.security.access.factory.ProjectEntityPermissionEvaluatorFactory" />

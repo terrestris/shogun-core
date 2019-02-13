@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 {package}.dao.ProjectApplicationDao;
 import ${package}.model.ProjectApplication;
 {package}.service.ProjectApplicationService;
-import de.terrestris.shogun2.rest.ApplicationRestController;
+import de.terrestris.shoguncore.rest.ApplicationRestController;
 
 /**
  * This is a demo controller that demonstrates how SHOGun-Core REST controllers

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 {package}.model.ProjectApplication;
 {package}.dao.ProjectApplicationDao;
 import ${package}.service.ProjectApplicationService;
-import de.terrestris.shogun2.web.ApplicationController;
+import de.terrestris.shoguncore.web.ApplicationController;
 
 /**
  * This is a demo controller that demonstrates how a SHOGun-Core controller can be

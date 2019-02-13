@@ -3,8 +3,8 @@
 #set( $symbol_escape = '\' )
 package ${package}.util;
 
-import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
-import de.terrestris.shogun2.util.interceptor.WmsRequestInterceptorInterface;
+import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
+import de.terrestris.shoguncore.util.interceptor.WmsRequestInterceptorInterface;
 
 /**
  * This class demonstrates how to implement the WmsRequestInterceptorInterface.

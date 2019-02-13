@@ -6,7 +6,7 @@ package ${package}.init;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import de.terrestris.shogun2.init.ContentInitializer;
+import de.terrestris.shoguncore.init.ContentInitializer;
 
 /**
  * This is a demo class that demonstrates how the SHOGun-Core

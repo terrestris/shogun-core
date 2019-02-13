@@ -4,9 +4,9 @@
 package ${package}.security.access.entity;
 
 import ${package}.model.ProjectApplication;
-import de.terrestris.shogun2.model.User;
-import de.terrestris.shogun2.model.security.Permission;
-import de.terrestris.shogun2.security.access.entity.PersistentObjectPermissionEvaluator;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.security.Permission;
+import de.terrestris.shoguncore.security.access.entity.PersistentObjectPermissionEvaluator;
 
 /**
  * Demonstrates the implementation of a custom permission evaluator for
