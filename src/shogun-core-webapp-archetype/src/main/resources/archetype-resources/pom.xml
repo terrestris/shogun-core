@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <shogun2.version>2.1.1-SNAPSHOT</shogun2.version>
+        <shogun.version>2.1.1-SNAPSHOT</shogun.version>
 
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
@@ -124,7 +124,7 @@
                 </executions>
             </plugin>
 
-            <!-- Checkout/clone the shogun2 client to this application. For
+            <!-- Checkout/clone the shoguncore client to this application. For
                 checkout just run mvn scm:checkout in your app directory -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -163,8 +163,8 @@
 
         <dependency>
             <groupId>de.terrestris</groupId>
-            <artifactId>shogun2-core</artifactId>
-            <version>${shogun2.version}</version>
+            <artifactId>shogun-core</artifactId>
+            <version>${shogun.version}</version>
         </dependency>
 
     </dependencies>
