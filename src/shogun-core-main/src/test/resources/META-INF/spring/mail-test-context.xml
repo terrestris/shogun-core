@@ -11,7 +11,7 @@
 
     <context:property-placeholder location="classpath*:META-INF/*.properties" />
 
-    <context:component-scan base-package="de.terrestris.shogun2.util.mail" />
+    <context:component-scan base-package="de.terrestris.shoguncore.util.mail" />
 
     <!-- The mailSender configuration -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
