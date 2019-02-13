@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author Nils Bühner
  */
-public class ImplicitNamingStrategyShogun2 extends ImplicitNamingStrategyJpaCompliantImpl {
+public class ImplicitNamingStrategyShogunCore extends ImplicitNamingStrategyJpaCompliantImpl {
 
     private static final long serialVersionUID = 1L;
 

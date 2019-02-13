@@ -1,7 +1,5 @@
 package de.terrestris.shogun2.importer.communication;
 
-import de.terrestris.shogun2.importer.communication.RESTDataStore;
-
 /**
  * terrestris GmbH & Co. KG
  *

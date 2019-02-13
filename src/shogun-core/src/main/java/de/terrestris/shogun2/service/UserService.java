@@ -67,7 +67,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     /**
      * The default user role that is assigned to a user if he activates his
      * account. ATTENTION: This autowired bean will NOT have an ID if the
-     * system did not boot with hibernate/CREATE mode and SHOGun2-content
+     * system did not boot with hibernate/CREATE mode and SHOGun-Core content
      * initialization!
      * <p>
      * TODO: We should only autowire a string with the role name...

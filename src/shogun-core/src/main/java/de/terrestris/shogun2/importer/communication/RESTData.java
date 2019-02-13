@@ -1,7 +1,5 @@
 package de.terrestris.shogun2.importer.communication;
 
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-
 /**
  * A data is the description of the source data of a import (overall) or a
  * task. In case the import has a global data definition, this normally refers

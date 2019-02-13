@@ -27,7 +27,7 @@ import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFa
 /**
  * @author Nils Bühner
  */
-public class Shogun2PermissionEvaluatorTest {
+public class ShogunCorePermissionEvaluatorTest {
 
     @SuppressWarnings("rawtypes")
     @Mock
@@ -37,7 +37,7 @@ public class Shogun2PermissionEvaluatorTest {
     private UserDao<User> userDao;
 
     @InjectMocks
-    private Shogun2PermissionEvaluator permissionEvaluator;
+    private ShogunCorePermissionEvaluator permissionEvaluator;
 
     @Before
     public void setUp() {

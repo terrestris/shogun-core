@@ -12,11 +12,11 @@
 
     <!-- Authentication Manager -->
     <authentication-manager alias="authenticationManager">
-        <authentication-provider ref="shogun2AuthenticationProvider" />
+        <authentication-provider ref="shogunCoreAuthenticationProvider" />
     </authentication-manager>
 
     <beans:bean id="basicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-        <beans:property name="realmName" value="SHOGun2 Realm" />
+        <beans:property name="realmName" value="SHOGun Realm" />
     </beans:bean>
 
     <beans:bean id="basicAuthenticationFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
@@ -70,7 +70,7 @@
     </beans:bean>
 
     <!-- Custom Authentication Provider -->
-    <beans:bean id="shogun2AuthenticationProvider" class="de.terrestris.shogun2.security.Shogun2AuthenticationProvider">
+    <beans:bean id="shogunCoreAuthenticationProvider" class="de.terrestris.shogun2.security.ShogunCoreAuthenticationProvider">
         <beans:property name="passwordEncoder" ref="bcryptEncoder" />
     </beans:bean>
 
@@ -94,7 +94,7 @@
          <beans:property name = "roleHierarchy" ref="roleHierarchy"/>
     </beans:bean>
 
-    <beans:bean id="permissionEvaluator" class="de.terrestris.shogun2.security.access.Shogun2PermissionEvaluator">
+    <beans:bean id="permissionEvaluator" class="de.terrestris.shogun2.security.access.ShogunCorePermissionEvaluator">
         <beans:property name="permissionEvaluatorFactory">
             <!-- This is how project specific permission evaluators can be used/configured -->
             <beans:bean class="${package}.security.access.factory.ProjectEntityPermissionEvaluatorFactory" />

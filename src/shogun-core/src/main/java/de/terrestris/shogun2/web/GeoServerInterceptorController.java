@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Map;
 
 import static org.apache.logging.log4j.LogManager.getLogger;

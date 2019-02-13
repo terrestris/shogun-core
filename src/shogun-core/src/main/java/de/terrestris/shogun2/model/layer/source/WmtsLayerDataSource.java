@@ -2,7 +2,6 @@ package de.terrestris.shogun2.model.layer.source;
 
 import javax.persistence.*;
 
-import de.terrestris.shogun2.model.layer.util.TileGrid;
 import de.terrestris.shogun2.model.layer.util.WmtsTileGrid;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

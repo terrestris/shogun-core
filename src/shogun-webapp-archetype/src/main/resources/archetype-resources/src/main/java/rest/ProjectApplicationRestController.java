@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ${package}.dao.ProjectApplicationDao;
+{package}.dao.ProjectApplicationDao;
 import ${package}.model.ProjectApplication;
-import ${package}.service.ProjectApplicationService;
+{package}.service.ProjectApplicationService;
 import de.terrestris.shogun2.rest.ApplicationRestController;
 
 /**
- * This is a demo controller that demonstrates how SHOGun2 REST controllers
+ * This is a demo controller that demonstrates how SHOGun-Core REST controllers
  * can be extended.
  *
  * @author Nils Bühner

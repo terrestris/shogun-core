@@ -1,7 +1,7 @@
 package de.terrestris.shogun2.hibernate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
+import de.terrestris.shogun2.util.json.ShogunCoreJsonObjectMapper;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
@@ -30,7 +30,7 @@ public class JsonbUserType implements UserType {
         if (value == null) {
             return null;
         }
-        Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+        ShogunCoreJsonObjectMapper mapper = new ShogunCoreJsonObjectMapper();
         if (value instanceof String) {
             try {
                 return mapper.readValue(value.toString(), HashMap.class);
@@ -84,7 +84,7 @@ public class JsonbUserType implements UserType {
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
         if (!rs.wasNull()) {
-            Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+            ShogunCoreJsonObjectMapper mapper = new ShogunCoreJsonObjectMapper();
             try {
                 String string = rs.getString(names[0]);
                 if (string == null) {
@@ -105,7 +105,7 @@ public class JsonbUserType implements UserType {
         if (value == null) {
             st.setNull(index, Types.OTHER);
         } else {
-            Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+            ShogunCoreJsonObjectMapper mapper = new ShogunCoreJsonObjectMapper();
             try {
                 String string = mapper.writeValueAsString(value);
                 st.setObject(index, string, Types.OTHER);

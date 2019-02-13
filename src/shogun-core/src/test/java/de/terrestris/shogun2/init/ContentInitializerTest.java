@@ -55,7 +55,7 @@ public class ContentInitializerTest {
         contentInitializer.setShogunInitEnabled(false);
         contentInitializer.initializeDatabaseContent();
 
-        verify(loggerMock).info("Not initializing anything for SHOGun2.");
+        verify(loggerMock).info("Not initializing anything for SHOGun.");
     }
 
     @Test

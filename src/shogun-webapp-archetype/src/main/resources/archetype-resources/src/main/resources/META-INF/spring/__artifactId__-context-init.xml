@@ -10,7 +10,7 @@
                            http://www.springframework.org/schema/jdbc
                            http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <!-- Flag enabling/disabling SHOGun2 initialization on startup -->
+    <!-- Flag enabling/disabling SHOGun initialization on startup -->
     <bean id="shogunInitEnabled" class="java.lang.Boolean">
         <constructor-arg value="${symbol_dollar}{init.shogunInitEnabled}"></constructor-arg>
     </bean>

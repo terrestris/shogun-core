@@ -2,10 +2,6 @@ package de.terrestris.shogun2.importer.communication;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-import de.terrestris.shogun2.importer.communication.RESTData;
-import de.terrestris.shogun2.importer.communication.RESTLayer;
-import de.terrestris.shogun2.importer.communication.RESTTarget;
 import de.terrestris.shogun2.importer.transform.RESTTransformChain;
 
 

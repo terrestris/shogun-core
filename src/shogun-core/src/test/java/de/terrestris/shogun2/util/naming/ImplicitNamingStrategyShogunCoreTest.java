@@ -8,9 +8,9 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Nils Bühner
  */
-public class ImplicitNamingStrategyShogun2Test {
+public class ImplicitNamingStrategyShogunCoreTest {
 
-    private final ImplicitNamingStrategyShogun2 namingStrategy = new ImplicitNamingStrategyShogun2();
+    private final ImplicitNamingStrategyShogunCore namingStrategy = new ImplicitNamingStrategyShogunCore();
 
     /**
      * Tests whether some known irregular nouns are detected.

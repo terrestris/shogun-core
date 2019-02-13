@@ -19,7 +19,7 @@ import org.springframework.web.util.UriUtils;
 import de.terrestris.shogun2.dao.RegistrationTokenDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.RegistrationToken;
-import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
+import de.terrestris.shogun2.util.application.ShogunCoreContextUtil;
 import de.terrestris.shogun2.util.mail.MailPublisher;
 
 /**
@@ -47,7 +47,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
     }
 
     /**
-     * The relative path for the SHOGun2 user activation interface.
+     * The relative path for the SHOGun-Core user activation interface.
      */
     @Value("${login.accountActivationPath}")
     private String accountActivationPath;
@@ -156,7 +156,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
             registrationTokenExpirationTime);
 
         // get the webapp URI
-        URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);
+        URI appURI = ShogunCoreContextUtil.getApplicationURIFromRequest(request);
 
         // build the registration activation link URI
         URI tokenURI = new URIBuilder(appURI)

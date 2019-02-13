@@ -4,7 +4,7 @@
 package ${package}.security.access.factory;
 
 import ${package}.model.ProjectApplication;
-import ${package}.security.access.entity.ProjectApplicationPermissionEvaluator;
+{package}.security.access.entity.ProjectApplicationPermissionEvaluator;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.security.access.entity.PersistentObjectPermissionEvaluator;
 import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFactory;
@@ -12,11 +12,11 @@ import de.terrestris.shogun2.security.access.factory.EntityPermissionEvaluatorFa
 
 /**
  * This is just a demo to show how the {@link EntityPermissionEvaluatorFactory}
- * from SHOGun2 can be extended to make use of it in a project specific
+ * from SHOGun-Core can be extended to make use of it in a project specific
  * implementation.
  * 
  * This class has to be configured to be used for the permissionEvaluator (of
- * SHOGun2) in the security XML of this project.
+ * SHOGun-Core) in the security XML of this project.
  * 
  * @author Nils Bühner
  *
@@ -32,7 +32,7 @@ public class ProjectEntityPermissionEvaluatorFactory<E extends PersistentObject>
 			return new ProjectApplicationPermissionEvaluator();
 		}
 
-		// call SHOGun2 implementation otherwise
+		// call SHOGun-Core implementation otherwise
 		return super.getEntityPermissionEvaluator(entityClass);
 
 	}

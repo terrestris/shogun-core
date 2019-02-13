@@ -1,8 +1,5 @@
 package de.terrestris.shogun2.importer.communication;
 
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-import de.terrestris.shogun2.importer.communication.RESTDataStore;
-
 /**
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG

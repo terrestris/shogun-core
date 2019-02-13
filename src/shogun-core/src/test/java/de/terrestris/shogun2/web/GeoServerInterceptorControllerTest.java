@@ -5,9 +5,6 @@ import de.terrestris.shogun2.service.GeoServerInterceptorService;
 import de.terrestris.shogun2.util.data.ResultSet;
 import de.terrestris.shogun2.util.interceptor.InterceptorException;
 import de.terrestris.shogun2.util.model.Response;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -16,16 +13,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static de.terrestris.shogun2.web.GeoServerInterceptorController.ERROR_MESSAGE;
 import static org.junit.Assert.assertEquals;

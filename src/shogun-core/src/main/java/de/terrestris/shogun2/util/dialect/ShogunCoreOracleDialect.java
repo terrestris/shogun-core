@@ -7,18 +7,18 @@ import java.sql.Types;
 
 /**
  * SQL {@link Dialect} extending {@link Oracle12cDialect} to register
- * column mapping for LOB datatypes used in SHOGun2 (e.g. file content
+ * column mapping for LOB datatypes used in SHOGun-Core (e.g. file content
  * in {@link de.terrestris.shogun2.model.File})
  *
  * @author Andre Henn
  * @author terrestris GmbH & co. KG
  */
-public class Shogun2OracleDialect extends Oracle12cDialect {
+public class ShogunCoreOracleDialect extends Oracle12cDialect {
 
     /**
      *
      */
-    public Shogun2OracleDialect() {
+    public ShogunCoreOracleDialect() {
         super();
     }
 

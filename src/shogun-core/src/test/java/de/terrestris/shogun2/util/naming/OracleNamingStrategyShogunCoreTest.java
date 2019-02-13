@@ -1,6 +1,6 @@
 package de.terrestris.shogun2.util.naming;
 
-import de.terrestris.shogun2.util.dialect.Shogun2OracleDialect;
+import de.terrestris.shogun2.util.dialect.ShogunCoreOracleDialect;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
@@ -16,16 +16,16 @@ import static org.mockito.Mockito.when;
 /**
  * @author Andre Henn
  */
-public class OracleNamingStrategyShogun2Test extends PhysicalNamingStrategyShogun2Test {
+public class OracleNamingStrategyShogunCoreTest extends PhysicalNamingStrategyShogunCoreTest {
 
     private final String TEST_PREFIX = "pref_";
 
-    private OracleNamingStrategyShogun2 oracleNamingStrategyShogun2;
+    private OracleNamingStrategyShogunCore oracleNamingStrategyShogunCore;
 
     @Before
     public void initStrategy() {
-        this.oracleNamingStrategyShogun2 = new OracleNamingStrategyShogun2();
-        oracleNamingStrategyShogun2.setColumnNamePrefix("pref_");
+        this.oracleNamingStrategyShogunCore = new OracleNamingStrategyShogunCore();
+        oracleNamingStrategyShogunCore.setColumnNamePrefix("pref_");
     }
 
     /**
@@ -37,7 +37,7 @@ public class OracleNamingStrategyShogun2Test extends PhysicalNamingStrategyShogu
     public void testPhysicalColumnNamesAreLowercaseForOracleDialect() throws SQLException {
         String columnName = "SomeCamelCaseColumn";
         String expectedPhysicalName = "somecamelcasecolumn";
-        Dialect dialect = new Shogun2OracleDialect();
+        Dialect dialect = new ShogunCoreOracleDialect();
 
         assertExpectedPhysicalColumnName(dialect, columnName, expectedPhysicalName);
     }
@@ -51,7 +51,7 @@ public class OracleNamingStrategyShogun2Test extends PhysicalNamingStrategyShogu
     public void testPhysicalColumnNamesAddPrefixToReservedOracleWord() throws SQLException {
         String columnName = "index";
         String expectedPhysicalName = TEST_PREFIX + "index";
-        Dialect dialect = new Shogun2OracleDialect();
+        Dialect dialect = new ShogunCoreOracleDialect();
 
         assertExpectedPhysicalColumnName(dialect, columnName, expectedPhysicalName);
     }
@@ -66,7 +66,7 @@ public class OracleNamingStrategyShogun2Test extends PhysicalNamingStrategyShogu
         when(context.getDialect()).thenReturn(dialect);
 
         Identifier classIdentifier = Identifier.toIdentifier(columnName);
-        String actualPhysicalName = oracleNamingStrategyShogun2.toPhysicalColumnName(classIdentifier, context).getText();
+        String actualPhysicalName = oracleNamingStrategyShogunCore.toPhysicalColumnName(classIdentifier, context).getText();
 
         assertEquals(expectedPhysicalColumnName, actualPhysicalName);
     }

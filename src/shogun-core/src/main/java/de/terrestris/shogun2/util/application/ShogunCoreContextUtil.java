@@ -10,7 +10,7 @@ import org.apache.http.client.utils.URIBuilder;
 /**
  * @author Daniel Koch
  */
-public class Shogun2ContextUtil {
+public class ShogunCoreContextUtil {
 
     /**
      * Returns the full webapplication URI from a given request.

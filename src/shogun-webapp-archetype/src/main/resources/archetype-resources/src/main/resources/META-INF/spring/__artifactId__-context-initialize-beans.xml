@@ -100,7 +100,7 @@
         <property name="lastName" value="Admins last name"/>
         <property name="accountName" value="admin"/>
         <!-- This will be encrypted when the init service saves the user. -->
-        <property name="password" value="shogun2"/>
+        <property name="password" value="shogun"/>
         <property name="active" value="true"/>
         <property name="roles">
             <util:set id="adminUserRoles">
@@ -113,7 +113,7 @@
         <property name="lastName" value="Users last name"/>
         <property name="accountName" value="user"/>
         <!-- This will be encrypted when the init service saves the user. -->
-        <property name="password" value="shogun2"/>
+        <property name="password" value="shogun"/>
         <property name="active" value="true"/>
         <property name="roles">
             <util:set id="defaultUserRoles">
@@ -482,7 +482,7 @@
         <property name="properties">
             <util:map>
                 <entry key="flex" value="1" />
-                <entry key="value" value="SHOGun2 Client" />
+                <entry key="value" value="SHOGun Client" />
                 <entry key="fieldStyle" value="color:#FFFFFF; font-size:30px; text-align: center; padding-top: 40px;" />
             </util:map>
         </property>

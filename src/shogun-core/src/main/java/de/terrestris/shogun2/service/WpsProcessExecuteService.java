@@ -104,7 +104,7 @@ public class WpsProcessExecuteService<E extends WpsProcessExecute, D extends Wps
      * @param wpsId
      * @return List of {@link WpsPlugin}s that are connected to the given {@link WpsProcessExecute}
      */
-    @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#wpsId, 'de.terrestris.shogun2.model.wps.WpsProcessExecute', 'DELETE')")
+    @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#wpsId, 'de.terrestris.shoguncore.model.wps.WpsProcessExecute', 'DELETE')")
     @Transactional(readOnly = true)
     public List<String> preCheckDelete(Integer wpsId) {
         List<String> result = new ArrayList<>();

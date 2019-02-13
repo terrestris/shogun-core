@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import de.terrestris.shogun2.init.ContentInitializer;
 
 /**
- * This is a demo class that demonstrates how the SHOGun2
+ * This is a demo class that demonstrates how the SHOGun-Core
  * {@link ContentInitializer} can be extended.
  *
  * @author Nils Bühner

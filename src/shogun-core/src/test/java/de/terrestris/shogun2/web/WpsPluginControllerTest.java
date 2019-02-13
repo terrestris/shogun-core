@@ -1,6 +1,5 @@
 package de.terrestris.shogun2.web;
 
-import de.terrestris.shogun2.service.WpsParameterService;
 import de.terrestris.shogun2.service.WpsPluginService;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**

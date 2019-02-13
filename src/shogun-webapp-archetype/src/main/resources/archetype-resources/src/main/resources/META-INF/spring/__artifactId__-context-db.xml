@@ -1,10 +1,10 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-#if( ${package} == ${shogun2-parent-package} )
-  #set( $model_packages_to_scan = "${shogun2-parent-package}.*.model" )
+#if( ${package} == ${shogun-parent-package} )
+  #set( $model_packages_to_scan = "${shogun-parent-package}.*.model" )
 #else
-  #set ( $model_packages_to_scan = "${shogun2-parent-package}.*.model, ${package}.model" )
+  #set ( $model_packages_to_scan = "${shogun-parent-package}.*.model, ${package}.model" )
 #end
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -34,19 +34,19 @@
         </property>
     </bean>
 
-    <bean id="shogun2DataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+    <bean id="shogunCoreDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <constructor-arg ref="hikariConfig"/>
     </bean>
 
     <bean id="sessionFactory"
         class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-        <property name="dataSource" ref="shogun2DataSource" />
+        <property name="dataSource" ref="shogunCoreDataSource" />
         <property name="packagesToScan" value="${model_packages_to_scan}" />
         <property name="implicitNamingStrategy">
-            <bean class="de.terrestris.shogun2.util.naming.ImplicitNamingStrategyShogun2" />
+            <bean class="de.terrestris.shogun2.util.naming.ImplicitNamingStrategyShogunCore" />
         </property>
         <property name="physicalNamingStrategy">
-            <bean class="de.terrestris.shogun2.util.naming.PhysicalNamingStrategyShogun2" />
+            <bean class="de.terrestris.shogun2.util.naming.PhysicalNamingStrategyShogunCore" />
         </property>
         <property name="hibernateProperties">
             <props>

@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class Shogun2ContextUtilTest {
+public class ShogunCoreContextUtilTest {
 
     /**
      * The mockup request
@@ -56,7 +56,7 @@ public class Shogun2ContextUtilTest {
         request.setParameters(params);
 
         // actually call the static method to test
-        URI uri = Shogun2ContextUtil.getApplicationURIFromRequest(request);
+        URI uri = ShogunCoreContextUtil.getApplicationURIFromRequest(request);
 
         String expected = scheme + "://" + host + ":" + port + path;
         String actual = uri.toString();
@@ -67,7 +67,7 @@ public class Shogun2ContextUtilTest {
 
     @Test
     public void testInstantiation() {
-        assertNotNull(new Shogun2ContextUtil());
+        assertNotNull(new ShogunCoreContextUtil());
     }
 
 }

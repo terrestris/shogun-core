@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-import de.terrestris.shogun2.importer.communication.RESTImportTask;
-
 /**
  * terrestris GmbH & Co. KG
  *

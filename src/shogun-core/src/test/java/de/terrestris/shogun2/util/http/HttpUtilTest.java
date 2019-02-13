@@ -140,7 +140,7 @@ public class HttpUtilTest {
             @Override
             public void handle(HttpRequest request, HttpResponse response,
                                HttpContext context) throws HttpException, IOException {
-                response.setEntity(new StringEntity("SHOGun2 rocks!", "UTF-8"));
+                response.setEntity(new StringEntity("SHOGun-Core rocks!", "UTF-8"));
             }
         }
         ;

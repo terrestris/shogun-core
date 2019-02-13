@@ -45,7 +45,7 @@ public class ModelDescriptionControllerTest {
     @Test
     public void getJsonSchemaSuccessMap() throws Exception {
         final String className = "Module";
-        final Class<?> foundClass = Class.forName("de.terrestris.shogun2.model.module.".concat(className));
+        final Class<?> foundClass = Class.forName("de.terrestris.shoguncore.model.module.".concat(className));
         final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(new ObjectMapper());
         final JsonSchema schema = schemaGen.generateSchema(foundClass);
 

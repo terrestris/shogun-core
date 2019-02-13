@@ -19,16 +19,16 @@ import static org.mockito.Mockito.when;
 /**
  * @author Nils Bühner
  */
-public class PhysicalNamingStrategyShogun2Test {
+public class PhysicalNamingStrategyShogunCoreTest {
 
-    private PhysicalNamingStrategyShogun2 namingStrategy;
+    private PhysicalNamingStrategyShogunCore namingStrategy;
 
     /**
      * Setup before each test
      */
     @Before
     public void setUp() {
-        namingStrategy = new PhysicalNamingStrategyShogun2();
+        namingStrategy = new PhysicalNamingStrategyShogunCore();
     }
 
     /**
@@ -50,7 +50,7 @@ public class PhysicalNamingStrategyShogun2Test {
      */
     @Test
     public void testOracleTableIdentifierLimit() throws SQLException {
-        int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_ORACLE;
+        int lengthLimit = PhysicalNamingStrategyShogunCore.LENGTH_LIMIT_ORACLE;
         Dialect dialect = new Oracle12cDialect();
 
         testTableIdentifierLimit(lengthLimit, dialect);
@@ -62,7 +62,7 @@ public class PhysicalNamingStrategyShogun2Test {
      */
     @Test
     public void testPostgreSqlTableIdentifierLimit() throws SQLException {
-        int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_POSTGRESQL;
+        int lengthLimit = PhysicalNamingStrategyShogunCore.LENGTH_LIMIT_POSTGRESQL;
         Dialect dialect = new PostgreSQL94Dialect();
 
         testTableIdentifierLimit(lengthLimit, dialect);
@@ -87,7 +87,7 @@ public class PhysicalNamingStrategyShogun2Test {
      */
     @Test
     public void testOracleColumnIdentifierLimit() throws SQLException {
-        int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_ORACLE;
+        int lengthLimit = PhysicalNamingStrategyShogunCore.LENGTH_LIMIT_ORACLE;
         Dialect dialect = new Oracle12cDialect();
 
         testColumnIdentifierLimit(lengthLimit, dialect);
@@ -99,7 +99,7 @@ public class PhysicalNamingStrategyShogun2Test {
      */
     @Test
     public void testPostgreSqlColumnIdentifierLimit() throws SQLException {
-        int lengthLimit = PhysicalNamingStrategyShogun2.LENGTH_LIMIT_POSTGRESQL;
+        int lengthLimit = PhysicalNamingStrategyShogunCore.LENGTH_LIMIT_POSTGRESQL;
         Dialect dialect = new PostgreSQL94Dialect();
 
         testColumnIdentifierLimit(lengthLimit, dialect);

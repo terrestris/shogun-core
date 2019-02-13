@@ -1,6 +1,6 @@
 package de.terrestris.shogun2.util.naming;
 
-import de.terrestris.shogun2.util.dialect.Shogun2OracleDialect;
+import de.terrestris.shogun2.util.dialect.ShogunCoreOracleDialect;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
@@ -15,7 +15,7 @@ import java.io.Serializable;
  *
  * @author Nils Bühner
  */
-public class PhysicalNamingStrategyShogun2 implements PhysicalNamingStrategy, Serializable {
+public class PhysicalNamingStrategyShogunCore implements PhysicalNamingStrategy, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -106,7 +106,7 @@ public class PhysicalNamingStrategyShogun2 implements PhysicalNamingStrategy, Se
             // identifier limit of 30 chars -->
             // http://stackoverflow.com/a/756569
             return LENGTH_LIMIT_ORACLE;
-        } else if (context.getDialect() instanceof Shogun2OracleDialect) {
+        } else if (context.getDialect() instanceof ShogunCoreOracleDialect) {
             // identifier limit of 30 chars -->
             return LENGTH_LIMIT_ORACLE;
         } else if (dialectName.startsWith("PostgreSQL")) {

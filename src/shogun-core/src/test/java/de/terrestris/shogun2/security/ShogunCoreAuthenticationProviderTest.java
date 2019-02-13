@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:META-INF/spring/test-encoder-bean.xml"})
-public class Shogun2AuthenticationProviderTest {
+public class ShogunCoreAuthenticationProviderTest {
 
     @Mock
     private UserDao<User> userDao;
@@ -52,7 +52,7 @@ public class Shogun2AuthenticationProviderTest {
     private RoleHierarchyImpl roleHierarchy;
 
     @InjectMocks
-    private Shogun2AuthenticationProvider authProvider;
+    private ShogunCoreAuthenticationProvider authProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -73,9 +73,9 @@ public class Shogun2AuthenticationProviderTest {
     public void authenticate_shouldAuthenticateAndAssignRolesFromUserAndUserGroups() {
 
         // 1. Mock an authentication request object
-        final String shogun2UserName = "user";
-        final String shogun2UserPass = "password";
-        final User userToAuth = createUserMock(shogun2UserName, shogun2UserPass);
+        final String shogunUserName = "user";
+        final String shogunUserPass = "password";
+        final User userToAuth = createUserMock(shogunUserName, shogunUserPass);
 
         final Role adminRole = new Role("ROLE_ADMIN");
         final Role userRole = new Role("ROLE_USER");
@@ -95,11 +95,11 @@ public class Shogun2AuthenticationProviderTest {
         userToAuth.setUserGroups(userGroups);
 
         Authentication authRequest = mock(Authentication.class);
-        when(authRequest.getName()).thenReturn(shogun2UserName);
-        when(authRequest.getCredentials()).thenReturn(shogun2UserPass);
+        when(authRequest.getName()).thenReturn(shogunUserName);
+        when(authRequest.getCredentials()).thenReturn(shogunUserPass);
 
         // 2. Mock the userDao
-        when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+        when(userDao.findByAccountName(shogunUserName)).thenReturn(userToAuth);
 
         // 3. Mock the roleHierarchy (return empty collection)
         when(
@@ -117,7 +117,7 @@ public class Shogun2AuthenticationProviderTest {
 
         assertThat(authResult.getPrincipal(), instanceOf(User.class));
         assertEquals(userToAuth, authResult.getPrincipal());
-        assertTrue(passwordEncoder.matches(shogun2UserPass, authResult.getCredentials().toString()));
+        assertTrue(passwordEncoder.matches(shogunUserPass, authResult.getCredentials().toString()));
 
         // assert that the user now has the ROLE_ADMIN (from user object) and
         // ROLE_USER (from the default user group)
@@ -133,9 +133,9 @@ public class Shogun2AuthenticationProviderTest {
     @Test
     public void authenticate_shouldNotAuthenticateIfNoAuthorities() {
         // 1. Mock an authentication request object
-        final String shogun2UserName = "user";
-        final String shogun2UserPass = "password";
-        final User userToAuth = createUserMock(shogun2UserName, shogun2UserPass);
+        final String shogunUserName = "user";
+        final String shogunUserPass = "password";
+        final User userToAuth = createUserMock(shogunUserName, shogunUserPass);
 
         final UserGroup userGroup = new UserGroup();
 
@@ -143,11 +143,11 @@ public class Shogun2AuthenticationProviderTest {
         userToAuth.setActive(true);
 
         Authentication authRequest = mock(Authentication.class);
-        when(authRequest.getName()).thenReturn(shogun2UserName);
-        when(authRequest.getCredentials()).thenReturn(shogun2UserPass);
+        when(authRequest.getName()).thenReturn(shogunUserName);
+        when(authRequest.getCredentials()).thenReturn(shogunUserPass);
 
         // 2. Mock the userDao
-        when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+        when(userDao.findByAccountName(shogunUserName)).thenReturn(userToAuth);
 
         // 3. Mock the roleHierarchy (return empty collection)
         when(
@@ -172,14 +172,14 @@ public class Shogun2AuthenticationProviderTest {
     public void authenticate_shouldThrowUsernameNotFoundExceptionIfUserNotFound() {
 
         // 1. Mock an authentication request object
-        final String shogun2UserName = "user";
+        final String shogunUserName = "user";
 
         // 2. Mock the auth request
         Authentication authRequest = mock(Authentication.class);
-        when(authRequest.getName()).thenReturn(shogun2UserName);
+        when(authRequest.getName()).thenReturn(shogunUserName);
 
         // 3. Mock the userDao by returning null (-> no user found)
-        when(userDao.findByAccountName(shogun2UserName)).thenReturn(null);
+        when(userDao.findByAccountName(shogunUserName)).thenReturn(null);
 
         // 4. Call the authenticate method with the mocked object to provoke
         // the expected UserNameNotFoundException
@@ -194,9 +194,9 @@ public class Shogun2AuthenticationProviderTest {
     public void authenticate_shouldThrowBadCredentialsExceptionIfPasswordDoesNotMatch() {
 
         // 1. Mock an authentication request object
-        final String shogun2UserName = "user";
+        final String shogunUserName = "user";
         final String correctPassword = "correctPassword";
-        final User userToAuth = createUserMock(shogun2UserName, correctPassword);
+        final User userToAuth = createUserMock(shogunUserName, correctPassword);
 
         final String wrongPassword = "wrongPassword";
 
@@ -205,11 +205,11 @@ public class Shogun2AuthenticationProviderTest {
 
         // 2. Mock the auth request with the wrong password
         Authentication authRequest = mock(Authentication.class);
-        when(authRequest.getName()).thenReturn(shogun2UserName);
+        when(authRequest.getName()).thenReturn(shogunUserName);
         when(authRequest.getCredentials()).thenReturn(wrongPassword);
 
         // 3. Mock the userDao
-        when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+        when(userDao.findByAccountName(shogunUserName)).thenReturn(userToAuth);
 
         // 4. Call the authenticate method with the mocked object to provoke
         // the expected BadCredentialsException
@@ -224,20 +224,20 @@ public class Shogun2AuthenticationProviderTest {
     public void authenticate_shouldThrowDisabledExceptionIfUserIsInactive() {
 
         // 1. Mock an authentication request object
-        final String shogun2UserName = "user";
+        final String shogunUserName = "user";
         final String correctPassword = "correctPassword";
-        final User userToAuth = createUserMock(shogun2UserName, correctPassword);
+        final User userToAuth = createUserMock(shogunUserName, correctPassword);
 
         // set user as inactive
         userToAuth.setActive(false);
 
         // 2. Mock the auth request for the inactive user
         Authentication authRequest = mock(Authentication.class);
-        when(authRequest.getName()).thenReturn(shogun2UserName);
+        when(authRequest.getName()).thenReturn(shogunUserName);
         when(authRequest.getCredentials()).thenReturn(correctPassword);
 
         // 3. Mock the userDao
-        when(userDao.findByAccountName(shogun2UserName)).thenReturn(userToAuth);
+        when(userDao.findByAccountName(shogunUserName)).thenReturn(userToAuth);
 
         // 4. Call the authenticate method with the mocked object to provoke
         // the expected DisabledException

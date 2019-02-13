@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ${package}.model.ProjectApplication;
-import ${package}.dao.ProjectApplicationDao;
+{package}.model.ProjectApplication;
+{package}.dao.ProjectApplicationDao;
 import ${package}.service.ProjectApplicationService;
 import de.terrestris.shogun2.web.ApplicationController;
 
 /**
- * This is a demo controller that demonstrates how a SHOGun2 controllers can be
+ * This is a demo controller that demonstrates how a SHOGun-Core controller can be
  * extended.
  *
  * @author Nils Bühner

@@ -1,7 +1,5 @@
 package de.terrestris.shogun2.importer.transform;
 
-import de.terrestris.shogun2.importer.transform.RESTTransform;
-
 /**
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG

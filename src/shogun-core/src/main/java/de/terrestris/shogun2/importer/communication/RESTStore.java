@@ -2,8 +2,6 @@ package de.terrestris.shogun2.importer.communication;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-
 /***
  *
  * @author Daniel Koch

@@ -5,8 +5,6 @@ package de.terrestris.shogun2.importer.transform;
 
 import java.util.List;
 
-import de.terrestris.shogun2.importer.transform.RESTTransform;
-
 /**
  * terrestris GmbH & Co. KG
  *

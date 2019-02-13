@@ -10,7 +10,7 @@ import de.terrestris.shogun2.dao.ApplicationDao;
 import de.terrestris.shogun2.model.Application;
 
 /**
- * This is a demo DAO that demonstrates how a SHOGun2 DAO can be extended.
+ * This is a demo DAO that demonstrates how a SHOGun-Core DAO can be extended.
  *
  * @author Nils Bühner
  *

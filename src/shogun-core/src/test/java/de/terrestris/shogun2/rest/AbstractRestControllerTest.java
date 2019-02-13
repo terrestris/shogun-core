@@ -44,7 +44,7 @@ import de.terrestris.shogun2.dao.GenericHibernateDao;
 import de.terrestris.shogun2.helper.IdHelper;
 import de.terrestris.shogun2.model.PersistentObject;
 import de.terrestris.shogun2.service.AbstractCrudService;
-import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
+import de.terrestris.shogun2.util.json.ShogunCoreJsonObjectMapper;
 
 /**
  * @author Kai Volland
@@ -98,7 +98,7 @@ public class AbstractRestControllerTest {
     /**
      * Object mapper used to write JSON
      */
-    private final ObjectMapper objectMapper = new Shogun2JsonObjectMapper();
+    private final ObjectMapper objectMapper = new ShogunCoreJsonObjectMapper();
 
     /**
      * Spring MVC test support

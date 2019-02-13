@@ -720,7 +720,7 @@ public class GenericHibernateDaoTest {
         } catch (Exception e) {
             String msg = e.getMessage();
             assertEquals("There is no collection field 'no_collection_field' with element type "
-                + "'de.terrestris.shogun2.model.Plugin' in the type 'de.terrestris.shogun2.model.Application'", msg);
+                + "'de.terrestris.shoguncore.model.Plugin' in the type 'de.terrestris.shoguncore.model.Application'", msg);
             catchedException = true;
         }
 
@@ -810,7 +810,7 @@ public class GenericHibernateDaoTest {
         } catch (Exception e) {
             String msg = e.getMessage();
             assertEquals("There is no field 'non_existing_field' in the type "
-                + "'de.terrestris.shogun2.model.Application' that accepts instances of 'java.lang.String'", msg);
+                + "'de.terrestris.shoguncore.model.Application' that accepts instances of 'java.lang.String'", msg);
             catchedException = true;
         }
 

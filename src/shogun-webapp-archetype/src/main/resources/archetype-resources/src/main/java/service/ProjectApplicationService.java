@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import ${package}.model.ProjectApplication;
+{package}.model.ProjectApplication;
 import ${package}.dao.ProjectApplicationDao;
 import de.terrestris.shogun2.service.ApplicationService;
 
 /**
- * This is a demo service that demonstrates how a SHOGun2 service can be
+ * This is a demo service that demonstrates how a SHOGun-Core service can be
  * extended.
  *
  * @author Nils Bühner

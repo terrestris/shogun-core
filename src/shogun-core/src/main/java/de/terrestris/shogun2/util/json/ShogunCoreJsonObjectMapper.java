@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
- * Customized JSON/Jackson ObjectMapper attending the needs of SHOGun2.
+ * Customized JSON/Jackson ObjectMapper attending the needs of SHOGun-Core.
  * <p>
  * This class will load the JodaModule for Jackson to support joda time types
  * and sets the date format to ISO8601, i.e. dates will be serialized in
@@ -17,7 +17,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
  *
  * @author Nils Bühner
  */
-public class Shogun2JsonObjectMapper extends ObjectMapper {
+public class ShogunCoreJsonObjectMapper extends ObjectMapper {
 
     /**
      *
@@ -27,7 +27,7 @@ public class Shogun2JsonObjectMapper extends ObjectMapper {
     /**
      * Constructor
      */
-    public Shogun2JsonObjectMapper() {
+    public ShogunCoreJsonObjectMapper() {
         super();
 
         // register the joda module to support the joda time types, which are

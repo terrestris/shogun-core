@@ -55,7 +55,7 @@ public class ContentInitializer {
      */
     public void initializeDatabaseContent() {
         if (this.shogunInitEnabled) {
-            LOG.info("Initializing SHOGun2 content");
+            LOG.info("Initializing SHOGun content");
             for (PersistentObject object : objectsToCreate) {
                 if (object instanceof User) {
                     // special handling of users to encrypt the password!
@@ -65,7 +65,7 @@ public class ContentInitializer {
                 }
             }
         } else {
-            LOG.info("Not initializing anything for SHOGun2.");
+            LOG.info("Not initializing anything for SHOGun.");
         }
     }
 

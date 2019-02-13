@@ -2,8 +2,6 @@ package de.terrestris.shogun2.importer.communication;
 
 import java.util.List;
 
-import de.terrestris.shogun2.importer.communication.RESTData;
-
 /**
  * @author Daniel Koch
  * @author terrestris GmbH & Co. KG

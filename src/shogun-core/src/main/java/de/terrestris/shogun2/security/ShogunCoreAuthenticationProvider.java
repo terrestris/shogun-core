@@ -27,12 +27,12 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 /**
  * @author Nils Bühner
  */
-public class Shogun2AuthenticationProvider implements AuthenticationProvider {
+public class ShogunCoreAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * The Logger
      */
-    private static final Logger LOG = getLogger(Shogun2AuthenticationProvider.class);
+    private static final Logger LOG = getLogger(ShogunCoreAuthenticationProvider.class);
 
     @Autowired
     private UserDao<User> userDao;
@@ -95,7 +95,7 @@ public class Shogun2AuthenticationProvider implements AuthenticationProvider {
         }
 
         // Create corresponding token to forward in Spring Security's filter
-        // chain. We will use the SHOGun2 user as the principal.
+        // chain. We will use the SHOGun-Core user as the principal.
         Authentication authResult = null;
         if (grantedAuthorities.isEmpty()) {
             // if the user has no authorities, we will build the

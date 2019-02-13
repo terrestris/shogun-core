@@ -1,10 +1,10 @@
 #set( $symbol_pound = '#' )
 #set( $symbol_dollar = '$' )
 #set( $symbol_escape = '\' )
-#if( ${package} == ${shogun2-parent-package} )
-  #set( $base_packages_to_scan = ${shogun2-parent-package} )
+#if( ${package} == ${shogun-parent-package} )
+  #set( $base_packages_to_scan = ${shogun-parent-package} )
 #else
-  #set ( $base_packages_to_scan = "${shogun2-parent-package}, ${package}" )
+  #set ( $base_packages_to_scan = "${shogun-parent-package}, ${package}" )
 #end
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -69,8 +69,8 @@
     <!-- The GeoServer Namespace to URI map used in the Interceptor -->
     <util:properties id="geoServerNameSpaces" location="classpath*:META-INF/geoServerNameSpaces.properties" />
 
-    <!-- The Shogun2JsonObjectMapper -->
-    <bean id="jacksonObjectMapper" class="de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper" />
+    <!-- The ShogunCoreJsonObjectMapper -->
+    <bean id="jacksonObjectMapper" class="de.terrestris.shogun2.util.json.ShogunCoreJsonObjectMapper" />
 
     <!-- The SearchPackages to be used in the modelDescriptionService -->
     <util:list id="describeModelSearchPackages" value-type="java.lang.String">
@@ -78,7 +78,7 @@
         <value>${package}.model</value>
     </util:list>
 
-    <!-- The default shogun2 OWS request interceptors -->
+    <!-- The default shoguncore OWS request interceptors -->
     <bean id="wfsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WfsRequestInterceptor" />
     <bean id="wcsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WcsRequestInterceptor" />
     <bean id="wmsRequestInterceptor" class="de.terrestris.shogun2.util.interceptor.impl.WmsRequestInterceptor" />

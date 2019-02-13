@@ -4,12 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 
-import de.terrestris.shogun2.importer.communication.AbstractRESTEntity;
-import de.terrestris.shogun2.importer.communication.RESTData;
-import de.terrestris.shogun2.importer.communication.RESTImportTask;
-import de.terrestris.shogun2.importer.communication.RESTTargetDataStore;
-import de.terrestris.shogun2.importer.communication.RESTTargetWorkspace;
-
 /**
  * An import refers to the top level object and is a "session" like entity the
  * state of the entire import. It maintains information relevant to the import

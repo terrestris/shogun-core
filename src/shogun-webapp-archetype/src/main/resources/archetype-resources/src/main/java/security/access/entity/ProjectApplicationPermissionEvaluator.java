@@ -48,7 +48,7 @@ public class ProjectApplicationPermissionEvaluator<E extends ProjectApplication>
 			return true;
 		}
 
-		// call parent implementation from SHOGun2
+		// call parent implementation from SHOGun-Core
 		return super.hasPermission(user, entity, permission);
 	}
 

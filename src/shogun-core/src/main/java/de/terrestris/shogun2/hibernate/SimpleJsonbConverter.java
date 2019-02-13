@@ -1,6 +1,6 @@
 package de.terrestris.shogun2.hibernate;
 
-import de.terrestris.shogun2.util.json.Shogun2JsonObjectMapper;
+import de.terrestris.shogun2.util.json.ShogunCoreJsonObjectMapper;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.AttributeConverter;
@@ -28,7 +28,7 @@ public class SimpleJsonbConverter implements AttributeConverter<Map<String, Stri
 
     @Override
     public String convertToDatabaseColumn(Map<String, String> attribute) {
-        Shogun2JsonObjectMapper mapper = new Shogun2JsonObjectMapper();
+        ShogunCoreJsonObjectMapper mapper = new ShogunCoreJsonObjectMapper();
         try {
             return (mapper.writeValueAsString(attribute));
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class SimpleJsonbConverter implements AttributeConverter<Map<String, Stri
 
     @Override
     public Map<String, String> convertToEntityAttribute(String dbData) {
-        Shogun2JsonObjectMapper parser = new Shogun2JsonObjectMapper();
+        ShogunCoreJsonObjectMapper parser = new ShogunCoreJsonObjectMapper();
         try {
             return parser.readValue(dbData, HashMap.class);
         } catch (IOException e) {

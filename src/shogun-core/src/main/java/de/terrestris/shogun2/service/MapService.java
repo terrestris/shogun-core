@@ -75,7 +75,7 @@ public class MapService<E extends Map, D extends MapDao<E>> extends
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#mapModuleId, 'de.terrestris.shogun2.model.module.Map', 'UPDATE')")
+    @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#mapModuleId, 'de.terrestris.shoguncore.model.module.Map', 'UPDATE')")
     public List<Layer> setLayersForMap(Integer mapModuleId, List<Integer> layerIds) throws Exception {
         E module = this.findById(mapModuleId);
         List<Layer> layers = new ArrayList<Layer>();

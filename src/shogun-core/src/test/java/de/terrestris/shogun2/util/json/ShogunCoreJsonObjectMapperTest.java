@@ -23,12 +23,12 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 /**
  * @author Nils Bühner
  */
-public class Shogun2JsonObjectMapperTest {
+public class ShogunCoreJsonObjectMapperTest {
 
     /**
      * The object mapper to test.
      */
-    private final ObjectMapper objectMapper = new Shogun2JsonObjectMapper();
+    private final ObjectMapper objectMapper = new ShogunCoreJsonObjectMapper();
 
     /**
      * Tests whether the JodaModule is registered.
@@ -36,7 +36,7 @@ public class Shogun2JsonObjectMapperTest {
     @Test
     public void testModules() {
 
-        List<Module> modules = Shogun2JsonObjectMapper.findModules();
+        List<Module> modules = ShogunCoreJsonObjectMapper.findModules();
 
         assertEquals(2, modules.size());
         assertThat(modules.get(0), instanceOf(JodaModule.class));

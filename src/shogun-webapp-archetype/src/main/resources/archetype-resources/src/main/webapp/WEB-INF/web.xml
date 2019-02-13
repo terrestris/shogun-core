@@ -35,13 +35,13 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!-- See de.terrestris.shogun2.web.ExtModelController -->
+    <!-- See de.terrestris.shoguncore.web.ExtModelController -->
     <servlet-mapping>
         <servlet-name>${artifactId}</servlet-name>
-        <url-pattern>/shogun2/model/*</url-pattern>
+        <url-pattern>/shogun/model/*</url-pattern>
     </servlet-mapping>
 
-    <!-- See de.terrestris.shogun2.web.ExtModelController -->
+    <!-- See de.terrestris.shoguncore.web.ExtModelController -->
     <servlet-mapping>
         <servlet-name>${artifactId}</servlet-name>
         <url-pattern>/${artifactId}/model/*</url-pattern>

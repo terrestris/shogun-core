@@ -22,12 +22,12 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 /**
  * @author Nils Bühner
  */
-public class Shogun2PermissionEvaluator implements PermissionEvaluator {
+public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
 
     /**
      * The LOGGER instance
      */
-    private final static Logger LOG = getLogger(Shogun2PermissionEvaluator.class);
+    private final static Logger LOG = getLogger(ShogunCorePermissionEvaluator.class);
 
     @Autowired
     private ApplicationContext appContext;
@@ -44,7 +44,7 @@ public class Shogun2PermissionEvaluator implements PermissionEvaluator {
     /**
      * If set to true, the plain principal object from the spring security
      * context will be used as "user". Otherwise the "full" user object will be
-     * loaded from the SHOGun2 database.
+     * loaded from the SHOGun-Core database.
      * <p>
      * It may be helpful to set this to true, if the user/principal object from
      * the security context contains information that is not persisted in the

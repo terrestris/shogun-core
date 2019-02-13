@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.terrestris.shogun2.dao.ImageFileDao;
 import de.terrestris.shogun2.model.ImageFile;
-import de.terrestris.shogun2.rest.AbstractRestController;
 import de.terrestris.shogun2.service.ImageFileService;
 
 /**

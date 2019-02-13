@@ -20,7 +20,7 @@ import de.terrestris.shogun2.dao.PasswordResetTokenDao;
 import de.terrestris.shogun2.dao.UserDao;
 import de.terrestris.shogun2.model.User;
 import de.terrestris.shogun2.model.token.PasswordResetToken;
-import de.terrestris.shogun2.util.application.Shogun2ContextUtil;
+import de.terrestris.shogun2.util.application.ShogunCoreContextUtil;
 import de.terrestris.shogun2.util.mail.MailPublisher;
 
 /**
@@ -201,7 +201,7 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
                                        PasswordResetToken resetPasswordToken) throws URISyntaxException {
 
         // get the webapp URI
-        URI appURI = Shogun2ContextUtil.getApplicationURIFromRequest(request);
+        URI appURI = ShogunCoreContextUtil.getApplicationURIFromRequest(request);
 
         // build the change-password URI send to the user
         URI tokenURI = new URIBuilder(appURI)

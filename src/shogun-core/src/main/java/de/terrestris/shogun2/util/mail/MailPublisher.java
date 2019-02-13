@@ -35,7 +35,7 @@ public class MailPublisher {
     private JavaMailSender mailSender;
 
     /**
-     * The default mail sender (e.g. noreply@shogun2.de).
+     * The default mail sender (e.g. noreply@shoguncore.de).
      */
     @Autowired
     @Qualifier("defaultMailSender")

@@ -1,6 +1,5 @@
 package de.terrestris.shogun2.web;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 

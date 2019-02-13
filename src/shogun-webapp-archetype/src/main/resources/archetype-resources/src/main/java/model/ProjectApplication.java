@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import de.terrestris.shogun2.model.Application;
 
 /**
- * This is a demo extension of a SHOGun2 model.
+ * This is a demo extension of a SHOGun-Core model.
  *
  * @author Nils Bühner
  *

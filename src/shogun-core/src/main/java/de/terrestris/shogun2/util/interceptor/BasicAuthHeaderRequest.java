@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpHeaders;
 
-import de.terrestris.shogun2.util.interceptor.MutableHttpServletRequest;
-
 /**
  * Utility class for basic auth based requests in the geoserver interceptor context.
  * Accepts a user and password via the constructor, which will be used to add an
