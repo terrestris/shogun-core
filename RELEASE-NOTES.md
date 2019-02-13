@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.1.0 (2019-02-13)
+
+* Changes:
+  * Support for PostgreSQL JSONB fields. See [here](https://github.com/terrestris/shogun2/pull/339)
+
 ## 2.0.0 (2019-01-28)
 
 * Changes:
