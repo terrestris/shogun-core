@@ -91,7 +91,6 @@ public class JsonbUserType implements UserType {
                     return null;
                 }
                 HashMap map = mapper.readValue(string, HashMap.class);
-                System.out.println(map);
                 return map;
             } catch (IOException e) {
                 throw new HibernateException(e);
