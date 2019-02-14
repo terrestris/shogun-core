@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-{package}.model.ProjectApplication;
-{package}.dao.ProjectApplicationDao;
+import ${package}.model.ProjectApplication;
+import ${package}.dao.ProjectApplicationDao;
 import ${package}.service.ProjectApplicationService;
 import de.terrestris.shoguncore.web.ApplicationController;
 
