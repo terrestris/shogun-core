@@ -1,5 +1,10 @@
 # Release Notes
 
+## 3.0.0 (2019-02-14)
+
+* Changes:
+  * Rename artifact shogun2 to shogun-core. See [here](https://github.com/terrestris/shogun-core/pull/340)
+
 ## 2.1.0 (2019-02-13)
 
 * Changes:
