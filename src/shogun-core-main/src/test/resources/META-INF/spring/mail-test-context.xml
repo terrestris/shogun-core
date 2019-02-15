@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:property-placeholder location="classpath*:META-INF/*.properties" />
+
+    <context:component-scan base-package="de.terrestris.shoguncore.util.mail" />
+
+    <!-- The mailSender configuration -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.server.host}" />
+        <property name="port" value="${mail.server.port}" />
+        <property name="username" value="${mail.server.username}" />
+        <property name="password" value="${mail.server.password}" />
+        <property name="javaMailProperties">
+           <props>
+                  <prop key="mail.transport.protocol">${mail.server.transportProtocol}</prop>
+                  <prop key="mail.smtp.auth">${mail.server.smtpAuth}</prop>
+                  <prop key="mail.smtp.starttls.enable">${mail.server.smtpStartTlsEnable}</prop>
+               </props>
+        </property>
+    </bean>
+
+    <!-- The default mail sender -->
+    <bean id="defaultMailSender" class="java.lang.String">
+        <constructor-arg value="${mail.defaultSender}"></constructor-arg>
+    </bean>
+
+    <!-- A simple mail message template -->
+    <bean id="registrationMailMessageTemplate" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="${mail.defaultSender}" />
+        <property name="subject" value="${mail.registrationMailTemplateSubject}" />
+        <property name="text" value="${mail.registrationMailTemplateText}" />
+    </bean>
+
+</beans>

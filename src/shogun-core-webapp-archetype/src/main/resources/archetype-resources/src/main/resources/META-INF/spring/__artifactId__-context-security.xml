@@ -1,0 +1,113 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Authentication Manager -->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="shogunCoreAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="basicAuthEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <beans:property name="realmName" value="SHOGun Realm" />
+    </beans:bean>
+
+    <beans:bean id="basicAuthenticationFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <beans:constructor-arg ref="authenticationManager"/>
+        <beans:constructor-arg ref="basicAuthEntryPoint" />
+    </beans:bean>
+
+    <!-- (Additional) Basic auth security for REST -->
+    <http auto-config='false' entry-point-ref="basicAuthEntryPoint" pattern="/rest/**" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+        <!-- Demo scenario: users will only get access to the /rest/users interface -->
+        <intercept-url pattern="/rest/users" access="hasRole('${symbol_dollar}{role.defaultUserRoleName}')"/>
+
+        <!-- All other interfaces can only be accessed by admins -->
+        <intercept-url pattern="/**" access="hasRole('${symbol_dollar}{role.superAdminRoleName}')"/>
+        <custom-filter ref="basicAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <csrf disabled="true"/>
+    </http>
+
+    <!-- Web/URL security -->
+    <http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager">
+
+        <logout logout-url="/logout" />
+
+        <!-- As CSRF protection is enabled by default in Spring Security 4,
+             the logout-url will only work with POST requests. To work with
+             GET requests CSRF has to be disabled -->
+        <csrf disabled="false"/>
+
+        <!-- URL security -->
+        <intercept-url pattern="/login/**" access="permitAll" />
+        <intercept-url pattern="/user/register.action" access="permitAll" />
+        <intercept-url pattern="/user/activate.action" access="permitAll" />
+        <intercept-url pattern="/user/resetPassword.action" access="permitAll" />
+        <intercept-url pattern="/user/changePassword.action" access="permitAll" />
+        <intercept-url pattern="/**" access="hasRole('${symbol_dollar}{role.defaultUserRoleName}')" />
+
+    </http>
+
+    <!-- Enables Method Security and Expression-based access control -->
+    <global-method-security pre-post-annotations="enabled">
+        <!-- Enables custom expression handler -->
+        <expression-handler ref="methodExpressionHandler" />
+    </global-method-security>
+
+    <!-- BEANS -->
+
+    <!-- bcrypt password encoder -->
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <!-- Configure the strength (log rounds). Default = 10 -->
+        <beans:constructor-arg value="10"/>
+    </beans:bean>
+
+    <!-- Custom Authentication Provider -->
+    <beans:bean id="shogunCoreAuthenticationProvider" class="de.terrestris.shoguncore.security.ShogunCoreAuthenticationProvider">
+        <beans:property name="passwordEncoder" ref="bcryptEncoder" />
+    </beans:bean>
+
+    <!-- This bean is referenced by the http security config to assure that the role hierarchy will be used -->
+    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <beans:constructor-arg>
+            <beans:bean id="webExpressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                <beans:property name = "expressionHandler">
+                    <beans:bean id="webExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+                        <beans:property name = "roleHierarchy" ref="roleHierarchy" />
+                    </beans:bean>
+                </beans:property>
+            </beans:bean>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <!-- See http://goo.gl/o42k1S -->
+    <beans:bean id="methodExpressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+    <!-- To use hasPermission() in expressions, configure a PermissionEvaluator -->
+         <beans:property name = "permissionEvaluator" ref="permissionEvaluator" />
+         <beans:property name = "roleHierarchy" ref="roleHierarchy"/>
+    </beans:bean>
+
+    <beans:bean id="permissionEvaluator" class="de.terrestris.shoguncore.security.access.ShogunCorePermissionEvaluator">
+        <beans:property name="permissionEvaluatorFactory">
+            <!-- This is how project specific permission evaluators can be used/configured -->
+            <beans:bean class="${package}.security.access.factory.ProjectEntityPermissionEvaluatorFactory" />
+        </beans:property>
+    </beans:bean>
+
+    <!-- http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/hierarchicalroles/RoleHierarchyImpl.html -->
+    <beans:bean id="roleHierarchy"  class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <beans:property name="hierarchy">
+            <beans:value>
+                ${symbol_dollar}{role.superAdminRoleName} > ${symbol_dollar}{role.defaultUserRoleName}
+            </beans:value>
+        </beans:property>
+    </beans:bean>
+
+</beans:beans>
