@@ -124,19 +124,18 @@
         <tomcat.version>9.0.2</tomcat.version>
 
         <!-- Core -->
-        <spring.version>5.1.3.RELEASE</spring.version>
+        <spring.version>5.1.5.RELEASE</spring.version>
         <spring-security.version>5.1.2.RELEASE</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.11.1</log4j.version>
+        <log4j.version>2.11.2</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <jackson.version>2.9.8</jackson.version>
-        <opencsv.version>4.4</opencsv.version>
-        <ehcache.version>3.6.2</ehcache.version>
+        <opencsv.version>4.5</opencsv.version>
+        <ehcache.version>3.6.3</ehcache.version>
 
         <!-- Persistence -->
         <hibernate.version>5.4.0.Final</hibernate.version>
-        <hikari-jdk7.version>2.4.13</hikari-jdk7.version>
-        <hikari.version>3.2.0</hikari.version>
+        <hikari.version>3.3.1</hikari.version>
         <h2.version>1.4.197</h2.version>
 
         <jdom.version>1.1.3</jdom.version>
@@ -153,11 +152,12 @@
         <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
-        <commons-io.version>2.5</commons-io.version>
+        <commons-dbutils.version>1.7</commons-dbutils.version>
+        <commons-io.version>2.6</commons-io.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
-        <commons-collections4.version>4.2</commons-collections4.version>
-        <commons-codec.version>1.9</commons-codec.version>
+        <commons-collections4.version>4.3</commons-collections4.version>
+        <commons-codec.version>1.12</commons-codec.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-logging.version>1.2</commons-logging.version>
@@ -179,7 +179,7 @@
         <javassist.version>3.22.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
 
-        <postgresql.version>42.1.4</postgresql.version>
+        <postgresql.version>42.2.5</postgresql.version>
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
@@ -197,7 +197,7 @@
         <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
-        <apache-httpclient.version>4.5.6</apache-httpclient.version>
+        <apache-httpclient.version>4.5.7</apache-httpclient.version>
 
         <!-- GeoTools -->
         <geotools.version>20.1</geotools.version>
@@ -210,7 +210,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>2.0.0-beta.5</powermock.version>
+        <powermock.version>2.0.0</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.16.0</jts.version>
