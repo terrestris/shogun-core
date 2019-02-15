@@ -3,12 +3,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.terrestris</groupId>
-    <artifactId>shogun2</artifactId>
+    <artifactId>shogun-core</artifactId>
     <version>2.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>SHOGun2</name>
-    <description>SHOGun2 is a Java based WebGIS framework</description>
-    <url>https://github.com/terrestris/shogun2</url>
+    <name>SHOGun-Core</name>
+    <description>SHOGun-Core is the core framework used in SHOGun</description>
+    <url>https://github.com/terrestris/shogun-core</url>
 
     <organization>
         <name>terrestris GmbH &amp; Co. KG</name>
@@ -24,15 +24,15 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/terrestris/shogun2</url>
-        <connection>scm:git:git://github.com/terrestris/shogun2.git</connection>
-        <developerConnection>scm:git:git@github.com:terrestris/shogun2.git</developerConnection>
+        <url>https://github.com/terrestris/shogun-core</url>
+        <connection>scm:git:git://github.com/terrestris/shogun-core.git</connection>
+        <developerConnection>scm:git:git@github.com:terrestris/shogun-core.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <ciManagement>
         <system>travis</system>
-        <url>https://travis-ci.org/terrestris/shogun2</url>
+        <url>https://travis-ci.org/terrestris/shogun-core</url>
     </ciManagement>
 
     <distributionManagement>
@@ -112,14 +112,14 @@
     </developers>
 
     <modules>
-        <module>shogun2-core</module>
-        <module>shogun2-webapp-archetype</module>
+        <module>shogun-core-main</module>
+        <module>shogun-core-webapp-archetype</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <webapp-archetype-resource-pom>shogun2-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
+        <webapp-archetype-resource-pom>shogun-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
         <tomcat.version>9.0.2</tomcat.version>
 
@@ -272,7 +272,7 @@
             </build>
         </profile>
 
-        <!-- A profile that is used for release a version of SHOGun2 to the
+        <!-- A profile that is used for release a version of SHOGun-Core to the
              Central Repository -->
         <profile>
             <id>release-artifact</id>
@@ -384,8 +384,8 @@
                     </regexFlags>
                     <replacements>
                        <replacement>
-                           <token>&lt;shogun2.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun2.version&gt;</token>
-                           <value>&lt;shogun2.version&gt;${newShogun2Version}&lt;/shogun2.version&gt;</value>
+                           <token>&lt;shogun.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun.version&gt;</token>
+                           <value>&lt;shogun.version&gt;${newShogunVersion}&lt;/shogun.version&gt;</value>
                        </replacement>
                     </replacements>
                 </configuration>
@@ -412,10 +412,10 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>de/terrestris/shogun2/model/**/*.class</exclude>
-                        <exclude>de/terrestris/shogun2/importer/communication/*.class</exclude>
-                        <exclude>de/terrestris/shogun2/importer/transform/*.class</exclude>
-                        <exclude>de/terrestris/shogun2/paging/PagingResult.class</exclude>
+                        <exclude>de/terrestris/shoguncore/model/**/*.class</exclude>
+                        <exclude>de/terrestris/shoguncore/importer/communication/*.class</exclude>
+                        <exclude>de/terrestris/shoguncore/importer/transform/*.class</exclude>
+                        <exclude>de/terrestris/shoguncore/paging/PagingResult.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -499,11 +499,11 @@
                     <preparationGoals>
                         clean
                         verify
-                        replacer:replace -DnewShogun2Version=${releaseVersion}
+                        replacer:replace -DnewShogunVersion=${releaseVersion}
                         scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for release ${releaseVersion}"
                     </preparationGoals>
                     <completionGoals>
-                        replacer:replace -DnewShogun2Version=${developmentVersion}
+                        replacer:replace -DnewShogunVersion=${developmentVersion}
                         scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for next development iteration"
                     </completionGoals>
                 </configuration>
