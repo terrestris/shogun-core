@@ -53,11 +53,8 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
      * @param width
      * @param height
      * @param version
-<<<<<<< HEAD:src/shogun-core-main/src/main/java/de/terrestris/shoguncore/model/layer/source/TileWmsLayerDataSource.java
-=======
      * @param layerNames
      * @param layerStyles
->>>>>>> add-custom-endpoints:src/shogun2-core/src/main/java/de/terrestris/shogun2/model/layer/source/TileWmsLayerDataSource.java
      * @param tileGrid
      */
     public TileWmsLayerDataSource(String name, String type, String url, int width,
