@@ -1,14 +1,14 @@
 package de.terrestris.shogun2.model.layer.source;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Class representing a layer data source for WMS servers providing single,
@@ -42,6 +42,12 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
     @Column(length = 2048)
     private String layerStyles;
 
+    @Column
+    private Boolean requestableByPath;
+
+    @Column
+    private String customRequestPath;
+
     /**
      *
      */
@@ -56,8 +62,8 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
      * @param width   image width
      * @param height  image height
      * @param version WMS version
-     * @param layers  List of layer names (instance if {@link GeoWebServiceLayerName}
-     * @param styles  List of layer styles (instance if {@link GeoWebServiceLayerStyle}
+     * @param layerNames List of layer names
+     * @param layerStyles  List of layer styles
      */
     public ImageWmsLayerDataSource(String name, String type, String url, int width,
                                    int height, String version, String layerNames, String layerStyles) {
@@ -185,4 +191,19 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
             isEquals();
     }
 
+    public Boolean getRequestableByPath() {
+        return requestableByPath;
+    }
+
+    public void setRequestableByPath( Boolean requestableByPath ) {
+        this.requestableByPath = requestableByPath;
+    }
+
+    public String getCustomRequestPath() {
+        return customRequestPath;
+    }
+
+    public void setCustomRequestPath( String customRequestPath ) {
+        this.customRequestPath = customRequestPath;
+    }
 }

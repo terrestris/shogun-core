@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -49,10 +51,9 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/geoserver.action", method = {
+    @RequestMapping(value = {"/geoserver.action", "/geoserver.action/{endpoint}"}, method = {
         RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> interceptGeoServerRequest(HttpServletRequest request) {
-
+    public ResponseEntity<?> interceptGeoServerRequest( HttpServletRequest request, @PathVariable(value="endpoint", required = false) Optional<String> endpoint ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
         byte[] responseBody = null;
@@ -62,7 +63,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
 
             LOG.trace("Trying to intercept a GeoServer resource.");
 
-            httpResponse = this.service.interceptGeoServerRequest(request);
+            httpResponse = this.service.interceptGeoServerRequest(request, endpoint);
 
             responseStatus = httpResponse.getStatusCode();
             responseBody = httpResponse.getBody();

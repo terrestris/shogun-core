@@ -102,13 +102,31 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest(HttpServletRequest request)
+    public Response interceptGeoServerRequest( HttpServletRequest request )
+        throws InterceptorException, URISyntaxException,
+        HttpException, IOException {
+        return interceptGeoServerRequest( request, Optional.empty() );
+    }
+
+    /**
+     * @param request
+     * @param endpoint
+     * @return
+     * @throws InterceptorException
+     * @throws URISyntaxException
+     * @throws HttpException
+     * @throws IOException
+     */
+    public Response interceptGeoServerRequest( HttpServletRequest request, Optional<String> endpoint )
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
 
         // wrap the request, we want to manipulate it
         MutableHttpServletRequest mutableRequest =
             new MutableHttpServletRequest(request);
+        if (endpoint.isPresent()) {
+            mutableRequest.addParameter("CUSTOM_ENDPOINT", endpoint.get());
+        }
 
         // get the OGC message information (service, request, endPoint)
         OgcMessage message = getOgcMessage(mutableRequest);
