@@ -4,12 +4,12 @@ import de.terrestris.shoguncore.model.layer.util.TileGrid;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Data source of layers for tile data from WMS servers.
@@ -53,6 +53,11 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
      * @param width
      * @param height
      * @param version
+<<<<<<< HEAD:src/shogun-core-main/src/main/java/de/terrestris/shoguncore/model/layer/source/TileWmsLayerDataSource.java
+=======
+     * @param layerNames
+     * @param layerStyles
+>>>>>>> add-custom-endpoints:src/shogun2-core/src/main/java/de/terrestris/shogun2/model/layer/source/TileWmsLayerDataSource.java
      * @param tileGrid
      */
     public TileWmsLayerDataSource(String name, String type, String url, int width,

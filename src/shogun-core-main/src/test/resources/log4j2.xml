@@ -13,6 +13,9 @@
         <Logger additivity="false" name="org.hibernate" level="info">
             <AppenderRef ref="Console" />
         </Logger>
+        <Logger additivity="false" name="org.springframework" level="info">
+            <AppenderRef ref="Console" />
+        </Logger>
         <Logger additivity="false" name="org.hibernate.cache" level="info">
             <AppenderRef ref="Console" />
         </Logger>

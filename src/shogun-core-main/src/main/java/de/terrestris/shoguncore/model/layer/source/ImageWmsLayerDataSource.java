@@ -39,6 +39,12 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
     @Column(length = 2048)
     private String layerStyles;
 
+    @Column
+    private Boolean requestableByPath;
+
+    @Column
+    private String customRequestPath;
+
     /**
      *
      */
@@ -53,7 +59,11 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
      * @param width   image width
      * @param height  image height
      * @param version WMS version
+<<<<<<< HEAD:src/shogun-core-main/src/main/java/de/terrestris/shoguncore/model/layer/source/ImageWmsLayerDataSource.java
      * @param layerNames  List of layer names
+=======
+     * @param layerNames List of layer names
+>>>>>>> add-custom-endpoints:src/shogun2-core/src/main/java/de/terrestris/shogun2/model/layer/source/ImageWmsLayerDataSource.java
      * @param layerStyles  List of layer styles
      */
     public ImageWmsLayerDataSource(String name, String type, String url, int width,
@@ -182,4 +192,19 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
             isEquals();
     }
 
+    public Boolean getRequestableByPath() {
+        return requestableByPath;
+    }
+
+    public void setRequestableByPath( Boolean requestableByPath ) {
+        this.requestableByPath = requestableByPath;
+    }
+
+    public String getCustomRequestPath() {
+        return customRequestPath;
+    }
+
+    public void setCustomRequestPath( String customRequestPath ) {
+        this.customRequestPath = customRequestPath;
+    }
 }

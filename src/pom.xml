@@ -232,6 +232,8 @@
         <bytebuddy.version>1.7.9</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
         <cache.version>1.1.0</cache.version>
+        <deegree.version>3.4.4</deegree.version>
+        <interceptor.version>1.2</interceptor.version>
 
         <downloadSources>true</downloadSources>
         <downloadJavadocs>true</downloadJavadocs>
@@ -1052,6 +1054,17 @@
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
                 <version>${hikari.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.deegree</groupId>
+                <artifactId>deegree-core-commons</artifactId>
+                <version>${deegree.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.interceptor</groupId>
+                <artifactId>javax.interceptor-api</artifactId>
+                <version>${interceptor.version}</version>
             </dependency>
 
         </dependencies>
