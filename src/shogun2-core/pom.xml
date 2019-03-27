@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.terrestris</groupId>
         <artifactId>shogun2</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>shogun2-core</artifactId>
@@ -275,6 +275,16 @@
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deegree</groupId>
+            <artifactId>deegree-core-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
         </dependency>
 
     </dependencies>
