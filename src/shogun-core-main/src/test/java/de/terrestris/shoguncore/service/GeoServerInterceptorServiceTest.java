@@ -324,7 +324,7 @@ public class GeoServerInterceptorServiceTest {
             "WMS", "GetStyles", "bvb:yarmolenko", "REQUEST");
 
         assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
-            actualRule, new String[]{"id", "created", "modified"}));
+            actualRule, "id", "created", "modified"));
     }
 
     @Test
@@ -343,7 +343,7 @@ public class GeoServerInterceptorServiceTest {
             "WFS", "DescribeFeatureType", null, "REQUEST");
 
         assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
-            actualRule, new String[]{"id", "created", "modified"}));
+            actualRule, "id", "created", "modified"));
     }
 
     @Test
@@ -361,7 +361,7 @@ public class GeoServerInterceptorServiceTest {
             "WFS", "DescribeFeatureType", null, "REQUEST");
 
         assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
-            actualRule, new String[]{"id", "created", "modified"}));
+            actualRule, "id", "created", "modified"));
     }
 
     @Test
@@ -380,7 +380,7 @@ public class GeoServerInterceptorServiceTest {
             "WMS", null, "bvb:yarmolenko", "REQUEST");
 
         assertTrue(EqualsBuilder.reflectionEquals(expectedRule,
-            actualRule, new String[]{"id", "created", "modified"}));
+            actualRule, "id", "created", "modified"));
     }
 
     @Test(expected = InterceptorException.class)
@@ -525,7 +525,7 @@ public class GeoServerInterceptorServiceTest {
             getTestInterceptorRulesForServiceAndEvent(service, event));
 
         // use powermock whitebox reflection to test private class
-        InterceptorRule mostSpecificRule = Whitebox.<InterceptorRule>invokeMethod(
+        InterceptorRule mostSpecificRule = Whitebox.invokeMethod(
             gsInterceptorService,
             "getMostSpecificRule", service, operation, endPoint, event);
 

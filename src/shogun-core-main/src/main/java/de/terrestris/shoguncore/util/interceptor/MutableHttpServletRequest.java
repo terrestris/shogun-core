@@ -310,4 +310,19 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
         }
     }
 
+    /**
+     * Get a parameter by name, ignoring case.
+     *
+     * @param name the parameter to get
+     * @return a comma separated list of parameter values
+     */
+    public String getParameterIgnoreCase(String name) {
+        for (Map.Entry<String, String[]> entry : customParameters.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(name)) {
+                return StringUtils.join(entry.getValue(), ",");
+            }
+        }
+        return null;
+    }
+
 }

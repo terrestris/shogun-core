@@ -39,6 +39,12 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
     @Column(length = 2048)
     private String layerStyles;
 
+    @Column
+    private Boolean requestableByPath;
+
+    @Column
+    private String customRequestPath;
+
     /**
      *
      */
@@ -182,4 +188,19 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
             isEquals();
     }
 
+    public Boolean getRequestableByPath() {
+        return requestableByPath;
+    }
+
+    public void setRequestableByPath( Boolean requestableByPath ) {
+        this.requestableByPath = requestableByPath;
+    }
+
+    public String getCustomRequestPath() {
+        return customRequestPath;
+    }
+
+    public void setCustomRequestPath( String customRequestPath ) {
+        this.customRequestPath = customRequestPath;
+    }
 }
