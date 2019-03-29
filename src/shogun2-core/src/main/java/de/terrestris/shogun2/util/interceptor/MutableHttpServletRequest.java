@@ -212,8 +212,8 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
-     * @param key
-     * @param value
+     * @param key The header name (without a trailing colon `:`)
+     * @param value The header value
      */
     public void setHeader(String key, String value) {
         if (!StringUtils.isEmpty(this.getHeader(key))) {
@@ -284,8 +284,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String headerValue = customHeaders.get(name);
-
-        // check the custom headers first
+        // Check custom headers first
         if (headerValue != null){
             return headerValue;
         }
