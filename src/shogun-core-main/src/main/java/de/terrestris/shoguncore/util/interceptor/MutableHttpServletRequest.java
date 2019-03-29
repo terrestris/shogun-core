@@ -44,6 +44,11 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     private Map<String, String[]> customParameters;
 
     /**
+     * Holds custom header mapping
+     */
+    private Map<String, String> customHeaders;
+
+    /**
      *
      */
     private String customRequestURI;
@@ -61,6 +66,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
         this.customRequestURI = request.getRequestURI();
         this.customParameters = new HashMap<String, String[]>(
             request.getParameterMap());
+        this.customHeaders = new HashMap<String, String>();
     }
 
     /**
@@ -206,6 +212,17 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
+     * @param key The header name (without a trailing colon `:`)
+     * @param value The header value
+     */
+    public void setHeader(String key, String value) {
+        if (!StringUtils.isEmpty(this.getHeader(key))) {
+            this.removeHeader(key);
+        }
+        customHeaders.put(key, value);
+    }
+
+    /**
      * @param key
      * @param value
      */
@@ -232,6 +249,15 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
+     * @param key
+     */
+    public void removeHeader(String key) {
+        if (customHeaders.get(key) != null) {
+            customHeaders.remove(key);
+        }
+    }
+
+    /**
      *
      */
     @Override
@@ -250,6 +276,19 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     @Override
     public Map<String, String[]> getParameterMap() {
         return customParameters;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public String getHeader(String name) {
+        String headerValue = customHeaders.get(name);
+        // Check custom headers first
+        if (headerValue != null){
+            return headerValue;
+        }
+        return ((HttpServletRequest) getRequest()).getHeader(name);
     }
 
     /**
