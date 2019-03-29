@@ -32,6 +32,10 @@ public class MutableHttpServletRequestTest {
 
     private static final String CUSTOM_REQUEST_PARAMETER_VALUE = "Kagawa";
 
+    private static final String CUSTOM_REQUEST_HEADER_KEY = "Authorization";
+
+    private static final String CUSTOM_REQUEST_HEADER_VALUE = "U2hpbmppOkthZ2F3YQ==";
+
     private MutableHttpServletRequest mutableRequest;
 
     @Before
@@ -87,6 +91,12 @@ public class MutableHttpServletRequestTest {
         mutableRequest.addParameter(CUSTOM_REQUEST_PARAMETER_KEY, param);
         assertEquals(StringUtils.join(param, ","),
             mutableRequest.getParameter(CUSTOM_REQUEST_PARAMETER_KEY));
+    }
+
+    @Test
+    public void set_custom_header() {
+        mutableRequest.setHeader(CUSTOM_REQUEST_HEADER_KEY, CUSTOM_REQUEST_HEADER_VALUE);
+        assertEquals(CUSTOM_REQUEST_HEADER_VALUE, mutableRequest.getHeader(CUSTOM_REQUEST_HEADER_KEY));
     }
 
     @Test
