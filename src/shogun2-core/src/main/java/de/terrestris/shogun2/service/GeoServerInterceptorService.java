@@ -126,6 +126,7 @@ public class GeoServerInterceptorService {
             new MutableHttpServletRequest(request);
         if (endpoint.isPresent()) {
             mutableRequest.addParameter("CUSTOM_ENDPOINT", endpoint.get());
+            mutableRequest.addParameter("CONTEXT_PATH", request.getContextPath());
         }
 
         // get the OGC message information (service, request, endPoint)

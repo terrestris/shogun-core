@@ -87,6 +87,28 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         toRemove.forEach(element -> element.getParentNode().removeChild(element));
     }
 
+    private void updateUrls(Document doc, String namespace, String baseUrl) throws XPathExpressionException {
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xpath = factory.newXPath();
+        NamespaceContext nscontext = CommonNamespaces.getNamespaceContext();
+        xpath.setNamespaceContext(nscontext);
+        String prefix = namespace.equals("") ? "" : "wms:";
+        XPathExpression expr = xpath.compile("//" + prefix + "OnlineResource");
+        NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+        for (int i = 0; i < nodeList.getLength(); ++i) {
+            Element link = (Element) nodeList.item(i);
+            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+            int index = url.indexOf("?");
+            if (index > -1) {
+                url = url.substring(index);
+                url = baseUrl + url;
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", url);
+            } else {
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", baseUrl);
+            }
+        }
+    }
+
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
@@ -109,14 +131,18 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
             Document doc = builder.parse(new ByteArrayInputStream(body));
             Element root = doc.getDocumentElement();
             String version = root.getAttribute("version");
-            System.out.println(version);
             if (version == null) {
                 return response;
             }
+            String proto = request.getHeader("x-forwarded-proto");
+            String host = request.getHeader("x-forwarded-host");
+            String baseUrl = proto + "://" + host + request.getParameter("CONTEXT_PATH") + "/geoserver.action/" + endpoint;
             if (version.equals("1.3.0")) {
                 removeLayers(doc, "http://www.opengis.net/wms", layerNames);
+                updateUrls(doc, "http://www.opengis.net/wms", baseUrl);
             } else {
                 removeLayers(doc, "", layerNames);
+                updateUrls(doc, "", baseUrl);
             }
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             DOMSource source = new DOMSource(doc);
