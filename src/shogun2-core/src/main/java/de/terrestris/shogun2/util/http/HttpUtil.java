@@ -1795,8 +1795,45 @@ public class HttpUtil {
         URI uri = httpRequest.getURI();
 
         HttpHost systemProxy = null;
+        AuthScope proxyAuthScope = null;
+        UsernamePasswordCredentials proxyCredentials = null;
+
         try {
+            String uriScheme = uri.getScheme();
+
+            String httpsProxyUser = System.getProperty("https.proxyUser");
+            String httpsProxyPassword = System.getProperty("https.proxyPassword");
+
+            String httpProxyUser = System.getProperty("http.proxyUser");
+            String httpProxyPassword = System.getProperty("http.proxyPassword");
+
             systemProxy = getSystemProxy(uri);
+
+            if (systemProxy != null) {
+                String proxyHostName = systemProxy.getHostName();
+                int proxyPort = systemProxy.getPort();
+                LOG.debug("Using proxy hostname from system proxy: " + proxyHostName);
+                LOG.debug("Using proxy port from system proxy: " +  proxyPort);
+
+                proxyAuthScope = new AuthScope(systemProxy.getHostName(), systemProxy.getPort());
+
+                if (StringUtils.equalsIgnoreCase(uriScheme, "http")) {
+                    LOG.debug("Using http proxy");
+
+                    if (!StringUtils.isEmpty(httpProxyUser) && !StringUtils.isEmpty(httpProxyPassword)) {
+                        LOG.debug("Using proxy user and password for the http proxy " + proxyHostName);
+                        proxyCredentials = new UsernamePasswordCredentials(httpProxyUser, httpProxyPassword);
+                    }
+
+                } else if (StringUtils.equalsIgnoreCase(uriScheme, "https")) {
+                    LOG.debug("Using https proxy");
+
+                    if (!StringUtils.isEmpty(httpsProxyUser) && !StringUtils.isEmpty(httpsProxyPassword)) {
+                        LOG.debug("Using proxy user and password for the https proxy " + proxyHostName);
+                        proxyCredentials = new UsernamePasswordCredentials(httpsProxyUser, httpsProxyPassword);
+                    }
+                }
+            }
         } catch (UnknownHostException e) {
             LOG.error("Error while detecting system wide proxy: " + e.getMessage());
         }
@@ -1810,13 +1847,23 @@ public class HttpUtil {
             .build();
 
         // set (preemptive) authentication if credentials are given
-        if (credentials != null) {
+        if (credentials != null || (proxyAuthScope != null && proxyCredentials != null)) {
 
             CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(
-                AuthScope.ANY,
-                credentials
-            );
+
+            if (proxyAuthScope != null && proxyCredentials != null) {
+                credentialsProvider.setCredentials(
+                        proxyAuthScope,
+                        proxyCredentials
+                );
+            }
+
+            if (credentials != null) {
+                credentialsProvider.setCredentials(
+                        new AuthScope(uri.getHost(), uri.getPort()),
+                        credentials
+                );
+            }
 
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(),
                 uri.getScheme());
