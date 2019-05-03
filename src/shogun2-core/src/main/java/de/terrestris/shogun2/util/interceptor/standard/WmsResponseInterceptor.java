@@ -97,14 +97,14 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         for (int i = 0; i < nodeList.getLength(); ++i) {
             Element link = (Element) nodeList.item(i);
-            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "xlink:href");
             int index = url.indexOf("?");
             if (index > -1) {
                 url = url.substring(index);
                 url = baseUrl + url;
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", url);
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", url);
             } else {
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", baseUrl);
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", baseUrl);
             }
         }
     }
