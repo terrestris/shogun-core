@@ -68,7 +68,7 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
     }
 
     private void removeLayers(Document doc, String namespace, List<String> layerNames) throws XPathExpressionException {
-        layerNames = layerNames.parallelStream().map(layerName -> layerName.split(":")[1]).collect(Collectors.toList());
+        List<String> unqualifiedLayerNames = layerNames.parallelStream().map(layerName -> layerName.split(":")[1]).collect(Collectors.toList());
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         NamespaceContext nscontext = CommonNamespaces.getNamespaceContext();
@@ -80,10 +80,23 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         for (int i = 0; i < nodeList.getLength(); ++i) {
             Element name = (Element) nodeList.item(i);
             String str = name.getTextContent();
-            if (!layerNames.contains(str)) {
+            if (!unqualifiedLayerNames.contains(str)) {
                 toRemove.add((Element) name.getParentNode());
+            } else {
+                String nodeLayerName = name.getTextContent();
+
+                for (int j = 0; j < layerNames.size(); j++) {
+                    String qualifiedLayerName = layerNames.get(j);
+                    String layerNamespace = qualifiedLayerName.split(":")[0];
+                    String unqualifiedLayerName = qualifiedLayerName.split(":")[1];
+
+                    if (nodeLayerName.equals(unqualifiedLayerName)) {
+                        name.setTextContent(layerNamespace + ":" + name.getTextContent());
+                    }
+                }
             }
         }
+
         toRemove.forEach(element -> element.getParentNode().removeChild(element));
     }
 
@@ -168,9 +181,7 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
     }
 
     @Override
-    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) {
-        return response;
-    }
+    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) { return response; }
 
     @Override
     public Response interceptGetStyles(MutableHttpServletRequest request, Response response) {
