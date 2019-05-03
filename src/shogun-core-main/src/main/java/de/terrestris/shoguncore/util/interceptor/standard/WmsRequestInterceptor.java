@@ -58,6 +58,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public MutableHttpServletRequest interceptGetFeatureInfo(MutableHttpServletRequest request) {
         filterLayerParameter("LAYERS", request);
         filterLayerParameter("QUERY_LAYERS", request);
@@ -70,6 +71,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public MutableHttpServletRequest interceptGetLegendGraphic(MutableHttpServletRequest request) {
         filterLayerParameter("LAYER", request);
         return request;
