@@ -68,7 +68,7 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
     }
 
     private void removeLayers(Document doc, String namespace, List<String> layerNames) throws XPathExpressionException {
-        layerNames = layerNames.parallelStream().map(layerName -> layerName.split(":")[1]).collect(Collectors.toList());
+        List<String> unqualifiedLayerNames = layerNames.parallelStream().map(layerName -> layerName.split(":")[1]).collect(Collectors.toList());
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         NamespaceContext nscontext = CommonNamespaces.getNamespaceContext();
@@ -80,10 +80,23 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         for (int i = 0; i < nodeList.getLength(); ++i) {
             Element name = (Element) nodeList.item(i);
             String str = name.getTextContent();
-            if (!layerNames.contains(str)) {
+            if (!unqualifiedLayerNames.contains(str)) {
                 toRemove.add((Element) name.getParentNode());
+            } else {
+                String nodeLayerName = name.getTextContent();
+
+                for (int j = 0; j < layerNames.size(); j++) {
+                    String qualifiedLayerName = layerNames.get(j);
+                    String layerNamespace = qualifiedLayerName.split(":")[0];
+                    String unqualifiedLayerName = qualifiedLayerName.split(":")[1];
+
+                    if (nodeLayerName.equals(unqualifiedLayerName)) {
+                        name.setTextContent(layerNamespace + ":" + name.getTextContent());
+                    }
+                }
             }
         }
+
         toRemove.forEach(element -> element.getParentNode().removeChild(element));
     }
 
@@ -97,14 +110,14 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         for (int i = 0; i < nodeList.getLength(); ++i) {
             Element link = (Element) nodeList.item(i);
-            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "href");
+            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "xlink:href");
             int index = url.indexOf("?");
             if (index > -1) {
                 url = url.substring(index);
                 url = baseUrl + url;
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", url);
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", url);
             } else {
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "href", baseUrl);
+                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", baseUrl);
             }
         }
     }
@@ -168,9 +181,7 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
     }
 
     @Override
-    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) {
-        return response;
-    }
+    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) { return response; }
 
     @Override
     public Response interceptGetStyles(MutableHttpServletRequest request, Response response) {
