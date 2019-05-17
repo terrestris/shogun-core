@@ -121,22 +121,22 @@
 
         <webapp-archetype-resource-pom>shogun-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>9.0.2</tomcat.version>
+        <tomcat.version>9.0.20</tomcat.version>
 
         <!-- Core -->
-        <spring.version>5.1.5.RELEASE</spring.version>
-        <spring-security.version>5.1.2.RELEASE</spring-security.version>
+        <spring.version>5.1.7.RELEASE</spring.version>
+        <spring-security.version>5.1.5.RELEASE</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
         <log4j.version>2.11.2</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <jackson.version>2.9.8</jackson.version>
-        <opencsv.version>4.5</opencsv.version>
+        <jackson.version>2.9.9</jackson.version>
+        <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.6.3</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.4.0.Final</hibernate.version>
+        <hibernate.version>5.4.2.Final</hibernate.version>
         <hikari.version>3.3.1</hikari.version>
-        <h2.version>1.4.197</h2.version>
+        <h2.version>1.4.199</h2.version>
 
         <jdom.version>1.1.3</jdom.version>
 
@@ -163,7 +163,7 @@
         <commons-logging.version>1.2</commons-logging.version>
 
         <!-- Joda Time -->
-        <joda-time.version>2.10.1</joda-time.version>
+        <joda-time.version>2.10.2</joda-time.version>
         <jadira-usertype-jodatime.version>7.0.0.CR1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
@@ -197,10 +197,10 @@
         <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
-        <apache-httpclient.version>4.5.7</apache-httpclient.version>
+        <apache-httpclient.version>4.5.8</apache-httpclient.version>
 
         <!-- GeoTools -->
-        <geotools.version>20.1</geotools.version>
+        <geotools.version>21.1</geotools.version>
 
         <!-- Zip4j -->
         <zip4j.version>1.3.2</zip4j.version>
@@ -213,7 +213,7 @@
         <powermock.version>2.0.0</powermock.version>
 
         <!-- Java Topology Suite -->
-        <jts.version>1.16.0</jts.version>
+        <jts.version>1.16.1</jts.version>
 
         <!-- JTS Jackson Datatype -->
         <jackson-datatype-jts.version>0.10-2.5-2</jackson-datatype-jts.version>
@@ -232,7 +232,7 @@
         <bytebuddy.version>1.7.9</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
         <cache.version>1.1.0</cache.version>
-        <deegree.version>3.4.4</deegree.version>
+        <deegree.version>3.4.6</deegree.version>
         <interceptor.version>1.2</interceptor.version>
 
         <downloadSources>true</downloadSources>
