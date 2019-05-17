@@ -109,10 +109,24 @@ public class RESTImportTask extends AbstractRESTEntity {
     }
 
     /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
      * @return the href
      */
     public String getHref() {
         return href;
+    }
+
+    /**
+     * @param href the href to set
+     */
+    public void setHref(String href) {
+        this.href = href;
     }
 
     /**
@@ -123,10 +137,24 @@ public class RESTImportTask extends AbstractRESTEntity {
     }
 
     /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
      * @return the updateMode
      */
     public String getUpdateMode() {
         return updateMode;
+    }
+
+    /**
+     * @param updateMode the updateMode to set
+     */
+    public void setUpdateMode(String updateMode) {
+        this.updateMode = updateMode;
     }
 
     /**
@@ -137,10 +165,24 @@ public class RESTImportTask extends AbstractRESTEntity {
     }
 
     /**
+     * @param data the data to set
+     */
+    public void setData(RESTData data) {
+        this.data = data;
+    }
+
+    /**
      * @return the target
      */
     public RESTTarget getTarget() {
         return target;
+    }
+
+    /**
+     * @param target the target to set
+     */
+    public void setTarget(RESTTarget target) {
+        this.target = target;
     }
 
     /**
@@ -151,10 +193,24 @@ public class RESTImportTask extends AbstractRESTEntity {
     }
 
     /**
+     * @param progress the progress to set
+     */
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    /**
      * @return the layer
      */
     public RESTLayer getLayer() {
         return layer;
+    }
+
+    /**
+     * @param layer the layer to set
+     */
+    public void setLayer(RESTLayer layer) {
+        this.layer = layer;
     }
 
     /**
@@ -165,10 +221,24 @@ public class RESTImportTask extends AbstractRESTEntity {
     }
 
     /**
+     * @param errorMessage the errorMessage to set
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    /**
      * @return the transformChain
      */
     public RESTTransformChain getTransformChain() {
         return transformChain;
+    }
+
+    /**
+     * @param transformChain the transformChain to set
+     */
+    public void setTransformChain(RESTTransformChain transformChain) {
+        this.transformChain = transformChain;
     }
 
 }
