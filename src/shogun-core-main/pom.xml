@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.terrestris</groupId>
         <artifactId>shogun-core</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>shogun-core-main</artifactId>
@@ -314,4 +314,8 @@
 
     </dependencies>
 
+
+  <scm>
+    <tag>v3.0.0</tag>
+  </scm>
 </project>
