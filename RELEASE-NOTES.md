@@ -1,9 +1,14 @@
 # Release Notes
 
-## 3.0.0 (2019-02-14)
+## 3.0.0 (2019-05-17)
 
+* New features:
+  * Add support for custom endpoints. See [here](https://github.com/terrestris/shogun-core/pull/345)
+  * Allow custom headers. See [here](https://github.com/terrestris/shogun-core/pull/347)
+  * Support proxy credentials. See [here](https://github.com/terrestris/shogun-core/pull/351)
 * Changes:
   * Rename artifact shogun2 to shogun-core. See [here](https://github.com/terrestris/shogun-core/pull/340)
+  * Namespace aware handling in default WMS request/response interceptor. See [here](https://github.com/terrestris/shogun-core/pull/353)
 
 ## 2.1.0 (2019-02-13)
 
