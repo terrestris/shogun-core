@@ -9,7 +9,7 @@
         <version>2.1.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>shogun-webapp-archetype</artifactId>
+    <artifactId>shogun-core-webapp-archetype</artifactId>
     <packaging>maven-archetype</packaging>
 
     <name>SHOGun-Core (Webapp Archetype)</name>

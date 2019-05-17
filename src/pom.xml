@@ -119,7 +119,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <webapp-archetype-resource-pom>shogun-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
+        <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
         <tomcat.version>9.0.20</tomcat.version>
 
