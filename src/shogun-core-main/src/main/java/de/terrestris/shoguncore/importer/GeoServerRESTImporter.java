@@ -308,6 +308,15 @@ public class GeoServerRESTImporter {
      * @throws HttpException
      */
     public boolean updateLayerForImportTask(int importJobId, int importTaskId, AbstractRESTEntity updateTaskEntity) throws URISyntaxException, HttpException {
+        if (importJobId < 0 || importTaskId < 0) {
+            LOG.debug("Invalid importJobId or importTaskId passed.");
+            return false;
+        }
+        if (updateTaskEntity == null) {
+            LOG.debug("Entity to update is null.");
+            return false;
+        }
+
         LOG.debug("Updating layer for the import task " + importTaskId + " in job " + importJobId + " with " + updateTaskEntity);
         Response httpResponse = HttpUtil.put(
                 this.addEndPoint(importJobId + "/tasks/" + importTaskId + "/layer"),
@@ -576,7 +585,7 @@ public class GeoServerRESTImporter {
     /**
      * Convert an object to json.
      */
-    private String asJSON(Object entity) {
+    protected String asJSON(Object entity) {
 
         String entityJson = null;
 
@@ -592,7 +601,7 @@ public class GeoServerRESTImporter {
     /**
      * Add an endpoint.
      */
-    private URI addEndPoint(String endPoint) throws URISyntaxException {
+    protected URI addEndPoint(String endPoint) throws URISyntaxException {
 
         if (StringUtils.isEmpty(endPoint) || endPoint.equals("/")) {
             return this.baseUri;
