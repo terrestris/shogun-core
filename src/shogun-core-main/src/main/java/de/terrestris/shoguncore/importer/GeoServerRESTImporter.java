@@ -275,7 +275,6 @@ public class GeoServerRESTImporter {
      */
     public boolean updateImportTask(int importJobId, int importTaskId,
                                     AbstractRESTEntity updateTaskEntity) throws Exception {
-
         LOG.debug("Updating the import task " + importTaskId + " in job " + importJobId +
             " with " + updateTaskEntity);
 
@@ -293,6 +292,37 @@ public class GeoServerRESTImporter {
             LOG.debug("Successfully updated the task " + importTaskId);
         } else {
             LOG.error("Unknown error occured while updating the task " + importTaskId);
+        }
+
+        return success;
+    }
+
+    /**
+     * Update layer object for a given task of an import job (via PUT)
+     *
+     * @param importJobId The import job ID
+     * @param importTaskId The import task ID
+     * @param updateTaskEntity The entity to use for update
+     * @return true if successful, false otherwise
+     * @throws URISyntaxException
+     * @throws HttpException
+     */
+    public boolean updateLayerForImportTask(int importJobId, int importTaskId, AbstractRESTEntity updateTaskEntity) throws URISyntaxException, HttpException {
+        LOG.debug("Updating layer for the import task " + importTaskId + " in job " + importJobId + " with " + updateTaskEntity);
+        Response httpResponse = HttpUtil.put(
+                this.addEndPoint(importJobId + "/tasks/" + importTaskId + "/layer"),
+                this.asJSON(updateTaskEntity),
+                ContentType.APPLICATION_JSON,
+                this.username,
+                this.password
+        );
+
+        boolean success = httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
+
+        if (success) {
+            LOG.debug("Successfully updated layer for task " + importTaskId);
+        } else {
+            LOG.error("An unknown error occurred while updating the task " + importTaskId);
         }
 
         return success;
