@@ -59,7 +59,7 @@ public class HttpUtilTest {
     /**
      *
      */
-    private static final Integer TEST_SERVER_PORT = 1234;
+    private static final Integer TEST_SERVER_PORT = 11234;
 
     /**
      *
