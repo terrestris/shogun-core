@@ -121,13 +121,13 @@
 
         <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>9.0.20</tomcat.version>
+        <tomcat.version>9.0.22</tomcat.version>
 
         <!-- Core -->
         <spring.version>5.1.7.RELEASE</spring.version>
         <spring-security.version>5.1.5.RELEASE</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.11.2</log4j.version>
+        <log4j.version>2.12.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <jackson.version>2.9.9</jackson.version>
         <opencsv.version>4.6</opencsv.version>
@@ -163,7 +163,7 @@
         <commons-logging.version>1.2</commons-logging.version>
 
         <!-- Joda Time -->
-        <joda-time.version>2.10.2</joda-time.version>
+        <joda-time.version>2.10.3</joda-time.version>
         <jadira-usertype-jodatime.version>7.0.0.CR1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
@@ -197,7 +197,7 @@
         <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
-        <apache-httpclient.version>4.5.8</apache-httpclient.version>
+        <apache-httpclient.version>4.5.9</apache-httpclient.version>
 
         <!-- GeoTools -->
         <geotools.version>21.1</geotools.version>
@@ -231,8 +231,8 @@
 
         <bytebuddy.version>1.7.9</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
-        <cache.version>1.1.0</cache.version>
-        <deegree.version>3.4.6</deegree.version>
+        <cache.version>1.1.1</cache.version>
+        <deegree.version>3.4.8</deegree.version>
         <interceptor.version>1.2</interceptor.version>
 
         <downloadSources>true</downloadSources>
