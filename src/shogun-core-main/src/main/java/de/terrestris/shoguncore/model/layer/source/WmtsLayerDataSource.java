@@ -1,13 +1,12 @@
 package de.terrestris.shoguncore.model.layer.source;
 
-import javax.persistence.*;
-
 import de.terrestris.shoguncore.model.layer.util.WmtsTileGrid;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**

@@ -1,6 +1,8 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.LayerDataSourceDao;
 import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
+import de.terrestris.shoguncore.model.layer.source.WmtsLayerDataSource;
 import de.terrestris.shoguncore.util.enumeration.HttpEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum.OperationType;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -42,6 +45,10 @@ import static org.apache.logging.log4j.LogManager.getLogger;
  */
 @Service
 public class GeoServerInterceptorService {
+
+    @Autowired
+    @Qualifier("layerDataSourceDao")
+    private LayerDataSourceDao<WmtsLayerDataSource> wmtsLayerDataSourceDao;
 
     /**
      * The Logger.
@@ -83,6 +90,8 @@ public class GeoServerInterceptorService {
 
     private final String USE_REFLECT_PARAM = "useReflect";
 
+    private static final Pattern WMTS_PATTERN = Pattern.compile("/[^/]+/wmts.action/\\d+/(.*)");
+
     /**
      *
      */
@@ -94,6 +103,24 @@ public class GeoServerInterceptorService {
      */
     @Autowired
     InterceptorRuleService<InterceptorRule, ?> interceptorRuleService;
+
+    @Transactional
+    public Response interceptWmtsRequest(HttpServletRequest request, String serviceId) throws UnsupportedEncodingException, InterceptorException, HttpException, URISyntaxException {
+        Matcher matcher = WMTS_PATTERN.matcher(request.getRequestURI());
+        int id = Integer.parseInt(serviceId);
+        if (!matcher.matches()) {
+            throw new InterceptorException("No WMTS request path found!");
+        }
+        String path = matcher.group(1);
+        WmtsLayerDataSource dataSource = wmtsLayerDataSourceDao.findById(id);
+        String baseUrl = dataSource.getUrl();
+        Response response = HttpUtil.get(baseUrl + "/" + path);
+
+        HttpHeaders forwardingHeaders = getResponseHeadersToForward(response.getHeaders());
+        response.setHeaders(forwardingHeaders);
+
+        return response;
+    }
 
     /**
      * @param request
