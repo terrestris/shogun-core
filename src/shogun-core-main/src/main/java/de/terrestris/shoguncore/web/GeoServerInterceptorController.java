@@ -59,7 +59,48 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
         try {
             LOG.trace("Trying to intercept a GeoServer resource.");
 
-            httpResponse = this.service.interceptGeoServerRequest(request, endpoint);
+            httpResponse = this.service.interceptGeoServerRequest(request, endpoint, true);
+
+            responseStatus = httpResponse.getStatusCode();
+            responseBody = httpResponse.getBody();
+            responseHeaders = httpResponse.getHeaders();
+
+            LOG.trace("Successfully intercepted a GeoServer resource.");
+
+            return new ResponseEntity<byte[]>(responseBody,
+                responseHeaders, responseStatus);
+
+        } catch (Exception e) {
+            LOG.error(ERROR_MESSAGE + e.getMessage());
+
+            responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, Object> responseMsg = ResultSet.error(
+                ERROR_MESSAGE + e.getMessage());
+
+            return new ResponseEntity<Map<String, Object>>(responseMsg,
+                responseHeaders, responseStatus);
+        }
+
+    }
+
+    /**
+     * A geoserver.action endpoint that does not pass headers such as Basic Authorization headers
+     *
+     * @param request
+     */
+    @RequestMapping(value = {"/geoserver-noauth.action", "/geoserver-noauth.action/{endpoint}"}, method = {
+        RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> interceptGeoServerRequestWithoutAuth( HttpServletRequest request, @PathVariable(value="endpoint", required = false) Optional<String> endpoint ) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus responseStatus = HttpStatus.OK;
+        byte[] responseBody = null;
+        Response httpResponse = null;
+
+        try {
+            LOG.trace("Trying to intercept a GeoServer resource.");
+
+            httpResponse = this.service.interceptGeoServerRequest(request, endpoint, false);
 
             responseStatus = httpResponse.getStatusCode();
             responseBody = httpResponse.getBody();

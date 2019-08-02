@@ -103,10 +103,10 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest( HttpServletRequest request )
+    public Response interceptGeoServerRequest( HttpServletRequest request, boolean forwardHeaders )
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
-        return interceptGeoServerRequest( request, Optional.empty() );
+        return interceptGeoServerRequest( request, Optional.empty(), forwardHeaders );
     }
 
     /**
@@ -118,7 +118,7 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest( HttpServletRequest request, Optional<String> endpoint )
+    public Response interceptGeoServerRequest( HttpServletRequest request, Optional<String> endpoint, boolean forwardHeaders )
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
 
@@ -148,7 +148,7 @@ public class GeoServerInterceptorService {
 
         // send the request
         // TODO: Move to global proxy class
-        Response response = sendRequest(mutableRequest);
+        Response response = sendRequest(mutableRequest, forwardHeaders);
 
         // intercept the response (if needed)
         Response interceptedResponse = ogcMessageDistributor
@@ -492,7 +492,7 @@ public class GeoServerInterceptorService {
      * @throws InterceptorException
      * @throws HttpException
      */
-    public static Response sendRequest(MutableHttpServletRequest request)
+    public static Response sendRequest(MutableHttpServletRequest request, boolean forwardHeaders)
         throws InterceptorException, HttpException {
 
         Response httpResponse = new Response();
@@ -506,7 +506,10 @@ public class GeoServerInterceptorService {
             // get the request URI
             URI requestUri = new URI(request.getRequestURI());
 
-            Header[] requestHeaders = getRequestHeadersToForward(request);
+            Header[] requestHeaders = {};
+            if (forwardHeaders) {
+                requestHeaders = getRequestHeadersToForward(request);
+            }
 
             // get the query parameters provided by the GET/POST request and
             // convert to a list of NameValuePairs
