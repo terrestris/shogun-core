@@ -72,7 +72,7 @@ public class GeoServerInterceptorServiceTest {
     public void test_throws_on_non_ogc_request() throws InterceptorException,
         URISyntaxException, HttpException, IOException {
         MockHttpServletRequest httpRequest = new MockHttpServletRequest();
-        gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class GeoServerInterceptorServiceTest {
         when(ruleService.findAllRulesForServiceAndEvent(
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
         assertEquals(resp, got);
     }
 
@@ -132,7 +132,7 @@ public class GeoServerInterceptorServiceTest {
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
 
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
 
         assertEquals(resp, got);
     }
@@ -166,7 +166,7 @@ public class GeoServerInterceptorServiceTest {
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
 
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
 
         assertEquals(resp, got);
 
@@ -208,7 +208,7 @@ public class GeoServerInterceptorServiceTest {
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WMS", "REQUEST"));
 
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
 
         assertEquals(resp, got);
     }
@@ -252,7 +252,7 @@ public class GeoServerInterceptorServiceTest {
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WFS", "REQUEST"));
 
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
 
         assertEquals(resp, got);
     }
@@ -303,7 +303,7 @@ public class GeoServerInterceptorServiceTest {
             any(String.class), any(String.class))).thenReturn(
             getTestInterceptorRulesForServiceAndEvent("WFS", "REQUEST"));
 
-        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest);
+        Response got = gsInterceptorService.interceptGeoServerRequest(httpRequest, true);
 
         assertEquals(resp, got);
 

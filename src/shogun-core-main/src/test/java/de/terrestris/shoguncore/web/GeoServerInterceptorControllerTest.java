@@ -57,7 +57,8 @@ public class GeoServerInterceptorControllerTest {
 
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
             Matchers.any(HttpServletRequest.class),
-            Matchers.any(Optional.class)
+            Matchers.any(Optional.class),
+            Matchers.any(boolean.class)
         )).thenReturn(responseObject);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(INTERCEPTOR_ENDPOINT))
@@ -75,7 +76,8 @@ public class GeoServerInterceptorControllerTest {
 
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
             Matchers.any(HttpServletRequest.class),
-            Matchers.any(Optional.class)
+            Matchers.any(Optional.class),
+            Matchers.any(boolean.class)
         )).thenReturn(responseObject);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(INTERCEPTOR_ENDPOINT))
@@ -92,7 +94,8 @@ public class GeoServerInterceptorControllerTest {
         Response responseObject = new Response(HttpStatus.OK, responseHeaders, testString.getBytes());
 
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
-            Matchers.any(HttpServletRequest.class)
+            Matchers.any(HttpServletRequest.class),
+            Matchers.any(boolean.class)
         )).thenReturn(responseObject);
 
         /**
@@ -105,7 +108,8 @@ public class GeoServerInterceptorControllerTest {
     @Test
     public void returnsErrorObjectIfExceptionWasThrown() throws Exception {
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
-            Matchers.any(HttpServletRequest.class)
+            Matchers.any(HttpServletRequest.class),
+            Matchers.any(boolean.class)
         )).thenThrow(InterceptorException.class);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(INTERCEPTOR_ENDPOINT))
