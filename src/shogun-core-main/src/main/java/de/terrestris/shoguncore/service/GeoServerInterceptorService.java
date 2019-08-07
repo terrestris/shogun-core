@@ -67,13 +67,6 @@ public class GeoServerInterceptorService {
     /**
      * An array of whitelisted Headers to forward within the Interceptor.
      */
-    private static final String[] FORWARD_REQUEST_HEADER_KEYS = new String[]{
-        HttpHeaders.AUTHORIZATION
-    };
-
-    /**
-     * An array of whitelisted Headers to forward within the Interceptor.
-     */
     private static final String[] FORWARD_RESPONSE_HEADER_KEYS = new String[]{
         "Content-Type",
         "Content-Disposition",
@@ -600,12 +593,10 @@ public class GeoServerInterceptorService {
     private static Header[] getRequestHeadersToForward(MutableHttpServletRequest request) {
         List<Header> requestHeaderList = new ArrayList<>();
 
-        // add all headers that should be involved in the request
-        for (String headerName : FORWARD_REQUEST_HEADER_KEYS) {
-            String headerValue = request.getHeader(headerName);
-            if (headerValue != null) {
-                requestHeaderList.add(new BasicHeader(headerName, headerValue));
-            }
+        // forward x-geoserver-credentials as Authorization header if available
+        String credentials = request.getHeader("x-geoserver-credentials");
+        if (credentials != null) {
+            requestHeaderList.add(new BasicHeader(HttpHeaders.AUTHORIZATION, credentials));
         }
 
         return requestHeaderList.toArray(new Header[0]);
