@@ -8,7 +8,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
-import de.terrestris.shoguncore.util.interceptor.BasicAuthHeaderRequest;
+import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WcsRequestInterceptorInterface;
 
@@ -44,7 +44,7 @@ public class WcsRequestInterceptor implements WcsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WCS GetCapabilities and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class WcsRequestInterceptor implements WcsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptDescribeCoverage(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WCS DescribeCoverage and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class WcsRequestInterceptor implements WcsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetCoverage(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WCS GetCoverage and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 }

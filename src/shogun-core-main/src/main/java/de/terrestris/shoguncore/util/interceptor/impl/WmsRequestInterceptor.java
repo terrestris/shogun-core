@@ -8,7 +8,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
-import de.terrestris.shoguncore.util.interceptor.BasicAuthHeaderRequest;
+import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WmsRequestInterceptorInterface;
 
@@ -44,7 +44,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetMap(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS GetMap and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetFeatureInfo(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS GetFeatureInfo and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptDescribeLayer(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS DescribeLayer and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetLegendGraphic(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS GetLegendGraphic and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetStyles(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS GetStyles and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class WmsRequestInterceptor implements WmsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WMS GetCapabilities and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 }

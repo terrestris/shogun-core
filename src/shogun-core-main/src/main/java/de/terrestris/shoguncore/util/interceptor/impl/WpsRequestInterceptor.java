@@ -8,7 +8,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
-import de.terrestris.shoguncore.util.interceptor.BasicAuthHeaderRequest;
+import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WpsRequestInterceptorInterface;
 
@@ -44,7 +44,7 @@ public class WpsRequestInterceptor implements WpsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WPS GetCapabilities and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class WpsRequestInterceptor implements WpsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptDescribeProcess(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WPS DescribeProcess and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class WpsRequestInterceptor implements WpsRequestInterceptorInterface {
 	@Override
 	public MutableHttpServletRequest interceptExecute(MutableHttpServletRequest request) {
 		LOG.debug("Intercepting WPS Execute and adding Basic auth credentials.");
-		return new BasicAuthHeaderRequest(request, gsUser, gsPass);
+		return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
 	}
 
 }
