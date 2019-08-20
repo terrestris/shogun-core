@@ -11,6 +11,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -59,6 +60,7 @@ public class MailPublisherTest {
         smtp.setServerStartupTimeout(3000L);
 
         greenMail = new GreenMail(smtp);
+        greenMail.withConfiguration(new GreenMailConfiguration().withDisabledAuthentication());
         greenMail.start();
     }
 
