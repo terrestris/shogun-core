@@ -1194,7 +1194,7 @@ public class HttpUtil {
         throws URISyntaxException, UnsupportedEncodingException, HttpException {
 
         if (!queryParams.isEmpty()) {
-            HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams);
+            HttpEntity httpEntity = new UrlEncodedFormEntity(queryParams, "UTF-8");
             httpRequest.setEntity(httpEntity);
         }
 
