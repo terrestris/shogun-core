@@ -1,5 +1,30 @@
 # Release Notes
 
+## 3.3.1 (2019-08-20)
+
+* Bugfix: Encode as UTF-8 when posting. See [here](https://github.com/terrestris/shogun-core/pull/369)
+
+## 3.3.0 (2019-08-08)
+
+* New features:
+  * Add a WFS response interceptor to rewrite URLs. See [here](https://github.com/terrestris/shogun-core/pull/367)
+* Changes:
+  * Use x-geoserver-credentials header for authorization. See [here](https://github.com/terrestris/shogun-core/pull/368)
+
+## 3.2.0 (2019-08-01)
+
+* New features:
+  * Bugfix: Add a wmts.action to proxy REST like WMTS sources. See [here](https://github.com/terrestris/shogun-core/pull/365)
+
+## 3.1.1 (2019-05-23)
+
+* Bugfix: Add missing dependencies. See [here](https://github.com/terrestris/shogun-core/pull/361)
+
+## 3.1.0 (2019-05-20)
+
+* New features:
+  * GeoServer Importer: Added method for updating a layer of a given import task and import job See [here](https://github.com/terrestris/shogun-core/pull/360)
+
 ## 3.0.0 (2019-05-17)
 
 * New features:
