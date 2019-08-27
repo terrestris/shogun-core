@@ -32,6 +32,7 @@ public abstract class LayerDataSource extends PersistentObject {
     private String name;
     private String type;
     private String url;
+    private String format;
 
     /**
      * default constructor
@@ -45,11 +46,12 @@ public abstract class LayerDataSource extends PersistentObject {
      * @param type
      * @param url
      */
-    public LayerDataSource(String name, String type, String url) {
+    public LayerDataSource(String name, String type, String url, String format) {
         super();
         this.name = name;
         this.type = type;
         this.url = url;
+        this.format = format;
     }
 
     /**
@@ -95,6 +97,20 @@ public abstract class LayerDataSource extends PersistentObject {
     }
 
     /**
+     * @return the format
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * @param format the format to set
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    /**
      * @see java.lang.Object#hashCode()
      * <p>
      * According to
@@ -109,6 +125,7 @@ public abstract class LayerDataSource extends PersistentObject {
             append(getName()).
             append(getType()).
             append(getUrl()).
+            append(getFormat()).
             toHashCode();
     }
 
@@ -130,6 +147,7 @@ public abstract class LayerDataSource extends PersistentObject {
             append(getName(), other.getName()).
             append(getType(), other.getType()).
             append(getUrl(), other.getUrl()).
+            append(getFormat(), other.getFormat()).
             isEquals();
     }
 
