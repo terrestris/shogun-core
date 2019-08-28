@@ -82,9 +82,9 @@ public class XyzLayerDataSource extends LayerDataSource {
      * @param resolutions
      * @param tileSize
      */
-    public XyzLayerDataSource(String name, String type, String url, Double center, Extent extent,
+    public XyzLayerDataSource(String name, String type, String url, String format, Double center, Extent extent,
                               List<Double> resolutions, Integer tileSize) {
-        super(name, type, url);
+        super(name, type, url, format);
         this.center = center;
         this.extent = extent;
         this.resolutions = resolutions;

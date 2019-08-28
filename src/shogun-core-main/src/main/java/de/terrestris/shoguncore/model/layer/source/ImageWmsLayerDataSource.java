@@ -62,9 +62,9 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
      * @param layerNames  List of layer names
      * @param layerStyles  List of layer styles
      */
-    public ImageWmsLayerDataSource(String name, String type, String url, int width,
+    public ImageWmsLayerDataSource(String name, String type, String url, String format, int width,
                                    int height, String version, String layerNames, String layerStyles) {
-        super(name, type, url);
+        super(name, type, url, format);
         this.width = width;
         this.height = height;
         this.version = version;

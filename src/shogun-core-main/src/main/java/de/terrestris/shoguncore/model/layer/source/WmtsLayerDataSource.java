@@ -39,7 +39,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     private String projection;
     private String matrixSet;
     private String requestEncoding;
-    private String format;
 
     /**
      * Default constructor
@@ -55,10 +54,9 @@ public class WmtsLayerDataSource extends LayerDataSource {
      * @param projection
      * @param matrixSet
      * @param requestEncoding
-     * @param format
      * @param urls
      */
-    public WmtsLayerDataSource(WmtsTileGrid tileGrid, String wmtsLayer, String wmtsStyle, String projection, String matrixSet, String requestEncoding, String format, List<String> urls) {
+    public WmtsLayerDataSource(WmtsTileGrid tileGrid, String wmtsLayer, String wmtsStyle, String projection, String matrixSet, String requestEncoding, List<String> urls) {
         this();
         this.tileGrid = tileGrid;
         this.wmtsLayer = wmtsLayer;
@@ -66,7 +64,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
         this.projection = projection;
         this.matrixSet = matrixSet;
         this.requestEncoding = requestEncoding;
-        this.format = format;
         this.urls = urls;
     }
 
@@ -168,22 +165,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
 
     /**
      *
-     * @return the image format
-     */
-    public String getFormat() {
-        return format;
-    }
-
-    /**
-     *
-     * @param format the image format to set
-     */
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    /**
-     *
      * @return The urls as {@link List} of {@link String}
      */
     public List<String> getUrls() {
@@ -210,7 +191,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
         // two randomly chosen prime numbers
         return new HashCodeBuilder(11, 19).
             appendSuper(super.hashCode()).
-            append(getFormat()).
             append(getRequestEncoding()).
             append(getWmtsLayer()).
             append(getMatrixSet()).
@@ -236,7 +216,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
 
         return new EqualsBuilder().
             appendSuper(super.equals(other)).
-            append(getFormat(), other.getFormat()).
             append(getRequestEncoding(), other.getRequestEncoding()).
             append(getWmtsLayer(), other.getWmtsLayer()).
             append(getMatrixSet(), other.getMatrixSet()).

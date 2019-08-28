@@ -57,10 +57,10 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
      * @param layerStyles
      * @param tileGrid
      */
-    public TileWmsLayerDataSource(String name, String type, String url, int width,
+    public TileWmsLayerDataSource(String name, String type, String url, String format, int width,
                                   int height, String version, String layerNames, String layerStyles,
                                   TileGrid tileGrid) {
-        super(name, type, url, width, height, version, layerNames, layerStyles);
+        super(name, type, url, format,  width, height, version, layerNames, layerStyles);
         this.tileGrid = tileGrid;
     }
 
