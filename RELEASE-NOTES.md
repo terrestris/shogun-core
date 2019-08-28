@@ -1,5 +1,9 @@
 # Release Notes
 
+## 4.0.0 (2019-08-28)
+
+* Change: `format` field has been moved to parent class, which implies changes in the underlying database tables. See [here](https://github.com/terrestris/shogun-core/pull/371)
+
 ## 3.3.1 (2019-08-20)
 
 * Bugfix: Encode as UTF-8 when posting. See [here](https://github.com/terrestris/shogun-core/pull/369)
