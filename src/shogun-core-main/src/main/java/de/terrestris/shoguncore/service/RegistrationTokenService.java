@@ -1,12 +1,10 @@
 package de.terrestris.shoguncore.service;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-
+import de.terrestris.shoguncore.dao.RegistrationTokenDao;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.token.RegistrationToken;
+import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
+import de.terrestris.shoguncore.util.mail.MailPublisher;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,11 +14,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import de.terrestris.shoguncore.dao.RegistrationTokenDao;
-import de.terrestris.shoguncore.model.User;
-import de.terrestris.shoguncore.model.token.RegistrationToken;
-import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
-import de.terrestris.shoguncore.util.mail.MailPublisher;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author Daniel Koch
@@ -29,6 +27,28 @@ import de.terrestris.shoguncore.util.mail.MailPublisher;
 @Service("registrationTokenService")
 public class RegistrationTokenService<E extends RegistrationToken, D extends RegistrationTokenDao<E>>
     extends AbstractUserTokenService<E, D> {
+
+    /**
+     * The relative path for the SHOGun-Core user activation interface.
+     */
+    @Value("${login.accountActivationPath}")
+    private String accountActivationPath;
+    /**
+     * The registration token expiration time in minutes
+     */
+    @Value("${login.registrationTokenExpirationTime}")
+    private int registrationTokenExpirationTime;
+    /**
+     *
+     */
+    @Autowired
+    private MailPublisher mailPublisher;
+    /**
+     *
+     */
+    @Autowired
+    @Qualifier("registrationMailMessageTemplate")
+    private SimpleMailMessage registrationMailMessageTemplate;
 
     /**
      * Default constructor, which calls the type-constructor
@@ -45,31 +65,6 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
     protected RegistrationTokenService(Class<E> entityClass) {
         super(entityClass);
     }
-
-    /**
-     * The relative path for the SHOGun-Core user activation interface.
-     */
-    @Value("${login.accountActivationPath}")
-    private String accountActivationPath;
-
-    /**
-     * The registration token expiration time in minutes
-     */
-    @Value("${login.registrationTokenExpirationTime}")
-    private int registrationTokenExpirationTime;
-
-    /**
-     *
-     */
-    @Autowired
-    private MailPublisher mailPublisher;
-
-    /**
-     *
-     */
-    @Autowired
-    @Qualifier("registrationMailMessageTemplate")
-    private SimpleMailMessage registrationMailMessageTemplate;
 
     /**
      * We have to use {@link Qualifier} to define the correct dao here.
@@ -164,7 +159,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
             .setParameter("token", registrationToken.getToken())
             .build();
 
-        LOG.trace("Created the following URI for account activation: " + tokenURI);
+        logger.trace("Created the following URI for account activation: " + tokenURI);
 
         return tokenURI;
     }
@@ -178,7 +173,7 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
     @SuppressWarnings("unchecked")
     public void deleteTokenAfterActivation(RegistrationToken token) {
         dao.delete((E) token);
-        LOG.trace("The registration token has been deleted.");
+        logger.trace("The registration token has been deleted.");
     }
 
     /**

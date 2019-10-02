@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.module.Button;
+import org.springframework.stereotype.Repository;
 
 @Repository("buttonDao")
 public class ButtonDao<E extends Button> extends

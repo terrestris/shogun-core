@@ -21,7 +21,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public abstract class PersistentObjectIdResolver<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
     extends SimpleObjectIdResolver {
 
-    protected final Logger LOG = getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     protected S service;
 
@@ -37,14 +37,6 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
         // helper method to process the injection of the services
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
-
-    /**
-     * Has to be implemented by subclasses to autowire and set the correct
-     * service class.
-     *
-     * @param service the service to set
-     */
-    public abstract void setService(S service);
 
     /**
      *
@@ -71,7 +63,7 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
                 throw new Exception("ID is not of type Integer.");
             }
         } catch (Exception e) {
-            LOG.error("Could not resolve object by ID: " + e.getMessage());
+            logger.error("Could not resolve object by ID: " + e.getMessage());
             return null;
         }
 
@@ -93,7 +85,7 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
         try {
             return getClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            LOG.error("Error instantiating ObjectIdResolver: " + e.getMessage());
+            logger.error("Error instantiating ObjectIdResolver: " + e.getMessage());
         }
         return null;
     }
@@ -104,4 +96,12 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
     public S getService() {
         return service;
     }
+
+    /**
+     * Has to be implemented by subclasses to autowire and set the correct
+     * service class.
+     *
+     * @param service the service to set
+     */
+    public abstract void setService(S service);
 }

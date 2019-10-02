@@ -1,23 +1,6 @@
 package de.terrestris.shoguncore.model.layer.source;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.layer.util.Extent;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -25,7 +8,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.layer.util.Extent;
+import javax.persistence.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing a layer source for tile data with
@@ -177,8 +164,9 @@ public class XyzLayerDataSource extends LayerDataSource {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof XyzLayerDataSource))
+        if (!(obj instanceof XyzLayerDataSource)) {
             return false;
+        }
         XyzLayerDataSource other = (XyzLayerDataSource) obj;
 
         return new EqualsBuilder().

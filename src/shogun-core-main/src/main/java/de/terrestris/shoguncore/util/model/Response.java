@@ -22,6 +22,24 @@ public class Response {
     private byte[] body;
 
     /**
+     *
+     */
+    public Response() {
+
+    }
+
+    /**
+     * @param statusCode
+     * @param headers
+     * @param body
+     */
+    public Response(HttpStatus statusCode, HttpHeaders headers, byte[] body) {
+        this.statusCode = statusCode;
+        this.headers = headers;
+        this.body = body;
+    }
+
+    /**
      * @return the statusCode
      */
     public HttpStatus getStatusCode() {
@@ -60,24 +78,6 @@ public class Response {
      * @param body the body to set
      */
     public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    /**
-     *
-     */
-    public Response() {
-
-    }
-
-    /**
-     * @param statusCode
-     * @param headers
-     * @param body
-     */
-    public Response(HttpStatus statusCode, HttpHeaders headers, byte[] body) {
-        this.statusCode = statusCode;
-        this.headers = headers;
         this.body = body;
     }
 

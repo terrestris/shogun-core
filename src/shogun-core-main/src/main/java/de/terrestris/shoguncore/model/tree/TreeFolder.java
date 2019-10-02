@@ -3,19 +3,14 @@
  */
 package de.terrestris.shoguncore.model.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a (simple) composite {@link TreeNode}, i.e. a folder
@@ -103,8 +98,9 @@ public class TreeFolder extends TreeNode {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TreeFolder))
+        if (!(obj instanceof TreeFolder)) {
             return false;
+        }
         TreeFolder other = (TreeFolder) obj;
 
         return new EqualsBuilder()

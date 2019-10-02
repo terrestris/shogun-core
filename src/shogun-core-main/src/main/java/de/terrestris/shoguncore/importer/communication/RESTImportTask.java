@@ -1,7 +1,6 @@
 package de.terrestris.shoguncore.importer.communication;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
-
 import de.terrestris.shoguncore.importer.transform.RESTTransformChain;
 
 

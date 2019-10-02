@@ -158,8 +158,9 @@ public class Map extends Module {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Map))
+        if (!(obj instanceof Map)) {
             return false;
+        }
         Map other = (Map) obj;
 
         return new EqualsBuilder().

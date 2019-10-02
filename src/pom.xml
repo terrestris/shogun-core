@@ -371,7 +371,6 @@
                         <version>${maven-checkstyle-plugin.version}</version>
                         <configuration>
                             <configLocation>checkstyle/checkstyle.xml</configLocation>
-                            <configLocation>google_checks.xml</configLocation>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
                             <linkXRef>false</linkXRef>

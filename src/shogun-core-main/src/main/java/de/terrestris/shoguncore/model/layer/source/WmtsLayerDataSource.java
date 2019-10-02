@@ -68,7 +68,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return the {@link WmtsTileGrid}
      */
     public WmtsTileGrid getTileGrid() {
@@ -76,7 +75,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param tileGrid WmtsTileGrid to set
      */
     public void setTileGrid(WmtsTileGrid tileGrid) {
@@ -84,7 +82,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return The layer name of WMTS layer
      */
     public String getWmtsLayer() {
@@ -92,7 +89,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param wmtsLayer The layer name to set
      */
     public void setWmtsLayer(String wmtsLayer) {
@@ -100,7 +96,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return The style name to set
      */
     public String getWmtsStyle() {
@@ -108,7 +103,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param wmtsStyle The style name to set
      */
     public void setWmtsStyle(String wmtsStyle) {
@@ -116,7 +110,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return The projection
      */
     public String getProjection() {
@@ -124,7 +117,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param projection The projection code to set
      */
     public void setProjection(String projection) {
@@ -132,7 +124,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return matrix set to use
      */
     public String getMatrixSet() {
@@ -140,7 +131,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param matrixSet The matrix set to set
      */
     public void setMatrixSet(String matrixSet) {
@@ -148,7 +138,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return the request encoding
      */
     public String getRequestEncoding() {
@@ -156,7 +145,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param requestEncoding the request encoding to set
      */
     public void setRequestEncoding(String requestEncoding) {
@@ -164,7 +152,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @return The urls as {@link List} of {@link String}
      */
     public List<String> getUrls() {
@@ -172,7 +159,6 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     *
      * @param urls The urls to set
      */
     public void setUrls(List<String> urls) {
@@ -210,8 +196,9 @@ public class WmtsLayerDataSource extends LayerDataSource {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof WmtsLayerDataSource))
+        if (!(obj instanceof WmtsLayerDataSource)) {
             return false;
+        }
         WmtsLayerDataSource other = (WmtsLayerDataSource) obj;
 
         return new EqualsBuilder().

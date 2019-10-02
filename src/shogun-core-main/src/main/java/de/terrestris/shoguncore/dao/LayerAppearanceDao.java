@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.layer.appearance.LayerAppearance;
+import org.springframework.stereotype.Repository;
 
 @Repository("layerAppearanceDao")
 public class LayerAppearanceDao<E extends LayerAppearance> extends

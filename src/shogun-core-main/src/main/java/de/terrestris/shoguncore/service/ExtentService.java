@@ -1,12 +1,11 @@
 package de.terrestris.shoguncore.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import de.terrestris.shoguncore.dao.ExtentDao;
 import de.terrestris.shoguncore.model.layer.util.Extent;
 import de.terrestris.shoguncore.model.module.Module;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 /**
  * Service class for the {@link Module} model.

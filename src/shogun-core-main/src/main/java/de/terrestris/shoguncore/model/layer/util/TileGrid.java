@@ -3,21 +3,18 @@
  */
 package de.terrestris.shoguncore.model.layer.util;
 
-import java.awt.geom.Point2D;
-import java.util.List;
-
-import javax.persistence.*;
-
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.*;
+import java.awt.geom.Point2D;
+import java.util.List;
 
 /**
  * Class representing a WMS tile grid
@@ -36,6 +33,7 @@ public class TileGrid extends PersistentObject {
      *
      */
     private static final long serialVersionUID = 1L;
+    private static final int DEFAULT_TILE_SIZE = 256;
 
     /**
      * The tileGrid type. Typically one of `TileGrid` or `WMTS`.
@@ -88,7 +86,7 @@ public class TileGrid extends PersistentObject {
      */
     public TileGrid() {
         super();
-        tileSize = new Integer(256);
+        tileSize = new Integer(DEFAULT_TILE_SIZE);
     }
 
     /**
@@ -204,8 +202,9 @@ public class TileGrid extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TileGrid))
+        if (!(obj instanceof TileGrid)) {
             return false;
+        }
         TileGrid other = (TileGrid) obj;
 
         return new EqualsBuilder().

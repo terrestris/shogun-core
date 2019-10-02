@@ -46,24 +46,11 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 @Service
 public class GeoServerInterceptorService {
 
-    @Autowired
-    @Qualifier("layerDataSourceDao")
-    private LayerDataSourceDao<WmtsLayerDataSource> wmtsLayerDataSourceDao;
-
     /**
      * The Logger.
      */
     private static final Logger LOG = getLogger(
         GeoServerInterceptorService.class);
-
-    /**
-     * The autowired properties file containing the (application driven)
-     * GeoServer namespace - GeoServer BaseURI mapping, e.g.:
-     * <p>
-     * topp=http://localhost:8080/geoserver/topp/ows
-     */
-    private Properties geoServerNameSpaces;
-
     /**
      * An array of whitelisted Headers to forward within the Interceptor.
      */
@@ -78,24 +65,259 @@ public class GeoServerInterceptorService {
         "geowebcache-tile-index",
         "geowebcache-miss-reason"
     };
-
-    private final String WMS_REFLECT_ENDPOINT = "/reflect";
-
-    private final String USE_REFLECT_PARAM = "useReflect";
-
     private static final Pattern WMTS_PATTERN = Pattern.compile("/[^/]+/wmts.action/\\d+/(.*)");
-
+    private static final String WMS_REFLECT_ENDPOINT = "/reflect";
+    private static final String USE_REFLECT_PARAM = "useReflect";
     /**
      *
      */
     @Autowired
     OgcMessageDistributor ogcMessageDistributor;
-
     /**
      *
      */
     @Autowired
     InterceptorRuleService<InterceptorRule, ?> interceptorRuleService;
+    @Autowired
+    @Qualifier("layerDataSourceDao")
+    private LayerDataSourceDao<WmtsLayerDataSource> wmtsLayerDataSourceDao;
+    /**
+     * The autowired properties file containing the (application driven)
+     * GeoServer namespace - GeoServer BaseURI mapping, e.g.:
+     * <p>
+     * topp=http://localhost:8080/geoserver/topp/ows
+     */
+    private Properties geoServerNameSpaces;
+
+    /**
+     * @param params
+     * @return
+     */
+    private static List<NameValuePair> createQueryParams(Map<String, String[]> params) {
+
+        List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
+
+        for (Entry<String, String[]> param : params.entrySet()) {
+            queryParams.add(new BasicNameValuePair(param.getKey(),
+                StringUtils.join(param.getValue(), ",")));
+        }
+
+        return queryParams;
+    }
+
+    /**
+     * @param baseUri
+     * @param queryParams
+     * @return
+     * @throws URISyntaxException
+     */
+    private static URI getFullRequestURI(URI baseUri, List<NameValuePair> queryParams)
+        throws URISyntaxException {
+
+        URI requestUri = null;
+
+        URIBuilder builder = new URIBuilder(baseUri);
+        builder.addParameters(queryParams);
+        requestUri = builder.build();
+
+        return requestUri;
+    }
+
+    /**
+     * @param endPoint
+     */
+    private static String getGeoServerNameSpace(String endPoint) {
+
+        // return the endPoint as nameSpace per default
+        String geoServerNamespace = endPoint;
+
+        if (endPoint.contains(":")) {
+            String[] split = endPoint.split(":");
+            geoServerNamespace = split[0];
+        }
+
+        return geoServerNamespace;
+    }
+
+    /**
+     * @param request
+     * @throws InterceptorException
+     * @throws HttpException
+     */
+    public static Response sendRequest(MutableHttpServletRequest request)
+        throws InterceptorException, HttpException {
+
+        Response httpResponse = new Response();
+
+        String requestMethod = request.getMethod();
+        boolean getRequest = "GET".equalsIgnoreCase(requestMethod);
+        boolean postRequest = "POST".equalsIgnoreCase(requestMethod);
+
+        try {
+
+            // get the request URI
+            URI requestUri = new URI(request.getRequestURI());
+
+            Header[] requestHeaders = getRequestHeadersToForward(request);
+
+            // get the query parameters provided by the GET/POST request and
+            // convert to a list of NameValuePairs
+            List<NameValuePair> allQueryParams = createQueryParams(request.getParameterMap());
+
+            // append the given request parameters to the base URI
+            URI fullRequestUri = getFullRequestURI(requestUri, allQueryParams);
+
+            if (getRequest) {
+                // if we're called via GET method
+
+                // perform the request with the given parameters
+                httpResponse = HttpUtil.get(fullRequestUri, requestHeaders);
+
+            } else if (postRequest) {
+                // if we're called via POST method
+
+                // We have to attach the actual query; a POST to e.g. http://example.com/?foo=bar is totally OK
+                String queryString = request.getQueryString();
+                if (queryString != null) {
+                    requestUri = appendQueryString(requestUri, queryString);
+                }
+
+                // get the request body if any
+                String body = OgcXmlUtil.getRequestBody(request);
+
+                if (!StringUtils.isEmpty(body)) {
+                    // we do have a POST with string data present
+
+                    // parse the content type of the request
+                    ContentType contentType = ContentType.parse(request.getContentType());
+
+                    if (contentType.getCharset() == null) {
+                        // use UTF-8 charset if charset could not be parsed from the content type
+                        // of the request
+                        contentType = contentType.withCharset("UTF-8");
+                    }
+
+                    // perform the POST request to the URI with queryString and with the given body
+                    httpResponse = HttpUtil.post(requestUri, body, contentType, requestHeaders);
+                } else {
+
+                    // perform the POST request with the given name value pairs,
+                    httpResponse = HttpUtil.post(requestUri, allQueryParams, requestHeaders);
+                }
+
+            } else {
+                // otherwise throw an exception
+                throw new InterceptorException("Only GET or POST method is allowed");
+            }
+
+        } catch (URISyntaxException | UnsupportedEncodingException e) {
+            LOG.error("Error while sending request: " + e.getMessage());
+        }
+
+        return httpResponse;
+    }
+
+    /**
+     * @param request
+     * @return
+     */
+    private static Header[] getRequestHeadersToForward(MutableHttpServletRequest request) {
+        List<Header> requestHeaderList = new ArrayList<>();
+
+        // forward x-geoserver-credentials as Authorization header if available
+        String credentials = request.getHeader("x-geoserver-credentials");
+        if (credentials != null) {
+            requestHeaderList.add(new BasicHeader(HttpHeaders.AUTHORIZATION, credentials));
+        }
+
+        return requestHeaderList.toArray(new Header[0]);
+    }
+
+    /**
+     * Returns a new URI with the passed queryString (e.g. foo=bar&amp;baz=123) appended to the passed URI. Adjusted from
+     * http://stackoverflow.com/a/26177982.
+     *
+     * @param uri
+     * @param appendQuery
+     */
+    public static URI appendQueryString(URI uri, String appendQuery) {
+        if (uri == null || appendQuery == null || appendQuery.isEmpty()) {
+            return uri;
+        }
+        String newQuery = uri.getQuery();
+        if (newQuery == null) {
+            newQuery = appendQuery;
+        } else {
+            newQuery += "&" + appendQuery;
+        }
+        // Fallback is the old URI
+        URI newUri = uri;
+        try {
+            newUri = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), newQuery, uri.getFragment());
+        } catch (URISyntaxException e) {
+            String msg = String.format(
+                "Failed to append query '%s' to URI '%s', returning URI unchanged.",
+                appendQuery, uri
+            );
+            LOG.warn(msg);
+        }
+        return newUri;
+    }
+
+    /**
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    private static HttpHeaders getResponseHeadersToForward(HttpHeaders headers)
+        throws UnsupportedEncodingException {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        if (headers == null) {
+            LOG.debug("No headers found to forward!");
+            return responseHeaders;
+        }
+
+        LOG.trace("Requested to filter the Headers to respond with:");
+
+        for (Entry<String, List<String>> header : headers.entrySet()) {
+            String headerKey = header.getKey();
+            String headerVal = StringUtils.join(header.getValue(), ",");
+
+            LOG.trace("  * Header: " + headerKey);
+
+            if (Arrays.asList(FORWARD_RESPONSE_HEADER_KEYS).contains(headerKey)) {
+
+                // the GeoServer response may contain a subtype in the
+                // "Content-Type" header without double quotes surrounding the
+                // subtype's value. If this is set we need to surround it
+                // with double quotes as this is required by the Spring
+                // ResponseEntity (and the RFC 2616 standard).
+                Pattern pattern = Pattern.compile("subtype=(.*)");
+                Matcher matcher = pattern.matcher(headerVal);
+
+                if (matcher.find()) {
+                    String replaceCandidate = matcher.group(1);
+                    String replacer;
+
+                    replacer = StringUtils.prependIfMissing(
+                        replaceCandidate, "\"");
+                    replacer = StringUtils.appendIfMissing(
+                        replacer, "\"");
+
+                    headerVal = StringUtils.replace(headerVal,
+                        replaceCandidate, replacer);
+                }
+
+                responseHeaders.set(headerKey, headerVal);
+                LOG.trace("    > Forwarded");
+            } else {
+                LOG.trace("    > Skipped");
+            }
+        }
+
+        return responseHeaders;
+    }
 
     @Transactional
     public Response interceptWmtsRequest(HttpServletRequest request, String serviceId) throws UnsupportedEncodingException, InterceptorException, HttpException, URISyntaxException {
@@ -123,10 +345,10 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest( HttpServletRequest request )
+    public Response interceptGeoServerRequest(HttpServletRequest request)
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
-        return interceptGeoServerRequest( request, Optional.empty() );
+        return interceptGeoServerRequest(request, Optional.empty());
     }
 
     /**
@@ -138,7 +360,7 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest( HttpServletRequest request, Optional<String> endpoint )
+    public Response interceptGeoServerRequest(HttpServletRequest request, Optional<String> endpoint)
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
 
@@ -235,7 +457,7 @@ public class GeoServerInterceptorService {
             if (!StringUtils.isEmpty(requestEndPoint) &&
                 !StringUtils.isEmpty(MutableHttpServletRequest.getRequestParameterValue(
                     mutableRequest, USE_REFLECT_PARAM))
-                ) {
+            ) {
                 LOG.trace("Will use WMS reflector endpoint of GeoServer");
                 requestService = ServiceType.WMS.toString();
                 requestOperation = OperationType.GET_MAP.toString();
@@ -392,40 +614,6 @@ public class GeoServerInterceptorService {
     }
 
     /**
-     * @param params
-     * @return
-     */
-    private static List<NameValuePair> createQueryParams(Map<String, String[]> params) {
-
-        List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
-
-        for (Entry<String, String[]> param : params.entrySet()) {
-            queryParams.add(new BasicNameValuePair(param.getKey(),
-                StringUtils.join(param.getValue(), ",")));
-        }
-
-        return queryParams;
-    }
-
-    /**
-     * @param baseUri
-     * @param queryParams
-     * @return
-     * @throws URISyntaxException
-     */
-    private static URI getFullRequestURI(URI baseUri, List<NameValuePair> queryParams)
-        throws URISyntaxException {
-
-        URI requestUri = null;
-
-        URIBuilder builder = new URIBuilder(baseUri);
-        builder.addParameters(queryParams);
-        requestUri = builder.build();
-
-        return requestUri;
-    }
-
-    /**
      * @param geoServerNamespace
      * @param useWmsReflector
      * @param isWMS
@@ -450,7 +638,7 @@ public class GeoServerInterceptorService {
             if (StringUtils.endsWithIgnoreCase(geoServerUrl, "ows")) {
                 StringBuilder builder = new StringBuilder();
                 int start = geoServerUrl.lastIndexOf("ows");
-                builder.append(geoServerUrl.substring(0, start));
+                builder.append(geoServerUrl, 0, start);
                 builder.append("wms" + WMS_REFLECT_ENDPOINT);
                 geoServerUrl = builder.toString();
             } else if (StringUtils.endsWithIgnoreCase(geoServerUrl, "wms")) {
@@ -489,203 +677,6 @@ public class GeoServerInterceptorService {
         LOG.debug("The corresponding GeoServer base URI is: " + geoServerBaseUri);
 
         return geoServerBaseUri;
-    }
-
-    /**
-     * @param endPoint
-     */
-    private static String getGeoServerNameSpace(String endPoint) {
-
-        // return the endPoint as nameSpace per default
-        String geoServerNamespace = endPoint;
-
-        if (endPoint.contains(":")) {
-            String[] split = endPoint.split(":");
-            geoServerNamespace = split[0];
-        }
-
-        return geoServerNamespace;
-    }
-
-    /**
-     * @param request
-     * @throws InterceptorException
-     * @throws HttpException
-     */
-    public static Response sendRequest(MutableHttpServletRequest request)
-        throws InterceptorException, HttpException {
-
-        Response httpResponse = new Response();
-
-        String requestMethod = request.getMethod();
-        boolean getRequest = "GET".equalsIgnoreCase(requestMethod);
-        boolean postRequest = "POST".equalsIgnoreCase(requestMethod);
-
-        try {
-
-            // get the request URI
-            URI requestUri = new URI(request.getRequestURI());
-
-            Header[] requestHeaders = getRequestHeadersToForward(request);
-
-            // get the query parameters provided by the GET/POST request and
-            // convert to a list of NameValuePairs
-            List<NameValuePair> allQueryParams = createQueryParams(request.getParameterMap());
-
-            // append the given request parameters to the base URI
-            URI fullRequestUri = getFullRequestURI(requestUri, allQueryParams);
-
-            if (getRequest) {
-                // if we're called via GET method
-
-                // perform the request with the given parameters
-                httpResponse = HttpUtil.get(fullRequestUri, requestHeaders);
-
-            } else if (postRequest) {
-                // if we're called via POST method
-
-                // We have to attach the actual query; a POST to e.g. http://example.com/?foo=bar is totally OK
-                String queryString = request.getQueryString();
-                if (queryString != null) {
-                    requestUri = appendQueryString(requestUri, queryString);
-                }
-
-                // get the request body if any
-                String body = OgcXmlUtil.getRequestBody(request);
-
-                if (!StringUtils.isEmpty(body)) {
-                    // we do have a POST with string data present
-
-                    // parse the content type of the request
-                    ContentType contentType = ContentType.parse(request.getContentType());
-
-                    if (contentType.getCharset() == null) {
-                        // use UTF-8 charset if charset could not be parsed from the content type
-                        // of the request
-                        contentType = contentType.withCharset("UTF-8");
-                    }
-
-                    // perform the POST request to the URI with queryString and with the given body
-                    httpResponse = HttpUtil.post(requestUri, body, contentType, requestHeaders);
-                } else {
-
-                    // perform the POST request with the given name value pairs,
-                    httpResponse = HttpUtil.post(requestUri, allQueryParams, requestHeaders);
-                }
-
-            } else {
-                // otherwise throw an exception
-                throw new InterceptorException("Only GET or POST method is allowed");
-            }
-
-        } catch (URISyntaxException | UnsupportedEncodingException e) {
-            LOG.error("Error while sending request: " + e.getMessage());
-        }
-
-        return httpResponse;
-    }
-
-    /**
-     *
-     * @param request
-     * @return
-     */
-    private static Header[] getRequestHeadersToForward(MutableHttpServletRequest request) {
-        List<Header> requestHeaderList = new ArrayList<>();
-
-        // forward x-geoserver-credentials as Authorization header if available
-        String credentials = request.getHeader("x-geoserver-credentials");
-        if (credentials != null) {
-            requestHeaderList.add(new BasicHeader(HttpHeaders.AUTHORIZATION, credentials));
-        }
-
-        return requestHeaderList.toArray(new Header[0]);
-    }
-
-    /**
-     * Returns a new URI with the passed queryString (e.g. foo=bar&amp;baz=123) appended to the passed URI. Adjusted from
-     * http://stackoverflow.com/a/26177982.
-     *
-     * @param uri
-     * @param appendQuery
-     */
-    public static URI appendQueryString(URI uri, String appendQuery) {
-        if (uri == null || appendQuery == null || appendQuery.isEmpty()) {
-            return uri;
-        }
-        String newQuery = uri.getQuery();
-        if (newQuery == null) {
-            newQuery = appendQuery;
-        } else {
-            newQuery += "&" + appendQuery;
-        }
-        // Fallback is the old URI
-        URI newUri = uri;
-        try {
-            newUri = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), newQuery, uri.getFragment());
-        } catch (URISyntaxException e) {
-            String msg = String.format(
-                "Failed to append query '%s' to URI '%s', returning URI unchanged.",
-                appendQuery, uri
-            );
-            LOG.warn(msg);
-        }
-        return newUri;
-    }
-
-    /**
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    private static HttpHeaders getResponseHeadersToForward(HttpHeaders headers)
-        throws UnsupportedEncodingException {
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        if (headers == null) {
-            LOG.debug("No headers found to forward!");
-            return responseHeaders;
-        }
-
-        LOG.trace("Requested to filter the Headers to respond with:");
-
-        for (Entry<String, List<String>> header : headers.entrySet()) {
-            String headerKey = header.getKey();
-            String headerVal = StringUtils.join(header.getValue(), ",");
-
-            LOG.trace("  * Header: " + headerKey);
-
-            if (Arrays.asList(FORWARD_RESPONSE_HEADER_KEYS).contains(headerKey)) {
-
-                // the GeoServer response may contain a subtype in the
-                // "Content-Type" header without double quotes surrounding the
-                // subtype's value. If this is set we need to surround it
-                // with double quotes as this is required by the Spring
-                // ResponseEntity (and the RFC 2616 standard).
-                Pattern pattern = Pattern.compile("subtype=(.*)");
-                Matcher matcher = pattern.matcher(headerVal);
-
-                if (matcher.find()) {
-                    String replaceCandidate = matcher.group(1);
-                    String replacer;
-
-                    replacer = StringUtils.prependIfMissing(
-                        replaceCandidate, "\"");
-                    replacer = StringUtils.appendIfMissing(
-                        replacer, "\"");
-
-                    headerVal = StringUtils.replace(headerVal,
-                        replaceCandidate, replacer);
-                }
-
-                responseHeaders.set(headerKey, headerVal);
-                LOG.trace("    > Forwarded");
-            } else {
-                LOG.trace("    > Skipped");
-            }
-        }
-
-        return responseHeaders;
     }
 
     /**

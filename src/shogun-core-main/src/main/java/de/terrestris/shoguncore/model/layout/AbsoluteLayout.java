@@ -3,19 +3,7 @@
  */
 package de.terrestris.shoguncore.model.layout;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.module.CompositeModule;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -23,7 +11,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.module.CompositeModule;
+import javax.persistence.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is the representation of an absolute layout, where components are
@@ -44,15 +35,6 @@ public class AbsoluteLayout extends Layout {
      *
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Explicitly adding the default constructor as this is important, e.g. for
-     * Hibernate: http://goo.gl/3Cr1pw
-     */
-    public AbsoluteLayout() {
-        this.setType("absolute");
-    }
-
     /**
      *
      */
@@ -63,6 +45,14 @@ public class AbsoluteLayout extends Layout {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @Fetch(FetchMode.JOIN)
     private List<Point> coords = new ArrayList<Point>();
+
+    /**
+     * Explicitly adding the default constructor as this is important, e.g. for
+     * Hibernate: http://goo.gl/3Cr1pw
+     */
+    public AbsoluteLayout() {
+        this.setType("absolute");
+    }
 
     /**
      * @return the coords
@@ -103,8 +93,9 @@ public class AbsoluteLayout extends Layout {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof AbsoluteLayout))
+        if (!(obj instanceof AbsoluteLayout)) {
             return false;
+        }
         AbsoluteLayout other = (AbsoluteLayout) obj;
 
         return new EqualsBuilder().

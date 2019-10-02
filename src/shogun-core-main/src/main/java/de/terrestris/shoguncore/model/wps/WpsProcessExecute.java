@@ -1,20 +1,6 @@
 package de.terrestris.shoguncore.model.wps;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.converter.PropertyValueConverter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,7 +10,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.converter.PropertyValueConverter;
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -145,8 +133,9 @@ public class WpsProcessExecute extends WpsReference {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WpsProcessExecute))
+        if (!(obj instanceof WpsProcessExecute)) {
             return false;
+        }
         WpsProcessExecute other = (WpsProcessExecute) obj;
 
         return new EqualsBuilder()

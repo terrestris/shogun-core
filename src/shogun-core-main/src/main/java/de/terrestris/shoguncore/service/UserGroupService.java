@@ -1,17 +1,16 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.terrestris.shoguncore.dao.UserGroupDao;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.UserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shoguncore.dao.UserGroupDao;
-import de.terrestris.shoguncore.model.User;
-import de.terrestris.shoguncore.model.UserGroup;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Service class for the {@link UserGroup} model.
@@ -60,11 +59,10 @@ public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
     public Set<User> getUsersOfGroup(Integer groupId) throws Exception {
-
         Set<User> groupUsersSet = new HashSet<User>();
         UserGroup userGroup = this.findById(groupId);
         if (userGroup != null) {
-            LOG.trace("Found group with ID " + userGroup.getId());
+            logger.trace("Found group with ID " + userGroup.getId());
             groupUsersSet = userGroup.getMembers();
         } else {
             throw new Exception("The group with id " + groupId + " could not be found");

@@ -15,11 +15,7 @@ import de.terrestris.shoguncore.model.map.MapControl;
 import de.terrestris.shoguncore.model.module.Module;
 import de.terrestris.shoguncore.model.security.PermissionCollection;
 import de.terrestris.shoguncore.model.token.Token;
-import de.terrestris.shoguncore.security.access.entity.AlwaysAllowReadPermissionEvaluator;
-import de.terrestris.shoguncore.security.access.entity.PermissionCollectionPermissionEvaluator;
-import de.terrestris.shoguncore.security.access.entity.PersistentObjectPermissionEvaluator;
-import de.terrestris.shoguncore.security.access.entity.UserGroupPermissionEvaluator;
-import de.terrestris.shoguncore.security.access.entity.UserPermissionEvaluator;
+import de.terrestris.shoguncore.security.access.entity.*;
 
 
 /**

@@ -1,8 +1,8 @@
 package de.terrestris.shoguncore.importer.transform;
 
-import java.util.List;
-
 import de.terrestris.shoguncore.importer.communication.AbstractRESTEntity;
+
+import java.util.List;
 
 /**
  * @author Daniel Koch
@@ -35,17 +35,17 @@ public class RESTTransformChain extends AbstractRESTEntity {
     }
 
     /**
-     * @return the transforms
-     */
-    public List<RESTTransform> getTransforms() {
-        return transforms;
-    }
-
-    /**
      * @param type the type to set
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * @return the transforms
+     */
+    public List<RESTTransform> getTransforms() {
+        return transforms;
     }
 
     /**

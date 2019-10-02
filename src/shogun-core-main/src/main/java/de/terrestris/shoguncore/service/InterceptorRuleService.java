@@ -1,14 +1,13 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.List;
-
+import de.terrestris.shoguncore.dao.InterceptorRuleDao;
+import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shoguncore.dao.InterceptorRuleDao;
-import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
+import java.util.List;
 
 /**
  * @param <E>

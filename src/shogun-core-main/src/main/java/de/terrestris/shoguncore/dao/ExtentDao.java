@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.layer.util.Extent;
+import org.springframework.stereotype.Repository;
 
 @Repository("extentDao")
 public class ExtentDao<E extends Extent> extends

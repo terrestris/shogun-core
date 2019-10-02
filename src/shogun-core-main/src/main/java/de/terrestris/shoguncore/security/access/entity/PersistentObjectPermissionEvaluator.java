@@ -22,7 +22,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * The LOGGER instance
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     /**
      * Represents the class of the entity
@@ -54,7 +54,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
         // if the user has the ADMIN permission
         if (userPermissions.contains(permission)
             || userPermissions.contains(Permission.ADMIN)) {
-            LOG.trace("Granting " + permission
+            logger.trace("Granting " + permission
                 + " access by user permissions");
             return true;
         }
@@ -69,12 +69,12 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
         // if the group has the ADMIN permission
         if (groupPermissions.contains(permission)
             || groupPermissions.contains(Permission.ADMIN)) {
-            LOG.trace("Granting " + permission
+            logger.trace("Granting " + permission
                 + " access by group permissions");
             return true;
         }
 
-        LOG.trace("Restricting " + permission + " access on secured object '"
+        logger.trace("Restricting " + permission + " access on secured object '"
             + simpleClassName + "' with ID " + entity.getId());
         return false;
     }

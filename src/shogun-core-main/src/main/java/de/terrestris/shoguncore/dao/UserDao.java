@@ -1,10 +1,9 @@
 package de.terrestris.shoguncore.dao;
 
+import de.terrestris.shoguncore.model.User;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.stereotype.Repository;
-
-import de.terrestris.shoguncore.model.User;
 
 @Repository("userDao")
 public class UserDao<E extends User> extends PersonDao<E> {

@@ -96,6 +96,8 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
                 case "2.0.0":
                     interceptGetCapabilities110And200(doc, baseUrl, CommonNamespaces.OWS_11_NS);
                     break;
+                default:
+                    throw new IOException("WFS version is not supported");
             }
             TransformerFactory factory = TransformerFactory.newInstance();
             Transformer transformer = factory.newTransformer();

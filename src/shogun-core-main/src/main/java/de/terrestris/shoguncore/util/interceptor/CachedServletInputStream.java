@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.util.interceptor;
 
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 
 /**
  * An inputstream which reads the cached request body and has mutable

@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.module.Module;
+import org.springframework.stereotype.Repository;
 
 @Repository("moduleDao")
 public class ModuleDao<E extends Module> extends

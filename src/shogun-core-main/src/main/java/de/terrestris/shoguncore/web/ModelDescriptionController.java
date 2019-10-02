@@ -1,7 +1,8 @@
 package de.terrestris.shoguncore.web;
 
-import java.util.Map;
-
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import de.terrestris.shoguncore.service.ModelDescriptionService;
+import de.terrestris.shoguncore.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -10,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-
-import de.terrestris.shoguncore.service.ModelDescriptionService;
-import de.terrestris.shoguncore.util.data.ResultSet;
+import java.util.Map;
 
 /**
  * terrestris GmbH & Co. KG
@@ -45,6 +43,7 @@ public class ModelDescriptionController {
 
     /**
      * The setter for modelDescriptionService
+     *
      * @param modelDescriptionService
      */
     public void setModelDescriptionService(ModelDescriptionService modelDescriptionService) {

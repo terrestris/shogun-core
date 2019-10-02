@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.tree.TreeFolder;
+import org.springframework.stereotype.Repository;
 
 @Repository("treeFolderDao")
 public class TreeFolderDao<E extends TreeFolder> extends

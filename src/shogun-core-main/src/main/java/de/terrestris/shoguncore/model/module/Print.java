@@ -3,12 +3,12 @@
  */
 package de.terrestris.shoguncore.model.module;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A module which contains a formular to print the map with the mapfish print v3.
@@ -76,8 +76,9 @@ public class Print extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Print))
+        if (!(obj instanceof Print)) {
             return false;
+        }
         Print other = (Print) obj;
 
         return new EqualsBuilder().

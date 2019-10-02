@@ -20,7 +20,7 @@ public class EntityUtil {
     /**
      * The parameter that might contain a list of fieldNames to restrict the entity to.
      */
-    public final static String RESTRICT_FIELDS_PARAM = "output:only";
+    public static final String RESTRICT_FIELDS_PARAM = "output:only";
 
     /**
      * @param clazz
@@ -37,11 +37,7 @@ public class EntityUtil {
         final Class<?> fieldType = field.getType();
 
         // we'll also return true if the fieldEntityType is null, i.e. "unknown"
-        if (fieldEntityType == null || fieldType.isAssignableFrom(fieldEntityType)) {
-            return true;
-        }
-
-        return false;
+        return fieldEntityType == null || fieldType.isAssignableFrom(fieldEntityType);
     }
 
     /**

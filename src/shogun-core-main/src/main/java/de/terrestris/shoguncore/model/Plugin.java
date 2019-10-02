@@ -8,9 +8,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -212,8 +212,9 @@ public class Plugin extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Plugin))
+        if (!(obj instanceof Plugin)) {
             return false;
+        }
         Plugin other = (Plugin) obj;
 
         return new EqualsBuilder()

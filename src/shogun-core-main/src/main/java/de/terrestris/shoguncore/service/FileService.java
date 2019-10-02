@@ -1,7 +1,7 @@
 package de.terrestris.shoguncore.service;
 
-import java.io.InputStream;
-
+import de.terrestris.shoguncore.dao.FileDao;
+import de.terrestris.shoguncore.model.File;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,8 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.terrestris.shoguncore.dao.FileDao;
-import de.terrestris.shoguncore.model.File;
+import java.io.InputStream;
 
 /**
  * Service class for the {@link File} model.
@@ -61,11 +60,11 @@ public class FileService<E extends File, D extends FileDao<E>>
 
         if (file == null) {
             final String errMsg = "Upload failed. File is null.";
-            LOG.error(errMsg);
+            logger.error(errMsg);
             throw new Exception(errMsg);
         } else if (file.isEmpty()) {
             final String errMsg = "Upload failed. File is empty.";
-            LOG.error(errMsg);
+            logger.error(errMsg);
             throw new Exception(errMsg);
         }
 

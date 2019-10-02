@@ -1,5 +1,18 @@
 package de.terrestris.shoguncore.service;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jboss.elasticsearch.tools.content.StructureUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,26 +24,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.jboss.elasticsearch.tools.content.StructureUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
-
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-
 /**
  * @author Nils Bühner
  */
 @Service("localeService")
 public class Csv2ExtJsLocaleService {
 
+    private static final int NUM_HEADER_LINES = 3;
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -72,7 +72,7 @@ public class Csv2ExtJsLocaleService {
             while (nextLineIsNotEmpty) {
                 final String[] nextLineArray = ArrayUtils.nullToEmpty(csvReader.readNext());
                 nextLine = Arrays.asList(nextLineArray);
-                nextLineIsNotEmpty = nextLine.isEmpty() == false;
+                nextLineIsNotEmpty = !nextLine.isEmpty();
 
                 if (nextLineIsNotEmpty) {
                     String component = nextLine.get(0);
@@ -145,7 +145,7 @@ public class Csv2ExtJsLocaleService {
             throw new Exception("CSV locale file seems to be empty.");
         }
 
-        if (headerLine.size() < 3) {
+        if (headerLine.size() < NUM_HEADER_LINES) {
             // we expect at least three columns: component;field;locale1
             throw new Exception("CSV locale file is invalid: Not enough columns.");
         }

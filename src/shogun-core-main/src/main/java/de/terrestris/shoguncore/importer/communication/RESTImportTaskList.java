@@ -1,8 +1,8 @@
 package de.terrestris.shoguncore.importer.communication;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonRootName;
+
+import java.util.ArrayList;
 
 /**
  * terrestris GmbH & Co. KG

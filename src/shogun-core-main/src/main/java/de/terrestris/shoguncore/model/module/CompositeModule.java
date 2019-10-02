@@ -3,18 +3,7 @@
  */
 package de.terrestris.shoguncore.model.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.layout.Layout;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -22,7 +11,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.layout.Layout;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a (simple) composite {@link Module}, i.e. a module
@@ -141,8 +132,9 @@ public class CompositeModule extends Module {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof CompositeModule))
+        if (!(obj instanceof CompositeModule)) {
             return false;
+        }
         CompositeModule other = (CompositeModule) obj;
 
         return new EqualsBuilder()

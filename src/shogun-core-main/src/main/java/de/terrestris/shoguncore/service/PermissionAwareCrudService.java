@@ -1,16 +1,5 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import de.terrestris.shoguncore.dao.GenericHibernateDao;
 import de.terrestris.shoguncore.dao.PermissionCollectionDao;
 import de.terrestris.shoguncore.model.PersistentObject;
@@ -18,6 +7,16 @@ import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.UserGroup;
 import de.terrestris.shoguncore.model.security.Permission;
 import de.terrestris.shoguncore.model.security.PermissionCollection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Nils Bühner
@@ -71,7 +70,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
      */
     public void addAndSaveUserPermissions(E entity, User user, Permission... permissions) {
         if (entity == null) {
-            LOG.error("Could not add permissions: The passed entity is NULL.");
+            logger.error("Could not add permissions: The passed entity is NULL.");
             return;
         }
 
@@ -79,7 +78,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
         if (permissionsSet == null || permissionsSet.isEmpty()) {
-            LOG.error("Could not add permissions: No permissions have been passed.");
+            logger.error("Could not add permissions: No permissions have been passed.");
             return;
         }
 
@@ -98,7 +97,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
             // create a new user permission collection and attach it to the user
             userPermissionCollection = new PermissionCollection(permissionsSet);
             entity.getUserPermissions().put(user, userPermissionCollection);
-            LOG.debug("Attached a new permission collection for a user: " + permissionsSet);
+            logger.debug("Attached a new permission collection for a user: " + permissionsSet);
 
             // persist permission collection and the entity as a new permission
             // collection has been attached
@@ -116,7 +115,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
             if (newNrOfPermissions > originalNrOfPermissions) {
                 // persist the collection as we have "really" added new permission(s)
                 persistPermissionCollection = true;
-                LOG.debug("Added the following permissions to an existing permission collection: "
+                logger.debug("Added the following permissions to an existing permission collection: "
                     + permissionsSet);
             }
         }
@@ -124,12 +123,12 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         if (persistPermissionCollection) {
             // persist the permission collection
             permissionCollectionService.saveOrUpdate(userPermissionCollection);
-            LOG.debug("Persisted a permission collection");
+            logger.debug("Persisted a permission collection");
 
             // persist the entity if necessary
             if (persistEntity) {
                 this.saveOrUpdate(entity);
-                LOG.debug("Persisted the entity with a new permission collection.");
+                logger.debug("Persisted the entity with a new permission collection.");
             }
         }
     }
@@ -144,7 +143,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
      */
     public void removeAndSaveUserPermissions(E entity, User user, Permission... permissions) {
         if (entity == null) {
-            LOG.error("Could not remove permissions: The passed entity is NULL.");
+            logger.error("Could not remove permissions: The passed entity is NULL.");
             return;
         }
 
@@ -152,7 +151,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
         if (permissionsSet == null || permissionsSet.isEmpty()) {
-            LOG.error("Could not remove permissions: No permissions have been passed.");
+            logger.error("Could not remove permissions: No permissions have been passed.");
             return;
         }
 
@@ -160,7 +159,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         PermissionCollection userPermissionCollection = entity.getUserPermissions().get(user);
 
         if (userPermissionCollection == null) {
-            LOG.error("Could not remove permissions as there is no attached permission collection.");
+            logger.error("Could not remove permissions as there is no attached permission collection.");
             return;
         }
 
@@ -174,7 +173,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         int newNrOfPermissions = userPermissions.size();
 
         if (newNrOfPermissions == 0) {
-            LOG.debug("The permission collection is empty and will thereby be deleted now.");
+            logger.debug("The permission collection is empty and will thereby be deleted now.");
 
             // remove
             entity.getUserPermissions().remove(user);
@@ -187,11 +186,11 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
 
         // only persist if we have "really" removed something
         if (newNrOfPermissions < originalNrOfPermissions) {
-            LOG.debug("Removed the following permissions from an existing permission collection: "
+            logger.debug("Removed the following permissions from an existing permission collection: "
                 + permissionsSet);
             // persist the permission collection
             permissionCollectionService.saveOrUpdate(userPermissionCollection);
-            LOG.debug("Persisted a permission collection");
+            logger.debug("Persisted a permission collection");
         }
     }
 
@@ -208,7 +207,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
      */
     public void addAndSaveGroupPermissions(E entity, UserGroup userGroup, Permission... permissions) {
         if (entity == null) {
-            LOG.error("Could not add permissions: The passed entity is NULL.");
+            logger.error("Could not add permissions: The passed entity is NULL.");
             return;
         }
 
@@ -216,7 +215,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
         if (permissionsSet == null || permissionsSet.isEmpty()) {
-            LOG.error("Could not add permissions: No permissions have been passed.");
+            logger.error("Could not add permissions: No permissions have been passed.");
             return;
         }
 
@@ -236,7 +235,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
             groupPermissionCollection = new PermissionCollection(permissionsSet);
 
             entity.getGroupPermissions().put(userGroup, groupPermissionCollection);
-            LOG.debug("Attached a new permission collection for a group: " + permissionsSet);
+            logger.debug("Attached a new permission collection for a group: " + permissionsSet);
 
             // persist permission collection and the entity as a new permission
             // collection has been attached
@@ -254,7 +253,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
             if (newNrOfPermissions > originalNrOfPermissions) {
                 // persist the collection as we have "really" added new permission(s)
                 persistPermissionCollection = true;
-                LOG.debug("Added the following permissions to an existing permission collection: "
+                logger.debug("Added the following permissions to an existing permission collection: "
                     + permissionsSet);
             }
         }
@@ -262,12 +261,12 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         if (persistPermissionCollection) {
             // persist the permission collection
             permissionCollectionService.saveOrUpdate(groupPermissionCollection);
-            LOG.debug("Persisted a permission collection");
+            logger.debug("Persisted a permission collection");
 
             // persist the entity if necessary
             if (persistEntity) {
                 this.saveOrUpdate(entity);
-                LOG.debug("Persisted the entity with a new permission collection.");
+                logger.debug("Persisted the entity with a new permission collection.");
             }
         }
     }
@@ -282,7 +281,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
      */
     public void removeAndSaveGroupPermissions(E entity, UserGroup userGroup, Permission... permissions) {
         if (entity == null) {
-            LOG.error("Could not remove permissions: The passed entity is NULL.");
+            logger.error("Could not remove permissions: The passed entity is NULL.");
             return;
         }
 
@@ -290,7 +289,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
         if (permissionsSet == null || permissionsSet.isEmpty()) {
-            LOG.error("Could not remove permissions: No permissions have been passed.");
+            logger.error("Could not remove permissions: No permissions have been passed.");
             return;
         }
 
@@ -298,7 +297,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         PermissionCollection groupPermissionCollection = entity.getGroupPermissions().get(userGroup);
 
         if (groupPermissionCollection == null) {
-            LOG.error("Could not remove permissions as there is no attached permission collection.");
+            logger.error("Could not remove permissions as there is no attached permission collection.");
             return;
         }
 
@@ -316,7 +315,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
             entity.getGroupPermissions().remove(userGroup);
             this.saveOrUpdate(entity);
 
-            LOG.debug("The permission collection is empty and will thereby be deleted now.");
+            logger.debug("The permission collection is empty and will thereby be deleted now.");
             permissionCollectionService.delete(groupPermissionCollection);
 
             return;
@@ -324,11 +323,11 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
 
         // only persist if we have "really" removed something
         if (newNrOfPermissions < originalNrOfPermissions) {
-            LOG.debug("Removed the following permissions from an existing permission collection: "
+            logger.debug("Removed the following permissions from an existing permission collection: "
                 + permissionsSet);
             // persist the permission collection
             permissionCollectionService.saveOrUpdate(groupPermissionCollection);
-            LOG.debug("Persisted a permission collection");
+            logger.debug("Persisted a permission collection");
         }
     }
 

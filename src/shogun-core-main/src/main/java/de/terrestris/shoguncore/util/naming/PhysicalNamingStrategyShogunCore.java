@@ -17,12 +17,9 @@ import java.io.Serializable;
  */
 public class PhysicalNamingStrategyShogunCore implements PhysicalNamingStrategy, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected static final int LENGTH_LIMIT_ORACLE = 30;
-
     protected static final int LENGTH_LIMIT_POSTGRESQL = 63;
-
+    private static final long serialVersionUID = 1L;
     @Autowired(required = false)
     @Qualifier("tablePrefix")
     private String tablePrefix;

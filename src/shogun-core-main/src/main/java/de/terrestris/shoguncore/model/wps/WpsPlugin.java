@@ -1,10 +1,10 @@
 package de.terrestris.shoguncore.model.wps;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import de.terrestris.shoguncore.converter.WpsProcessExecuteIdResolver;
+import de.terrestris.shoguncore.model.Plugin;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,12 +14,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import de.terrestris.shoguncore.converter.WpsProcessExecuteIdResolver;
-import de.terrestris.shoguncore.model.Plugin;
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
@@ -94,8 +92,9 @@ public class WpsPlugin extends Plugin {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WpsPlugin))
+        if (!(obj instanceof WpsPlugin)) {
             return false;
+        }
         WpsPlugin other = (WpsPlugin) obj;
 
         return new EqualsBuilder()

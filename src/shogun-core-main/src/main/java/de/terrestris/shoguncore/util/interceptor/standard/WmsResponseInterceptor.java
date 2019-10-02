@@ -181,7 +181,9 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
     }
 
     @Override
-    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) { return response; }
+    public Response interceptGetLegendGraphic(MutableHttpServletRequest request, Response response) {
+        return response;
+    }
 
     @Override
     public Response interceptGetStyles(MutableHttpServletRequest request, Response response) {

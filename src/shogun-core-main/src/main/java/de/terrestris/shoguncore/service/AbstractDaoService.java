@@ -1,12 +1,11 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.GenericHibernateDao;
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
-
-import de.terrestris.shoguncore.dao.GenericHibernateDao;
-import de.terrestris.shoguncore.model.PersistentObject;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -22,13 +21,17 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     /**
      * Provides the concrete entity class of the controller.
      * Based on the pattern proposed here: http://stackoverflow.com/a/3403987
      */
     private final Class<E> entityClass;
+    /**
+     * The data access object
+     */
+    protected D dao;
 
     /**
      * Constructor that sets the concrete entity class for the service.
@@ -39,9 +42,11 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
     }
 
     /**
-     * The data access object
+     * @return the dao
      */
-    protected D dao;
+    public D getDao() {
+        return dao;
+    }
 
     /**
      * Subclasses must implement this class and annotate it with
@@ -52,13 +57,6 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
      * @param dao the dao to set
      */
     public abstract void setDao(D dao);
-
-    /**
-     * @return the dao
-     */
-    public D getDao() {
-        return dao;
-    }
 
     /**
      * @return the entityClass

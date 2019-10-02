@@ -31,23 +31,21 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class GeoServerInterceptorController<S extends GeoServerInterceptorService> {
 
     /**
+     *
+     */
+    public static final String ERROR_MESSAGE = "Error while requesting a " +
+        "GeoServer resource: ";
+    /**
      * The Logger.
      */
     private static final Logger LOG = getLogger(GeoServerInterceptorController.class);
-
     /**
      *
      */
     protected S service;
 
-    /**
-     *
-     */
-    public static final String ERROR_MESSAGE = "Error while requesting a " +
-        "GeoServer resource: ";
-
     @GetMapping(value = {"/wmts.action/{service}/**"})
-    public ResponseEntity<?> interceptWmtsRequest(HttpServletRequest request, @PathVariable(value="service") String service) {
+    public ResponseEntity<?> interceptWmtsRequest(HttpServletRequest request, @PathVariable(value = "service") String service) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
         Response httpResponse;
@@ -76,7 +74,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
      */
     @RequestMapping(value = {"/geoserver.action", "/geoserver.action/{endpoint}"}, method = {
         RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> interceptGeoServerRequest( HttpServletRequest request, @PathVariable(value="endpoint", required = false) Optional<String> endpoint ) {
+    public ResponseEntity<?> interceptGeoServerRequest(HttpServletRequest request, @PathVariable(value = "endpoint", required = false) Optional<String> endpoint) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
         byte[] responseBody;

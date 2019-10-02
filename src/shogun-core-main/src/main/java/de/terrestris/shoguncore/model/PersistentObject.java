@@ -188,8 +188,9 @@ public abstract class PersistentObject implements Serializable {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof PersistentObject))
+        if (!(obj instanceof PersistentObject)) {
             return false;
+        }
         PersistentObject other = (PersistentObject) obj;
 
         return new EqualsBuilder().

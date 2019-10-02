@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.wps.WpsPlugin;
+import org.springframework.stereotype.Repository;
 
 
 /**

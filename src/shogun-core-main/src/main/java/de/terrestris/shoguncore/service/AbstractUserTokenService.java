@@ -1,15 +1,14 @@
 package de.terrestris.shoguncore.service;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
-import org.springframework.transaction.annotation.Transactional;
-
 import de.terrestris.shoguncore.dao.AbstractUserTokenDao;
 import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.token.PasswordResetToken;
 import de.terrestris.shoguncore.model.token.UserToken;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Daniel Koch
@@ -17,6 +16,15 @@ import de.terrestris.shoguncore.model.token.UserToken;
  */
 public abstract class AbstractUserTokenService<E extends UserToken, D extends AbstractUserTokenDao<E>>
     extends AbstractTokenService<E, D> {
+
+    /**
+     * An expiry threshold in minutes for the creation of a new
+     * {@link PasswordResetToken}. I.e. if a token is requested for a
+     * {@link User} and an there is an existing token that expires within the
+     * minutes configured in this constant, the existing token will be deleted
+     * and a new one will be created.
+     */
+    private static final int EXPIRY_THRESHOLD_MINUTES = 5;
 
     /**
      * Default constructor, which calls the type-constructor
@@ -33,15 +41,6 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
     protected AbstractUserTokenService(Class<E> entityClass) {
         super(entityClass);
     }
-
-    /**
-     * An expiry threshold in minutes for the creation of a new
-     * {@link PasswordResetToken}. I.e. if a token is requested for a
-     * {@link User} and an there is an existing token that expires within the
-     * minutes configured in this constant, the existing token will be deleted
-     * and a new one will be created.
-     */
-    private static final int EXPIRY_THRESHOLD_MINUTES = 5;
 
     /**
      * Has to be implemented by subclasses to return a concrete instance for the
@@ -120,7 +119,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
         if (userToken != null) {
 
             if (userToken.expiresWithin(EXPIRY_THRESHOLD_MINUTES)) {
-                LOG.debug("User already has an expired token (or at least a "
+                logger.debug("User already has an expired token (or at least a "
                     + "token that expires within the next "
                     + EXPIRY_THRESHOLD_MINUTES + " minutes). This token "
                     + "will be deleted.");
@@ -128,7 +127,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
                 // delete the expired token
                 dao.delete(userToken);
             } else {
-                LOG.debug("Returning existing token for user '"
+                logger.debug("Returning existing token for user '"
                     + user.getAccountName() + "'");
                 // return the existing and valid token
                 return userToken;
@@ -142,7 +141,7 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
         dao.saveOrUpdate(userToken);
 
         final String tokenType = userToken.getClass().getSimpleName();
-        LOG.debug("Successfully created a user token of type '" + tokenType
+        logger.debug("Successfully created a user token of type '" + tokenType
             + "' for user '" + user.getAccountName() + "'");
 
         return userToken;

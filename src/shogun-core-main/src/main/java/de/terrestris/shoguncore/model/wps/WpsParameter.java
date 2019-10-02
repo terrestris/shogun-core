@@ -1,17 +1,7 @@
 package de.terrestris.shoguncore.model.wps;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,9 +11,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -180,8 +170,9 @@ public abstract class WpsParameter extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WpsParameter))
+        if (!(obj instanceof WpsParameter)) {
             return false;
+        }
         WpsParameter other = (WpsParameter) obj;
 
         return new EqualsBuilder()

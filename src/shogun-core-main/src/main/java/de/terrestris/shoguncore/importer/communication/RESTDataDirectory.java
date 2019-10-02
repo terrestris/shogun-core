@@ -6,10 +6,4 @@ package de.terrestris.shoguncore.importer.communication;
  */
 public class RESTDataDirectory extends RESTData {
 
-    /**
-     *
-     */
-    @SuppressWarnings("unused")
-    private String location;
-
 }

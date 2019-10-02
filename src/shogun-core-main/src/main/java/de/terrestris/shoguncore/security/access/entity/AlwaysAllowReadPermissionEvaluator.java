@@ -36,7 +36,7 @@ public class AlwaysAllowReadPermissionEvaluator<E extends PersistentObject> exte
 
         // always grant READ access ("unsecured" object)
         if (permission.equals(Permission.READ)) {
-            LOG.trace("Granting READ access on " + entity.getClass().getSimpleName() + " with ID " + entity.getId());
+            logger.trace("Granting READ access on " + entity.getClass().getSimpleName() + " with ID " + entity.getId());
             return true;
         }
 

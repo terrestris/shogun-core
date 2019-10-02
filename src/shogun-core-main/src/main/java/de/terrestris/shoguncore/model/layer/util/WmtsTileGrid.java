@@ -59,8 +59,9 @@ public class WmtsTileGrid extends TileGrid {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WmtsTileGrid))
+        if (!(obj instanceof WmtsTileGrid)) {
             return false;
+        }
         WmtsTileGrid other = (WmtsTileGrid) obj;
 
         return new EqualsBuilder().

@@ -163,6 +163,19 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
+     *
+     */
+    @Override
+    public String getRequestURI() {
+        if (this.customRequestURI != null) {
+            return this.customRequestURI;
+        } else {
+            HttpServletRequest request = (HttpServletRequest) super.getRequest();
+            return request.getRequestURI();
+        }
+    }
+
+    /**
      * @param url The URI to set as instance of {@link String}
      */
     public void setRequestURI(String url) {
@@ -174,19 +187,6 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
      */
     public void setRequestURI(URI uri) {
         this.customRequestURI = uri.toString();
-    }
-
-    /**
-     *
-     */
-    @Override
-    public String getRequestURI() {
-        if (this.customRequestURI != null) {
-            return this.customRequestURI;
-        } else {
-            HttpServletRequest request = (HttpServletRequest) super.getRequest();
-            return request.getRequestURI();
-        }
     }
 
     /**
@@ -212,7 +212,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     /**
-     * @param key The header name (without a trailing colon `:`)
+     * @param key   The header name (without a trailing colon `:`)
      * @param value The header value
      */
     public void setHeader(String key, String value) {
@@ -285,7 +285,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     public String getHeader(String name) {
         String headerValue = customHeaders.get(name);
         // Check custom headers first
-        if (headerValue != null){
+        if (headerValue != null) {
             return headerValue;
         }
         return ((HttpServletRequest) getRequest()).getHeader(name);
@@ -300,23 +300,6 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
             cacheInputStream();
         }
         return new CachedServletInputStream(cachedInputStream);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(getInputStream()));
-    }
-
-    /**
-     * Cache the inputstream in order to read it multiple times. For
-     * convenience, I use apache.commons IOUtils
-     */
-    private void cacheInputStream() throws IOException {
-        cachedInputStream = new ByteArrayOutputStream();
-        IOUtils.copy(super.getInputStream(), cachedInputStream);
     }
 
     /**
@@ -347,6 +330,23 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
         } catch (IOException e) {
             LOG.error("Exception on writing InputStream.", e);
         }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(getInputStream()));
+    }
+
+    /**
+     * Cache the inputstream in order to read it multiple times. For
+     * convenience, I use apache.commons IOUtils
+     */
+    private void cacheInputStream() throws IOException {
+        cachedInputStream = new ByteArrayOutputStream();
+        IOUtils.copy(super.getInputStream(), cachedInputStream);
     }
 
     /**

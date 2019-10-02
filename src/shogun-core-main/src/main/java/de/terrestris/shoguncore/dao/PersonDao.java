@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.Person;
+import org.springframework.stereotype.Repository;
 
 @Repository("personDao")
 public class PersonDao<E extends Person> extends

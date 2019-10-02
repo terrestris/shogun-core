@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.map.MapConfig;
+import org.springframework.stereotype.Repository;
 
 @Repository("mapConfigDao")
 public class MapConfigDao<E extends MapConfig> extends

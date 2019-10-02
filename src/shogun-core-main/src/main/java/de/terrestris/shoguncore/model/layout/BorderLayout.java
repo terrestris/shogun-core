@@ -3,18 +3,7 @@
  */
 package de.terrestris.shoguncore.model.layout;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.module.CompositeModule;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -22,7 +11,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.module.CompositeModule;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is the representation of an border layout, where components are
@@ -43,15 +34,6 @@ public class BorderLayout extends Layout {
      *
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Explicitly adding the default constructor as this is important, e.g. for
-     * Hibernate: http://goo.gl/3Cr1pw
-     */
-    public BorderLayout() {
-        this.setType("border");
-    }
-
     /**
      *
      */
@@ -62,6 +44,14 @@ public class BorderLayout extends Layout {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @Fetch(FetchMode.JOIN)
     private List<String> regions = new ArrayList<String>();
+
+    /**
+     * Explicitly adding the default constructor as this is important, e.g. for
+     * Hibernate: http://goo.gl/3Cr1pw
+     */
+    public BorderLayout() {
+        this.setType("border");
+    }
 
     /**
      * @return the regions
@@ -102,8 +92,9 @@ public class BorderLayout extends Layout {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof BorderLayout))
+        if (!(obj instanceof BorderLayout)) {
             return false;
+        }
         BorderLayout other = (BorderLayout) obj;
 
         return new EqualsBuilder().

@@ -1,16 +1,15 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.GenericHibernateDao;
+import de.terrestris.shoguncore.init.ContentInitializer;
+import de.terrestris.shoguncore.model.PersistentObject;
+import de.terrestris.shoguncore.model.User;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import de.terrestris.shoguncore.dao.GenericHibernateDao;
-import de.terrestris.shoguncore.init.ContentInitializer;
-import de.terrestris.shoguncore.model.PersistentObject;
-import de.terrestris.shoguncore.model.User;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 

@@ -31,6 +31,33 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     PersonService<E, D> {
 
     /**
+     * Registration token service
+     */
+    @Autowired
+    protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
+    /**
+     * Role service
+     */
+    @Autowired
+    protected RoleService<Role, RoleDao<Role>> roleService;
+    /**
+     * The autowired PasswordEncoder
+     */
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
+    /**
+     * The default user role that is assigned to a user if he activates his
+     * account. ATTENTION: This autowired bean will NOT have an ID if the
+     * system did not boot with hibernate/CREATE mode and SHOGun-Core content
+     * initialization!
+     * <p>
+     * TODO: We should only autowire a string with the role name...
+     */
+    @Autowired(required = false)
+    @Qualifier("userRole")
+    private Role defaultUserRole;
+
+    /**
      * Default constructor, which calls the type-constructor
      */
     @SuppressWarnings("unchecked")
@@ -45,36 +72,6 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     protected UserService(Class<E> entityClass) {
         super(entityClass);
     }
-
-    /**
-     * Registration token service
-     */
-    @Autowired
-    protected RegistrationTokenService<RegistrationToken, RegistrationTokenDao<RegistrationToken>> registrationTokenService;
-
-    /**
-     * Role service
-     */
-    @Autowired
-    protected RoleService<Role, RoleDao<Role>> roleService;
-
-    /**
-     * The autowired PasswordEncoder
-     */
-    @Autowired
-    protected PasswordEncoder passwordEncoder;
-
-    /**
-     * The default user role that is assigned to a user if he activates his
-     * account. ATTENTION: This autowired bean will NOT have an ID if the
-     * system did not boot with hibernate/CREATE mode and SHOGun-Core content
-     * initialization!
-     * <p>
-     * TODO: We should only autowire a string with the role name...
-     */
-    @Autowired(required = false)
-    @Qualifier("userRole")
-    private Role defaultUserRole;
 
     /**
      * We have to use {@link Qualifier} to define the correct dao here.
@@ -128,11 +125,11 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 
         if (existingUser != null) {
             final String errorMessage = "User with eMail '" + email + "' already exists.";
-            LOG.info(errorMessage);
+            logger.info(errorMessage);
             throw new Exception(errorMessage);
         }
 
-        user = (E) this.persistNewUser(user, true);
+        user = this.persistNewUser(user, true);
 
         // create a token for the user and send an email with an "activation" link
         registrationTokenService.sendRegistrationActivationMail(request, user);
@@ -148,7 +145,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
 
         RegistrationToken token = registrationTokenService.findByTokenValue(tokenValue);
 
-        LOG.debug("Trying to activate user account with token: " + tokenValue);
+        logger.debug("Trying to activate user account with token: " + tokenValue);
 
         // throws Exception if token is not valid
         registrationTokenService.validateToken(token);
@@ -169,12 +166,12 @@ public class UserService<E extends User, D extends UserDao<E>> extends
         }
 
         // update the user
-        dao.saveOrUpdate((E) user);
+        dao.saveOrUpdate(user);
 
         // delete the token
         registrationTokenService.deleteTokenAfterActivation(token);
 
-        LOG.info("The user '" + user.getAccountName()
+        logger.info("The user '" + user.getAccountName()
             + "' has successfully been activated.");
     }
 
@@ -253,7 +250,7 @@ public class UserService<E extends User, D extends UserDao<E>> extends
         Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
         E user = this.findById(userId);
         if (user != null) {
-            LOG.trace("Found user with ID " + user.getId());
+            logger.trace("Found user with ID " + user.getId());
             userGroupsSet = user.getUserGroups();
         } else {
             throw new Exception("The user with id " + userId + " could not be found");

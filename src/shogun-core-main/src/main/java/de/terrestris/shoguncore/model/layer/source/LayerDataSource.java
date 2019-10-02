@@ -1,16 +1,15 @@
 package de.terrestris.shoguncore.model.layer.source;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 /**
  * Base class for all layer datasources
@@ -138,8 +137,9 @@ public abstract class LayerDataSource extends PersistentObject {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof LayerDataSource))
+        if (!(obj instanceof LayerDataSource)) {
             return false;
+        }
         LayerDataSource other = (LayerDataSource) obj;
 
         return new EqualsBuilder().

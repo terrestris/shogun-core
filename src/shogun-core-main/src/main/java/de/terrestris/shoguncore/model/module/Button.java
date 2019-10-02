@@ -3,14 +3,13 @@
  */
 package de.terrestris.shoguncore.model.module;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.Application;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import de.terrestris.shoguncore.model.Application;
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * The Image Module is the Ext JS representation of an HTML img element.
@@ -213,8 +212,9 @@ public class Button extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Button))
+        if (!(obj instanceof Button)) {
             return false;
+        }
         Button other = (Button) obj;
 
         return new EqualsBuilder().

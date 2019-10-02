@@ -1,10 +1,10 @@
 package de.terrestris.shoguncore.model.token;
 
+import de.terrestris.shoguncore.model.User;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import de.terrestris.shoguncore.model.User;
 
 /**
  * A {@link Token} instance that has a one-to-one relation to a {@link User}

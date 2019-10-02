@@ -37,42 +37,34 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 @Service("httpProxyService")
 public class HttpProxyService {
 
-    /**
-     * The LOGGER instance (that will be available in all subclasses)
-     */
-    private static final Logger LOG = getLogger(HttpProxyService.class);
-
-    /* +--------------------------------------------------------------------+ */
-    /* | Generic constants                                                  | */
-    /* +--------------------------------------------------------------------+ */
-
-    /**
-     * Used to as content type for error messages if a request could not be
-     * proxied.
-     */
-    private static final String CONTENT_TYPE_TEXT_PLAIN = MediaType.TEXT_PLAIN.toString();
-
     /* +--------------------------------------------------------------------+ */
     /* | static errors and response entities                                | */
     /* +--------------------------------------------------------------------+ */
     public static final String ERR_MSG_400_NO_URL = "ERROR 400 (Bad Request):"
         + " The HttpProxyService could not determine a URL to proxy to.";
 
+    /* +--------------------------------------------------------------------+ */
+    /* | Generic constants                                                  | */
+    /* +--------------------------------------------------------------------+ */
     public static final String ERR_MSG_400_COMMON = "ERROR 400 (Bad Request):"
         + " Please check the log files for details.";
-
     public static final String ERR_MSG_404 = "ERROR 404 (Not found):"
         + " The HttpProxyService could not find the requested service.";
-
     public static final String ERR_MSG_405 = "ERROR 405: (Method Not Allowed):"
         + " The HttpProxyService does not support this request method.";
-
     public static final String ERR_MSG_500 = "ERROR 500 (Internal Error)"
         + " An internal error occured which prevented further processing.";
-
     public static final String ERR_MSG_502 = "ERROR 502 (Bad Gateway):"
         + " The HttpProxyService does not allow you to access that location.";
-
+    /**
+     * The LOGGER instance (that will be available in all subclasses)
+     */
+    private static final Logger LOG = getLogger(HttpProxyService.class);
+    /**
+     * Used to as content type for error messages if a request could not be
+     * proxied.
+     */
+    private static final String CONTENT_TYPE_TEXT_PLAIN = MediaType.TEXT_PLAIN.toString();
     private static final ResponseEntity<String> RESPONSE_400_BAD_REQUEST_COMMON =
         ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -167,6 +159,12 @@ public class HttpProxyService {
     private static final Set<String> LC_UNSUPPORTED_HEADERS = new HashSet<>(
         Arrays.asList("transfer-encoding"));
 
+    /**
+     * The ports for http / https connections
+     */
+    private static final int HTTPS_PORT = 443;
+    private static final int HTTP_PORT = 443;
+
     /* +--------------------------------------------------------------------+ */
     /* | Autowired variables                                                | */
     /* +--------------------------------------------------------------------+ */
@@ -175,6 +173,106 @@ public class HttpProxyService {
      */
     @Value("#{'${proxy.whitelist}'.split(',')}")
     private List<String> proxyWhiteList;
+
+    /**
+     * @param originalResponse
+     * @return
+     */
+    private static HttpHeaders getHeadersToForward(HttpResponse originalResponse) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        if (originalResponse == null) {
+            return responseHeaders;
+        }
+
+        // This is a fallback, we usually will overwrite this with s.th.
+        // more specific from the response.
+        responseHeaders.setContentType(new MediaType("text", "plain"));
+
+        Header[] originalResponseHeaders = originalResponse.getAllHeaders();
+
+        StringBuffer bufferHeaders = new StringBuffer();
+
+        for (Header header : originalResponseHeaders) {
+            String headerName = header.getName();
+            String headerVal = header.getValue();
+
+            if (isUnsupportedHeader(headerName)) {
+                LOG.debug("Unsupported header '" + headerName + "' found "
+                    + " and ignored");
+            } else {
+                headerVal = fixUpHeaderValue(headerName, headerVal);
+
+                // now set the header in the return headers
+                responseHeaders.set(headerName, headerVal);
+                bufferHeaders.append(headerName + "=" + headerVal + ", ");
+            }
+
+        }
+
+        if (responseHeaders.size() > 1) {
+            LOG.debug("List of headers for the final response of this request: "
+                + bufferHeaders.toString().replaceAll("(,\\s*)$", ""));
+        } else {
+            LOG.debug("No specific headers to forward, "
+                + "setting 'ContentType: text/plain' as fallback");
+        }
+        return responseHeaders;
+    }
+
+    /**
+     * @param headerName
+     * @return
+     */
+    private static boolean isUnsupportedHeader(String headerName) {
+        return !isSupportedHeader(headerName);
+    }
+
+    /**
+     * @param headerName
+     * @return
+     */
+    private static boolean isSupportedHeader(String headerName) {
+        if (headerName == null) {
+            return false;
+        }
+        return !LC_UNSUPPORTED_HEADERS.contains(headerName.toLowerCase());
+    }
+
+    /**
+     * @param headerName
+     * @param headerVal
+     * @return
+     */
+    private static String fixUpHeaderValue(String headerName, String headerVal) {
+        if (headerName == null || headerVal == null) {
+            return null;
+        }
+
+        String logPrefix = "Header '" + headerName + "' has a value '"
+            + headerVal + "'" + " which seems incorrect. ";
+
+        String fixedHeaderVal = headerVal;
+
+        String lowercaseHeaderVal = headerVal.toLowerCase().trim();
+
+        if (lowercaseHeaderVal.contains("subtype")) {
+            LOG.debug(logPrefix + " Quoting subtype to fix it.");
+            fixedHeaderVal = headerVal.replace(UNQUOTED_SUBTYPE_GML,
+                QUOTED_SUBTYPE_GML);
+        } else if (CONTENT_TYPE_JSON_HINTS.contains(lowercaseHeaderVal)) {
+            LOG.debug(logPrefix + " Using value '"
+                + JSON_CONTENT_TYPE_HEADER + "'.");
+            fixedHeaderVal = JSON_CONTENT_TYPE_HEADER;
+        } else if (CONTENT_TYPE_CSV_HINTS.contains(lowercaseHeaderVal)) {
+            LOG.debug(logPrefix + " Using value '"
+                + JSON_CONTENT_TYPE_HEADER + "'.");
+            fixedHeaderVal = CSV_CONTENT_TYPE_HEADER;
+        }
+
+        return fixedHeaderVal;
+    }
 
     /**
      * @param request
@@ -194,7 +292,7 @@ public class HttpProxyService {
      * @return
      */
     public ResponseEntity<?> doProxy(HttpServletRequest request, String baseUrl, Map<String, String> params,
-            boolean useWhitelist) {
+                                     boolean useWhitelist) {
         LOG.debug("Intercepting a request against service '" + baseUrl + "' with parameters: " + params);
 
         if (StringUtils.isEmpty(baseUrl) || request == null) {
@@ -209,12 +307,6 @@ public class HttpProxyService {
         } catch (MalformedURLException use) {
             LOG.error(RESPONSE_500_INTERNAL_SERVER_ERROR);
             return RESPONSE_500_INTERNAL_SERVER_ERROR;
-        }
-
-        // Could not parse URI properly
-        if (url == null) {
-            LOG.warn(ERR_MSG_404);
-            return RESPONSE_404_NOT_FOUND;
         }
 
         if (useWhitelist) {
@@ -319,7 +411,7 @@ public class HttpProxyService {
         final int port = url.getPort();
         final String protocol = url.getProtocol();
 
-        final int portToTest = (port != -1) ? port : (StringUtils.equalsIgnoreCase(protocol, "https") ? 443 : 80);
+        final int portToTest = (port != -1) ? port : (StringUtils.equalsIgnoreCase(protocol, "https") ? HTTPS_PORT : HTTP_PORT);
 
         List<String> matchingWhiteListEntries = proxyWhiteList.stream().filter((String whitelistEntry) -> {
             String whitelistHost;
@@ -331,7 +423,7 @@ public class HttpProxyService {
                 whitelistHost = whitelistEntry;
                 whitelistPort = -1;
             }
-            final int portToTestAgainst = (whitelistPort != -1) ? whitelistPort : (StringUtils.equalsIgnoreCase(protocol, "https") ? 443 : 80);
+            final int portToTestAgainst = (whitelistPort != -1) ? whitelistPort : (StringUtils.equalsIgnoreCase(protocol, "https") ? HTTPS_PORT : HTTP_PORT);
             final boolean portIsMatching = portToTestAgainst == portToTest;
             final boolean domainIsMatching = StringUtils.equalsIgnoreCase(host, whitelistHost) || StringUtils.endsWith(host, whitelistHost);
             return (portIsMatching && domainIsMatching);
@@ -339,109 +431,6 @@ public class HttpProxyService {
         boolean isAllowed = !matchingWhiteListEntries.isEmpty();
 
         return isAllowed;
-    }
-
-    /**
-     * @param originalResponse
-     * @return
-     */
-    private static HttpHeaders getHeadersToForward(HttpResponse originalResponse) {
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        if (originalResponse == null) {
-            return responseHeaders;
-        }
-
-        // This is a fallback, we usually will overwrite this with s.th.
-        // more specific from the response.
-        responseHeaders.setContentType(new MediaType("text", "plain"));
-
-        Header[] originalResponseHeaders = originalResponse.getAllHeaders();
-
-        StringBuffer bufferHeaders = new StringBuffer();
-
-        for (Header header : originalResponseHeaders) {
-            String headerName = header.getName();
-            String headerVal = header.getValue();
-
-            if (isUnsupportedHeader(headerName)) {
-                LOG.debug("Unsupported header '" + headerName + "' found "
-                    + " and ignored");
-            } else {
-                headerVal = fixUpHeaderValue(headerName, headerVal);
-
-                // now set the header in the return headers
-                responseHeaders.set(headerName, headerVal);
-                bufferHeaders.append(headerName + "=" + headerVal + ", ");
-            }
-
-        }
-
-        if (responseHeaders.size() > 1) {
-            LOG.debug("List of headers for the final response of this request: "
-                + bufferHeaders.toString().replaceAll("(,\\s*)$", ""));
-        } else {
-            LOG.debug("No specific headers to forward, "
-                + "setting 'ContentType: text/plain' as fallback");
-        }
-        return responseHeaders;
-    }
-
-    /**
-     * @param headerName
-     * @return
-     */
-    private static boolean isUnsupportedHeader(String headerName) {
-        return !isSupportedHeader(headerName);
-    }
-
-    /**
-     * @param headerName
-     * @return
-     */
-    private static boolean isSupportedHeader(String headerName) {
-        if (headerName == null) {
-            return false;
-        }
-        if (LC_UNSUPPORTED_HEADERS.contains(headerName.toLowerCase())) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param headerName
-     * @param headerVal
-     * @return
-     */
-    private static String fixUpHeaderValue(String headerName, String headerVal) {
-        if (headerName == null || headerVal == null) {
-            return null;
-        }
-
-        String logPrefix = "Header '" + headerName + "' has a value '"
-            + headerVal + "'" + " which seems incorrect. ";
-
-        String fixedHeaderVal = headerVal;
-
-        String lowercaseHeaderVal = headerVal.toLowerCase().trim();
-
-        if (lowercaseHeaderVal.contains("subtype")) {
-            LOG.debug(logPrefix + " Quoting subtype to fix it.");
-            fixedHeaderVal = headerVal.replace(UNQUOTED_SUBTYPE_GML,
-                QUOTED_SUBTYPE_GML);
-        } else if (CONTENT_TYPE_JSON_HINTS.contains(lowercaseHeaderVal)) {
-            LOG.debug(logPrefix + " Using value '"
-                + JSON_CONTENT_TYPE_HEADER + "'.");
-            fixedHeaderVal = JSON_CONTENT_TYPE_HEADER;
-        } else if (CONTENT_TYPE_CSV_HINTS.contains(lowercaseHeaderVal)) {
-            LOG.debug(logPrefix + " Using value '"
-                + JSON_CONTENT_TYPE_HEADER + "'.");
-            fixedHeaderVal = CSV_CONTENT_TYPE_HEADER;
-        }
-
-        return fixedHeaderVal;
     }
 
     /**

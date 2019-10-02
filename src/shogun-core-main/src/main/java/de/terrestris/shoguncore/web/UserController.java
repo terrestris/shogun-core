@@ -85,7 +85,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
                 + "Please check your mails (" + user.getEmail()
                 + ") for further instructions.");
         } catch (Exception e) {
-            LOG.error("Could not register a new user: " + e.getMessage());
+            logger.error("Could not register a new user: " + e.getMessage());
             return ResultSet.error("Could not register a new user.");
         }
     }
@@ -101,7 +101,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
             service.activateUser(token);
             return ResultSet.success("Your account has successfully been activated.");
         } catch (Exception e) {
-            LOG.error("Account could not be activated: " + e.getMessage());
+            logger.error("Account could not be activated: " + e.getMessage());
             return ResultSet.error("Account could not be activated.");
         }
     }
@@ -114,7 +114,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     Map<String, Object> resetPassword(HttpServletRequest request,
                                       @RequestParam(value = "email") String email) {
 
-        LOG.debug("Requested to reset the password for '" + email + "'");
+        logger.debug("Requested to reset the password for '" + email + "'");
 
         try {
             passwordResetTokenService.sendResetPasswordMail(request, email);
@@ -122,7 +122,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
                 + "Please check your mails!");
         } catch (Exception e) {
             final String message = e.getMessage();
-            LOG.error("Could not request a password reset: " + message);
+            logger.error("Could not request a password reset: " + message);
             return ResultSet.error(message);
         }
     }
@@ -136,14 +136,14 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
         @RequestParam(value = "password") String password,
         @RequestParam(value = "token") String token) {
 
-        LOG.debug("Requested to change a password for token " + token);
+        logger.debug("Requested to change a password for token " + token);
 
         try {
             passwordResetTokenService.validateTokenAndUpdatePassword(password, token);
             return ResultSet.success("Your password was changed successfully.");
 
         } catch (Exception e) {
-            LOG.error("Could not change the password: " + e.getMessage());
+            logger.error("Could not change the password: " + e.getMessage());
             return ResultSet.error("Could not change the password. "
                 + "Please contact your administrator.");
         }
@@ -156,7 +156,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     public @ResponseBody
     Map<String, Object> getUserBySession() {
 
-        LOG.debug("Requested to return the logged in user");
+        logger.debug("Requested to return the logged in user");
 
         try {
             return ResultSet.success(service.getUserBySession());

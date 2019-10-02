@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.LayoutDao;
+import de.terrestris.shoguncore.model.layout.Layout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import de.terrestris.shoguncore.dao.LayoutDao;
-import de.terrestris.shoguncore.model.layout.Layout;
 
 /**
  * Service class for the {@link Layout} model.

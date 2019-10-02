@@ -3,19 +3,14 @@
  */
 package de.terrestris.shoguncore.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.util.Arrays;
 
 /**
  * This class represents a file which is stored as a bytearray in the database
@@ -103,14 +98,14 @@ public class File extends PersistentObject {
      * @return the file
      */
     public byte[] getFile() {
-        return file;
+        return Arrays.copyOf(file, file.length);
     }
 
     /**
      * @param file the file to set
      */
     public void setFile(byte[] file) {
-        this.file = file;
+        this.file = Arrays.copyOf(file, file.length);
     }
 
     /**
@@ -141,8 +136,9 @@ public class File extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof File))
+        if (!(obj instanceof File)) {
             return false;
+        }
         File other = (File) obj;
 
         return new EqualsBuilder().appendSuper(super.equals(other))

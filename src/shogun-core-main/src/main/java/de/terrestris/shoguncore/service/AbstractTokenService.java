@@ -1,12 +1,11 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.AbstractTokenDao;
+import de.terrestris.shoguncore.model.token.Token;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Transactional;
-
-import de.terrestris.shoguncore.dao.AbstractTokenDao;
-import de.terrestris.shoguncore.model.token.Token;
 
 /**
  * @author Daniel Koch

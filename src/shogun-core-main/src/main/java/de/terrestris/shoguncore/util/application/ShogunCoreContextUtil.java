@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.util.application;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.apache.http.client.utils.URIBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.http.client.utils.URIBuilder;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author Daniel Koch

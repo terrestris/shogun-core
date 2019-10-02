@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.PermissionCollectionDao;
+import de.terrestris.shoguncore.model.security.PermissionCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import de.terrestris.shoguncore.dao.PermissionCollectionDao;
-import de.terrestris.shoguncore.model.security.PermissionCollection;
 
 /**
  * Service class for the {@link PermissionCollection} model.

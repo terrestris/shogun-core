@@ -1,21 +1,7 @@
 package de.terrestris.shoguncore.model.map;
 
-import java.awt.geom.Point2D;
-import java.util.List;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.PersistentObject;
+import de.terrestris.shoguncore.model.layer.util.Extent;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -23,8 +9,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.PersistentObject;
-import de.terrestris.shoguncore.model.layer.util.Extent;
+import javax.persistence.*;
+import java.awt.geom.Point2D;
+import java.util.List;
 
 /**
  * The <i>MapConfig</i> is backend representation for an
@@ -318,8 +305,9 @@ public class MapConfig extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof MapConfig))
+        if (!(obj instanceof MapConfig)) {
             return false;
+        }
         MapConfig other = (MapConfig) obj;
 
         return new EqualsBuilder().

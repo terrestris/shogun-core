@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.WpsPrimitiveDao;
+import de.terrestris.shoguncore.model.wps.WpsPrimitive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import de.terrestris.shoguncore.dao.WpsPrimitiveDao;
-import de.terrestris.shoguncore.model.wps.WpsPrimitive;
 
 /**
  * Service class for the {@link WpsPrimitive} model.

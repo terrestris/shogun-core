@@ -1,11 +1,11 @@
 package de.terrestris.shoguncore.rest;
 
-import java.io.BufferedReader;
-import java.io.Reader;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.terrestris.shoguncore.dao.GenericHibernateDao;
+import de.terrestris.shoguncore.model.PersistentObject;
+import de.terrestris.shoguncore.service.AbstractCrudService;
+import de.terrestris.shoguncore.web.AbstractWebController;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.terrestris.shoguncore.dao.GenericHibernateDao;
-import de.terrestris.shoguncore.model.PersistentObject;
-import de.terrestris.shoguncore.service.AbstractCrudService;
-import de.terrestris.shoguncore.web.AbstractWebController;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.List;
 
 /**
  * @author Kai Volland
@@ -35,18 +32,18 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
     extends AbstractWebController<E, D, S> {
 
     /**
+     *
+     */
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    /**
      * Constructor that sets the concrete entity class for the controller.
      * Subclasses MUST call this constructor.
      */
     protected AbstractRestController(Class<E> entityClass) {
         super(entityClass);
     }
-
-    /**
-     *
-     */
-    @Autowired
-    protected ObjectMapper objectMapper;
 
     /**
      * Find all entities.
@@ -56,7 +53,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
         final List<E> resultList = this.service.findAllRestricted(requestParams);
 
         if (resultList != null && !resultList.isEmpty()) {
-            LOG.trace("Found a total of " + resultList.size()
+            logger.trace("Found a total of " + resultList.size()
                 + " entities of type "
                 + resultList.get(0).getClass().getSimpleName());
         }
@@ -75,7 +72,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
         final List<E> resultList = this.service.findBySimpleFilter(requestParams);
 
         if (resultList != null && !resultList.isEmpty()) {
-            LOG.trace("Found a total of " + resultList.size()
+            logger.trace("Found a total of " + resultList.size()
                 + " entities of type "
                 + resultList.get(0).getClass().getSimpleName());
         }
@@ -93,11 +90,11 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 
         try {
             E entity = this.service.findById(id);
-            LOG.trace("Found " + entity.getClass().getSimpleName()
+            logger.trace("Found " + entity.getClass().getSimpleName()
                 + " with ID " + entity.getId());
             return new ResponseEntity<E>(entity, HttpStatus.OK);
         } catch (Exception e) {
-            LOG.error("Error finding entity with id " + id + ": "
+            logger.error("Error finding entity with id " + id + ": "
                 + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
         }
@@ -124,16 +121,16 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
             // saveOrUpdate will save and not update
             final Integer id = entity.getId();
             if (id != null) {
-                LOG.error(errorMessagePrefix + "ID value is set to " + id
+                logger.error(errorMessagePrefix + "ID value is set to " + id
                     + ", but MUST be null");
                 return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
             }
 
             this.service.saveOrUpdate(entity);
-            LOG.trace("Created " + simpleClassName + " with ID " + entity.getId());
+            logger.trace("Created " + simpleClassName + " with ID " + entity.getId());
             return new ResponseEntity<E>(entity, HttpStatus.CREATED);
         } catch (Exception e) {
-            LOG.error(errorMessagePrefix + e.getMessage());
+            logger.error(errorMessagePrefix + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
         } finally {
             IOUtils.closeQuietly(reader);
@@ -160,7 +157,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
 
             // validate json object
             if (jsonObject == null || !jsonObject.has("id")) {
-                LOG.error(errorPrefix
+                logger.error(errorPrefix
                     + "The JSON body is empty or has no 'id' property.");
                 return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
             }
@@ -168,7 +165,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
             // assure that the path variable id equals the payload id
             final int payloadId = jsonObject.get("id").asInt();
             if (payloadId != id) {
-                LOG.error(errorPrefix + "Requested to update entity with ID "
+                logger.error(errorPrefix + "Requested to update entity with ID "
                     + id + ", but payload ID is " + payloadId);
                 return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
             }
@@ -192,7 +189,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
             }
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            LOG.error(errorPrefix + e.getMessage());
+            logger.error(errorPrefix + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
         } finally {
             IOUtils.closeQuietly(reader);
@@ -218,10 +215,10 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
             final String proxyClassName = entityToDelete.getClass().getSimpleName();
             final String simpleClassName = StringUtils.substringBefore(proxyClassName, "_$$_");
 
-            LOG.trace("Deleted " + simpleClassName + " with ID " + id);
+            logger.trace("Deleted " + simpleClassName + " with ID " + id);
             return new ResponseEntity<E>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            LOG.error("Error deleting entity with ID " + id + ": "
+            logger.error("Error deleting entity with ID " + id + ": "
                 + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
         }

@@ -1,33 +1,10 @@
 package de.terrestris.shoguncore.util.http;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-
+import de.terrestris.shoguncore.util.model.Response;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -35,12 +12,7 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -61,7 +33,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import de.terrestris.shoguncore.util.model.Response;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.util.*;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -91,7 +71,7 @@ public class HttpUtil {
     /**
      * The name of the 'authorization' header
      */
-    private static String AUTHORIZATION_HEADER = "authorization";
+    private static final String AUTHORIZATION_HEADER = "authorization";
 
     /**
      * Performs an HTTP GET on the given URL <i>without authentication</i>
@@ -1093,6 +1073,9 @@ public class HttpUtil {
         // when entity is set on the httpPost instance in the postMultiPart method
         headersToForward = removeHeaders(headersToForward, new String[]{"content-length", "content-type"});
 
+        if (request == null) {
+            throw new HttpException("URI is null");
+        }
         Collection<Part> parts = request.getParts();
 
         return HttpUtil.postMultiPart(uri, parts, headersToForward);
@@ -1215,6 +1198,10 @@ public class HttpUtil {
         Header[] headersToForward = null;
         if (request != null && forwardHeaders) {
             headersToForward = HttpUtil.getHeadersFromRequest(request);
+        }
+
+        if (request == null) {
+            throw new HttpException("URI is null");
         }
 
         String ctString = request.getContentType();
@@ -1811,7 +1798,7 @@ public class HttpUtil {
                 String proxyHostName = systemProxy.getHostName();
                 int proxyPort = systemProxy.getPort();
                 LOG.debug("Using proxy hostname from system proxy: " + proxyHostName);
-                LOG.debug("Using proxy port from system proxy: " +  proxyPort);
+                LOG.debug("Using proxy port from system proxy: " + proxyPort);
 
                 proxyAuthScope = new AuthScope(systemProxy.getHostName(), systemProxy.getPort());
 
@@ -1851,15 +1838,15 @@ public class HttpUtil {
 
             if (proxyAuthScope != null && proxyCredentials != null) {
                 credentialsProvider.setCredentials(
-                        proxyAuthScope,
-                        proxyCredentials
+                    proxyAuthScope,
+                    proxyCredentials
                 );
             }
 
             if (credentials != null) {
                 credentialsProvider.setCredentials(
-                        new AuthScope(uri.getHost(), uri.getPort()),
-                        credentials
+                    new AuthScope(uri.getHost(), uri.getPort()),
+                    credentials
                 );
             }
 
@@ -1939,10 +1926,7 @@ public class HttpUtil {
      * @return true if sane, false otherwise
      */
     public static boolean isSaneRequest(HttpServletRequest request) {
-        if (request != null && request.getMethod() != null) {
-            return true;
-        }
-        return false;
+        return request != null && request.getMethod() != null;
     }
 
     /**
@@ -1985,11 +1969,7 @@ public class HttpUtil {
             return false;
         }
 
-        if (contentType.toLowerCase().startsWith("multipart/form-data")) {
-            return true;
-        }
-
-        return false;
+        return contentType.toLowerCase().startsWith("multipart/form-data");
     }
 
     /**
@@ -2086,7 +2066,7 @@ public class HttpUtil {
      * If the JVM knows about a HTTP proxy, e.g. by specifying
      * <p>
      * <pre>
-     * 	 -Dhttp.proxyHost=schwatzgelb.de -Dhttp.proxyPort=8080
+     *    -Dhttp.proxyHost=schwatzgelb.de -Dhttp.proxyPort=8080
      * </pre>
      * <p>
      * as startup parameters, this method will correctly detect them and return
@@ -2107,7 +2087,7 @@ public class HttpUtil {
         // If it is necessary that this property is set to true, it should be
         // configured on the JVM via -Djava.net.useSystemProxies=true
 
-        //	System.setProperty("java.net.useSystemProxies", "true");
+        // System.setProperty("java.net.useSystemProxies", "true");
 
         HttpHost systemProxy = null;
 
@@ -2134,20 +2114,6 @@ public class HttpUtil {
     }
 
     /**
-     * Note: The value annotation is set to the setter of httpTimeout here as
-     * we can't autowire any value to its static field (but the field has to be
-     * static itself).
-     *
-     * @param httpTimeout the httpTimeout to set
-     */
-    @Value("${http.timeout}")
-    @SuppressWarnings("static-method")
-    public void setDefaultHttpTimeout(int httpTimeout) {
-        HttpUtil.defaultHttpTimeout = httpTimeout;
-        HttpUtil.httpTimeout = httpTimeout;
-    }
-
-    /**
      * @return the httpTimeout
      */
     public static int getHttpTimeout() {
@@ -2164,7 +2130,22 @@ public class HttpUtil {
     /**
      * Resets the http timeout to the default one given by the app config.
      */
+    @SuppressFBWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     public static void resetHttpTimeout() {
         HttpUtil.httpTimeout = HttpUtil.defaultHttpTimeout;
+    }
+
+    /**
+     * Note: The value annotation is set to the setter of httpTimeout here as
+     * we can't autowire any value to its static field (but the field has to be
+     * static itself).
+     *
+     * @param httpTimeout the httpTimeout to set
+     */
+    @Value("${http.timeout}")
+    @SuppressWarnings("static-method")
+    public void setDefaultHttpTimeout(int httpTimeout) {
+        HttpUtil.defaultHttpTimeout = httpTimeout;
+        HttpUtil.httpTimeout = httpTimeout;
     }
 }

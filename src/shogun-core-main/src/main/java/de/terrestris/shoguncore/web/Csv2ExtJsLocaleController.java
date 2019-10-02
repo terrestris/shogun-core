@@ -24,7 +24,7 @@ public class Csv2ExtJsLocaleController {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     /**
      *
@@ -49,7 +49,7 @@ public class Csv2ExtJsLocaleController {
             return null; // TODO become smarter!?
         }
 
-        LOG.debug("Trying to get all EXT JS locale components of app '" + appId + "' for locale: '" + locale + "'");
+        logger.debug("Trying to get all EXT JS locale components of app '" + appId + "' for locale: '" + locale + "'");
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {

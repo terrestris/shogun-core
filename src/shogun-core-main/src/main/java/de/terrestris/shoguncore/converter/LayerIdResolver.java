@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.terrestris.shoguncore.dao.LayerDao;
 import de.terrestris.shoguncore.model.layer.Layer;
 import de.terrestris.shoguncore.service.LayerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author Nils Buehner

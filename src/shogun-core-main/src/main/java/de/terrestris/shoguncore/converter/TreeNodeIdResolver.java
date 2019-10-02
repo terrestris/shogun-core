@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.terrestris.shoguncore.dao.TreeNodeDao;
 import de.terrestris.shoguncore.model.tree.TreeNode;
 import de.terrestris.shoguncore.service.TreeNodeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author Nils Buehner

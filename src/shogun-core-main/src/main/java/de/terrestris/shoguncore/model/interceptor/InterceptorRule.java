@@ -1,22 +1,16 @@
 package de.terrestris.shoguncore.model.interceptor;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.PersistentObject;
+import de.terrestris.shoguncore.util.enumeration.HttpEnum;
+import de.terrestris.shoguncore.util.enumeration.InterceptorEnum;
+import de.terrestris.shoguncore.util.enumeration.OgcEnum;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import de.terrestris.shoguncore.model.PersistentObject;
-import de.terrestris.shoguncore.util.enumeration.HttpEnum;
-import de.terrestris.shoguncore.util.enumeration.InterceptorEnum;
-import de.terrestris.shoguncore.util.enumeration.OgcEnum;
+import javax.persistence.*;
 
 /**
  * The model representing the rules for the GeoServer Interceptor class.
@@ -209,8 +203,9 @@ public class InterceptorRule extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof InterceptorRule))
+        if (!(obj instanceof InterceptorRule)) {
             return false;
+        }
         InterceptorRule other = (InterceptorRule) obj;
 
         return new EqualsBuilder().

@@ -7,12 +7,11 @@ import java.util.*;
  * Utility class for basic auth based requests in the geoserver interceptor context.
  * Accepts a user and password via the constructor, which will be used to add an
  * appropriate basic auth header to the requests.
- *
+ * <p>
  * Credits go to https://stackoverflow.com/a/2811841 and
  * https://stackoverflow.com/a/44200124
  *
  * @author Nils Bühner
- *
  */
 public class GeoserverAuthHeaderRequest extends MutableHttpServletRequest {
 
@@ -22,8 +21,8 @@ public class GeoserverAuthHeaderRequest extends MutableHttpServletRequest {
      * Constructs a new servlet request with an additional x-geoserver-credentials header containing the given
      * username/password as HTTP basic auth encoded value.
      *
-     * @param request the original request
-     * @param user the geoserver user name
+     * @param request  the original request
+     * @param user     the geoserver user name
      * @param password the password
      */
     public GeoserverAuthHeaderRequest(HttpServletRequest request, String user, String password) {

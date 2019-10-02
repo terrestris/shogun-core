@@ -1,13 +1,9 @@
 package de.terrestris.shoguncore.util.enumeration;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.util.*;
 
 /**
  * @author Daniel Koch
@@ -16,306 +12,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public class OgcEnum {
 
     /**
-     * A enum type for the allowed service format.
-     */
-    public static enum Service {
-        SERVICE("SERVICE");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private Service(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static Service fromString(String inputValue) {
-            if (inputValue != null) {
-                for (Service type : Service.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-    }
-
-    /**
-     * A enum type for the allowed operation format.
-     */
-    public static enum Operation {
-        OPERATION("REQUEST");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private Operation(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static OperationType fromString(String inputValue) {
-            if (inputValue != null) {
-                for (OperationType type : OperationType.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-    }
-
-    /**
-     * A enum type for the allowed endPoint format.
-     */
-    public static enum EndPoint {
-        LAYERS("LAYERS"),
-        LAYER("LAYER"),
-        TYPENAME("TYPENAME"),
-        TYPENAMES("TYPENAMES"),
-        NAMESPACE("NAMESPACE");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private EndPoint(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static EndPoint fromString(String inputValue) {
-            if (inputValue != null) {
-                for (EndPoint type : EndPoint.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-
-        /**
-         * Returns all enum values as string array.
-         *
-         * @return
-         */
-        public static String[] getAllValues() {
-            EndPoint[] endPoints = values();
-            String[] values = new String[endPoints.length];
-
-            for (int i = 0; i < endPoints.length; i++) {
-                values[i] = endPoints[i].value;
-            }
-
-            return values;
-        }
-    }
-
-    /**
-     * A enum type for the allowed service type format.
-     */
-    public static enum ServiceType {
-        WMS("WMS"),
-        WFS("WFS"),
-        WCS("WCS"),
-        WPS("WPS"),
-        W3DS("W3DS");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private ServiceType(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static ServiceType fromString(String inputValue) {
-            if (inputValue != null) {
-                for (ServiceType type : ServiceType.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-    }
-
-    /**
-     * A enum type for the allowed operation type format.
-     */
-    public static enum OperationType {
-        GET_MAP("GetMap"),
-        GET_CAPABILITIES("GetCapabilities"),
-        GET_FEATURE_INFO("GetFeatureInfo"),
-        DESCRIBE_LAYER("DescribeLayer"),
-        GET_LEGEND_GRAPHIC("GetLegendGraphic"),
-        GET_STYLES("GetStyles"),
-        DESCRIBE_FEATURE_TYPE("DescribeFeatureType"),
-        GET_FEATURE("GetFeature"),
-        LOCK_FEATURE("LockFeature"),
-        TRANSACTION("Transaction"),
-        DESCRIBE_COVERAGE("DescribeCoverage"),
-        GET_COVERAGE("GetCoverage"),
-        EXECUTE("Execute"),
-        DESCRIBE_PROCESS("DescribeProcess"),
-        GET_SCENE("GetScene"),
-        GET_LAYER_INFO("GetLayerInfo"),
-        GET_TILE("GetTile");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private OperationType(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static OperationType fromString(String inputValue) {
-            if (inputValue != null) {
-                for (OperationType type : OperationType.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-    }
-
-    /**
      * A map that contains a set of {@link OperationType}s for any possible
      * {@link ServiceType}. See also the opposite collection
-     * {@link SERVICETYPES_BY_OPERATION}.
+     * SERVICETYPES_BY_OPERATION.
      */
-    public static Map<ServiceType, Set<OperationType>> OPERATIONS_BY_SERVICETYPE;
+    public static final Map<ServiceType, Set<OperationType>> OPERATIONS_BY_SERVICETYPE;
+    /**
+     * A map that contains a set of {@link ServiceType}s for any possible
+     * {@link OperationType}. See also the opposite collection
+     * OPERATIONS_BY_SERVICETYPE.
+     */
+    public static final Map<OperationType, Set<ServiceType>> SERVICETYPES_BY_OPERATION;
 
     static {
         Map<ServiceType, Set<OperationType>> map = new HashMap<ServiceType, Set<OperationType>>();
@@ -362,13 +69,6 @@ public class OgcEnum {
         // store it in the lookup
         OPERATIONS_BY_SERVICETYPE = Collections.unmodifiableMap(map);
     }
-
-    /**
-     * A map that contains a set of {@link ServiceType}s for any possible
-     * {@link OperationType}. See also the opposite collection
-     * {@link OPERATIONS_BY_SERVICETYPE}.
-     */
-    public static Map<OperationType, Set<ServiceType>> SERVICETYPES_BY_OPERATION;
 
     static {
         Map<OperationType, Set<ServiceType>> map = new HashMap<OperationType, Set<ServiceType>>();
@@ -438,6 +138,301 @@ public class OgcEnum {
         }
         // store it in the lookup
         SERVICETYPES_BY_OPERATION = Collections.unmodifiableMap(map);
+    }
+
+    /**
+     * A enum type for the allowed service format.
+     */
+    public enum Service {
+        SERVICE("SERVICE");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        Service(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static Service fromString(String inputValue) {
+            if (inputValue != null) {
+                for (Service type : Service.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
+    }
+
+    /**
+     * A enum type for the allowed operation format.
+     */
+    public enum Operation {
+        OPERATION("REQUEST");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        Operation(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static OperationType fromString(String inputValue) {
+            if (inputValue != null) {
+                for (OperationType type : OperationType.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
+    }
+
+    /**
+     * A enum type for the allowed endPoint format.
+     */
+    public enum EndPoint {
+        LAYERS("LAYERS"),
+        LAYER("LAYER"),
+        TYPENAME("TYPENAME"),
+        TYPENAMES("TYPENAMES"),
+        NAMESPACE("NAMESPACE");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        EndPoint(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static EndPoint fromString(String inputValue) {
+            if (inputValue != null) {
+                for (EndPoint type : EndPoint.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Returns all enum values as string array.
+         *
+         * @return
+         */
+        public static String[] getAllValues() {
+            EndPoint[] endPoints = values();
+            String[] values = new String[endPoints.length];
+
+            for (int i = 0; i < endPoints.length; i++) {
+                values[i] = endPoints[i].value;
+            }
+
+            return values;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
+    }
+
+    /**
+     * A enum type for the allowed service type format.
+     */
+    public enum ServiceType {
+        WMS("WMS"),
+        WFS("WFS"),
+        WCS("WCS"),
+        WPS("WPS"),
+        W3DS("W3DS");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        ServiceType(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static ServiceType fromString(String inputValue) {
+            if (inputValue != null) {
+                for (ServiceType type : ServiceType.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
+    }
+
+    /**
+     * A enum type for the allowed operation type format.
+     */
+    public enum OperationType {
+        GET_MAP("GetMap"),
+        GET_CAPABILITIES("GetCapabilities"),
+        GET_FEATURE_INFO("GetFeatureInfo"),
+        DESCRIBE_LAYER("DescribeLayer"),
+        GET_LEGEND_GRAPHIC("GetLegendGraphic"),
+        GET_STYLES("GetStyles"),
+        DESCRIBE_FEATURE_TYPE("DescribeFeatureType"),
+        GET_FEATURE("GetFeature"),
+        LOCK_FEATURE("LockFeature"),
+        TRANSACTION("Transaction"),
+        DESCRIBE_COVERAGE("DescribeCoverage"),
+        GET_COVERAGE("GetCoverage"),
+        EXECUTE("Execute"),
+        DESCRIBE_PROCESS("DescribeProcess"),
+        GET_SCENE("GetScene"),
+        GET_LAYER_INFO("GetLayerInfo"),
+        GET_TILE("GetTile");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        OperationType(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static OperationType fromString(String inputValue) {
+            if (inputValue != null) {
+                for (OperationType type : OperationType.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
     }
 
 }

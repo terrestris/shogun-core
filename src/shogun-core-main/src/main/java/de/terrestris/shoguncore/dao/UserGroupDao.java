@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.UserGroup;
+import org.springframework.stereotype.Repository;
 
 @Repository("userGroupDao")
 public class UserGroupDao<E extends UserGroup> extends

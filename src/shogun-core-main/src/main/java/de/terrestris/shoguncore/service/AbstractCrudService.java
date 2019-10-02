@@ -95,8 +95,6 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 
     /**
      * Returns all entities, but possibly with only the passed fields set with actual values.
-     *
-     *
      */
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     public List<E> findAllRestricted(MultiValueMap<String, String> restrictToRequest) {

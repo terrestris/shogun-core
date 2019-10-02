@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.layout.Layout;
+import org.springframework.stereotype.Repository;
 
 @Repository("layoutDao")
 public class LayoutDao<E extends Layout> extends

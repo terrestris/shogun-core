@@ -60,7 +60,7 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
     public TileWmsLayerDataSource(String name, String type, String url, String format, int width,
                                   int height, String version, String layerNames, String layerStyles,
                                   TileGrid tileGrid) {
-        super(name, type, url, format,  width, height, version, layerNames, layerStyles);
+        super(name, type, url, format, width, height, version, layerNames, layerStyles);
         this.tileGrid = tileGrid;
     }
 
@@ -119,8 +119,9 @@ public class TileWmsLayerDataSource extends ImageWmsLayerDataSource {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TileWmsLayerDataSource))
+        if (!(obj instanceof TileWmsLayerDataSource)) {
             return false;
+        }
         TileWmsLayerDataSource other = (TileWmsLayerDataSource) obj;
 
         return new EqualsBuilder().

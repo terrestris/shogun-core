@@ -3,15 +3,14 @@
  */
 package de.terrestris.shoguncore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * This class represents an Image which is stored as a bytearray in the database
@@ -115,8 +114,9 @@ public class ImageFile extends File {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ImageFile))
+        if (!(obj instanceof ImageFile)) {
             return false;
+        }
         ImageFile other = (ImageFile) obj;
 
         return new EqualsBuilder().appendSuper(super.equals(other))

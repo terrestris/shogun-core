@@ -22,22 +22,19 @@ public class ContentInitializer {
     /**
      * The Logger
      */
-    protected final Logger LOG = getLogger(getClass());
-
-    /**
-     * Flag symbolizing if content initialization should be active on startup
-     */
-    @Autowired
-    @Qualifier("shogunInitEnabled")
-    private Boolean shogunInitEnabled;
-
+    protected final Logger logger = getLogger(getClass());
     /**
      * Initialization Service to init shogun content like users or default
      * applications.
      */
     @Autowired
     protected InitializationService initService;
-
+    /**
+     * Flag symbolizing if content initialization should be active on startup
+     */
+    @Autowired
+    @Qualifier("shogunInitEnabled")
+    private Boolean shogunInitEnabled;
     /**
      * The list of objects that shall be persisted.
      * <p>
@@ -55,7 +52,7 @@ public class ContentInitializer {
      */
     public void initializeDatabaseContent() {
         if (this.shogunInitEnabled) {
-            LOG.info("Initializing SHOGun content");
+            logger.info("Initializing SHOGun content");
             for (PersistentObject object : objectsToCreate) {
                 if (object instanceof User) {
                     // special handling of users to encrypt the password!
@@ -65,12 +62,11 @@ public class ContentInitializer {
                 }
             }
         } else {
-            LOG.info("Not initializing anything for SHOGun.");
+            logger.info("Not initializing anything for SHOGun.");
         }
     }
 
     /**
-     *
      * @param shogunInitEnabled
      */
     public void setShogunInitEnabled(Boolean shogunInitEnabled) {
@@ -78,7 +74,6 @@ public class ContentInitializer {
     }
 
     /**
-     *
      * @param initService
      */
     public void setInitService(InitializationService initService) {
@@ -86,7 +81,6 @@ public class ContentInitializer {
     }
 
     /**
-     *
      * @param objectsToCreate
      */
     public void setObjectsToCreate(List<PersistentObject> objectsToCreate) {
