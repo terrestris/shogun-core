@@ -129,7 +129,7 @@
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
         <log4j.version>2.12.1</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.8.0</ehcache.version>
 
@@ -770,7 +770,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}.3</version>
+                <version>${jackson.version}</version>
             </dependency>
 
             <dependency>
