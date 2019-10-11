@@ -176,7 +176,6 @@
         <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
         <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <maven-pmd-plugin.version>3.9.0</maven-pmd-plugin.version>
         <javassist.version>3.25.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
 
@@ -328,25 +327,6 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <version>${maven-pmd-plugin.version}</version>
-                        <configuration>
-                            <printFailingErrors>true</printFailingErrors>
-                            <rulesets>
-                                <ruleset>${project.basedir}/../pmd/ruleset.xml</ruleset>
-                            </rulesets>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
