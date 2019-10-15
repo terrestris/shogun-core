@@ -1,5 +1,6 @@
 package de.terrestris.shoguncore.util.naming;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 
@@ -124,6 +125,7 @@ public class ImplicitNamingStrategyShogunCore extends ImplicitNamingStrategyJpaC
      * @param singular
      * @return
      */
+    @SuppressFBWarnings("DM_CONVERT_CASE")
     private String transformToPluralForm(String singular) {
         String lowercaseSingular = singular.toLowerCase();
         if (IRREGULAR_NOUNS.containsKey(lowercaseSingular)) {

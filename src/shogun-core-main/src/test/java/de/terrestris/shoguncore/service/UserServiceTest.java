@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
@@ -257,6 +258,7 @@ public class UserServiceTest extends PermissionAwareCrudServiceTest<User, UserDa
 
     }
 
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     @Test
     public void activateUser_shouldActivateUserAsExpected() throws Exception {
 

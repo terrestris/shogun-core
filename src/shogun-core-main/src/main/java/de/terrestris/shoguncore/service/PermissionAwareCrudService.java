@@ -75,9 +75,9 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         }
 
         // create a set from the passed array
-        final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
+        final HashSet<Permission> permissionsSet = new HashSet<>(Arrays.asList(permissions));
 
-        if (permissionsSet == null || permissionsSet.isEmpty()) {
+        if (permissionsSet.isEmpty()) {
             logger.error("Could not add permissions: No permissions have been passed.");
             return;
         }
@@ -150,7 +150,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         // create a set from the passed array
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
-        if (permissionsSet == null || permissionsSet.isEmpty()) {
+        if (permissionsSet.isEmpty()) {
             logger.error("Could not remove permissions: No permissions have been passed.");
             return;
         }
@@ -214,7 +214,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         // create a set from the passed array
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
-        if (permissionsSet == null || permissionsSet.isEmpty()) {
+        if (permissionsSet.isEmpty()) {
             logger.error("Could not add permissions: No permissions have been passed.");
             return;
         }
@@ -288,7 +288,7 @@ public class PermissionAwareCrudService<E extends PersistentObject, D extends Ge
         // create a set from the passed array
         final HashSet<Permission> permissionsSet = new HashSet<Permission>(Arrays.asList(permissions));
 
-        if (permissionsSet == null || permissionsSet.isEmpty()) {
+        if (permissionsSet.isEmpty()) {
             logger.error("Could not remove permissions: No permissions have been passed.");
             return;
         }

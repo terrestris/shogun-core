@@ -65,7 +65,7 @@ public class TreeNodeService<E extends TreeNode, D extends TreeNodeDao<E>> exten
                 // recursive call for all children
                 clonedChildren.add(cloneAndPersistTreeNode(childNode));
             }
-            ((TreeFolder) node).setChildren((List<TreeNode>) children);
+            ((TreeFolder) node).setChildren((List<TreeNode>) clonedChildren);
         }
 
         // detach the clone from the hibernate session to persist it as a new instance in the next step

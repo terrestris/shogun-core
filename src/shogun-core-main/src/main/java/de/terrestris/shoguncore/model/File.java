@@ -4,6 +4,7 @@
 package de.terrestris.shoguncore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -97,7 +98,11 @@ public class File extends PersistentObject {
     /**
      * @return the file
      */
+    @SuppressFBWarnings("PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     public byte[] getFile() {
+        if (file == null) {
+            return null;
+        }
         return Arrays.copyOf(file, file.length);
     }
 
@@ -105,6 +110,10 @@ public class File extends PersistentObject {
      * @param file the file to set
      */
     public void setFile(byte[] file) {
+        if (file == null) {
+            this.file = null;
+            return;
+        }
         this.file = Arrays.copyOf(file, file.length);
     }
 

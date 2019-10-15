@@ -1,9 +1,7 @@
-/**
- *
- */
 package de.terrestris.shoguncore.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -11,6 +9,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Arrays;
 
 /**
  * This class represents an Image which is stored as a bytearray in the database
@@ -48,15 +47,23 @@ public class ImageFile extends File {
     /**
      * @return the thumbnail
      */
+    @SuppressFBWarnings("PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     public byte[] getThumbnail() {
-        return thumbnail;
+        if (thumbnail == null) {
+            return null;
+        }
+        return Arrays.copyOf(thumbnail, thumbnail.length);
     }
 
     /**
      * @param thumbnail the thumbnail to set
      */
     public void setThumbnail(byte[] thumbnail) {
-        this.thumbnail = thumbnail;
+        if (thumbnail == null) {
+            this.thumbnail = null;
+            return;
+        }
+        this.thumbnail = Arrays.copyOf(thumbnail, thumbnail.length);
     }
 
     /**

@@ -134,7 +134,10 @@ public class GeoServerRESTImporter {
                 zipFile.addFile(targetPrj, params);
             } finally {
                 if (targetPrj != null) {
-                    targetPrj.delete();
+                    boolean deleted = targetPrj.delete();
+                    if (!deleted) {
+                        LOG.warn("Temporary target prj file could not be deleted.");
+                    }
                 }
             }
         }
@@ -290,7 +293,7 @@ public class GeoServerRESTImporter {
             importTaskList = mapper.readValue(httpResponse.getBody(), RESTImportTaskList.class);
             LOG.debug("Imported file " + file.getName() + " contains data for multiple layers.");
             return importTaskList;
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.debug("Imported file " + file.getName() + " likely contains data for single " +
                 "layer. Will check this now.");
             try {
@@ -301,7 +304,7 @@ public class GeoServerRESTImporter {
                     LOG.debug("Imported file " + file.getName() + " contains data for a single layer.");
                 }
                 return importTaskList;
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 LOG.info("It seems that the SRS definition source file can not be interpreted by " +
                     "GeoServer / GeoTools. Try to set SRS definition to " + sourceSrs + ".");
 

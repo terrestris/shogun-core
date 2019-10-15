@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -68,7 +67,7 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
         logger.debug("Requested to upload a multipart-file");
 
         // build response map
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+        Map<String, Object> responseMap = null;
         try {
             E file = service.uploadFile(uploadedFile);
             logger.info("Successfully uploaded file " + file.getFileName());
@@ -91,10 +90,7 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
      */
     @RequestMapping(value = "/get.action", method = RequestMethod.GET)
     public ResponseEntity<?> getFile(@RequestParam Integer id) {
-
         final HttpHeaders responseHeaders = new HttpHeaders();
-        Map<String, Object> responseMap = new HashMap<String, Object>();
-
         try {
             File file = service.findById(id);
 
@@ -108,19 +104,14 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
                 MediaType.parseMediaType(file.getFileType()));
 
             logger.info("Successfully got the file " + file.getFileName());
-
-            responseMap = ResultSet.success(file);
-            return new ResponseEntity<byte[]>(
-                fileBytes, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(fileBytes, responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("Could not get the file: " + e.getMessage());
-            responseMap = ResultSet.error("Could not get the file: " +
+            Map<String, Object> responseMap = ResultSet.error("Could not get the file: " +
                 e.getMessage());
 
             responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-            return new ResponseEntity<Map<String, Object>>(
-                responseMap, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseMap, responseHeaders, HttpStatus.OK);
         }
     }
 }

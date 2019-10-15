@@ -43,7 +43,6 @@ import javax.servlet.http.Part;
  * @author danielkoch
  * @author ahennr
  */
-@SuppressWarnings("static-method")
 public class HttpUtilTest {
 
     /**
@@ -126,7 +125,7 @@ public class HttpUtilTest {
     /**
      *
      */
-    protected static HttpServer server;
+    private static HttpServer server;
 
     /**
      * @throws IOException

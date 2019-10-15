@@ -3,9 +3,7 @@ package de.terrestris.shoguncore.service;
 import de.terrestris.shoguncore.util.http.HttpUtil;
 import de.terrestris.shoguncore.util.model.Response;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -163,7 +161,7 @@ public class HttpProxyService {
      * The ports for http / https connections
      */
     private static final int HTTPS_PORT = 443;
-    private static final int HTTP_PORT = 443;
+    private static final int HTTP_PORT = 80;
 
     /* +--------------------------------------------------------------------+ */
     /* | Autowired variables                                                | */
@@ -173,106 +171,6 @@ public class HttpProxyService {
      */
     @Value("#{'${proxy.whitelist}'.split(',')}")
     private List<String> proxyWhiteList;
-
-    /**
-     * @param originalResponse
-     * @return
-     */
-    private static HttpHeaders getHeadersToForward(HttpResponse originalResponse) {
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        if (originalResponse == null) {
-            return responseHeaders;
-        }
-
-        // This is a fallback, we usually will overwrite this with s.th.
-        // more specific from the response.
-        responseHeaders.setContentType(new MediaType("text", "plain"));
-
-        Header[] originalResponseHeaders = originalResponse.getAllHeaders();
-
-        StringBuffer bufferHeaders = new StringBuffer();
-
-        for (Header header : originalResponseHeaders) {
-            String headerName = header.getName();
-            String headerVal = header.getValue();
-
-            if (isUnsupportedHeader(headerName)) {
-                LOG.debug("Unsupported header '" + headerName + "' found "
-                    + " and ignored");
-            } else {
-                headerVal = fixUpHeaderValue(headerName, headerVal);
-
-                // now set the header in the return headers
-                responseHeaders.set(headerName, headerVal);
-                bufferHeaders.append(headerName + "=" + headerVal + ", ");
-            }
-
-        }
-
-        if (responseHeaders.size() > 1) {
-            LOG.debug("List of headers for the final response of this request: "
-                + bufferHeaders.toString().replaceAll("(,\\s*)$", ""));
-        } else {
-            LOG.debug("No specific headers to forward, "
-                + "setting 'ContentType: text/plain' as fallback");
-        }
-        return responseHeaders;
-    }
-
-    /**
-     * @param headerName
-     * @return
-     */
-    private static boolean isUnsupportedHeader(String headerName) {
-        return !isSupportedHeader(headerName);
-    }
-
-    /**
-     * @param headerName
-     * @return
-     */
-    private static boolean isSupportedHeader(String headerName) {
-        if (headerName == null) {
-            return false;
-        }
-        return !LC_UNSUPPORTED_HEADERS.contains(headerName.toLowerCase());
-    }
-
-    /**
-     * @param headerName
-     * @param headerVal
-     * @return
-     */
-    private static String fixUpHeaderValue(String headerName, String headerVal) {
-        if (headerName == null || headerVal == null) {
-            return null;
-        }
-
-        String logPrefix = "Header '" + headerName + "' has a value '"
-            + headerVal + "'" + " which seems incorrect. ";
-
-        String fixedHeaderVal = headerVal;
-
-        String lowercaseHeaderVal = headerVal.toLowerCase().trim();
-
-        if (lowercaseHeaderVal.contains("subtype")) {
-            LOG.debug(logPrefix + " Quoting subtype to fix it.");
-            fixedHeaderVal = headerVal.replace(UNQUOTED_SUBTYPE_GML,
-                QUOTED_SUBTYPE_GML);
-        } else if (CONTENT_TYPE_JSON_HINTS.contains(lowercaseHeaderVal)) {
-            LOG.debug(logPrefix + " Using value '"
-                + JSON_CONTENT_TYPE_HEADER + "'.");
-            fixedHeaderVal = JSON_CONTENT_TYPE_HEADER;
-        } else if (CONTENT_TYPE_CSV_HINTS.contains(lowercaseHeaderVal)) {
-            LOG.debug(logPrefix + " Using value '"
-                + JSON_CONTENT_TYPE_HEADER + "'.");
-            fixedHeaderVal = CSV_CONTENT_TYPE_HEADER;
-        }
-
-        return fixedHeaderVal;
-    }
 
     /**
      * @param request
@@ -394,8 +292,8 @@ public class HttpProxyService {
             return url;
         }
         URIBuilder uriBuilder = new URIBuilder(url.toURI());
-        for (String paramName : params.keySet()) {
-            uriBuilder.addParameter(paramName, params.get(paramName));
+        for (Entry<String, String> entry : params.entrySet()) {
+            uriBuilder.addParameter(entry.getKey(), entry.getValue());
         }
         return uriBuilder.build().toURL();
     }
@@ -411,8 +309,14 @@ public class HttpProxyService {
         final int port = url.getPort();
         final String protocol = url.getProtocol();
 
-        final int portToTest = (port != -1) ? port : (StringUtils.equalsIgnoreCase(protocol, "https") ? HTTPS_PORT : HTTP_PORT);
+        int portToTest = -1;
+        if (port != -1) {
+            portToTest = port;
+        } else {
+            portToTest = StringUtils.equalsIgnoreCase(protocol, "https") ? HTTPS_PORT : HTTP_PORT;
+        }
 
+        final int finalPortToTest = portToTest;
         List<String> matchingWhiteListEntries = proxyWhiteList.stream().filter((String whitelistEntry) -> {
             String whitelistHost;
             int whitelistPort;
@@ -424,7 +328,7 @@ public class HttpProxyService {
                 whitelistPort = -1;
             }
             final int portToTestAgainst = (whitelistPort != -1) ? whitelistPort : (StringUtils.equalsIgnoreCase(protocol, "https") ? HTTPS_PORT : HTTP_PORT);
-            final boolean portIsMatching = portToTestAgainst == portToTest;
+            final boolean portIsMatching = portToTestAgainst == finalPortToTest;
             final boolean domainIsMatching = StringUtils.equalsIgnoreCase(host, whitelistHost) || StringUtils.endsWith(host, whitelistHost);
             return (portIsMatching && domainIsMatching);
         }).collect(Collectors.toList());

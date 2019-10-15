@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -246,17 +245,15 @@ public class UserService<E extends User, D extends UserDao<E>> extends
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
     public Set<UserGroup> getGroupsOfUser(Integer userId) throws Exception {
-
-        Set<UserGroup> userGroupsSet = new HashSet<UserGroup>();
         E user = this.findById(userId);
         if (user != null) {
             logger.trace("Found user with ID " + user.getId());
-            userGroupsSet = user.getUserGroups();
+            Set<UserGroup> userGroupsSet = user.getUserGroups();
+            return userGroupsSet;
         } else {
             throw new Exception("The user with id " + userId + " could not be found");
         }
 
-        return userGroupsSet;
     }
 
     /**

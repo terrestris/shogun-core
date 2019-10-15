@@ -189,11 +189,10 @@ public class EntityUtil {
             return null;
         }
         List<String> restrictFieldsTo = null;
-        Set<String> keys = requestedFilter.keySet();
-        for (String key : keys) {
-            if (RESTRICT_FIELDS_PARAM.equalsIgnoreCase(key)) {
+        for (Map.Entry<String, List<String>> entry : requestedFilter.entrySet()) {
+            if (RESTRICT_FIELDS_PARAM.equalsIgnoreCase(entry.getKey())) {
                 restrictFieldsTo = listFromCommaSeparatedStringList(
-                    requestedFilter.get(key)
+                    entry.getValue()
                 );
             }
         }
@@ -202,7 +201,7 @@ public class EntityUtil {
         }
 
         List<String> restrictableFieldNames = getFilterableOrRestrictableFieldNames(entityClass);
-        List<String> filteredRestrictTo = new ArrayList<String>();
+        List<String> filteredRestrictTo = new ArrayList<>();
 
         for (String restrictableFieldName : restrictableFieldNames) {
             for (String requestedRestrictTo : restrictFieldsTo) {
@@ -261,10 +260,9 @@ public class EntityUtil {
 
         MultiValueMap<String, Object> result = new LinkedMultiValueMap<>();
 
-        Set<String> validInputFieldNames = validInputFieldNameToOrigFieldName.keySet();
-
-        for (String validInputFieldName : validInputFieldNames) {
-            String origInputFieldName = validInputFieldNameToOrigFieldName.get(validInputFieldName);
+        for (Map.Entry<String, String> entry : validInputFieldNameToOrigFieldName.entrySet()) {
+            String validInputFieldName = entry.getKey();
+            String origInputFieldName = entry.getValue();
 
             List<String> stringValues = requestedFilter.get(validInputFieldName);
 

@@ -21,16 +21,14 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public abstract class PersistentObjectIdResolver<E extends PersistentObject, D extends GenericHibernateDao<E, Integer>, S extends AbstractCrudService<E, D>>
     extends SimpleObjectIdResolver {
 
-    protected final Logger logger = getLogger(getClass());
+    protected static final Logger logger = getLogger(PersistentObjectIdResolver.class);
 
     protected S service;
 
     /**
      * Default Constructor that injects beans automatically.
-     *
-     * @param entityClass
      */
-    protected PersistentObjectIdResolver() {
+    PersistentObjectIdResolver() {
         // As subclasses of this class are used in the resolver property of an
         // JsonIdentityInfo annotation, we cannot easily autowire components
         // (like the service for the current). For that reason, we use this
@@ -66,15 +64,6 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
             logger.error("Could not resolve object by ID: " + e.getMessage());
             return null;
         }
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public boolean canUseFor(ObjectIdResolver resolverType) {
-        return super.canUseFor(resolverType);
     }
 
     /**

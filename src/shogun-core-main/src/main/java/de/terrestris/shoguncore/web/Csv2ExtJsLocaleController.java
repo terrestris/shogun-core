@@ -22,9 +22,9 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class Csv2ExtJsLocaleController {
 
     /**
-     * The LOGGER instance (that will be available in all subclasses)
+     * The logger instance
      */
-    protected final Logger logger = getLogger(getClass());
+    private static final Logger logger = getLogger(Csv2ExtJsLocaleController.class);
 
     /**
      *

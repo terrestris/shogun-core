@@ -19,6 +19,11 @@ import java.util.List;
 @Table
 public class WmtsTileGrid extends TileGrid {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     // String list holding the matrix IDs.
     @ElementCollection(targetClass = String.class)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

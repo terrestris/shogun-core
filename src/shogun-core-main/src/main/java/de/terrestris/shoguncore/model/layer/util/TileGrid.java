@@ -86,7 +86,7 @@ public class TileGrid extends PersistentObject {
      */
     public TileGrid() {
         super();
-        tileSize = new Integer(DEFAULT_TILE_SIZE);
+        tileSize = Integer.valueOf(DEFAULT_TILE_SIZE);
     }
 
     /**

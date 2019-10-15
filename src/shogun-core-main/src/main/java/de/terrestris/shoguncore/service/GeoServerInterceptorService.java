@@ -565,16 +565,14 @@ public class GeoServerInterceptorService {
         HashMap<InterceptorRule, Integer> ruleMap = new HashMap<>();
         interceptorRules.stream().forEach((rule) -> {
             int score = 0;
-            if (!Objects.equals(rule.getEndPoint(), null) && !Objects.equals(rule.getEndPoint(), endPoint) &&
-                endPoint != null) {
+
+            if (!StringUtils.isEmpty(rule.getEndPoint()) && !StringUtils.isEmpty(endPoint) && !StringUtils.equalsIgnoreCase(rule.getEndPoint(), endPoint)) {
                 return;
             }
-            if (!Objects.equals(rule.getService(), null) && !Objects.equals(rule.getService(), service) &&
-                service != null) {
+            if (rule.getService() != null && !Objects.equals(rule.getService(), service) && service != null) {
                 return;
             }
-            if (!Objects.equals(rule.getOperation(), null) && !Objects.equals(rule.getOperation(), operation) &&
-                operation != null) {
+            if (rule.getOperation() != null && !Objects.equals(rule.getOperation(), operation) && operation != null) {
                 return;
             }
             if (endPoint != null && Objects.equals(rule.getEndPoint(), endPoint)) {

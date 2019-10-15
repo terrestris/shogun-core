@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public class OracleNamingStrategyShogunCore extends PhysicalNamingStrategyShogunCore {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     private static final String[] RESERVED_WORDS_ORACLE = new String[]{"TRIGGER", "WHERE", "REVOKE", "INTERSECT", "CONNECT",
         "GRANT", "OF", "ORDER", "HAVING", "NULL", "SMALLINT", "RENAME", "BETWEEN", "SHARE", "MODE", "UNION", "SET",
         "VALUES", "VIEW", "WITH", "CHAR", "FROM", "BY", "OR", "ELSE", "THEN", "CHECK", "VARCHAR2", "VARCHAR", "CREATE",

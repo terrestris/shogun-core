@@ -1,5 +1,7 @@
 package de.terrestris.shoguncore.util.interceptor;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -25,6 +27,7 @@ public class GeoserverAuthHeaderRequest extends MutableHttpServletRequest {
      * @param user     the geoserver user name
      * @param password the password
      */
+    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     public GeoserverAuthHeaderRequest(HttpServletRequest request, String user, String password) {
         super(request);
         this.encoding = "Basic " + Base64.getEncoder().encodeToString(user.concat(":").concat(password).getBytes());

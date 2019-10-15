@@ -5,6 +5,7 @@ import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.token.RegistrationToken;
 import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
 import de.terrestris.shoguncore.util.mail.MailPublisher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -118,17 +119,23 @@ public class RegistrationTokenService<E extends RegistrationToken, D extends Reg
 
         // prepare a personalized mail with the given token
         final String email = user.getEmail();
+
+        String registrationActivationMsgTxt = registrationActivationMsg.getText();
+        if (StringUtils.isEmpty(registrationActivationMsgTxt)) {
+            logger.warn("Registration activation - message is null, use empty text");
+            registrationActivationMsgTxt = StringUtils.EMPTY;
+        }
+
         registrationActivationMsg.setTo(email);
         registrationActivationMsg.setText(
             String.format(
-                registrationActivationMsg.getText(),
+                registrationActivationMsgTxt,
                 UriUtils.decode(resetPasswordURI.toString(), "UTF-8")
             )
         );
 
         // and send the mail
         mailPublisher.sendMail(registrationActivationMsg);
-
     }
 
     /**

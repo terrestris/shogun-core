@@ -5,6 +5,7 @@ import de.terrestris.shoguncore.model.layer.source.ImageWmsLayerDataSource;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WmsResponseInterceptorInterface;
 import de.terrestris.shoguncore.util.model.Response;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.Logger;
 import org.deegree.commons.xml.CommonNamespaces;
 import org.hibernate.criterion.LogicalExpression;
@@ -67,6 +68,7 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
         return response;
     }
 
+    @SuppressFBWarnings("UC_USELESS_OBJECT")
     private void removeLayers(Document doc, String namespace, List<String> layerNames) throws XPathExpressionException {
         List<String> unqualifiedLayerNames = layerNames.parallelStream().map(layerName -> layerName.split(":")[1]).collect(Collectors.toList());
         XPathFactory factory = XPathFactory.newInstance();
@@ -144,9 +146,6 @@ public class WmsResponseInterceptor implements WmsResponseInterceptorInterface {
             Document doc = builder.parse(new ByteArrayInputStream(body));
             Element root = doc.getDocumentElement();
             String version = root.getAttribute("version");
-            if (version == null) {
-                return response;
-            }
             String proto = request.getHeader("x-forwarded-proto");
             String host = request.getHeader("x-forwarded-host");
             String baseUrl = proto + "://" + host + request.getParameter("CONTEXT_PATH") + "/geoserver.action/" + endpoint;

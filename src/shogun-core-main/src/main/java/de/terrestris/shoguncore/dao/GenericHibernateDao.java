@@ -36,7 +36,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger logger = getLogger(getClass());
+    protected static final Logger logger = getLogger(GenericHibernateDao.class);
 
     /**
      * Represents the class of the entity

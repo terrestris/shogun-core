@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This abstract service class provides basic CRUD functionality.
@@ -154,17 +155,15 @@ public abstract class AbstractCrudService<E extends PersistentObject, D extends 
 
         List<Criterion> orPredicates = new ArrayList<>();
 
-        if (origFieldNamesToCastedValues != null && !origFieldNamesToCastedValues.isEmpty()) {
-
-            for (String fieldName : origFieldNamesToCastedValues.keySet()) {
-                List<Object> fieldValues = origFieldNamesToCastedValues.get(fieldName);
-
+        if (!origFieldNamesToCastedValues.isEmpty()) {
+            for (Map.Entry<String, List<Object>> entry : origFieldNamesToCastedValues.entrySet()) {
                 // if there are multiple values for a field name, we'll check
                 // for equality and connect them with OR
                 List<Criterion> eqExpressions = new ArrayList<>();
+                List<Object> fieldValues = entry.getValue();
 
                 for (Object fieldValue : fieldValues) {
-                    final SimpleExpression eq = Restrictions.eq(fieldName, fieldValue);
+                    final SimpleExpression eq = Restrictions.eq(entry.getKey(), fieldValue);
                     eqExpressions.add(eq);
                 }
 

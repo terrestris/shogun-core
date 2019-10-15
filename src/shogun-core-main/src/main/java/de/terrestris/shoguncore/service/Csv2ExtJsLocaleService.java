@@ -141,7 +141,7 @@ public class Csv2ExtJsLocaleService {
         int indexOfLocale = -1;
         List<String> headerLine = Arrays.asList(ArrayUtils.nullToEmpty(csvReader.readNext()));
 
-        if (headerLine == null || headerLine.isEmpty()) {
+        if (headerLine.isEmpty()) {
             throw new Exception("CSV locale file seems to be empty.");
         }
 

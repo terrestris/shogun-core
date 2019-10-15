@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -59,16 +58,13 @@ public class UserGroupService<E extends UserGroup, D extends UserGroupDao<E>>
     @PostFilter("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
     public Set<User> getUsersOfGroup(Integer groupId) throws Exception {
-        Set<User> groupUsersSet = new HashSet<User>();
         UserGroup userGroup = this.findById(groupId);
         if (userGroup != null) {
             logger.trace("Found group with ID " + userGroup.getId());
-            groupUsersSet = userGroup.getMembers();
+            Set<User> groupUsersSet = userGroup.getMembers();
+            return groupUsersSet;
         } else {
             throw new Exception("The group with id " + groupId + " could not be found");
         }
-
-        return groupUsersSet;
     }
-
 }

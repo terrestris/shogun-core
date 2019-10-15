@@ -59,7 +59,6 @@ public abstract class AbstractUserTokenService<E extends UserToken, D extends Ab
      */
     @Transactional(readOnly = true)
     public E findByUser(User user) {
-
         SimpleExpression eqUser = Restrictions.eq("user", user);
 
         E userToken = dao.findByUniqueCriteria(eqUser);

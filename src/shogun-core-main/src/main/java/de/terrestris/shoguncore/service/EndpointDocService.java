@@ -25,12 +25,7 @@ public class EndpointDocService {
      */
     @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())")
     public Set<RequestMappingInfo> getEndpoints(RequestMappingHandlerMapping requestMappingHandlerMapping) {
-
-        if (requestMappingHandlerMapping.getHandlerMethods() != null) {
-            return requestMappingHandlerMapping.getHandlerMethods().keySet();
-        }
-
-        return null;
+        return requestMappingHandlerMapping.getHandlerMethods().keySet();
     }
 
 }

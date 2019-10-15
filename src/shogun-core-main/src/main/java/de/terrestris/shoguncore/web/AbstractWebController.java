@@ -20,7 +20,7 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger logger = getLogger(getClass());
+    protected static final Logger logger = getLogger(AbstractWebController.class);
 
     /**
      * Provides the concrete entity class of the controller.

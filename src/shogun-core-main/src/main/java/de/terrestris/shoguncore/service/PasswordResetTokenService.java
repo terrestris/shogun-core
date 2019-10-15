@@ -6,6 +6,7 @@ import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.token.PasswordResetToken;
 import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
 import de.terrestris.shoguncore.util.mail.MailPublisher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -138,11 +139,17 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
         SimpleMailMessage resetPwdMsg = new SimpleMailMessage(
             resetPasswordMailMessageTemplate);
 
+        String resetPwdMsgTxt = resetPwdMsg.getText();
+        if (StringUtils.isEmpty(resetPwdMsgTxt)) {
+            logger.warn("Reset password - message is null, use empty text");
+            resetPwdMsgTxt = StringUtils.EMPTY;
+        }
+
         // prepare a personalized mail with the given token
         resetPwdMsg.setTo(email);
         resetPwdMsg.setText(
             String.format(
-                resetPwdMsg.getText(),
+                resetPwdMsgTxt,
                 user.getFirstName(),
                 user.getLastName(),
                 UriUtils.decode(resetPasswordURI.toString(), "UTF-8")

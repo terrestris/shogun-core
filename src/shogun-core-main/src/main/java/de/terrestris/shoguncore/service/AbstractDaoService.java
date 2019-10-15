@@ -21,7 +21,7 @@ public abstract class AbstractDaoService<E extends PersistentObject, D extends G
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger logger = getLogger(getClass());
+    protected static final Logger logger = getLogger(AbstractDaoService.class);
 
     /**
      * Provides the concrete entity class of the controller.

@@ -1959,6 +1959,7 @@ public class HttpUtil {
      * @param request {@link HttpServletRequest} to check
      * @return true if FormMultipartPost, false otherwise
      */
+    @SuppressFBWarnings("DM_CONVERT_CASE")
     public static boolean isFormMultipartPost(HttpServletRequest request) {
         if (!isHttpPostRequest(request)) {
             return false;
@@ -1978,6 +1979,7 @@ public class HttpUtil {
      * @param request {@link HttpServletRequest} to extract headers from
      * @return Array with {@link Header}s
      */
+    @SuppressFBWarnings({"DM_CONVERT_CASE", "PZLA_PREFER_ZERO_LENGTH_ARRAYS"})
     public static Header[] getHeadersFromRequest(HttpServletRequest request) {
         List<Header> returnHeaderList = new ArrayList<>();
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -2022,6 +2024,7 @@ public class HttpUtil {
      * @param headersToClean  Array of {@link Header}: Headers to clean up
      * @param headersToRemove Header names to remove
      */
+    @SuppressFBWarnings("PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     private static Header[] removeHeaders(Header[] headersToClean, String[] headersToRemove) {
         ArrayList<Header> headers = new ArrayList<>();
         if (headersToClean == null) {
@@ -2045,6 +2048,7 @@ public class HttpUtil {
      * @param request {@link HttpServletRequest} to extract body from
      * @return
      */
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     private static String getRequestBody(HttpServletRequest request) {
         String body = null;
         try (BufferedReader requestReader = request.getReader()) {
@@ -2142,6 +2146,7 @@ public class HttpUtil {
      *
      * @param httpTimeout the httpTimeout to set
      */
+    @SuppressFBWarnings({"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"})
     @Value("${http.timeout}")
     @SuppressWarnings("static-method")
     public void setDefaultHttpTimeout(int httpTimeout) {

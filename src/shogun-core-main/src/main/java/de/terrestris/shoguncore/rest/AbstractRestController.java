@@ -6,7 +6,6 @@ import de.terrestris.shoguncore.dao.GenericHibernateDao;
 import de.terrestris.shoguncore.model.PersistentObject;
 import de.terrestris.shoguncore.service.AbstractCrudService;
 import de.terrestris.shoguncore.web.AbstractWebController;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
@@ -110,11 +110,9 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
         final String errorMessagePrefix = "Error when saving entity of type "
             + simpleClassName + ": ";
 
-        BufferedReader reader = null;
-        // read and parse the json request body
-        try {
-            reader = request.getReader();
 
+        // read and parse the json request body
+        try (BufferedReader reader = request.getReader()) {
             E entity = objectMapper.readValue(reader, getEntityClass());
 
             // ID value MUST be null to assure that
@@ -129,11 +127,9 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
             this.service.saveOrUpdate(entity);
             logger.trace("Created " + simpleClassName + " with ID " + entity.getId());
             return new ResponseEntity<E>(entity, HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException e) {
             logger.error(errorMessagePrefix + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.BAD_REQUEST);
-        } finally {
-            IOUtils.closeQuietly(reader);
         }
     }
 
@@ -148,11 +144,9 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
         String errorPrefix = "Error updating "
             + getEntityClass().getSimpleName() + " with ID " + id + ": ";
 
-        Reader reader = null;
-
-        try {
+        try(Reader reader = request.getReader()) {
             // read and parse the json request body
-            reader = request.getReader();
+
             JsonNode jsonObject = objectMapper.readTree(reader);
 
             // validate json object
@@ -188,11 +182,9 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
                 return new ResponseEntity<E>(entity, HttpStatus.OK);
             }
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        } catch (RuntimeException | IOException e) {
             logger.error(errorPrefix + e.getMessage());
             return new ResponseEntity<E>(HttpStatus.NOT_FOUND);
-        } finally {
-            IOUtils.closeQuietly(reader);
         }
     }
 

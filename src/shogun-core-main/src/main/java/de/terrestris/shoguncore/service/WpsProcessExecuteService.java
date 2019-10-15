@@ -1,5 +1,6 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.GenericHibernateDao;
 import de.terrestris.shoguncore.dao.WpsPluginDao;
 import de.terrestris.shoguncore.dao.WpsProcessExecuteDao;
 import de.terrestris.shoguncore.model.wps.WpsPlugin;
@@ -63,7 +64,13 @@ public class WpsProcessExecuteService<E extends WpsProcessExecute, D extends Wps
             return;
         }
 
-        WpsPluginDao<WpsPlugin> wpsPluginDao = wpsPluginService.getDao();
+        GenericHibernateDao dao = wpsPluginService.getDao();
+        WpsPluginDao<WpsPlugin> wpsPluginDao = null;
+        if (!(dao instanceof WpsPluginDao)) {
+            logger.error("WPSProcessExecute cannot be deleted, failed to get WpsPluginDao");
+            return;
+        }
+        wpsPluginDao = (WpsPluginDao<WpsPlugin>) dao;
 
         SimpleExpression eqProcess = Restrictions.eq("process", wpsProcessExecute);
         List<WpsPlugin> wpsPlugins = wpsPluginDao.findByCriteria(eqProcess);

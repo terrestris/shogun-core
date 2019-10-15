@@ -29,7 +29,7 @@ public class ModelDescriptionService {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger logger = getLogger(getClass());
+    protected static final Logger logger = getLogger(ModelDescriptionService.class);
     /**
      *
      */

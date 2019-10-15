@@ -525,7 +525,7 @@ public class GenericHibernateDaoTest {
 
         List<Application> queriedApps = r.getResultList();
 
-        assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+        assertEquals(Long.valueOf(nrOfMockApps), r.getTotalCount());
         assertEquals(nrOfMockApps - firstResult, queriedApps.size());
         assertTrue(mockApps.containsAll(queriedApps));
     }
@@ -546,7 +546,7 @@ public class GenericHibernateDaoTest {
 
         List<Application> queriedApps = r.getResultList();
 
-        assertEquals(new Long(nrOfMockApps), r.getTotalCount());
+        assertEquals(Long.valueOf(nrOfMockApps), r.getTotalCount());
         assertEquals(maxResults, queriedApps.size());
         assertTrue(mockApps.containsAll(queriedApps));
     }
@@ -574,8 +574,8 @@ public class GenericHibernateDaoTest {
 
         List<Application> descApps = descResults.getResultList();
 
-        assertEquals(new Long(nrOfMockApps), ascResults.getTotalCount());
-        assertEquals(new Long(nrOfMockApps), descResults.getTotalCount());
+        assertEquals(Long.valueOf(nrOfMockApps), ascResults.getTotalCount());
+        assertEquals(Long.valueOf(nrOfMockApps), descResults.getTotalCount());
         assertTrue(mockApps.containsAll(ascApps));
         assertTrue(mockApps.containsAll(descApps));
 
@@ -623,7 +623,7 @@ public class GenericHibernateDaoTest {
         int expectedResultSize = Math.min(maxResults, expectedTotalCount - firstResult);
 
         assertTrue(mockApps.containsAll(resultApps));
-        assertEquals(new Long(expectedTotalCount), pagingResult.getTotalCount());
+        assertEquals(Long.valueOf(expectedTotalCount), pagingResult.getTotalCount());
         assertEquals(expectedResultSize, resultApps.size());
 
         // check order (DESC)

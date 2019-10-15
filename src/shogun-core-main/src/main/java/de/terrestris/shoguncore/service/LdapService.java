@@ -6,8 +6,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,17 +53,15 @@ public class LdapService {
      */
     public List<String> getGroups(String username, String property) {
         final List<String> result = new ArrayList<>();
-        ldapTemplate.search(query().where("cn").is(username), new AttributesMapper<String>() {
-            public String mapFromAttributes(Attributes attrs) throws NamingException {
-                NamingEnumeration<?> ous = attrs.get(property).getAll();
-                // since we can generate multiple values here but may only return a single string, we ignore
-                // the ldapTemplate#search result and just put the values in our own list, returning an empty string
-                // which is effectively ignored
-                while (ous.hasMore()) {
-                    result.add((String) ous.next());
-                }
-                return "";
+        ldapTemplate.search(query().where("cn").is(username), (AttributesMapper<String>) attrs -> {
+            NamingEnumeration<?> ous = attrs.get(property).getAll();
+            // since we can generate multiple values here but may only return a single string, we ignore
+            // the ldapTemplate#search result and just put the values in our own list, returning an empty string
+            // which is effectively ignored
+            while (ous.hasMore()) {
+                result.add((String) ous.next());
             }
+            return "";
         });
         return result;
     }

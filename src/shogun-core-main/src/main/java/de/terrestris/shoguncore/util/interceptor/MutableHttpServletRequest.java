@@ -1,6 +1,7 @@
 package de.terrestris.shoguncore.util.interceptor;
 
 import de.terrestris.shoguncore.util.enumeration.OgcEnum;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -335,6 +336,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
     /**
      *
      */
+    @SuppressFBWarnings("DM_DEFAULT_ENCODING")
     @Override
     public BufferedReader getReader() throws IOException {
         return new BufferedReader(new InputStreamReader(getInputStream()));

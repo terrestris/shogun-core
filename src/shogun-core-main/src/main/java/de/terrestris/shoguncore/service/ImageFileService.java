@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -57,24 +58,21 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
      */
     public static byte[] scaleImage(byte[] imageBytes, String outputFormat,
                                     Integer targetSize) throws Exception {
-
-        InputStream is = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] imageInBytes = null;
+        byte[] imageInBytes;
         BufferedImage image = null;
         BufferedImage resizedImage = null;
 
-        try {
-            is = new ByteArrayInputStream(imageBytes);
+        try (
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            InputStream is = new ByteArrayInputStream(imageBytes);
+        ) {
             image = ImageIO.read(is);
             resizedImage = Scalr.resize(image, targetSize);
             ImageIO.write(resizedImage, outputFormat, baos);
             imageInBytes = baos.toByteArray();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new Exception("Error on resizing an image: " + e.getMessage());
         } finally {
-            IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(baos);
             if (image != null) {
                 image.flush();
             }
@@ -104,7 +102,6 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
     @Override
     @PreAuthorize("isAuthenticated()")
     public E uploadFile(MultipartFile file) throws Exception {
-
         if (file == null) {
             final String errMsg = "Upload failed. Image is null.";
             logger.error(errMsg);
