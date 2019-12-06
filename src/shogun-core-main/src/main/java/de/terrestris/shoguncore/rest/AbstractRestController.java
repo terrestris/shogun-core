@@ -144,7 +144,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
         String errorPrefix = "Error updating "
             + getEntityClass().getSimpleName() + " with ID " + id + ": ";
 
-        try(Reader reader = request.getReader()) {
+        try (Reader reader = request.getReader()) {
             // read and parse the json request body
 
             JsonNode jsonObject = objectMapper.readTree(reader);

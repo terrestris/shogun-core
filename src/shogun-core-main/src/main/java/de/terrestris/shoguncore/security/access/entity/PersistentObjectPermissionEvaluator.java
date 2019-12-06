@@ -82,9 +82,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * @param userPermissionsMap
      */
-    protected PermissionCollection extractUserPermissions(User user,
-                                                          Map<User, PermissionCollection> userPermissionsMap) {
-
+    protected PermissionCollection extractUserPermissions(User user, Map<User, PermissionCollection> userPermissionsMap) {
         PermissionCollection permissionCollection = userPermissionsMap.get(user);
 
         if (permissionCollection == null) {
@@ -104,7 +102,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
         for (Map.Entry<UserGroup, PermissionCollection> userGroupEntry: groupPermissionsMap.entrySet()) {
             UserGroup userGroup = userGroupEntry.getKey();
             if (userGroup.getMembers().contains(user)) {
-                Set<Permission> groupPermissions =userGroupEntry.getValue().getPermissions();
+                Set<Permission> groupPermissions = userGroupEntry.getValue().getPermissions();
                 aggregatedGroupPermissions.addAll(groupPermissions);
             }
         }
