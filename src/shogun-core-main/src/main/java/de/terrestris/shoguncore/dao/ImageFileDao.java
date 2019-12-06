@@ -1,9 +1,8 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.File;
 import de.terrestris.shoguncore.model.ImageFile;
+import org.springframework.stereotype.Repository;
 
 
 /**

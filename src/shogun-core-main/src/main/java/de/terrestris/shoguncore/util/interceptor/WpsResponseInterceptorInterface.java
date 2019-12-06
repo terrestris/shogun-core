@@ -1,16 +1,15 @@
 package de.terrestris.shoguncore.util.interceptor;
 
-import org.springframework.stereotype.Component;
-
 import de.terrestris.shoguncore.util.model.Response;
+import org.springframework.stereotype.Component;
 
 @Component
 public interface WpsResponseInterceptorInterface {
 
-    public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
+    Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
 
-    public Response interceptDescribeProcess(MutableHttpServletRequest request, Response response);
+    Response interceptDescribeProcess(MutableHttpServletRequest request, Response response);
 
-    public Response interceptExecute(MutableHttpServletRequest request, Response response);
+    Response interceptExecute(MutableHttpServletRequest request, Response response);
 
 }

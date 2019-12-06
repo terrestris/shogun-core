@@ -1,7 +1,9 @@
 package de.terrestris.shoguncore.rest;
 
-import java.util.Set;
-
+import de.terrestris.shoguncore.dao.UserDao;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.UserGroup;
+import de.terrestris.shoguncore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.terrestris.shoguncore.dao.UserDao;
-import de.terrestris.shoguncore.model.User;
-import de.terrestris.shoguncore.model.UserGroup;
-import de.terrestris.shoguncore.service.UserService;
+import java.util.Set;
 
 /**
  * @author Kai Volland
@@ -66,7 +65,7 @@ public class UserRestController<E extends User, D extends UserDao<E>, S extends 
             Set<UserGroup> userGroupsSet = this.service.getGroupsOfUser(userId);
             return new ResponseEntity<Set<UserGroup>>(userGroupsSet, HttpStatus.OK);
         } catch (Exception e) {
-            LOG.error("Error finding user with id " + userId + ": "
+            logger.error("Error finding user with id " + userId + ": "
                 + e.getMessage());
             return new ResponseEntity<Set<UserGroup>>(HttpStatus.NOT_FOUND);
         }

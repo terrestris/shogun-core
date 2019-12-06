@@ -27,7 +27,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
     /**
      * The LOGGER instance
      */
-    private final static Logger LOG = getLogger(ShogunCorePermissionEvaluator.class);
+    private static final Logger logger = getLogger(ShogunCorePermissionEvaluator.class);
 
     @Autowired
     private ApplicationContext appContext;
@@ -82,7 +82,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
             if (principalObject instanceof User) {
                 final User principal = (User) principalObject;
 
-                if (usePlainPrincipal == true) {
+                if (usePlainPrincipal) {
                     user = principal;
                 } else {
                     // get the "full" user from the database
@@ -97,7 +97,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
 
             String accountName = (user == null) ? "ANONYMOUS" : user.getAccountName();
 
-            LOG.trace("Evaluating whether user '" + accountName
+            logger.trace("Evaluating whether user '" + accountName
                 + "' has permission '" + permission + "' on '"
                 + simpleClassName + "' with ID " + objectId);
 
@@ -107,7 +107,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
             hasPermission = entityPermissionEvaluator.hasPermission(user, persistentObject, permission);
 
         } else {
-            LOG.error("Permission evaluation has been aborted.");
+            logger.error("Permission evaluation has been aborted.");
         }
 
         return hasPermission;
@@ -126,7 +126,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
         try {
             entityClass = Class.forName(targetType);
         } catch (ClassNotFoundException e) {
-            LOG.error("Could not create class for type: " + targetType + "(" + e.getMessage() + ")");
+            logger.error("Could not create class for type: " + targetType + "(" + e.getMessage() + ")");
             return false;
         }
 
@@ -141,7 +141,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
             if (dao.getEntityClass().equals(entityClass)) {
                 // we found a matching DAO
                 daoToUse = dao;
-                LOG.debug("Found an exactly matching DAO for type " + entityClass);
+                logger.debug("Found an exactly matching DAO for type " + entityClass);
                 break;
             }
         }
@@ -153,7 +153,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
                 if (dao.getEntityClass().isAssignableFrom(entityClass)) {
                     // we found a DAO that will work (e.g. PersonDao for User.class)
                     daoToUse = dao;
-                    LOG.debug("Found a matching DAO from the hierarchy of type " + entityClass);
+                    logger.debug("Found a matching DAO from the hierarchy of type " + entityClass);
                     break;
                 }
             }
@@ -161,7 +161,7 @@ public class ShogunCorePermissionEvaluator implements PermissionEvaluator {
 
         // LOG warning if we could NOT find a matching DAO
         if (daoToUse == null) {
-            LOG.warn("Could not find a DAO for type:" + entityClass);
+            logger.warn("Could not find a DAO for type:" + entityClass);
             return false;
         }
 

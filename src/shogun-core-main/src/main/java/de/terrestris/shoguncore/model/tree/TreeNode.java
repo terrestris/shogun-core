@@ -344,8 +344,9 @@ public class TreeNode extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof TreeNode))
+        if (!(obj instanceof TreeNode)) {
             return false;
+        }
         TreeNode other = (TreeNode) obj;
 
         return new EqualsBuilder().appendSuper(super.equals(other)).

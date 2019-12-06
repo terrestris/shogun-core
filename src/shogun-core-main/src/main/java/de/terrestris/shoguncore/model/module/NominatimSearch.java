@@ -3,20 +3,8 @@
  */
 package de.terrestris.shoguncore.model.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -24,8 +12,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A search module working with the OSM Nominatim Service.
@@ -41,72 +30,15 @@ public class NominatimSearch extends Module {
      *
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * A enum type for the allowed response format.
-     */
-    public static enum NominatimFormatType {
-        HTML("html"),
-        XML("xml"),
-        JSON("json"),
-        JSONV2("jsonv2");
-
-        private final String value;
-
-        /**
-         * Enum constructor
-         *
-         * @param value
-         */
-        private NominatimFormatType(String value) {
-            this.value = value;
-        }
-
-        /**
-         * Static method to get an enum based on a string value.
-         * This method is annotated with {@link JsonCreator},
-         * which allows the client to send case insensitive string
-         * values (like "jSon"), which will be converted to the
-         * correct enum value.
-         *
-         * @param inputValue
-         * @return
-         */
-        @JsonCreator
-        public static NominatimFormatType fromString(String inputValue) {
-            if (inputValue != null) {
-                for (NominatimFormatType type : NominatimFormatType.values()) {
-                    if (inputValue.equalsIgnoreCase(type.value)) {
-                        return type;
-                    }
-                }
-            }
-            return null;
-        }
-
-        /**
-         * This method is annotated with {@link JsonValue},
-         * so that jackson will serialize the enum value to
-         * the (lowercase) {@link #value}.
-         */
-        @Override
-        @JsonValue
-        public String toString() {
-            return value;
-        }
-    }
-
     /**
      * The response format.
      */
     @Enumerated(EnumType.STRING)
     private NominatimFormatType format;
-
     /**
      * Limits the response.
      */
     private Integer resultLimit;
-
     /**
      * A list of EPSG-Codes the should be available in the module.
      */
@@ -117,17 +49,14 @@ public class NominatimSearch extends Module {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @Fetch(FetchMode.JOIN)
     private List<Integer> viewboxlbrt = new ArrayList<Integer>();
-
     /**
      * Characters needed to send a request.
      */
     private Integer minSearchTextChars;
-
     /**
      * The delay between hitting a key and sending the request in ms.
      */
     private Integer typeDelay;
-
     /**
      * The template of the grouping Header.
      * See: http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.grid.feature.Grouping-cfg-groupHeaderTpl
@@ -225,7 +154,6 @@ public class NominatimSearch extends Module {
         this.groupHeaderTpl = groupHeaderTpl;
     }
 
-
     /**
      * @see java.lang.Object#hashCode()
      * <p>
@@ -256,8 +184,9 @@ public class NominatimSearch extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof NominatimSearch))
+        if (!(obj instanceof NominatimSearch)) {
             return false;
+        }
         NominatimSearch other = (NominatimSearch) obj;
 
         return new EqualsBuilder().
@@ -269,6 +198,60 @@ public class NominatimSearch extends Module {
             append(getTypeDelay(), other.getTypeDelay()).
             append(getGroupHeaderTpl(), other.getGroupHeaderTpl()).
             isEquals();
+    }
+
+    /**
+     * A enum type for the allowed response format.
+     */
+    public enum NominatimFormatType {
+        HTML("html"),
+        XML("xml"),
+        JSON("json"),
+        JSONV2("jsonv2");
+
+        private final String value;
+
+        /**
+         * Enum constructor
+         *
+         * @param value
+         */
+        NominatimFormatType(String value) {
+            this.value = value;
+        }
+
+        /**
+         * Static method to get an enum based on a string value.
+         * This method is annotated with {@link JsonCreator},
+         * which allows the client to send case insensitive string
+         * values (like "jSon"), which will be converted to the
+         * correct enum value.
+         *
+         * @param inputValue
+         * @return
+         */
+        @JsonCreator
+        public static NominatimFormatType fromString(String inputValue) {
+            if (inputValue != null) {
+                for (NominatimFormatType type : NominatimFormatType.values()) {
+                    if (inputValue.equalsIgnoreCase(type.value)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method is annotated with {@link JsonValue},
+         * so that jackson will serialize the enum value to
+         * the (lowercase) {@link #value}.
+         */
+        @Override
+        @JsonValue
+        public String toString() {
+            return value;
+        }
     }
 
 }

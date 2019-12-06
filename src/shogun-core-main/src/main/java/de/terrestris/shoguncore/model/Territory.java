@@ -1,17 +1,12 @@
 package de.terrestris.shoguncore.model;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.locationtech.jts.geom.MultiPolygon;
+
+import javax.persistence.*;
 
 
 /**
@@ -112,8 +107,9 @@ public class Territory extends PersistentObject {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Territory))
+        if (!(obj instanceof Territory)) {
             return false;
+        }
         Territory other = (Territory) obj;
 
         return new EqualsBuilder().

@@ -3,12 +3,12 @@
  */
 package de.terrestris.shoguncore.model.module;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The Image Module is the Ext JS representation of an HTML img element.
@@ -116,8 +116,9 @@ public class Image extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Image))
+        if (!(obj instanceof Image)) {
             return false;
+        }
         Image other = (Image) obj;
 
         return new EqualsBuilder().

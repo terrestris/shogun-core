@@ -1,12 +1,12 @@
 package de.terrestris.shoguncore.service;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-
+import de.terrestris.shoguncore.dao.PasswordResetTokenDao;
+import de.terrestris.shoguncore.dao.UserDao;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.token.PasswordResetToken;
+import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
+import de.terrestris.shoguncore.util.mail.MailPublisher;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,12 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import de.terrestris.shoguncore.dao.PasswordResetTokenDao;
-import de.terrestris.shoguncore.dao.UserDao;
-import de.terrestris.shoguncore.model.User;
-import de.terrestris.shoguncore.model.token.PasswordResetToken;
-import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
-import de.terrestris.shoguncore.util.mail.MailPublisher;
+import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author Daniel Koch
@@ -30,6 +29,38 @@ import de.terrestris.shoguncore.util.mail.MailPublisher;
 @Service("passwordResetTokenService")
 public class PasswordResetTokenService<E extends PasswordResetToken, D extends PasswordResetTokenDao<E>>
     extends AbstractUserTokenService<E, D> {
+
+    /**
+     *
+     */
+    @Autowired
+    private UserService<User, UserDao<User>> userService;
+    /**
+     *
+     */
+    @Autowired
+    private UserDao<User> userDao;
+    /**
+     *
+     */
+    @Autowired
+    private MailPublisher mailPublisher;
+    /**
+     * The autowired PasswordEncoder
+     */
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    /**
+     *
+     */
+    @Autowired
+    @Qualifier("resetPasswordMailMessageTemplate")
+    private SimpleMailMessage resetPasswordMailMessageTemplate;
+    /**
+     *
+     */
+    @Autowired
+    private String changePasswordPath;
 
     /**
      * Default constructor, which calls the type-constructor
@@ -46,43 +77,6 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
     protected PasswordResetTokenService(Class<E> entityClass) {
         super(entityClass);
     }
-
-    /**
-     *
-     */
-    @Autowired
-    private UserService<User, UserDao<User>> userService;
-
-    /**
-     *
-     */
-    @Autowired
-    private UserDao<User> userDao;
-
-    /**
-     *
-     */
-    @Autowired
-    private MailPublisher mailPublisher;
-
-    /**
-     * The autowired PasswordEncoder
-     */
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    /**
-     *
-     */
-    @Autowired
-    @Qualifier("resetPasswordMailMessageTemplate")
-    private SimpleMailMessage resetPasswordMailMessageTemplate;
-
-    /**
-     *
-     */
-    @Autowired
-    private String changePasswordPath;
 
     /**
      * We have to use {@link Qualifier} to define the correct dao here.
@@ -145,11 +139,17 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
         SimpleMailMessage resetPwdMsg = new SimpleMailMessage(
             resetPasswordMailMessageTemplate);
 
+        String resetPwdMsgTxt = resetPwdMsg.getText();
+        if (StringUtils.isEmpty(resetPwdMsgTxt)) {
+            logger.warn("Reset password - message is null, use empty text");
+            resetPwdMsgTxt = StringUtils.EMPTY;
+        }
+
         // prepare a personalized mail with the given token
         resetPwdMsg.setTo(email);
         resetPwdMsg.setText(
             String.format(
-                resetPwdMsg.getText(),
+                resetPwdMsgTxt,
                 user.getFirstName(),
                 user.getLastName(),
                 UriUtils.decode(resetPasswordURI.toString(), "UTF-8")
@@ -186,8 +186,8 @@ public class PasswordResetTokenService<E extends PasswordResetToken, D extends P
         // delete the token
         dao.delete((E) passwordResetToken);
 
-        LOG.trace("Deleted the token.");
-        LOG.debug("Successfully updated the password.");
+        logger.trace("Deleted the token.");
+        logger.debug("Successfully updated the password.");
 
     }
 

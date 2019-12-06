@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.layer.util.TileGrid;
+import org.springframework.stereotype.Repository;
 
 @Repository("tileGridDao")
 public class TileGridDao<E extends TileGrid> extends

@@ -3,8 +3,10 @@
  */
 package de.terrestris.shoguncore.web;
 
-import java.util.List;
-
+import de.terrestris.shoguncore.dao.PluginDao;
+import de.terrestris.shoguncore.model.Plugin;
+import de.terrestris.shoguncore.service.PluginService;
+import de.terrestris.shoguncore.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -14,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.terrestris.shoguncore.dao.PluginDao;
-import de.terrestris.shoguncore.model.Plugin;
-import de.terrestris.shoguncore.service.PluginService;
-import de.terrestris.shoguncore.util.data.ResultSet;
+import java.util.List;
 
 /**
  * @author Nils Bühner
@@ -69,7 +68,7 @@ public class PluginController<E extends Plugin, D extends PluginDao<E>, S extend
             result = service.preCheckDelete(pluginId);
         } catch (Exception e) {
             final String msg = e.getMessage();
-            LOG.error("Could not pre-check plugin deletion: " + msg);
+            logger.error("Could not pre-check plugin deletion: " + msg);
             return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);

@@ -1,16 +1,15 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import de.terrestris.shoguncore.dao.TreeNodeDao;
 import de.terrestris.shoguncore.helper.IdHelper;
 import de.terrestris.shoguncore.model.tree.TreeFolder;
 import de.terrestris.shoguncore.model.tree.TreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class for the {@link TreeNode} model.
@@ -66,7 +65,7 @@ public class TreeNodeService<E extends TreeNode, D extends TreeNodeDao<E>> exten
                 // recursive call for all children
                 clonedChildren.add(cloneAndPersistTreeNode(childNode));
             }
-            ((TreeFolder) node).setChildren((List<TreeNode>) children);
+            ((TreeFolder) node).setChildren((List<TreeNode>) clonedChildren);
         }
 
         // detach the clone from the hibernate session to persist it as a new instance in the next step

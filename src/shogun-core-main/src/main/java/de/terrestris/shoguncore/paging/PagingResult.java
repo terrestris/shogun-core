@@ -1,8 +1,8 @@
 package de.terrestris.shoguncore.paging;
 
-import java.util.List;
-
 import de.terrestris.shoguncore.model.PersistentObject;
+
+import java.util.List;
 
 /**
  * The Result of a paging request. Contains a list with returned objects and the

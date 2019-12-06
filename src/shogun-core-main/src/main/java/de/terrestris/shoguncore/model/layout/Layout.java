@@ -3,19 +3,9 @@
  */
 package de.terrestris.shoguncore.model.layout;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.PersistentObject;
+import de.terrestris.shoguncore.model.module.CompositeModule;
+import de.terrestris.shoguncore.model.module.Module;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -23,9 +13,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.model.PersistentObject;
-import de.terrestris.shoguncore.model.module.CompositeModule;
-import de.terrestris.shoguncore.model.module.Module;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class represents the layout of a {@link CompositeModule} in a GUI.
@@ -153,8 +143,9 @@ public class Layout extends PersistentObject {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Layout))
+        if (!(obj instanceof Layout)) {
             return false;
+        }
         Layout other = (Layout) obj;
 
         return new EqualsBuilder().

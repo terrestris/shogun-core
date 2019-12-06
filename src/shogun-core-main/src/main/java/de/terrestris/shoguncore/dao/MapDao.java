@@ -1,14 +1,13 @@
 package de.terrestris.shoguncore.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import de.terrestris.shoguncore.model.layer.Layer;
+import de.terrestris.shoguncore.model.module.Map;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Repository;
 
-import de.terrestris.shoguncore.model.layer.Layer;
-import de.terrestris.shoguncore.model.module.Map;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository("mapDao")
 public class MapDao<E extends Map> extends

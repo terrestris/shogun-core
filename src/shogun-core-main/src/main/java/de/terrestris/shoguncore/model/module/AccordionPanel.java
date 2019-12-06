@@ -3,12 +3,12 @@
  */
 package de.terrestris.shoguncore.model.module;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This class represents the an Panel with an accordion layout.
@@ -76,8 +76,9 @@ public class AccordionPanel extends CompositeModule {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof AccordionPanel))
+        if (!(obj instanceof AccordionPanel)) {
             return false;
+        }
         AccordionPanel other = (AccordionPanel) obj;
 
         return new EqualsBuilder().

@@ -1,16 +1,15 @@
 package de.terrestris.shoguncore.util.interceptor;
 
-import org.springframework.stereotype.Component;
-
 import de.terrestris.shoguncore.util.model.Response;
+import org.springframework.stereotype.Component;
 
 @Component
 public interface WcsResponseInterceptorInterface {
 
-    public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
+    Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
 
-    public Response interceptDescribeCoverage(MutableHttpServletRequest request, Response response);
+    Response interceptDescribeCoverage(MutableHttpServletRequest request, Response response);
 
-    public Response interceptGetCoverage(MutableHttpServletRequest request, Response response);
+    Response interceptGetCoverage(MutableHttpServletRequest request, Response response);
 
 }

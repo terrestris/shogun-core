@@ -28,17 +28,6 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
     protected S service;
 
     /**
-     * We have to use {@link Qualifier} to define the correct service here.
-     * Otherwise, spring can not decide which service has to be autowired here
-     * as there are multiple candidates.
-     */
-    @Autowired
-    @Qualifier("mapService")
-    public void setService(S service) {
-        this.service = service;
-    }
-
-    /**
      * Default constructor, which calls the type-constructor
      */
     @SuppressWarnings("unchecked")
@@ -55,10 +44,21 @@ public class MapController<E extends Map, D extends MapDao<E>, S extends MapServ
     }
 
     /**
+     * We have to use {@link Qualifier} to define the correct service here.
+     * Otherwise, spring can not decide which service has to be autowired here
+     * as there are multiple candidates.
+     */
+    @Autowired
+    @Qualifier("mapService")
+    public void setService(S service) {
+        this.service = service;
+    }
+
+    /**
      * Set layers for map
      *
      * @param mapModuleId The map module id
-     * @param layerIds The list of layer ids
+     * @param layerIds    The list of layer ids
      * @return
      */
     @RequestMapping(value = "/setLayersForMap.action", method = RequestMethod.POST)

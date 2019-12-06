@@ -1,12 +1,11 @@
 package de.terrestris.shoguncore.web;
 
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.terrestris.shoguncore.dao.GenericHibernateDao;
 import de.terrestris.shoguncore.model.PersistentObject;
 import de.terrestris.shoguncore.service.AbstractCrudService;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -21,13 +20,17 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected static final Logger logger = getLogger(AbstractWebController.class);
 
     /**
      * Provides the concrete entity class of the controller.
      * Based on the pattern propsed here: http://stackoverflow.com/a/3403987
      */
     private final Class<E> entityClass;
+    /**
+     * The {@link AbstractCrudService} for this controller.
+     */
+    protected S service;
 
     /**
      * Constructor that sets the concrete entity class for the controller.
@@ -38,9 +41,11 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
     }
 
     /**
-     * The {@link AbstractCrudService} for this controller.
+     * @return the service
      */
-    protected S service;
+    public S getService() {
+        return service;
+    }
 
     /**
      * Subclasses must implement this class and annotate it with
@@ -49,13 +54,6 @@ public abstract class AbstractWebController<E extends PersistentObject, D extend
      * @param service the service to set
      */
     public abstract void setService(S service);
-
-    /**
-     * @return the service
-     */
-    public S getService() {
-        return service;
-    }
 
     /**
      * @return the entityClass

@@ -141,6 +141,8 @@ public class ShogunCoreAuthenticationProvider implements AuthenticationProvider 
         // user roles
         if (user != null) {
             allUserRoles.addAll(user.getRoles());
+        } else {
+            return allUserRoles;
         }
 
         Set<UserGroup> userGroups = user.getUserGroups();

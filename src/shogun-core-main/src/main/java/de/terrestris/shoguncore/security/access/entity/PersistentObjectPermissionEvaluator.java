@@ -22,7 +22,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * The LOGGER instance
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected static final Logger logger = getLogger(PersistentObjectPermissionEvaluator.class);
 
     /**
      * Represents the class of the entity
@@ -54,7 +54,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
         // if the user has the ADMIN permission
         if (userPermissions.contains(permission)
             || userPermissions.contains(Permission.ADMIN)) {
-            LOG.trace("Granting " + permission
+            logger.trace("Granting " + permission
                 + " access by user permissions");
             return true;
         }
@@ -69,12 +69,12 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
         // if the group has the ADMIN permission
         if (groupPermissions.contains(permission)
             || groupPermissions.contains(Permission.ADMIN)) {
-            LOG.trace("Granting " + permission
+            logger.trace("Granting " + permission
                 + " access by group permissions");
             return true;
         }
 
-        LOG.trace("Restricting " + permission + " access on secured object '"
+        logger.trace("Restricting " + permission + " access on secured object '"
             + simpleClassName + "' with ID " + entity.getId());
         return false;
     }
@@ -82,9 +82,7 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * @param userPermissionsMap
      */
-    protected PermissionCollection extractUserPermissions(User user,
-                                                          Map<User, PermissionCollection> userPermissionsMap) {
-
+    protected PermissionCollection extractUserPermissions(User user, Map<User, PermissionCollection> userPermissionsMap) {
         PermissionCollection permissionCollection = userPermissionsMap.get(user);
 
         if (permissionCollection == null) {
@@ -98,22 +96,16 @@ public class PersistentObjectPermissionEvaluator<E extends PersistentObject> {
     /**
      * @param groupPermissionsMap
      */
-    protected PermissionCollection extractGroupPermissions(User user,
-                                                           Map<UserGroup, PermissionCollection> groupPermissionsMap) {
+    protected PermissionCollection extractGroupPermissions(User user, Map<UserGroup, PermissionCollection> groupPermissionsMap) {
+        Set<Permission> aggregatedGroupPermissions = new HashSet<>();
 
-        Set<Permission> aggregatedGroupPermissions = new HashSet<Permission>();
-
-        Set<UserGroup> userGroupsWithPermissions = groupPermissionsMap.keySet();
-
-        for (UserGroup userGroup : userGroupsWithPermissions) {
-
+        for (Map.Entry<UserGroup, PermissionCollection> userGroupEntry: groupPermissionsMap.entrySet()) {
+            UserGroup userGroup = userGroupEntry.getKey();
             if (userGroup.getMembers().contains(user)) {
-                Set<Permission> groupPermissions = groupPermissionsMap.get(userGroup).getPermissions();
+                Set<Permission> groupPermissions = userGroupEntry.getValue().getPermissions();
                 aggregatedGroupPermissions.addAll(groupPermissions);
             }
-
         }
-
         return new PermissionCollection(aggregatedGroupPermissions);
     }
 

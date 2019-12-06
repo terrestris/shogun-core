@@ -1,13 +1,12 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.Set;
-
+import de.terrestris.shoguncore.web.EndpointDocController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import de.terrestris.shoguncore.web.EndpointDocController;
+import java.util.Set;
 
 /**
  * Service class for the {@link EndpointDocController}.
@@ -26,12 +25,7 @@ public class EndpointDocService {
      */
     @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName())")
     public Set<RequestMappingInfo> getEndpoints(RequestMappingHandlerMapping requestMappingHandlerMapping) {
-
-        if (requestMappingHandlerMapping.getHandlerMethods() != null) {
-            return requestMappingHandlerMapping.getHandlerMethods().keySet();
-        }
-
-        return null;
+        return requestMappingHandlerMapping.getHandlerMethods().keySet();
     }
 
 }

@@ -1,24 +1,17 @@
 package de.terrestris.shoguncore.model.layer;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import de.terrestris.shoguncore.model.PersistentObject;
 import de.terrestris.shoguncore.model.layer.appearance.LayerAppearance;
 import de.terrestris.shoguncore.model.layer.source.LayerDataSource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Representation of a layer which consists a corresponding data source
@@ -182,8 +175,9 @@ public class Layer extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Layer))
+        if (!(obj instanceof Layer)) {
             return false;
+        }
         Layer other = (Layer) obj;
 
         return new EqualsBuilder().

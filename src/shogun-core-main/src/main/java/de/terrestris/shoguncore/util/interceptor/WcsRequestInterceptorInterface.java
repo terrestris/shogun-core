@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 @Component
 public interface WcsRequestInterceptorInterface {
 
-    public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request);
 
-    public MutableHttpServletRequest interceptDescribeCoverage(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptDescribeCoverage(MutableHttpServletRequest request);
 
-    public MutableHttpServletRequest interceptGetCoverage(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptGetCoverage(MutableHttpServletRequest request);
 
 }

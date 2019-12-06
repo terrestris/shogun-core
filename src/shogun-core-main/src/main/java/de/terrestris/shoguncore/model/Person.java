@@ -1,14 +1,5 @@
 package de.terrestris.shoguncore.model;
 
-import java.util.Locale;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,6 +7,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import java.util.Locale;
 
 /**
  * @author Nils Bühner
@@ -130,8 +124,9 @@ public class Person extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Person))
+        if (!(obj instanceof Person)) {
             return false;
+        }
         Person other = (Person) obj;
 
         return new EqualsBuilder().

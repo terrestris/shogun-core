@@ -1,13 +1,12 @@
 package de.terrestris.shoguncore.rest;
 
+import de.terrestris.shoguncore.dao.MapConfigDao;
+import de.terrestris.shoguncore.model.map.MapConfig;
+import de.terrestris.shoguncore.service.MapConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import de.terrestris.shoguncore.dao.MapConfigDao;
-import de.terrestris.shoguncore.model.map.MapConfig;
-import de.terrestris.shoguncore.service.MapConfigService;
 
 /**
  * @author Kai Volland

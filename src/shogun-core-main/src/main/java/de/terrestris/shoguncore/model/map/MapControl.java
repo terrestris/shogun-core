@@ -1,18 +1,7 @@
 package de.terrestris.shoguncore.model.map;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.converter.PropertyValueConverter;
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -20,8 +9,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import de.terrestris.shoguncore.converter.PropertyValueConverter;
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents an
@@ -78,9 +68,9 @@ public class MapControl extends PersistentObject {
         super();
     }
 
-    public MapControl(String name_) {
+    public MapControl(String name) {
         super();
-        this.mapControlName = name_;
+        this.mapControlName = name;
     }
 
     /**
@@ -139,8 +129,9 @@ public class MapControl extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof MapControl))
+        if (!(obj instanceof MapControl)) {
             return false;
+        }
         MapControl other = (MapControl) obj;
 
         return new EqualsBuilder().

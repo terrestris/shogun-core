@@ -18,7 +18,7 @@ public enum Permission {
      *
      * @param value
      */
-    private Permission(String permission) {
+    Permission(String permission) {
         this.permission = permission;
     }
 

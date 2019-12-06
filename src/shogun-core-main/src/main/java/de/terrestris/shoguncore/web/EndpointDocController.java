@@ -1,7 +1,6 @@
 package de.terrestris.shoguncore.web;
 
-import java.util.Set;
-
+import de.terrestris.shoguncore.service.EndpointDocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import de.terrestris.shoguncore.service.EndpointDocService;
+import java.util.Set;
 
 /**
  * Web-controller for endpoint documentation.

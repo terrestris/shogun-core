@@ -1,13 +1,6 @@
 package de.terrestris.shoguncore.model.token;
 
-import java.util.UUID;
-
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -16,7 +9,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Abstract base class for all tokens. A UUID token will be generated on
@@ -123,8 +117,9 @@ public abstract class Token extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Token))
+        if (!(obj instanceof Token)) {
             return false;
+        }
         Token other = (Token) obj;
 
         return new EqualsBuilder().

@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.converter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.terrestris.shoguncore.dao.WpsProcessExecuteDao;
 import de.terrestris.shoguncore.model.wps.WpsProcessExecute;
 import de.terrestris.shoguncore.service.WpsProcessExecuteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @param <E>

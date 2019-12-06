@@ -1,8 +1,8 @@
 package de.terrestris.shoguncore.importer.communication;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonRootName;
+
+import java.util.List;
 
 /**
  * @author Daniel Koch

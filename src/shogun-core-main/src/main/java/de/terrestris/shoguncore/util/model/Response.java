@@ -1,8 +1,11 @@
 package de.terrestris.shoguncore.util.model;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+
+import java.util.Arrays;
 
 public class Response {
 
@@ -20,6 +23,24 @@ public class Response {
      *
      */
     private byte[] body;
+
+    /**
+     *
+     */
+    public Response() {
+
+    }
+
+    /**
+     * @param statusCode
+     * @param headers
+     * @param body
+     */
+    public Response(HttpStatus statusCode, HttpHeaders headers, byte[] body) {
+        this.statusCode = statusCode;
+        this.headers = headers;
+        this.body = body != null ? Arrays.copyOf(body, body.length) : null;
+    }
 
     /**
      * @return the statusCode
@@ -52,33 +73,23 @@ public class Response {
     /**
      * @return the body
      */
+    @SuppressFBWarnings("PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     public byte[] getBody() {
-        return body;
+        if (body == null) {
+            return null;
+        }
+        return Arrays.copyOf(body, body.length);
     }
 
     /**
      * @param body the body to set
      */
     public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    /**
-     *
-     */
-    public Response() {
-
-    }
-
-    /**
-     * @param statusCode
-     * @param headers
-     * @param body
-     */
-    public Response(HttpStatus statusCode, HttpHeaders headers, byte[] body) {
-        this.statusCode = statusCode;
-        this.headers = headers;
-        this.body = body;
+        if (body == null) {
+            this.body = null;
+            return;
+        }
+        this.body = Arrays.copyOf(body, body.length);
     }
 
     /**

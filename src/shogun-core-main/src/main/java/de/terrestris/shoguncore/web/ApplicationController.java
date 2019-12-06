@@ -1,7 +1,8 @@
 package de.terrestris.shoguncore.web;
 
-import java.util.List;
-
+import de.terrestris.shoguncore.dao.ApplicationDao;
+import de.terrestris.shoguncore.model.Application;
+import de.terrestris.shoguncore.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.terrestris.shoguncore.dao.ApplicationDao;
-import de.terrestris.shoguncore.model.Application;
-import de.terrestris.shoguncore.service.ApplicationService;
+import java.util.List;
 
 /**
  * @author Nils Bühner
@@ -52,7 +51,7 @@ public class ApplicationController<E extends Application, D extends ApplicationD
     @RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
     public @ResponseBody
     List<E> findAllApplications() {
-        LOG.info("Trying to find all Applications.");
+        logger.info("Trying to find all Applications.");
 
         return service.findAll();
     }

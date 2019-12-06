@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.Territory;
+import org.springframework.stereotype.Repository;
 
 @Repository("territoryDao")
 public class TerritoryDao<E extends Territory> extends

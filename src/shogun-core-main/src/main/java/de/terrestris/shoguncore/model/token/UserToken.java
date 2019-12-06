@@ -108,8 +108,9 @@ public abstract class UserToken extends Token {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof UserToken))
+        if (!(obj instanceof UserToken)) {
             return false;
+        }
         UserToken other = (UserToken) obj;
 
         return new EqualsBuilder().

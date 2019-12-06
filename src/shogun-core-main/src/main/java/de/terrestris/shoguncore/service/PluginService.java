@@ -1,8 +1,9 @@
 package de.terrestris.shoguncore.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.terrestris.shoguncore.dao.ApplicationDao;
+import de.terrestris.shoguncore.dao.PluginDao;
+import de.terrestris.shoguncore.model.Application;
+import de.terrestris.shoguncore.model.Plugin;
 import org.h2.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -13,10 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.terrestris.shoguncore.dao.ApplicationDao;
-import de.terrestris.shoguncore.dao.PluginDao;
-import de.terrestris.shoguncore.model.Application;
-import de.terrestris.shoguncore.model.Plugin;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class for the {@link Plugin} model.
@@ -125,7 +124,7 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
     @PreAuthorize("hasRole(@configHolder.getSuperAdminRoleName()) or hasPermission(#plugin, 'DELETE')")
     public void delete(E plugin) {
         if (applicationService == null) {
-            LOG.error("Plugin cannot be deleted, failed to autowire application service");
+            logger.error("Plugin cannot be deleted, failed to autowire application service");
             return;
         }
 
@@ -138,13 +137,13 @@ public class PluginService<E extends Plugin, D extends PluginDao<E>> extends
                     "Remove plugin (id=%s) from application (id=%s)",
                     pluginId, app.getId()
                 );
-                LOG.debug(msg);
+                logger.debug(msg);
                 plugins.remove(plugin);
                 // TODO will this use the the PreAuthorize annotations of AbstractCrudService wrt WRITE on the app?
                 applicationService.saveOrUpdate(app);
             }
         }
-        LOG.debug(String.format("Delete plugin (id=%s)", pluginId));
+        logger.debug(String.format("Delete plugin (id=%s)", pluginId));
         // call overridden parent to actually delete the entity itself
         super.delete(plugin);
     }

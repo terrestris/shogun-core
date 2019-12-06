@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.ApplicationDao;
+import de.terrestris.shoguncore.model.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import de.terrestris.shoguncore.dao.ApplicationDao;
-import de.terrestris.shoguncore.model.Application;
 
 /**
  * Service class for the {@link Application} model.

@@ -3,8 +3,11 @@
  */
 package de.terrestris.shoguncore.web;
 
-import java.util.List;
-
+import de.terrestris.shoguncore.dao.WpsProcessExecuteDao;
+import de.terrestris.shoguncore.model.wps.WpsPlugin;
+import de.terrestris.shoguncore.model.wps.WpsProcessExecute;
+import de.terrestris.shoguncore.service.WpsProcessExecuteService;
+import de.terrestris.shoguncore.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -14,11 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.terrestris.shoguncore.dao.WpsProcessExecuteDao;
-import de.terrestris.shoguncore.model.wps.WpsPlugin;
-import de.terrestris.shoguncore.model.wps.WpsProcessExecute;
-import de.terrestris.shoguncore.service.WpsProcessExecuteService;
-import de.terrestris.shoguncore.util.data.ResultSet;
+import java.util.List;
 
 /**
  * @author Nils Bühner
@@ -71,7 +70,7 @@ public class WpsProcessExecuteController<E extends WpsProcessExecute, D extends 
             result = service.preCheckDelete(wpsProcessId);
         } catch (Exception e) {
             final String msg = e.getMessage();
-            LOG.error("Could not pre-check WpsProcessExecute deletion: " + msg);
+            logger.error("Could not pre-check WpsProcessExecute deletion: " + msg);
             return new ResponseEntity<>(ResultSet.error(msg), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(ResultSet.success(result), HttpStatus.OK);

@@ -237,8 +237,9 @@ public class Application extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Application))
+        if (!(obj instanceof Application)) {
             return false;
+        }
         Application other = (Application) obj;
 
         return new EqualsBuilder().

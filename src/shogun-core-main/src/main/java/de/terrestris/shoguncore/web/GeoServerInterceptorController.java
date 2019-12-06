@@ -2,7 +2,9 @@ package de.terrestris.shoguncore.web;
 
 import de.terrestris.shoguncore.service.GeoServerInterceptorService;
 import de.terrestris.shoguncore.util.data.ResultSet;
+import de.terrestris.shoguncore.util.interceptor.InterceptorException;
 import de.terrestris.shoguncore.util.model.Response;
+import org.apache.http.HttpException;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,23 +36,21 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class GeoServerInterceptorController<S extends GeoServerInterceptorService> {
 
     /**
+     *
+     */
+    public static final String ERROR_MESSAGE = "Error while requesting a " +
+        "GeoServer resource: ";
+    /**
      * The Logger.
      */
     private static final Logger LOG = getLogger(GeoServerInterceptorController.class);
-
     /**
      *
      */
     protected S service;
 
-    /**
-     *
-     */
-    public static final String ERROR_MESSAGE = "Error while requesting a " +
-        "GeoServer resource: ";
-
     @GetMapping(value = {"/wmts.action/{service}/**"})
-    public ResponseEntity<?> interceptWmtsRequest(HttpServletRequest request, @PathVariable(value="service") String service) {
+    public ResponseEntity<?> interceptWmtsRequest(HttpServletRequest request, @PathVariable(value = "service") String service) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
         Response httpResponse;
@@ -59,7 +62,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
             responseHeaders = httpResponse.getHeaders();
 
             return new ResponseEntity<>(responseBody, responseHeaders, responseStatus);
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException | InterceptorException | HttpException | URISyntaxException e) {
             LOG.error(ERROR_MESSAGE + e.getMessage());
             LOG.trace("Stack trace:", e);
 
@@ -76,7 +79,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
      */
     @RequestMapping(value = {"/geoserver.action", "/geoserver.action/{endpoint}"}, method = {
         RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<?> interceptGeoServerRequest( HttpServletRequest request, @PathVariable(value="endpoint", required = false) Optional<String> endpoint ) {
+    public ResponseEntity<?> interceptGeoServerRequest(HttpServletRequest request, @PathVariable(value = "endpoint", required = false) Optional<String> endpoint) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
         byte[] responseBody;
@@ -96,7 +99,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
             return new ResponseEntity<>(responseBody,
                 responseHeaders, responseStatus);
 
-        } catch (Exception e) {
+        } catch (NullPointerException | IOException | InterceptorException | HttpException | URISyntaxException e) {
             LOG.error(ERROR_MESSAGE + e.getMessage());
 
             responseHeaders.setContentType(MediaType.APPLICATION_JSON);

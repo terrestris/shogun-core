@@ -1,13 +1,12 @@
 package de.terrestris.shoguncore.rest;
 
+import de.terrestris.shoguncore.dao.ApplicationDao;
+import de.terrestris.shoguncore.model.Application;
+import de.terrestris.shoguncore.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import de.terrestris.shoguncore.dao.ApplicationDao;
-import de.terrestris.shoguncore.model.Application;
-import de.terrestris.shoguncore.service.ApplicationService;
 
 /**
  * @author Kai Volland

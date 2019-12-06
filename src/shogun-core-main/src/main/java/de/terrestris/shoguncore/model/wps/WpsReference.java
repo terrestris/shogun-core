@@ -1,10 +1,5 @@
 package de.terrestris.shoguncore.model.wps;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,6 +8,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  *
@@ -147,8 +147,9 @@ public class WpsReference extends WpsParameter {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WpsReference))
+        if (!(obj instanceof WpsReference)) {
             return false;
+        }
         WpsReference other = (WpsReference) obj;
 
         return new EqualsBuilder()

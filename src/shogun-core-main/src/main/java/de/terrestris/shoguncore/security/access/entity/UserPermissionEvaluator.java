@@ -36,7 +36,7 @@ public class UserPermissionEvaluator<E extends User> extends
         // always grant READ access to own user object (of the logged in user)
         if (user != null && user.equals(entity)
             && permission.equals(Permission.READ)) {
-            LOG.trace("Granting READ access on own user object");
+            logger.trace("Granting READ access on own user object");
             return true;
         }
 

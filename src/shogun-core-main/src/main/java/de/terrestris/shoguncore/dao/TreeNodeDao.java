@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.tree.TreeNode;
+import org.springframework.stereotype.Repository;
 
 @Repository("treeNodeDao")
 public class TreeNodeDao<E extends TreeNode> extends

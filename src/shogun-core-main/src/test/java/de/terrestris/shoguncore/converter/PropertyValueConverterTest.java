@@ -2,7 +2,7 @@ package de.terrestris.shoguncore.converter;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Bühner
@@ -51,7 +51,6 @@ public class PropertyValueConverterTest {
      */
     @Test
     public void convertToEntityAttribute_convertsToDouble() {
-
         String testValue = "17.42";
         String negativeTestValue = "-17.42";
 
@@ -59,10 +58,11 @@ public class PropertyValueConverterTest {
         Object convertedNegativeValue = converter.convertToEntityAttribute(negativeTestValue);
 
         assertTrue(convertedValue instanceof Double);
-        assertTrue(((Double) convertedValue) == 17.42);
-
+        double val = Double.valueOf((Double) convertedValue);
+        assertTrue(Math.abs(17.42 - val) <= 1E-8);
         assertTrue(convertedNegativeValue instanceof Double);
-        assertTrue(((Double) convertedNegativeValue) == -17.42);
+        val = Double.valueOf((Double) convertedNegativeValue);
+        assertTrue(Math.abs(17.42 + val) <= 1E-8);
     }
 
     /**

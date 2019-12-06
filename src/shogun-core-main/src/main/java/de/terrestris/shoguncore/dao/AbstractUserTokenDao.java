@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.token.UserToken;
+import org.springframework.stereotype.Repository;
 
 /**
  * As the {@link UserToken} class is abstract, this class will also be abstract.

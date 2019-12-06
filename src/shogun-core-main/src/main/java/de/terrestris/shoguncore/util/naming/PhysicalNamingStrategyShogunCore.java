@@ -1,6 +1,7 @@
 package de.terrestris.shoguncore.util.naming;
 
 import de.terrestris.shoguncore.util.dialect.ShogunCoreOracleDialect;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;
@@ -17,12 +18,9 @@ import java.io.Serializable;
  */
 public class PhysicalNamingStrategyShogunCore implements PhysicalNamingStrategy, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     protected static final int LENGTH_LIMIT_ORACLE = 30;
-
     protected static final int LENGTH_LIMIT_POSTGRESQL = 63;
-
+    private static final long serialVersionUID = 1L;
     @Autowired(required = false)
     @Qualifier("tablePrefix")
     private String tablePrefix;
@@ -69,6 +67,7 @@ public class PhysicalNamingStrategyShogunCore implements PhysicalNamingStrategy,
      *                   null
      * @return
      */
+    @SuppressFBWarnings("DM_CONVERT_CASE")
     protected Identifier convertToLimitedLowerCase(JdbcEnvironment context, Identifier identifier, String prefix) {
         String identifierText = identifier.getText();
 

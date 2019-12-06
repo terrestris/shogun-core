@@ -29,28 +29,26 @@ public class ModelDescriptionService {
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = getLogger(getClass());
-
-    @Resource
-    @Qualifier("describeModelSearchPackages")
-    private List<String> describeModelSearchPackages;
-
+    protected static final Logger logger = getLogger(ModelDescriptionService.class);
     /**
      *
      */
     @Autowired
     protected ObjectMapper objectMapper;
+    @Resource
+    @Qualifier("describeModelSearchPackages")
+    private List<String> describeModelSearchPackages;
 
     public JsonSchema getJsonSchema(String className) throws IOException {
 
         Class<?> foundClass = null;
         for (String searchPackage : describeModelSearchPackages) {
-            LOG.debug(String.format("Search className %s in package %s.", className, searchPackage));
+            logger.debug(String.format("Search className %s in package %s.", className, searchPackage));
             try {
                 boolean wasNull = foundClass == null;
                 foundClass = Class.forName(searchPackage + "." + className);
                 if (!wasNull) {
-                    LOG.error(String.format("Modelname %s exists in multiple packages! Last one will win.", className));
+                    logger.error(String.format("Modelname %s exists in multiple packages! Last one will win.", className));
                 }
             } catch (ClassNotFoundException e) {
                 //not in this package, try another
@@ -58,7 +56,7 @@ public class ModelDescriptionService {
         }
 
         if (foundClass == null) {
-            LOG.warn(String.format("No class found for describing modelname %s", className));
+            logger.warn(String.format("No class found for describing modelname %s", className));
             return null;
         }
 

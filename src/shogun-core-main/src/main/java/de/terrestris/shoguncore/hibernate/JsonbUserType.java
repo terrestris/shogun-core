@@ -116,7 +116,7 @@ public class JsonbUserType implements UserType {
 
     @Override
     public int[] sqlTypes() {
-        return new int[]{ Types.OTHER };
+        return new int[]{Types.OTHER};
     }
 
 }

@@ -1,13 +1,13 @@
 package de.terrestris.shoguncore.util.interceptor;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import de.terrestris.shoguncore.util.enumeration.InterceptorEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 /**
  * @author Daniel Koch
@@ -438,8 +438,9 @@ public class OgcMessage {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof OgcMessage))
+        if (!(obj instanceof OgcMessage)) {
             return false;
+        }
         OgcMessage other = (OgcMessage) obj;
 
         return new EqualsBuilder()
@@ -449,6 +450,19 @@ public class OgcMessage {
             .append(getRequestRule(), other.getRequestRule())
             .append(getResponseRule(), other.getResponseRule())
             .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        // two randomly chosen prime numbers
+        return new HashCodeBuilder(83, 61).
+            appendSuper(super.hashCode())
+            .append(getService())
+            .append(getOperation())
+            .append(getEndPoint())
+            .append(getRequestRule())
+            .append(getResponseRule())
+            .toHashCode();
     }
 
     /**

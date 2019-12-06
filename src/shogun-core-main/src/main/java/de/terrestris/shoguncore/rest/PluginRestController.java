@@ -1,19 +1,14 @@
 package de.terrestris.shoguncore.rest;
 
+import de.terrestris.shoguncore.dao.PluginDao;
+import de.terrestris.shoguncore.model.Plugin;
+import de.terrestris.shoguncore.service.PluginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import de.terrestris.shoguncore.dao.PluginDao;
-import de.terrestris.shoguncore.model.Plugin;
-import de.terrestris.shoguncore.service.PluginService;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Nils Bühner
@@ -47,7 +42,7 @@ public class PluginRestController<E extends Plugin, D extends PluginDao<E>, S ex
     ResponseEntity<String> getExternalPluginSource(
         @PathVariable String simpleClassName) {
 
-        LOG.debug("Requested to return the sourcecode for plugin " + simpleClassName);
+        logger.debug("Requested to return the sourcecode for plugin " + simpleClassName);
 
         ResponseEntity<String> responseEntity = null;
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -69,7 +64,7 @@ public class PluginRestController<E extends Plugin, D extends PluginDao<E>, S ex
             String errMsg = "Error while returning the class code for "
                 + "external plugin: " + e.getMessage();
 
-            LOG.error(errMsg);
+            logger.error(errMsg);
 
             responseEntity = new ResponseEntity<String>(
                 errMsg,

@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component;
 @Component
 public interface WpsRequestInterceptorInterface {
 
-    public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request);
 
-    public MutableHttpServletRequest interceptDescribeProcess(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptDescribeProcess(MutableHttpServletRequest request);
 
-    public MutableHttpServletRequest interceptExecute(MutableHttpServletRequest request);
+    MutableHttpServletRequest interceptExecute(MutableHttpServletRequest request);
 
 }

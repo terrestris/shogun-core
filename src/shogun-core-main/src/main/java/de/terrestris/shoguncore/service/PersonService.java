@@ -1,11 +1,10 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.PersonDao;
+import de.terrestris.shoguncore.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import de.terrestris.shoguncore.dao.PersonDao;
-import de.terrestris.shoguncore.model.Person;
 
 /**
  * Service class for the {@link Person} model.

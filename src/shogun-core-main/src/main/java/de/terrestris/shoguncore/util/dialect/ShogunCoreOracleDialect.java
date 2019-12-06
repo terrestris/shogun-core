@@ -1,7 +1,7 @@
 package de.terrestris.shoguncore.util.dialect;
 
-import org.hibernate.dialect.Oracle12cDialect;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.Oracle12cDialect;
 
 import java.sql.Types;
 

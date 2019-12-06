@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.token.PasswordResetToken;
+import org.springframework.stereotype.Repository;
 
 @Repository("passwordResetTokenDao")
 public class PasswordResetTokenDao<E extends PasswordResetToken> extends

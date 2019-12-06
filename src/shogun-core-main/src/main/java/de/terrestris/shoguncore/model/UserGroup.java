@@ -139,8 +139,9 @@ public class UserGroup extends PersistentObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof UserGroup))
+        if (!(obj instanceof UserGroup)) {
             return false;
+        }
         UserGroup other = (UserGroup) obj;
 
         return new EqualsBuilder().

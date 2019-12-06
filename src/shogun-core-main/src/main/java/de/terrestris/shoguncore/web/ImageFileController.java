@@ -1,7 +1,9 @@
 package de.terrestris.shoguncore.web;
 
-import java.util.Map;
-
+import de.terrestris.shoguncore.dao.ImageFileDao;
+import de.terrestris.shoguncore.model.ImageFile;
+import de.terrestris.shoguncore.service.ImageFileService;
+import de.terrestris.shoguncore.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import de.terrestris.shoguncore.dao.ImageFileDao;
-import de.terrestris.shoguncore.model.ImageFile;
-import de.terrestris.shoguncore.service.ImageFileService;
-import de.terrestris.shoguncore.util.data.ResultSet;
+import java.util.Map;
 
 /**
  * @author Johannes Weskamm
@@ -57,7 +56,6 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
 
     /**
      * Gets an image from the database by the given id
-     *
      */
     @RequestMapping(value = "/getThumbnail.action", method = RequestMethod.GET)
     public ResponseEntity<?> getThumbnail(@RequestParam Integer id) {
@@ -79,7 +77,7 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
             responseHeaders.setContentType(
                 MediaType.parseMediaType(image.getFileType()));
 
-            LOG.info("Successfully got the image thumbnail " +
+            logger.info("Successfully got the image thumbnail " +
                 image.getFileName());
 
             return new ResponseEntity<byte[]>(
@@ -88,7 +86,7 @@ public class ImageFileController<E extends ImageFile, D extends ImageFileDao<E>,
             final String errorMessage = "Could not get the image thumbnail: "
                 + e.getMessage();
 
-            LOG.error(errorMessage);
+            logger.error(errorMessage);
             responseMap = ResultSet.error(errorMessage);
 
             responseHeaders.setContentType(MediaType.APPLICATION_JSON);

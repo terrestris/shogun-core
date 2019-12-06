@@ -1,13 +1,12 @@
 package de.terrestris.shoguncore.web;
 
+import de.terrestris.shoguncore.dao.ModuleDao;
+import de.terrestris.shoguncore.model.module.Module;
+import de.terrestris.shoguncore.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import de.terrestris.shoguncore.dao.ModuleDao;
-import de.terrestris.shoguncore.model.module.Module;
-import de.terrestris.shoguncore.service.ModuleService;
 
 /**
  * @author Nils Bühner

@@ -3,24 +3,16 @@
  */
 package de.terrestris.shoguncore.model.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The CoordinateTransform module allows the user to transform map coordinates into
@@ -118,8 +110,9 @@ public class CoordinateTransformation extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof CoordinateTransformation))
+        if (!(obj instanceof CoordinateTransformation)) {
             return false;
+        }
         CoordinateTransformation other = (CoordinateTransformation) obj;
 
         return new EqualsBuilder().

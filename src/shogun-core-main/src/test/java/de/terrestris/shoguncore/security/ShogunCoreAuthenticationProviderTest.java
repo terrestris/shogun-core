@@ -7,6 +7,7 @@ import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.UserGroup;
 import de.terrestris.shoguncore.service.UserGroupService;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,8 +138,6 @@ public class ShogunCoreAuthenticationProviderTest {
         final String shogunUserPass = "password";
         final User userToAuth = createUserMock(shogunUserName, shogunUserPass);
 
-        final UserGroup userGroup = new UserGroup();
-
         // set user as active
         userToAuth.setActive(true);
 
@@ -259,7 +258,7 @@ public class ShogunCoreAuthenticationProviderTest {
 
     @Test
     public void authentication_supportsUsernamePassword() {
-        authProvider.supports(UsernamePasswordAuthenticationToken.class);
+        Assert.assertTrue("Authentication supports UsernamePasswordAuthenticationToken", authProvider.supports(UsernamePasswordAuthenticationToken.class));
     }
 
     @Test

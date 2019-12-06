@@ -3,20 +3,11 @@
  */
 package de.terrestris.shoguncore.model.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import de.terrestris.shoguncore.converter.LayerIdResolver;
+import de.terrestris.shoguncore.model.layer.Layer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
@@ -24,12 +15,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import de.terrestris.shoguncore.converter.LayerIdResolver;
-import de.terrestris.shoguncore.model.layer.Layer;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A module to search features of a WFS.
@@ -222,8 +210,9 @@ public class WfsSearch extends Module {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof WfsSearch))
+        if (!(obj instanceof WfsSearch)) {
             return false;
+        }
         WfsSearch other = (WfsSearch) obj;
 
         return new EqualsBuilder().

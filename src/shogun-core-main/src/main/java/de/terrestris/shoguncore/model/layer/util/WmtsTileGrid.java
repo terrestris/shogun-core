@@ -19,6 +19,11 @@ import java.util.List;
 @Table
 public class WmtsTileGrid extends TileGrid {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     // String list holding the matrix IDs.
     @ElementCollection(targetClass = String.class)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -59,8 +64,9 @@ public class WmtsTileGrid extends TileGrid {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof WmtsTileGrid))
+        if (!(obj instanceof WmtsTileGrid)) {
             return false;
+        }
         WmtsTileGrid other = (WmtsTileGrid) obj;
 
         return new EqualsBuilder().

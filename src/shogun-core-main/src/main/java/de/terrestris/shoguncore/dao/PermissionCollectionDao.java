@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.security.PermissionCollection;
+import org.springframework.stereotype.Repository;
 
 @Repository("permissionCollectionDao")
 public class PermissionCollectionDao<E extends PermissionCollection> extends GenericHibernateDao<E, Integer> {

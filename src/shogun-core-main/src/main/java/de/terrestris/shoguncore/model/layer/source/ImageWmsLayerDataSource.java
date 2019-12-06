@@ -53,14 +53,14 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
     }
 
     /**
-     * @param name    Name of datasource
-     * @param type    Type of datasource
-     * @param url     URL of datasource
-     * @param width   image width
-     * @param height  image height
-     * @param version WMS version
+     * @param name        Name of datasource
+     * @param type        Type of datasource
+     * @param url         URL of datasource
+     * @param width       image width
+     * @param height      image height
+     * @param version     WMS version
      * @param layerNames  List of layer names
-     * @param layerStyles  List of layer styles
+     * @param layerStyles List of layer styles
      */
     public ImageWmsLayerDataSource(String name, String type, String url, String format, int width,
                                    int height, String version, String layerNames, String layerStyles) {
@@ -174,8 +174,9 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ImageWmsLayerDataSource))
+        if (!(obj instanceof ImageWmsLayerDataSource)) {
             return false;
+        }
         ImageWmsLayerDataSource other = (ImageWmsLayerDataSource) obj;
 
         return new EqualsBuilder().
@@ -192,7 +193,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
         return requestableByPath;
     }
 
-    public void setRequestableByPath( Boolean requestableByPath ) {
+    public void setRequestableByPath(Boolean requestableByPath) {
         this.requestableByPath = requestableByPath;
     }
 
@@ -200,7 +201,7 @@ public class ImageWmsLayerDataSource extends LayerDataSource {
         return customRequestPath;
     }
 
-    public void setCustomRequestPath( String customRequestPath ) {
+    public void setCustomRequestPath(String customRequestPath) {
         this.customRequestPath = customRequestPath;
     }
 }

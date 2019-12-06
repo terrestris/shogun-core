@@ -37,7 +37,7 @@ public class UserGroupPermissionEvaluator<E extends UserGroup> extends
         // always grant READ access to groups in which the user itself is a member
         if (user != null && permission.equals(Permission.READ)
             && userGroup.getMembers().contains(user)) {
-            LOG.trace("Granting READ access on group where the user is member.");
+            logger.trace("Granting READ access on group where the user is member.");
             return true;
         }
 

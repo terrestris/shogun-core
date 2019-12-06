@@ -12,7 +12,7 @@ public class InterceptorEnum {
     /**
      * A enum type for the allowed rule format.
      */
-    public static enum RuleType {
+    public enum RuleType {
         ALLOW("ALLOW"),
         DENY("DENY"),
         MODIFY("MODIFY");
@@ -24,7 +24,7 @@ public class InterceptorEnum {
          *
          * @param value
          */
-        private RuleType(String value) {
+        RuleType(String value) {
             this.value = value;
         }
 

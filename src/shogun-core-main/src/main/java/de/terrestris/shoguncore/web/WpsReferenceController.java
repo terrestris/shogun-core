@@ -3,14 +3,13 @@
  */
 package de.terrestris.shoguncore.web;
 
+import de.terrestris.shoguncore.dao.WpsReferenceDao;
+import de.terrestris.shoguncore.model.wps.WpsReference;
+import de.terrestris.shoguncore.service.WpsReferenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import de.terrestris.shoguncore.dao.WpsReferenceDao;
-import de.terrestris.shoguncore.model.wps.WpsReference;
-import de.terrestris.shoguncore.service.WpsReferenceService;
 
 /**
  * @author Nils Bühner

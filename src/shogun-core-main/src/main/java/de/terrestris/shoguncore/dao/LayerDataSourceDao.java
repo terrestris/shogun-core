@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.layer.source.LayerDataSource;
+import org.springframework.stereotype.Repository;
 
 @Repository("layerDataSourceDao")
 public class LayerDataSourceDao<E extends LayerDataSource> extends

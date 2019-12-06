@@ -36,7 +36,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
     /**
      * The LOGGER instance (that will be available in all subclasses)
      */
-    protected final Logger LOG = getLogger(getClass());
+    protected static final Logger logger = getLogger(GenericHibernateDao.class);
 
     /**
      * Represents the class of the entity
@@ -45,6 +45,11 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 
     @Value("${hibernate.cache.use_query_cache}")
     private Boolean useQueryCache;
+    /**
+     * Hibernate SessionFactory
+     */
+    @Autowired
+    private SessionFactory sessionFactory;
 
     /**
      * Default constructor
@@ -64,12 +69,6 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
     }
 
     /**
-     * Hibernate SessionFactory
-     */
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    /**
      * Obtains the current session.
      *
      * @return
@@ -87,8 +86,8 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      * @see http://www.mkyong.com/hibernate/different-between-session-get-and-session-load/
      */
     public E findById(ID id) {
-        LOG.trace("Finding " + entityClass.getSimpleName() + " with ID " + id);
-        return (E) getSession().get(entityClass, id);
+        logger.trace("Finding " + entityClass.getSimpleName() + " with ID " + id);
+        return getSession().get(entityClass, id);
     }
 
     /**
@@ -180,8 +179,8 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      * @see http://www.mkyong.com/hibernate/different-between-session-get-and-session-load/
      */
     public E loadById(ID id) {
-        LOG.trace("Loading " + entityClass.getSimpleName() + " with ID " + id);
-        return (E) getSession().load(entityClass, id);
+        logger.trace("Loading " + entityClass.getSimpleName() + " with ID " + id);
+        return getSession().load(entityClass, id);
     }
 
     /**
@@ -191,7 +190,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      * @see GenericHibernateDao#findByCriteria(Criterion...)
      */
     public List<E> findAll() throws HibernateException {
-        LOG.trace("Finding all instances of " + entityClass.getSimpleName());
+        logger.trace("Finding all instances of " + entityClass.getSimpleName());
         return findByCriteria();
     }
 
@@ -206,7 +205,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
         String createOrUpdatePrefix = hasId ? "Updating" : "Creating a new";
         String idSuffix = hasId ? " with ID " + id : "";
 
-        LOG.trace(createOrUpdatePrefix + " instance of " + entityClass.getSimpleName()
+        logger.trace(createOrUpdatePrefix + " instance of " + entityClass.getSimpleName()
             + idSuffix);
 
         e.setModified(DateTime.now());
@@ -219,7 +218,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      * @param e The entity to remove from the database.
      */
     public void delete(E e) {
-        LOG.trace("Deleting " + entityClass.getSimpleName() + " with ID " + e.getId());
+        logger.trace("Deleting " + entityClass.getSimpleName() + " with ID " + e.getId());
         getSession().delete(e);
     }
 
@@ -247,7 +246,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      * @param e
      */
     public void evict(E e) {
-        LOG.trace("Detaching " + entityClass.getSimpleName() + " with ID " + e.getId() + " from hibernate session");
+        logger.trace("Detaching " + entityClass.getSimpleName() + " with ID " + e.getId() + " from hibernate session");
         getSession().evict(e);
     }
 
@@ -260,7 +259,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      */
     @SuppressWarnings("unchecked")
     public List<E> findByCriteria(Criterion... criterion) throws HibernateException {
-        LOG.trace("Finding instances of " + entityClass.getSimpleName()
+        logger.trace("Finding instances of " + entityClass.getSimpleName()
             + " based on " + criterion.length + " criteria");
 
         Criteria criteria = createDistinctRootEntityCriteria(criterion);
@@ -288,7 +287,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      */
     @SuppressWarnings("unchecked")
     public List<E> findByCriteriaRestricted(List<String> restrictFieldNames, Criterion... criterion) throws HibernateException {
-        LOG.trace("Finding instances of " + entityClass.getSimpleName()
+        logger.trace("Finding instances of " + entityClass.getSimpleName()
             + " based on " + criterion.length + " criteria");
 
         Criteria criteria = createDistinctRootEntityCriteria(criterion);
@@ -318,7 +317,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
      */
     @SuppressWarnings("unchecked")
     public E findByUniqueCriteria(Criterion... criterion) throws HibernateException {
-        LOG.trace("Finding one unique " + entityClass.getSimpleName()
+        logger.trace("Finding one unique " + entityClass.getSimpleName()
             + " based on " + criterion.length + " criteria");
 
         Criteria criteria = createDistinctRootEntityCriteria(criterion);
@@ -340,7 +339,7 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 
         int nrOfSorters = sorters == null ? 0 : sorters.size();
 
-        LOG.trace("Finding instances of " + entityClass.getSimpleName()
+        logger.trace("Finding instances of " + entityClass.getSimpleName()
             + " based on " + criterion.length + " criteria"
             + " with " + nrOfSorters + " sorters");
 
@@ -348,11 +347,11 @@ public class GenericHibernateDao<E extends PersistentObject, ID extends Serializ
 
         // add paging info
         if (maxResults != null) {
-            LOG.trace("Limiting result set size to " + maxResults);
+            logger.trace("Limiting result set size to " + maxResults);
             criteria.setMaxResults(maxResults);
         }
         if (firstResult != null) {
-            LOG.trace("Setting the first result to be retrieved to "
+            logger.trace("Setting the first result to be retrieved to "
                 + firstResult);
             criteria.setFirstResult(firstResult);
         }

@@ -1,8 +1,7 @@
 package de.terrestris.shoguncore.dao;
 
-import org.springframework.stereotype.Repository;
-
 import de.terrestris.shoguncore.model.token.RegistrationToken;
+import org.springframework.stereotype.Repository;
 
 @Repository("registrationTokenDao")
 public class RegistrationTokenDao<E extends RegistrationToken> extends

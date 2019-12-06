@@ -1,14 +1,13 @@
 package de.terrestris.shoguncore.service;
 
+import de.terrestris.shoguncore.dao.RoleDao;
+import de.terrestris.shoguncore.model.Role;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import de.terrestris.shoguncore.dao.RoleDao;
-import de.terrestris.shoguncore.model.Role;
 
 /**
  * Service class for the {@link Role} model.

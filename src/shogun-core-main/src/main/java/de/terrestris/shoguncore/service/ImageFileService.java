@@ -1,12 +1,7 @@
 package de.terrestris.shoguncore.service;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
+import de.terrestris.shoguncore.dao.ImageFileDao;
+import de.terrestris.shoguncore.model.ImageFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr;
@@ -16,8 +11,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.terrestris.shoguncore.dao.ImageFileDao;
-import de.terrestris.shoguncore.model.ImageFile;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Service class for the {@link ImageFile} model.
@@ -28,6 +27,11 @@ import de.terrestris.shoguncore.model.ImageFile;
 @Service("imageFileService")
 public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
     extends FileService<E, D> {
+
+    /**
+     * The default value used for the creation of thumbnails in pixels
+     */
+    private static final Integer DEFAULT_THUMBNAIL_SIZE = 100;
 
     /**
      * Default constructor, which calls the type-constructor
@@ -46,6 +50,40 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
     }
 
     /**
+     * Scales an image by the given dimensions
+     *
+     * @param outputFormat
+     * @param targetSize   width/height in px (square)
+     * @throws Exception
+     */
+    public static byte[] scaleImage(byte[] imageBytes, String outputFormat,
+                                    Integer targetSize) throws Exception {
+        byte[] imageInBytes;
+        BufferedImage image = null;
+        BufferedImage resizedImage = null;
+
+        try (
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            InputStream is = new ByteArrayInputStream(imageBytes);
+        ) {
+            image = ImageIO.read(is);
+            resizedImage = Scalr.resize(image, targetSize);
+            ImageIO.write(resizedImage, outputFormat, baos);
+            imageInBytes = baos.toByteArray();
+        } catch (IOException e) {
+            throw new Exception("Error on resizing an image: " + e.getMessage());
+        } finally {
+            if (image != null) {
+                image.flush();
+            }
+            if (resizedImage != null) {
+                resizedImage.flush();
+            }
+        }
+        return imageInBytes;
+    }
+
+    /**
      * We have to use {@link Qualifier} to define the correct dao here.
      * Otherwise, spring can not decide which dao has to be autowired here
      * as there are multiple candidates.
@@ -58,31 +96,25 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
     }
 
     /**
-     * The default value used for the creation of thumbnails in pixels
-     */
-    private final Integer DEFAULT_THUMBNAIL_SIZE = 100;
-
-    /**
      * @param file
      * @throws Exception
      */
     @Override
     @PreAuthorize("isAuthenticated()")
     public E uploadFile(MultipartFile file) throws Exception {
-
         if (file == null) {
             final String errMsg = "Upload failed. Image is null.";
-            LOG.error(errMsg);
+            logger.error(errMsg);
             throw new Exception(errMsg);
         } else if (file.isEmpty()) {
             final String errMsg = "Upload failed. Image " + file + " is empty.";
-            LOG.error(errMsg);
+            logger.error(errMsg);
             throw new Exception(errMsg);
         }
 
         // persist the image file
         E image = this.saveImage(file, true, DEFAULT_THUMBNAIL_SIZE);
-        LOG.info("Successfully uploaded image " + image.getFileName());
+        logger.info("Successfully uploaded image " + image.getFileName());
 
         return image;
     }
@@ -145,43 +177,6 @@ public class ImageFileService<E extends ImageFile, D extends ImageFileDao<E>>
         }
 
         return imageToPersist;
-    }
-
-    /**
-     * Scales an image by the given dimensions
-     *
-     * @param outputFormat
-     * @param targetSize   width/height in px (square)
-     * @throws Exception
-     */
-    public static byte[] scaleImage(byte[] imageBytes, String outputFormat,
-                                    Integer targetSize) throws Exception {
-
-        InputStream is = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] imageInBytes = null;
-        BufferedImage image = null;
-        BufferedImage resizedImage = null;
-
-        try {
-            is = new ByteArrayInputStream(imageBytes);
-            image = ImageIO.read(is);
-            resizedImage = Scalr.resize(image, targetSize);
-            ImageIO.write(resizedImage, outputFormat, baos);
-            imageInBytes = baos.toByteArray();
-        } catch (Exception e) {
-            throw new Exception("Error on resizing an image: " + e.getMessage());
-        } finally {
-            IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(baos);
-            if (image != null) {
-                image.flush();
-            }
-            if (resizedImage != null) {
-                resizedImage.flush();
-            }
-        }
-        return imageInBytes;
     }
 
 }

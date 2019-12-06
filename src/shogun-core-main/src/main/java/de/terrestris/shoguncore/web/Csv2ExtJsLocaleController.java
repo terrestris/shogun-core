@@ -22,9 +22,9 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 public class Csv2ExtJsLocaleController {
 
     /**
-     * The LOGGER instance (that will be available in all subclasses)
+     * The logger instance
      */
-    protected final Logger LOG = getLogger(getClass());
+    private static final Logger logger = getLogger(Csv2ExtJsLocaleController.class);
 
     /**
      *
@@ -49,7 +49,7 @@ public class Csv2ExtJsLocaleController {
             return null; // TODO become smarter!?
         }
 
-        LOG.debug("Trying to get all EXT JS locale components of app '" + appId + "' for locale: '" + locale + "'");
+        logger.debug("Trying to get all EXT JS locale components of app '" + appId + "' for locale: '" + locale + "'");
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {

@@ -1,5 +1,6 @@
 package de.terrestris.shoguncore.util.naming;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.hibernate.boot.model.naming.EntityNaming;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 
@@ -17,6 +18,15 @@ public class ImplicitNamingStrategyShogunCore extends ImplicitNamingStrategyJpaC
     private static final long serialVersionUID = 1L;
 
     private static final Map<String, String> IRREGULAR_NOUNS = createIrregularNouns();
+    private static final char PLURAL_SUFFIX_S = 's';
+    private static final char LAST_CHAR_S = 's';
+    private static final char LAST_CHAR_X = 'x';
+    private static final char LAST_CHAR_Z = 'z';
+    private static final String LAST_CHARS_CH = "ch";
+    private static final String LAST_CHARS_SH = "sh";
+    private static final String PLURAL_SUFFIX_ES = "es";
+    private static final char LAST_CHAR_Y = 'y';
+    private static final String PLURAL_SUFFIX_IES = "ies";
 
     private static Map<String, String> createIrregularNouns() {
         Map<String, String> irregularNouns = new HashMap<String, String>();
@@ -96,18 +106,6 @@ public class ImplicitNamingStrategyShogunCore extends ImplicitNamingStrategyJpaC
         return irregularNouns;
     }
 
-    private static final char PLURAL_SUFFIX_S = 's';
-
-    private static final char LAST_CHAR_S = 's';
-    private static final char LAST_CHAR_X = 'x';
-    private static final char LAST_CHAR_Z = 'z';
-    private static final String LAST_CHARS_CH = "ch";
-    private static final String LAST_CHARS_SH = "sh";
-    private static final String PLURAL_SUFFIX_ES = "es";
-
-    private static final char LAST_CHAR_Y = 'y';
-    private static final String PLURAL_SUFFIX_IES = "ies";
-
     /**
      * Transforms an entity name to plural form.
      */
@@ -127,6 +125,7 @@ public class ImplicitNamingStrategyShogunCore extends ImplicitNamingStrategyJpaC
      * @param singular
      * @return
      */
+    @SuppressFBWarnings("DM_CONVERT_CASE")
     private String transformToPluralForm(String singular) {
         String lowercaseSingular = singular.toLowerCase();
         if (IRREGULAR_NOUNS.containsKey(lowercaseSingular)) {

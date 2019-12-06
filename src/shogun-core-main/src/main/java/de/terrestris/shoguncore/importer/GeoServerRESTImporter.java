@@ -23,7 +23,6 @@ import org.apache.logging.log4j.Logger;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.wkt.Formattable;
 import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -48,7 +47,7 @@ public class GeoServerRESTImporter {
     /**
      * The Logger.
      */
-    private final static Logger LOG = getLogger(GeoServerRESTImporter.class);
+    private static final Logger LOG = getLogger(GeoServerRESTImporter.class);
 
     /**
      *
@@ -101,6 +100,72 @@ public class GeoServerRESTImporter {
     }
 
     /**
+     * Add a projection file to a shapefile zip archive.
+     */
+    public static File addPrjFileToArchive(File file, String targetCrs)
+        throws ZipException, IOException, FactoryException {
+
+        ZipFile zipFile = new ZipFile(file);
+
+        CoordinateReferenceSystem decodedTargetCrs = CRS.decode(targetCrs);
+        String targetCrsWkt = toSingleLineWKT(decodedTargetCrs);
+
+        ArrayList<String> zipFileNames = new ArrayList<String>();
+        List<FileHeader> zipFileHeaders = zipFile.getFileHeaders();
+
+        for (FileHeader zipFileHeader : zipFileHeaders) {
+            if (FilenameUtils.getExtension(zipFileHeader.getFileName()).equalsIgnoreCase("prj")) {
+                continue;
+            }
+            zipFileNames.add(FilenameUtils.getBaseName(zipFileHeader.getFileName()));
+        }
+
+        LOG.debug("Following files will be created and added to ZIP file: " + zipFileNames);
+
+        for (String prefix : zipFileNames) {
+            File targetPrj = null;
+            try {
+                targetPrj = File.createTempFile("TMP_" + prefix, ".prj");
+                FileUtils.write(targetPrj, targetCrsWkt, "UTF-8");
+                ZipParameters params = new ZipParameters();
+                params.setSourceExternalStream(true);
+                params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+                params.setFileNameInZip(prefix + ".prj");
+                zipFile.addFile(targetPrj, params);
+            } finally {
+                if (targetPrj != null) {
+                    boolean deleted = targetPrj.delete();
+                    if (!deleted) {
+                        LOG.warn("Temporary target prj file could not be deleted.");
+                    }
+                }
+            }
+        }
+
+        return zipFile.getFile();
+    }
+
+    /**
+     * Turns the CRS into a single line WKT
+     *
+     * @param crs CoordinateReferenceSystem which should be formatted
+     * @return Single line String which can be written to PRJ file
+     */
+    public static String toSingleLineWKT(CoordinateReferenceSystem crs) {
+        String wkt = null;
+        try {
+            // this is a lenient transformation, works with polar stereographics too
+            Formattable formattable = (Formattable) crs;
+            wkt = formattable.toWKT(0, false);
+        } catch (ClassCastException e) {
+            wkt = crs.toWKT();
+        }
+
+        wkt = wkt.replaceAll("\n", "").replaceAll("  ", "");
+        return wkt;
+    }
+
+    /**
      * Create a new import job.
      */
     public RESTImport createImportJob(String workSpaceName, String dataStoreName)
@@ -150,7 +215,6 @@ public class GeoServerRESTImporter {
 
     /**
      * Create a reprojection task.
-     *
      */
     public boolean createReprojectTransformTask(Integer importJobId, Integer taskId,
                                                 String sourceSrs, String targetSrs) throws URISyntaxException, HttpException {
@@ -229,7 +293,7 @@ public class GeoServerRESTImporter {
             importTaskList = mapper.readValue(httpResponse.getBody(), RESTImportTaskList.class);
             LOG.debug("Imported file " + file.getName() + " contains data for multiple layers.");
             return importTaskList;
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.debug("Imported file " + file.getName() + " likely contains data for single " +
                 "layer. Will check this now.");
             try {
@@ -240,7 +304,7 @@ public class GeoServerRESTImporter {
                     LOG.debug("Imported file " + file.getName() + " contains data for a single layer.");
                 }
                 return importTaskList;
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 LOG.info("It seems that the SRS definition source file can not be interpreted by " +
                     "GeoServer / GeoTools. Try to set SRS definition to " + sourceSrs + ".");
 
@@ -300,8 +364,8 @@ public class GeoServerRESTImporter {
     /**
      * Update layer object for a given task of an import job (via PUT)
      *
-     * @param importJobId The import job ID
-     * @param importTaskId The import task ID
+     * @param importJobId      The import job ID
+     * @param importTaskId     The import task ID
      * @param updateTaskEntity The entity to use for update
      * @return true if successful, false otherwise
      * @throws URISyntaxException
@@ -319,11 +383,11 @@ public class GeoServerRESTImporter {
 
         LOG.debug("Updating layer for the import task " + importTaskId + " in job " + importJobId + " with " + updateTaskEntity);
         Response httpResponse = HttpUtil.put(
-                this.addEndPoint(importJobId + "/tasks/" + importTaskId + "/layer"),
-                this.asJSON(updateTaskEntity),
-                ContentType.APPLICATION_JSON,
-                this.username,
-                this.password
+            this.addEndPoint(importJobId + "/tasks/" + importTaskId + "/layer"),
+            this.asJSON(updateTaskEntity),
+            ContentType.APPLICATION_JSON,
+            this.username,
+            this.password
         );
 
         boolean success = httpResponse.getStatusCode().equals(HttpStatus.NO_CONTENT);
@@ -504,69 +568,6 @@ public class GeoServerRESTImporter {
             LOG.error("Error while creating the transform task");
             return false;
         }
-    }
-
-    /**
-     * Add a projection file to a shapefile zip archive.
-     */
-    public static File addPrjFileToArchive(File file, String targetCrs)
-        throws ZipException, IOException, NoSuchAuthorityCodeException, FactoryException {
-
-        ZipFile zipFile = new ZipFile(file);
-
-        CoordinateReferenceSystem decodedTargetCrs = CRS.decode(targetCrs);
-        String targetCrsWkt = toSingleLineWKT(decodedTargetCrs);
-
-        ArrayList<String> zipFileNames = new ArrayList<String>();
-        List<FileHeader> zipFileHeaders = zipFile.getFileHeaders();
-
-        for (FileHeader zipFileHeader : zipFileHeaders) {
-            if (FilenameUtils.getExtension(zipFileHeader.getFileName()).equalsIgnoreCase("prj")) {
-                continue;
-            }
-            zipFileNames.add(FilenameUtils.getBaseName(zipFileHeader.getFileName()));
-        }
-
-        LOG.debug("Following files will be created and added to ZIP file: " + zipFileNames);
-
-        for (String prefix : zipFileNames) {
-            File targetPrj = null;
-            try {
-                targetPrj = File.createTempFile("TMP_" + prefix, ".prj");
-                FileUtils.write(targetPrj, targetCrsWkt, "UTF-8");
-                ZipParameters params = new ZipParameters();
-                params.setSourceExternalStream(true);
-                params.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
-                params.setFileNameInZip(prefix + ".prj");
-                zipFile.addFile(targetPrj, params);
-            } finally {
-                if (targetPrj != null) {
-                    targetPrj.delete();
-                }
-            }
-        }
-
-        return zipFile.getFile();
-    }
-
-    /**
-     * Turns the CRS into a single line WKT
-     *
-     * @param crs CoordinateReferenceSystem which should be formatted
-     * @return Single line String which can be written to PRJ file
-     */
-    public static String toSingleLineWKT(CoordinateReferenceSystem crs) {
-        String wkt = null;
-        try {
-            // this is a lenient transformation, works with polar stereographics too
-            Formattable formattable = (Formattable) crs;
-            wkt = formattable.toWKT(0, false);
-        } catch (ClassCastException e) {
-            wkt = crs.toWKT();
-        }
-
-        wkt = wkt.replaceAll("\n", "").replaceAll("  ", "");
-        return wkt;
     }
 
     /**

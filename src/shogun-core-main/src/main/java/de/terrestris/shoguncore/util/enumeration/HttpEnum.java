@@ -12,7 +12,7 @@ public class HttpEnum {
     /**
      * A enum type for the allowed event format.
      */
-    public static enum EventType {
+    public enum EventType {
         REQUEST("REQUEST"),
         RESPONSE("RESPONSE");
 
@@ -23,7 +23,7 @@ public class HttpEnum {
          *
          * @param value
          */
-        private EventType(String value) {
+        EventType(String value) {
             this.value = value;
         }
 

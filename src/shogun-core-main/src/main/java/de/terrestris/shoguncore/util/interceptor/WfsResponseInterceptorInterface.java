@@ -1,20 +1,19 @@
 package de.terrestris.shoguncore.util.interceptor;
 
-import org.springframework.stereotype.Component;
-
 import de.terrestris.shoguncore.util.model.Response;
+import org.springframework.stereotype.Component;
 
 @Component
 public interface WfsResponseInterceptorInterface {
 
-    public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
+    Response interceptGetCapabilities(MutableHttpServletRequest request, Response response);
 
-    public Response interceptDescribeFeatureType(MutableHttpServletRequest request, Response response);
+    Response interceptDescribeFeatureType(MutableHttpServletRequest request, Response response);
 
-    public Response interceptGetFeature(MutableHttpServletRequest request, Response response);
+    Response interceptGetFeature(MutableHttpServletRequest request, Response response);
 
-    public Response interceptLockFeature(MutableHttpServletRequest request, Response response);
+    Response interceptLockFeature(MutableHttpServletRequest request, Response response);
 
-    public Response interceptTransaction(MutableHttpServletRequest request, Response response);
+    Response interceptTransaction(MutableHttpServletRequest request, Response response);
 
 }

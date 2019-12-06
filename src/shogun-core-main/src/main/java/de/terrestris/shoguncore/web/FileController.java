@@ -1,8 +1,9 @@
 package de.terrestris.shoguncore.web;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import de.terrestris.shoguncore.dao.FileDao;
+import de.terrestris.shoguncore.model.File;
+import de.terrestris.shoguncore.service.FileService;
+import de.terrestris.shoguncore.util.data.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.terrestris.shoguncore.dao.FileDao;
-import de.terrestris.shoguncore.model.File;
-import de.terrestris.shoguncore.service.FileService;
-import de.terrestris.shoguncore.util.data.ResultSet;
+import java.util.Map;
 
 /**
  * @author Johannes Weskamm
@@ -66,16 +64,16 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
     public ResponseEntity<?> uploadFile(
         @RequestParam("file") MultipartFile uploadedFile) {
 
-        LOG.debug("Requested to upload a multipart-file");
+        logger.debug("Requested to upload a multipart-file");
 
         // build response map
-        Map<String, Object> responseMap = new HashMap<String, Object>();
+        Map<String, Object> responseMap = null;
         try {
             E file = service.uploadFile(uploadedFile);
-            LOG.info("Successfully uploaded file " + file.getFileName());
+            logger.info("Successfully uploaded file " + file.getFileName());
             responseMap = ResultSet.success(file);
         } catch (Exception e) {
-            LOG.error("Could not upload the file: " + e.getMessage());
+            logger.error("Could not upload the file: " + e.getMessage());
             responseMap = ResultSet.error("Could not upload the file: " +
                 e.getMessage());
         }
@@ -89,14 +87,10 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
 
     /**
      * Gets a file from the database by the given id
-     *
      */
     @RequestMapping(value = "/get.action", method = RequestMethod.GET)
     public ResponseEntity<?> getFile(@RequestParam Integer id) {
-
         final HttpHeaders responseHeaders = new HttpHeaders();
-        Map<String, Object> responseMap = new HashMap<String, Object>();
-
         try {
             File file = service.findById(id);
 
@@ -109,20 +103,15 @@ public class FileController<E extends File, D extends FileDao<E>, S extends File
             responseHeaders.setContentType(
                 MediaType.parseMediaType(file.getFileType()));
 
-            LOG.info("Successfully got the file " + file.getFileName());
-
-            responseMap = ResultSet.success(file);
-            return new ResponseEntity<byte[]>(
-                fileBytes, responseHeaders, HttpStatus.OK);
+            logger.info("Successfully got the file " + file.getFileName());
+            return new ResponseEntity<>(fileBytes, responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
-            LOG.error("Could not get the file: " + e.getMessage());
-            responseMap = ResultSet.error("Could not get the file: " +
+            logger.error("Could not get the file: " + e.getMessage());
+            Map<String, Object> responseMap = ResultSet.error("Could not get the file: " +
                 e.getMessage());
 
             responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-            return new ResponseEntity<Map<String, Object>>(
-                responseMap, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseMap, responseHeaders, HttpStatus.OK);
         }
     }
 }

@@ -3,23 +3,15 @@
  */
 package de.terrestris.shoguncore.model.layer.util;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import de.terrestris.shoguncore.model.PersistentObject;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import de.terrestris.shoguncore.model.PersistentObject;
+import javax.persistence.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 
 /**
  * Util class representing the extent of a layer or a map.
@@ -91,7 +83,6 @@ public class Extent extends PersistentObject {
         super();
         this.lowerLeft = new Double(lowerLeftX, lowerLeftY);
         this.upperRight = new Double(upperRightX, upperRightY);
-        ;
     }
 
     /**
@@ -148,8 +139,9 @@ public class Extent extends PersistentObject {
      * when using ORM like Hibernate
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof Extent))
+        if (!(obj instanceof Extent)) {
             return false;
+        }
         Extent other = (Extent) obj;
 
         return new EqualsBuilder().
