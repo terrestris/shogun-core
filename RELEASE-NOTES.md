@@ -1,5 +1,10 @@
 # Release Notes
 
+## 5.0.0 (2019-12-13)
+
+* Change: Due to the introduction of Spotbugs and Checkstyle all static loggers were renamed from `LOG` to `logger`. See [here](https://github.com/terrestris/shogun-core/pull/374)
+* Feature: Added possibility to ignore namespace bound GeoServer endpoints in the GeoServer Interceptor and to set a default base URL. See [here](https://github.com/terrestris/shogun-core/pull/375)
+
 ## 4.0.0 (2019-08-28)
 
 * Change: `format` field has been moved to parent class, which implies changes in the underlying database tables. See [here](https://github.com/terrestris/shogun-core/pull/371)
