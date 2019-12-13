@@ -28,6 +28,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -62,6 +63,7 @@ public class GeoServerInterceptorServiceTest {
     @Before
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(gsInterceptorService, "namespaceBoundUrl", true);
 
         Properties geoServerNameSpaces = new Properties();
         geoServerNameSpaces.setProperty("bvb", TEST_GEOSERVER_BASE_PATH + "bvb/ows");

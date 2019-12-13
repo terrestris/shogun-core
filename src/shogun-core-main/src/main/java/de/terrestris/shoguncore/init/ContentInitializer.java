@@ -22,7 +22,7 @@ public class ContentInitializer {
     /**
      * The Logger
      */
-    protected static final Logger logger = getLogger(ContentInitializer.class);
+    protected final Logger logger = getLogger(getClass());
     /**
      * Initialization Service to init shogun content like users or default
      * applications.
