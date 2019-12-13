@@ -21,6 +21,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,12 @@ public class GeoServerInterceptorService {
      * topp=http://localhost:8080/geoserver/topp/ows
      */
     private Properties geoServerNameSpaces;
+
+    @Value("${geoserver.interceptor.namespaceBoundUrl:true}")
+    private boolean namespaceBoundUrl;
+
+    @Value("${geoserver.interceptor.defaultOwsUrl:}")
+    private String defaultOwsUrl;
 
     /**
      * @param params
@@ -623,8 +630,14 @@ public class GeoServerInterceptorService {
 
         URI uri = null;
 
-        String geoServerUrl = this.geoServerNameSpaces.getProperty(
-            geoServerNamespace);
+        String geoServerUrl;
+        if (namespaceBoundUrl) {
+            geoServerUrl = this.geoServerNameSpaces.getProperty(
+                geoServerNamespace);
+        } else {
+            geoServerUrl = defaultOwsUrl;
+            LOG.debug("Using GeoServer OWS URL without namespace: {}" , geoServerUrl);
+        }
 
         if (StringUtils.isEmpty(geoServerUrl)) {
             throw new InterceptorException("Couldn't detect GeoServer URI " +
