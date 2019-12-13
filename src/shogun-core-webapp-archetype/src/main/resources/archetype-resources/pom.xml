@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <shogun.version>4.0.1-SNAPSHOT</shogun.version>
+        <shogun.version>5.0.0</shogun.version>
 
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
