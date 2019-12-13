@@ -28,7 +28,7 @@ public abstract class PersistentObjectIdResolver<E extends PersistentObject, D e
     /**
      * Default Constructor that injects beans automatically.
      */
-    PersistentObjectIdResolver() {
+    public PersistentObjectIdResolver() {
         // As subclasses of this class are used in the resolver property of an
         // JsonIdentityInfo annotation, we cannot easily autowire components
         // (like the service for the current). For that reason, we use this
