@@ -48,7 +48,7 @@ public class ApplicationController<E extends Application, D extends ApplicationD
         this.service = service;
     }
 
-    @RequestMapping(value = "/findAll.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/findAll.action", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     List<E> findAllApplications() {
         logger.info("Trying to find all Applications.");

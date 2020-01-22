@@ -64,7 +64,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
      * @param email
      * @param password
      */
-    @RequestMapping(value = "/register.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/register.action", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> registerUser(HttpServletRequest request,
                                      @RequestParam String email,
@@ -93,7 +93,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     /**
      * @param token
      */
-    @RequestMapping(value = "/activate.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/activate.action", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> activateUser(@RequestParam String token) {
 
@@ -109,7 +109,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     /**
      * @param email
      */
-    @RequestMapping(value = "/resetPassword.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/resetPassword.action", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> resetPassword(HttpServletRequest request,
                                       @RequestParam(value = "email") String email) {
@@ -130,7 +130,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     /**
      * @param token
      */
-    @RequestMapping(value = "/changePassword.action", method = RequestMethod.POST)
+    @RequestMapping(value = "/changePassword.action", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> changePassword(
         @RequestParam(value = "password") String password,
@@ -152,7 +152,7 @@ public class UserController<E extends User, D extends UserDao<E>, S extends User
     /**
      *
      */
-    @RequestMapping(value = "/getUserBySession.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/getUserBySession.action", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> getUserBySession() {
 

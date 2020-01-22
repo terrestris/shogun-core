@@ -38,10 +38,9 @@ public class EndpointDocController {
     /**
      * Provides an overview of all mapped endpoints.
      */
-    @RequestMapping(value = "/endpointdoc", method = RequestMethod.GET)
+    @RequestMapping(value = "/endpointdoc", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Set<RequestMappingInfo> getEndpoints() {
-
         return this.service.getEndpoints(requestMappingHandlerMapping);
     }
 
