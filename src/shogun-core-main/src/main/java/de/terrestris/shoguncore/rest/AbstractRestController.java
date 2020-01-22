@@ -48,7 +48,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
     /**
      * Find all entities.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<E>> findAll(@RequestParam MultiValueMap<String, String> requestParams) {
         final List<E> resultList = this.service.findAllRestricted(requestParams);
 
@@ -66,7 +66,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      * <p>
      * The requestParams MultiValueMap contains all information from the query String @see {@link RequestParam}
      */
-    @RequestMapping(value = "/filter", method = RequestMethod.GET)
+    @RequestMapping(value = "/filter", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<E>> findBySimpleFilter(@RequestParam MultiValueMap<String, String> requestParams) {
 
         final List<E> resultList = this.service.findBySimpleFilter(requestParams);
@@ -85,7 +85,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      *
      * @param id
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public ResponseEntity<E> findById(@PathVariable Integer id) {
 
         try {
@@ -103,7 +103,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
     /**
      * Create/save an entity.
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResponseEntity<E> save(HttpServletRequest request) {
 
         final String simpleClassName = getEntityClass().getSimpleName();
@@ -138,7 +138,7 @@ public abstract class AbstractRestController<E extends PersistentObject, D exten
      *
      * @param id
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = "application/json;charset=UTF-8")
     public ResponseEntity<E> update(@PathVariable int id, HttpServletRequest request) {
 
         String errorPrefix = "Error updating "

@@ -35,7 +35,7 @@ public class Csv2ExtJsLocaleController {
     /**
      * @return
      */
-    @RequestMapping(value = "/{appId}/{locale}.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/{appId}/{locale}.json", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public @ResponseBody
     Map<String, Object> getAllComponentsForLocale(
         @PathVariable String appId,
