@@ -121,27 +121,27 @@
 
         <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
-        <tomcat.version>9.0.24</tomcat.version>
+        <tomcat.version>9.0.30</tomcat.version>
 
         <!-- Core -->
         <spring.version>5.2.3.RELEASE</spring.version>
-        <spring-security.version>5.2.1.RELEASE</spring-security.version>
+        <spring-security.version>5.2.2.RELEASE</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.12.1</log4j.version>
+        <log4j.version>2.13.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
         <jackson.version>2.10.2</jackson.version>
         <opencsv.version>4.6</opencsv.version>
-        <ehcache.version>3.8.0</ehcache.version>
+        <ehcache.version>3.8.1</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.4.4.Final</hibernate.version>
+        <hibernate.version>5.4.11.Final</hibernate.version>
         <hikari.version>3.4.2</hikari.version>
         <h2.version>1.4.200</h2.version>
 
         <jdom.version>1.1.3</jdom.version>
 
         <!-- Testing -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>2.28.2</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
@@ -149,7 +149,7 @@
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-dbutils.version>1.7</commons-dbutils.version>
@@ -176,10 +176,10 @@
         <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
         <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <javassist.version>3.25.0-GA</javassist.version>
+        <javassist.version>3.26.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
 
-        <postgresql.version>42.2.6</postgresql.version>
+        <postgresql.version>42.2.10</postgresql.version>
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
@@ -195,10 +195,10 @@
         <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 
         <!-- Apache HTTP Client -->
-        <apache-httpclient.version>4.5.9</apache-httpclient.version>
+        <apache-httpclient.version>4.5.11</apache-httpclient.version>
 
         <!-- GeoTools -->
-        <geotools.version>21.2</geotools.version>
+        <geotools.version>22.2</geotools.version>
 
         <!-- Zip4j -->
         <zip4j.version>1.3.3</zip4j.version>
@@ -208,7 +208,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>2.0.2</powermock.version>
+        <powermock.version>2.0.5</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.16.1</jts.version>
@@ -222,16 +222,16 @@
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
         <deploy-plugin.version>3.0.0-M1</deploy-plugin.version>
-        <surefire-plugin.version>3.0.0-M3</surefire-plugin.version>
+        <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
         <install-plugin.version>2.5.2</install-plugin.version>
         <site-plugin.version>3.8.2</site-plugin.version>
         <resources-plugin.version>3.1.0</resources-plugin.version>
         <project-info-reports-plugin.version>3.0.0</project-info-reports-plugin.version>
 
-        <bytebuddy.version>1.10.1</bytebuddy.version>
+        <bytebuddy.version>1.10.7</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
         <cache.version>1.1.1</cache.version>
-        <deegree.version>3.4.8</deegree.version>
+        <deegree.version>3.4.11</deegree.version>
         <interceptor.version>1.2.2</interceptor.version>
 
         <downloadSources>true</downloadSources>
