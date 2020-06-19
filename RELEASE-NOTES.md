@@ -1,5 +1,13 @@
 # Release Notes
 
+## 5.1.0 (2020-06-19)
+
+* Introduces layerappearance clickable property. See [here](https://github.com/terrestris/shogun-core/pull/381)
+
+## 5.0.1 (2020-02-11)
+
+* Dependency updates (see [here](https://github.com/terrestris/shogun-core/pull/377) and [here](https://github.com/terrestris/shogun-core/pull/378))
+
 ## 5.0.0 (2019-12-13)
 
 * Change: Due to the introduction of Spotbugs and Checkstyle all static loggers were renamed from `LOG` to `logger`. See [here](https://github.com/terrestris/shogun-core/pull/374)
