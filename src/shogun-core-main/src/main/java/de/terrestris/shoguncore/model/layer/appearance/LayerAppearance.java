@@ -44,6 +44,11 @@ public class LayerAppearance extends PersistentObject {
     /**
      *
      */
+    private Boolean clickable;
+
+    /**
+     *
+     */
     private String hoverTemplate;
 
     /**
@@ -135,6 +140,20 @@ public class LayerAppearance extends PersistentObject {
      */
     public void setHoverable(Boolean hoverable) {
         this.hoverable = hoverable;
+    }
+
+    /**
+     * @return the clickable
+     */
+    public Boolean getClickable() {
+        return clickable;
+    }
+
+    /**
+     * @param clickable the clickable to set
+     */
+    public void setClickable(Boolean clickable) {
+        this.clickable = clickable;
     }
 
     /**
@@ -255,6 +274,7 @@ public class LayerAppearance extends PersistentObject {
             append(getOpacity()).
             append(getVisible()).
             append(getHoverable()).
+            append(getClickable()).
             append(getHoverTemplate()).
             append(getProperties()).
             toHashCode();
@@ -284,6 +304,7 @@ public class LayerAppearance extends PersistentObject {
             append(getOpacity(), other.getOpacity()).
             append(getVisible(), other.getVisible()).
             append(getHoverable(), other.getHoverable()).
+            append(getClickable(), other.getClickable()).
             append(getHoverTemplate(), other.getHoverTemplate()).
             append(getProperties(), other.getProperties()).
             isEquals();
