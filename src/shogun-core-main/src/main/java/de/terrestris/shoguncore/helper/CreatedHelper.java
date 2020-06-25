@@ -12,7 +12,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class CreatedHelper {
 
-    private static final Logger logger = getLogger(IdHelper.class);
+    private static final Logger logger = getLogger(CreatedHelper.class);
 
     /**
      * Helper method that uses reflection to set the (inaccessible) created field of
