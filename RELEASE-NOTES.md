@@ -1,5 +1,13 @@
 # Release Notes
 
+## 5.2.1 (2020-06-26)
+
+* Enable usage of endpoints. See [here](https://github.com/terrestris/shogun-core/pull/383)
+
+## 5.2.0 (2020-06-26)
+
+* Introduces CreatedHelper. See [here](https://github.com/terrestris/shogun-core/pull/382)
+
 ## 5.1.0 (2020-06-19)
 
 * Introduces layerappearance clickable property. See [here](https://github.com/terrestris/shogun-core/pull/381)
