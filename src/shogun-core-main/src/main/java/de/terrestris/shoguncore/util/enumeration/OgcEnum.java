@@ -250,7 +250,8 @@ public class OgcEnum {
         LAYER("LAYER"),
         TYPENAME("TYPENAME"),
         TYPENAMES("TYPENAMES"),
-        NAMESPACE("NAMESPACE");
+        NAMESPACE("NAMESPACE"),
+        CUSTOM_ENDPOINT("CUSTOM_ENDPOINT");
 
         private final String value;
 
