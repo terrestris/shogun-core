@@ -79,9 +79,13 @@
     </util:list>
 
     <!-- The default shoguncore OWS request interceptors -->
-    <bean id="wfsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WfsRequestInterceptor" />
+    <bean id="wfsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WfsRequestInterceptor" />
+    <bean id="wfsResponseInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WfsResponseInterceptor" />
+    <bean id="wmsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WmsRequestInterceptor" />
+    <bean id="wmsResponseInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WmsResponseInterceptor" />
+    <bean id="wmtsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WmtsRequestInterceptor" />
+    <bean id="wmtsResponseInterceptor" class="de.terrestris.shoguncore.util.interceptor.secure.WmtsResponseInterceptor" />
     <bean id="wcsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WcsRequestInterceptor" />
-    <bean id="wmsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WmsRequestInterceptor" />
     <bean id="wpsRequestInterceptor" class="de.terrestris.shoguncore.util.interceptor.impl.WpsRequestInterceptor" />
 
 </beans>

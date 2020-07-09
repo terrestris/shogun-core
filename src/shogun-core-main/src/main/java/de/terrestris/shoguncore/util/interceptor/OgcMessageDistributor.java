@@ -71,6 +71,13 @@ public class OgcMessageDistributor {
      *
      */
     @Autowired(required = false)
+    @Qualifier("wmtsRequestInterceptor")
+    private WmtsRequestInterceptorInterface wmtsRequestInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
     @Qualifier("wfsRequestInterceptor")
     private WfsRequestInterceptorInterface wfsRequestInterceptor;
 
@@ -94,6 +101,13 @@ public class OgcMessageDistributor {
     @Autowired(required = false)
     @Qualifier("wmsResponseInterceptor")
     private WmsResponseInterceptorInterface wmsResponseInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
+    @Qualifier("wmtsResponseInterceptor")
+    private WmtsResponseInterceptorInterface wmtsResponseInterceptor;
 
     /**
      *
@@ -170,6 +184,24 @@ public class OgcMessageDistributor {
                 throw new InterceptorException(operationErrMsg);
             }
 
+        } else if (message.isWmts()) {
+            // check if the wmtsRequestInterceptor is available
+            if (this.wmtsRequestInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return request;
+            }
+
+            LOG.debug(infoMsg);
+
+            if (message.isWmtsGetCapabilities()) {
+                request = this.wmtsRequestInterceptor.interceptGetCapabilities(request);
+            } else if (message.isWmtsGetTile()) {
+                request = this.wmtsRequestInterceptor.interceptGetTile(request);
+            } else if (message.isWmtsGetFeatureInfo()) {
+                request = this.wmtsRequestInterceptor.interceptGetFeatureInfo(request);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
         } else if (message.isWfs()) {
 
             // check if the wfsRequestInterceptor is available
@@ -302,6 +334,26 @@ public class OgcMessageDistributor {
                 throw new InterceptorException(operationErrMsg);
             }
 
+        } else if (message.isWmts()) {
+
+            // check if the wmtsResponseInterceptor is available
+            if (this.wmtsResponseInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return response;
+            }
+
+            LOG.debug(infoMsg);
+
+            if (message.isWmtsGetCapabilities()) {
+                response = this.wmtsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
+            } else if (message.isWmtsGetTile()) {
+                response = this.wmtsResponseInterceptor.interceptGetTile(mutableRequest, response);
+            } else if (message.isWmtsGetFeatureInfo()) {
+                response = this.wmtsResponseInterceptor.interceptGetFeatureInfo(mutableRequest, response);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
+
         } else if (message.isWfs()) {
 
             // check if the wfsResponseInterceptor is available
@@ -388,6 +440,14 @@ public class OgcMessageDistributor {
     }
 
     /**
+     * @param wmtsRequestInterceptor the wmtsRequestInterceptor to set
+     */
+    public void setWmtsRequestInterceptor(
+        WmtsRequestInterceptorInterface wmtsRequestInterceptor) {
+        this.wmtsRequestInterceptor = wmtsRequestInterceptor;
+    }
+
+    /**
      * @param wfsRequestInterceptor the wfsRequestInterceptor to set
      */
     public void setWfsRequestInterceptor(
@@ -423,6 +483,14 @@ public class OgcMessageDistributor {
     public void setWmsResponseInterceptor(
         WmsResponseInterceptorInterface wmsResponseInterceptor) {
         this.wmsResponseInterceptor = wmsResponseInterceptor;
+    }
+
+    /**
+     * @param wmtsResponseInterceptor the wmtsResponseInterceptor to set
+     */
+    public void setWmtsResponseInterceptor(
+        WmtsResponseInterceptorInterface wmtsResponseInterceptor) {
+        this.wmtsResponseInterceptor = wmtsResponseInterceptor;
     }
 
     /**

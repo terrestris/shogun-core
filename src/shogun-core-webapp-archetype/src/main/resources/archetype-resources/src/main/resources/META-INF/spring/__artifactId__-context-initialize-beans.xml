@@ -75,10 +75,14 @@
         <!-- GeoServer Interceptor Rules -->
         <ref bean="defaultWMSRequestInterceptorRule" />
         <ref bean="defaultWMSResponseInterceptorRule" />
+        <ref bean="defaultWMTSRequestInterceptorRule" />
+        <ref bean="defaultWMTSResponseInterceptorRule" />
         <ref bean="defaultWFSRequestInterceptorRule" />
         <ref bean="defaultWFSResponseInterceptorRule" />
         <ref bean="defaultWCSRequestInterceptorRule" />
         <ref bean="defaultWCSResponseInterceptorRule" />
+        <ref bean="defaultWPSRequestInterceptorRule" />
+        <ref bean="defaultWPSResponseInterceptorRule" />
 
         <!-- Applications -->
         <ref bean="defaultApplication"/>
@@ -557,38 +561,62 @@
     <!-- The default interceptor rules -->
     <bean id="defaultWMSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WMS"/>
     </bean>
 
     <bean id="defaultWMSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WMS"/>
+    </bean>
+
+    <bean id="defaultWMTSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
+        <property name="event" value="REQUEST"/>
+        <property name="rule" value="MODIFY"/>
+        <property name="service" value="WMTS"/>
+    </bean>
+
+    <bean id="defaultWMTSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
+        <property name="event" value="RESPONSE"/>
+        <property name="rule" value="MODIFY"/>
+        <property name="service" value="WMTS"/>
     </bean>
 
     <bean id="defaultWFSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WFS"/>
     </bean>
 
     <bean id="defaultWFSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WFS"/>
     </bean>
 
     <bean id="defaultWCSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="REQUEST"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WCS"/>
     </bean>
 
     <bean id="defaultWCSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
         <property name="event" value="RESPONSE"/>
-        <property name="rule" value="ALLOW"/>
+        <property name="rule" value="MODIFY"/>
         <property name="service" value="WCS"/>
+    </bean>
+
+    <bean id="defaultWPSRequestInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
+        <property name="event" value="REQUEST"/>
+        <property name="rule" value="MODIFY"/>
+        <property name="service" value="WPS"/>
+    </bean>
+
+    <bean id="defaultWPSResponseInterceptorRule" class="de.terrestris.shoguncore.model.interceptor.InterceptorRule">
+        <property name="event" value="RESPONSE"/>
+        <property name="rule" value="MODIFY"/>
+        <property name="service" value="WPS"/>
     </bean>
 
 </beans>
