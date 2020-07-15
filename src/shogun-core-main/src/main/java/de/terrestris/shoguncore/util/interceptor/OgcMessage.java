@@ -18,6 +18,7 @@ public class OgcMessage {
     /**
      * The OGC service type, possible rules are:
      * * WMS
+     * * WMTS
      * * WFS
      * * WCS
      */

@@ -63,7 +63,6 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
         String endpoint = request.getParameterIgnoreCase("CUSTOM_ENDPOINT");
-        System.out.println("endpoint " + endpoint);
         if (endpoint == null) {
             return null;
         }
@@ -84,8 +83,6 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new ByteArrayInputStream(body));
-            Element root = doc.getDocumentElement();
-            String version = root.getAttribute("version");
             String proto = request.getHeader("x-forwarded-proto");
             String host = request.getHeader("x-forwarded-host");
             if (StringUtils.isEmpty(proto)) {
@@ -95,13 +92,9 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
                 host = request.getServerName();
             }
             String baseUrl = proto + "://" + host + request.getParameter("CONTEXT_PATH") + "/geoserver.action/" + endpoint;
-            if (version.equals("1.3.0")) {
-                removeLayers(doc, "http://schemas.opengis.net/wmts", layerNames);
-                updateUrls(doc, "http://schemas.opengis.net/wmts", baseUrl);
-            } else {
-                removeLayers(doc, "", layerNames);
-                updateUrls(doc, "", baseUrl);
-            }
+            removeLayers(doc, "wmts", layerNames);
+            updateUrls(doc, "wmts", baseUrl);
+
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             DOMSource source = new DOMSource(doc);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -152,10 +145,14 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
         }
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
-        NamespaceContext nscontext = CommonNamespaces.getNamespaceContext();
+        String owsVersion = doc.getDocumentElement().getAttribute("xmlns:ows");
+        String wmtsVersion = doc.getDocumentElement().getAttribute("xmlns");
+        NamespaceContext nscontext = CommonNamespaces.getNamespaceContext().
+            addNamespace("ows", owsVersion).
+            addNamespace("wmts", wmtsVersion);
         xpath.setNamespaceContext(nscontext);
         String prefix = namespace.equals("") ? "" : "wmts:";
-        XPathExpression expr = xpath.compile("//" + prefix + "Layer/" + prefix + "Name");
+        XPathExpression expr = xpath.compile("//" + prefix + "Layer/ows:Identifier");
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         List<Element> toRemove = new ArrayList<>();
         for (int i = 0; i < nodeList.getLength(); ++i) {
@@ -195,21 +192,36 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
     private void updateUrls(Document doc, String namespace, String baseUrl) throws XPathExpressionException {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
-        NamespaceContext nscontext = CommonNamespaces.getNamespaceContext();
+        String owsVersion = doc.getDocumentElement().getAttribute("xmlns:ows");
+        String wmtsVersion = doc.getDocumentElement().getAttribute("xmlns");
+        NamespaceContext nscontext = CommonNamespaces.getNamespaceContext().
+            addNamespace("ows", owsVersion).
+            addNamespace("wmts", wmtsVersion);
         xpath.setNamespaceContext(nscontext);
-        String prefix = namespace.equals("") ? "" : "wmts:";
-        XPathExpression expr = xpath.compile("//" + prefix + "OnlineResource");
+        XPathExpression expr = xpath.compile("//@xlink:href");
         NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         for (int i = 0; i < nodeList.getLength(); ++i) {
-            Element link = (Element) nodeList.item(i);
-            String url = link.getAttributeNS("http://www.w3.org/1999/xlink", "xlink:href");
+            String url = nodeList.item(i).getNodeValue();
             int index = url.indexOf("?");
             if (index > -1) {
                 url = url.substring(index);
                 url = baseUrl + url;
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", url);
+                nodeList.item(i).setNodeValue(url);
             } else {
-                link.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", baseUrl);
+                nodeList.item(i).setNodeValue(baseUrl);
+            }
+        }
+        XPathExpression expr2 = xpath.compile("//wmts:Layer//@template");
+        NodeList nodeList2 = (NodeList) expr2.evaluate(doc, XPathConstants.NODESET);
+        for (int i = 0; i < nodeList2.getLength(); ++i) {
+            String url = nodeList2.item(i).getNodeValue();
+            int index = url.indexOf("gwc/service/wmts/rest");
+            if (index > -1) {
+                String path = url.split("gwc/service/wmts/rest")[1];
+                url = baseUrl + path;
+                nodeList2.item(i).setNodeValue(url);
+            } else {
+                nodeList2.item(i).setNodeValue(baseUrl);
             }
         }
     }

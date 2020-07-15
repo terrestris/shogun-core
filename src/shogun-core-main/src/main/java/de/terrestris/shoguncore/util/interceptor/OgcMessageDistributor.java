@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Optional;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -131,13 +133,33 @@ public class OgcMessageDistributor {
     private WpsResponseInterceptorInterface wpsResponseInterceptor;
 
     /**
+     *
      * @param request
      * @param message
      * @return
      * @throws InterceptorException
      */
     public MutableHttpServletRequest distributeToRequestInterceptor(
-        MutableHttpServletRequest request, OgcMessage message)
+        MutableHttpServletRequest request,
+        OgcMessage message) throws InterceptorException {
+            return distributeToRequestInterceptor(
+                request,
+                message,
+                new HashMap<String, Optional<String>>()
+            );
+    }
+
+    /**
+     * @param request
+     * @param message
+     * @param optionals
+     * @return
+     * @throws InterceptorException
+     */
+    public MutableHttpServletRequest distributeToRequestInterceptor(
+        MutableHttpServletRequest request,
+        OgcMessage message,
+        HashMap<String, Optional<String>> optionals)
         throws InterceptorException {
 
         if (message.isRequestAllowed()) {
@@ -196,9 +218,13 @@ public class OgcMessageDistributor {
             if (message.isWmtsGetCapabilities()) {
                 request = this.wmtsRequestInterceptor.interceptGetCapabilities(request);
             } else if (message.isWmtsGetTile()) {
-                request = this.wmtsRequestInterceptor.interceptGetTile(request);
+                request = this.wmtsRequestInterceptor.interceptGetTile(
+                    request,
+                    optionals);
             } else if (message.isWmtsGetFeatureInfo()) {
-                request = this.wmtsRequestInterceptor.interceptGetFeatureInfo(request);
+                request = this.wmtsRequestInterceptor.interceptGetFeatureInfo(
+                    request,
+                    optionals);
             } else {
                 throw new InterceptorException(operationErrMsg);
             }

@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
 import java.util.Optional;
 
 import static de.terrestris.shoguncore.web.GeoServerInterceptorController.ERROR_MESSAGE;
@@ -57,7 +59,7 @@ public class GeoServerInterceptorControllerTest {
 
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
             Matchers.any(HttpServletRequest.class),
-            Matchers.any(Optional.class)
+            Matchers.any(HashMap.class)
         )).thenReturn(responseObject);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(INTERCEPTOR_ENDPOINT))
@@ -75,7 +77,7 @@ public class GeoServerInterceptorControllerTest {
 
         Mockito.when(geoServerInterceptorService.interceptGeoServerRequest(
             Matchers.any(HttpServletRequest.class),
-            Matchers.any(Optional.class)
+            Matchers.any(HashMap.class)
         )).thenReturn(responseObject);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(INTERCEPTOR_ENDPOINT))

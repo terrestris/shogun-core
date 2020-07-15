@@ -5,6 +5,7 @@ import de.terrestris.shoguncore.dao.UserDao;
 import de.terrestris.shoguncore.model.User;
 import de.terrestris.shoguncore.model.UserGroup;
 import de.terrestris.shoguncore.model.layer.Layer;
+import de.terrestris.shoguncore.model.layer.source.ImageWmsLayerDataSource;
 import de.terrestris.shoguncore.model.layer.source.WfsLayerDataSource;
 import de.terrestris.shoguncore.model.security.Permission;
 import de.terrestris.shoguncore.model.security.PermissionCollection;
@@ -143,6 +144,19 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
                     layer.getSource();
                 if ((source.getTypeName().equalsIgnoreCase(typeNameParam) ||
                      source.getTypeNames().equalsIgnoreCase(typeNameParam)) &&
+                    source.getUrl().equalsIgnoreCase(request.getContextPath() +
+                    "/geoserver.action")) {
+                    if (method.equals("UPDATE")) {
+                        match = checkForPermission(layer, Permission.UPDATE);
+                    } else if (method.equals("READ")) {
+                        // implicitly checked by findAll method
+                        match = true;
+                    }
+                }
+            } else if (layer.getSource() instanceof ImageWmsLayerDataSource) {
+                ImageWmsLayerDataSource source = (ImageWmsLayerDataSource)
+                    layer.getSource();
+                if (source.getLayerNames().equalsIgnoreCase(typeNameParam) &&
                     source.getUrl().equalsIgnoreCase(request.getContextPath() +
                     "/geoserver.action")) {
                     if (method.equals("UPDATE")) {
