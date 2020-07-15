@@ -2,14 +2,16 @@ package de.terrestris.shoguncore.service;
 
 import de.terrestris.shoguncore.dao.TreeNodeDao;
 import de.terrestris.shoguncore.helper.IdHelper;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.UserGroup;
+import de.terrestris.shoguncore.model.security.PermissionCollection;
 import de.terrestris.shoguncore.model.tree.TreeFolder;
 import de.terrestris.shoguncore.model.tree.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service class for the {@link TreeNode} model.
@@ -47,9 +49,11 @@ public class TreeNodeService<E extends TreeNode, D extends TreeNodeDao<E>> exten
      * @throws IllegalAccessException
      * @throws NoSuchFieldException
      */
-    @SuppressWarnings("unchecked")
     public E cloneAndPersistTreeNode(E node) throws Exception {
+        return cloneAndPersistTreeNode(node, true, new ArrayList<>());
+    }
 
+    private E cloneAndPersistTreeNode(E node, boolean root, List<E> nodes) throws Exception {
         if (node == null) {
             throw new Exception("Node to clone must not be null.");
         }
@@ -57,13 +61,29 @@ public class TreeNodeService<E extends TreeNode, D extends TreeNodeDao<E>> exten
         // unproxy the node to be sure that everything (on top level) is loaded eagerly
         // before we continue to care about possible child notes and persistance
         node = dao.unproxy(node);
+        HashMap<User, PermissionCollection> userPermissions = new HashMap<>();
+        node.getUserPermissions().forEach((user, coll) -> {
+            PermissionCollection collection = new PermissionCollection();
+            collection.setPermissions(new HashSet<>(coll.getPermissions()));
+            userPermissions.put(user, collection);
+        });
+        node.setUserPermissions(userPermissions);
+        HashMap<UserGroup, PermissionCollection> groupPermissions = new HashMap<>();
+        node.getGroupPermissions().forEach((group, coll) -> {
+            PermissionCollection collection = new PermissionCollection();
+            collection.setPermissions(new HashSet<>(coll.getPermissions()));
+            groupPermissions.put(group, collection);
+        });
+        node.setGroupPermissions(groupPermissions);
 
         if (node instanceof TreeFolder) {
             List<E> children = (List<E>) ((TreeFolder) node).getChildren();
             List<E> clonedChildren = new ArrayList<>();
             for (E childNode : children) {
                 // recursive call for all children
-                clonedChildren.add(cloneAndPersistTreeNode(childNode));
+                E child = cloneAndPersistTreeNode(childNode, false, nodes);
+                child.setParentFolder((TreeFolder) node);
+                clonedChildren.add(child);
             }
             ((TreeFolder) node).setChildren((List<TreeNode>) clonedChildren);
         }
@@ -74,8 +94,13 @@ public class TreeNodeService<E extends TreeNode, D extends TreeNodeDao<E>> exten
         // set id to null to persist a new instance afterwards
         IdHelper.setIdOnPersistentObject(node, null);
 
-        // persist the same object as a new entry in database
-        dao.saveOrUpdate(node);
+        nodes.add(node);
+
+        if (root) {
+            // persist the same object as a new entry in database
+            Collections.reverse(nodes);
+            nodes.forEach(dao::saveOrUpdate);
+        }
 
         return node;
     }
