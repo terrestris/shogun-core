@@ -1,5 +1,10 @@
 # Release Notes
 
+## 5.2.2 (2020-07-15)
+
+* Fix copying of applications. See [here](https://github.com/terrestris/shogun-core/pull/385)
+* Update log4j version. See [here](https://github.com/terrestris/shogun-core/pull/384)
+
 ## 5.2.1 (2020-06-26)
 
 * Enable usage of endpoints. See [here](https://github.com/terrestris/shogun-core/pull/383)
