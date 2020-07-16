@@ -54,6 +54,7 @@ public class GeoServerInterceptorService {
      */
     private static final Logger LOG = getLogger(
         GeoServerInterceptorService.class);
+
     /**
      * An array of whitelisted Headers to forward within the Interceptor.
      */
@@ -68,14 +69,20 @@ public class GeoServerInterceptorService {
         "geowebcache-tile-index",
         "geowebcache-miss-reason"
     };
+
+    /**
+     *
+     */
     private static final Pattern WMTS_PATTERN = Pattern.compile("/[^/]+/wmts.action/\\d+/(.*)");
     private static final String WMS_REFLECT_ENDPOINT = "/reflect";
     private static final String USE_REFLECT_PARAM = "useReflect";
+
     /**
      *
      */
     @Autowired
     OgcMessageDistributor ogcMessageDistributor;
+
     /**
      *
      */
@@ -350,6 +357,7 @@ public class GeoServerInterceptorService {
                 WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
                 if (source.getId().equals(id)) {
                     dataSource = source;
+                    break;
                 }
             }
         }

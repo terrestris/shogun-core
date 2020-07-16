@@ -11,7 +11,7 @@ import de.terrestris.shoguncore.model.security.Permission;
 import de.terrestris.shoguncore.model.security.PermissionCollection;
 import de.terrestris.shoguncore.service.LayerService;
 import de.terrestris.shoguncore.service.UserService;
-import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
+import de.terrestris.shoguncore.util.enumeration.OgcEnum;
 import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WfsRequestInterceptorInterface;
@@ -24,8 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,12 +36,7 @@ import java.util.Set;
  * @author Johannes Weskamm
  *
  */
-public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
-
-    /**
-     *
-     */
-    private URI appUri = null;
+public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequestInterceptorInterface {
 
     /**
      *
@@ -82,6 +75,7 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
     @Override
     public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
         LOG.debug("Intercepting WFS GetCapabilities");
+        // response will be intercepted
         return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
     }
 
@@ -91,6 +85,7 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
     @Override
     public MutableHttpServletRequest interceptDescribeFeatureType(MutableHttpServletRequest request) {
         LOG.debug("Intercepting WFS DescribeFeatureType");
+        // response will be intercepted
         return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
     }
 
@@ -136,6 +131,7 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
     private boolean isAllowed(
         MutableHttpServletRequest request, String paramName, String method) {
         String typeNameParam = request.getParameterIgnoreCase(paramName);
+
         List<Layer> all = layerService.findAll();
         boolean match = false;
         for (Layer layer : all) {
@@ -152,6 +148,7 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
                         // implicitly checked by findAll method
                         match = true;
                     }
+                    break;
                 }
             } else if (layer.getSource() instanceof ImageWmsLayerDataSource) {
                 ImageWmsLayerDataSource source = (ImageWmsLayerDataSource)
@@ -165,6 +162,7 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
                         // implicitly checked by findAll method
                         match = true;
                     }
+                    break;
                 }
             }
         }
@@ -179,9 +177,9 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
      * @return If the layer is allowed to read for current user
      */
     private boolean isAllowed(MutableHttpServletRequest request, String method) {
-        String typeNameParam = "typeNames";
+        String typeNameParam = OgcEnum.EndPoint.TYPENAMES.toString();
         if (StringUtils.isEmpty(request.getParameterIgnoreCase(typeNameParam))) {
-            typeNameParam = "typeName";
+            typeNameParam = OgcEnum.EndPoint.TYPENAME.toString();
         }
         return isAllowed(request, typeNameParam, method);
     }
@@ -217,31 +215,4 @@ public class WfsRequestInterceptor implements WfsRequestInterceptorInterface {
         return allowedOnUser || allowedOnGroup;
     }
 
-    /**
-     * <p>forbidRequest.</p>
-     *
-     * @param request a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     * @return a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     */
-    protected MutableHttpServletRequest forbidRequest(MutableHttpServletRequest request) {
-        this.setAppUriFromRequest(request);
-        String redirectUri = appUri == null ? "" : appUri.toString();
-        request.setRequestURI(redirectUri + "/response/forbidden.action");
-        return request;
-    }
-
-    /**
-     * <p>setAppUriFromRequest.</p>
-     *
-     * @param request a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     */
-    protected void setAppUriFromRequest(MutableHttpServletRequest request) {
-        if (appUri == null) {
-            try {
-                appUri = ShogunCoreContextUtil.getApplicationURIFromRequest(request);
-            } catch (URISyntaxException e) {
-                // pass
-            }
-        }
-    }
 }

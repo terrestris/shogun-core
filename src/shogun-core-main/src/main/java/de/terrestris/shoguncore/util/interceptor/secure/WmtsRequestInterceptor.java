@@ -4,7 +4,6 @@ import de.terrestris.shoguncore.dao.LayerDao;
 import de.terrestris.shoguncore.model.layer.Layer;
 import de.terrestris.shoguncore.model.layer.source.WmtsLayerDataSource;
 import de.terrestris.shoguncore.service.LayerService;
-import de.terrestris.shoguncore.util.application.ShogunCoreContextUtil;
 import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WmtsRequestInterceptorInterface;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +28,7 @@ import java.util.Optional;
  * @author Johannes Weskamm
  *
  */
-public class WmtsRequestInterceptor implements WmtsRequestInterceptorInterface {
-
-/**
-     *
-     */
-    private URI appUri = null;
+public class WmtsRequestInterceptor extends BaseInterceptor implements WmtsRequestInterceptorInterface {
 
     /**
      *
@@ -183,38 +175,11 @@ public class WmtsRequestInterceptor implements WmtsRequestInterceptorInterface {
                 }
                 if (sourceLayer.equalsIgnoreCase(layer)) {
                     match = true;
+                    break;
                 }
             }
         }
         return match;
-    }
-
-    /**
-     * <p>forbidRequest.</p>
-     *
-     * @param request a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     * @return a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     */
-    protected MutableHttpServletRequest forbidRequest(MutableHttpServletRequest request) {
-        this.setAppUriFromRequest(request);
-        String redirectUri = appUri == null ? "" : appUri.toString();
-        request.setRequestURI(redirectUri + "/response/forbidden.action");
-        return request;
-    }
-
-    /**
-     * <p>setAppUriFromRequest.</p>
-     *
-     * @param request a {@link de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest} object.
-     */
-    protected void setAppUriFromRequest(MutableHttpServletRequest request) {
-        if (appUri == null) {
-            try {
-                appUri = ShogunCoreContextUtil.getApplicationURIFromRequest(request);
-            } catch (URISyntaxException e) {
-                // pass
-            }
-        }
     }
 
 }
