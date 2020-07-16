@@ -355,8 +355,7 @@ public class GeoServerInterceptorService {
         }
 
         if (dataSource == null) {
-            Response response = new Response(HttpStatus.FORBIDDEN, null, new byte[0]);
-            return response;
+            return new Response(HttpStatus.FORBIDDEN, null, new byte[0]);
         }
 
         String baseUrl = dataSource.getUrl();
