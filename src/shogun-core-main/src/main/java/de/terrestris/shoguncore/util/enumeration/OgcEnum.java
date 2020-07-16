@@ -35,6 +35,11 @@ public class OgcEnum {
         wmsOps.add(OperationType.GET_LEGEND_GRAPHIC);
         wmsOps.add(OperationType.GET_STYLES);
 
+        Set<OperationType> wmtsOps = new HashSet<OperationType>();
+        wmtsOps.add(OperationType.GET_CAPABILITIES);
+        wmtsOps.add(OperationType.GET_TILE);
+        wmtsOps.add(OperationType.GET_FEATURE_INFO);
+
         Set<OperationType> wfsOps = new HashSet<OperationType>();
         wfsOps.add(OperationType.GET_CAPABILITIES);
         wfsOps.add(OperationType.DESCRIBE_FEATURE_TYPE);
@@ -61,6 +66,7 @@ public class OgcEnum {
 
 
         map.put(ServiceType.WMS, Collections.unmodifiableSet(wmsOps));
+        map.put(ServiceType.WMTS, Collections.unmodifiableSet(wmtsOps));
         map.put(ServiceType.WFS, Collections.unmodifiableSet(wfsOps));
         map.put(ServiceType.WCS, Collections.unmodifiableSet(wcsOps));
         map.put(ServiceType.WPS, Collections.unmodifiableSet(wpsOps));
@@ -78,6 +84,11 @@ public class OgcEnum {
         wmsSet.add(ServiceType.WMS);
         wmsSet = Collections.unmodifiableSet(wmsSet);
 
+        // A set containing only the WMTS ServiceType
+        Set<ServiceType> wmtsSet = new HashSet<ServiceType>();
+        wmtsSet.add(ServiceType.WMTS);
+        wmtsSet = Collections.unmodifiableSet(wmtsSet);
+
         // A set containing only the WFS ServiceType
         Set<ServiceType> wfsSet = new HashSet<ServiceType>();
         wfsSet.add(ServiceType.WFS);
@@ -93,9 +104,10 @@ public class OgcEnum {
         wpsSet.add(ServiceType.WPS);
         wpsSet = Collections.unmodifiableSet(wpsSet);
 
-        // A set containing the WMS, WFS, WCS and WPS ServiceTypes
+        // A set containing the WMS, WMTS, WFS, WCS and WPS ServiceTypes
         Set<ServiceType> getCapSet = new HashSet<ServiceType>();
         getCapSet.add(ServiceType.WMS);
+        getCapSet.add(ServiceType.WMTS);
         getCapSet.add(ServiceType.WFS);
         getCapSet.add(ServiceType.WCS);
         getCapSet.add(ServiceType.WPS);
@@ -103,6 +115,8 @@ public class OgcEnum {
 
         // look up all WMS operations from the previously created map
         Set<OperationType> wmsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WMS);
+        // look up all WMTS operations from the previously created map
+        Set<OperationType> wmtsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WMTS);
         // look up all WFS operations from the previously created map
         Set<OperationType> wfsOperations = OPERATIONS_BY_SERVICETYPE.get(ServiceType.WFS);
         // look up all WCS operations from the previously created map
@@ -116,6 +130,12 @@ public class OgcEnum {
         for (OperationType wmsOperation : wmsOperations) {
             if (!OperationType.GET_CAPABILITIES.equals(wmsOperation)) {
                 map.put(wmsOperation, wmsSet);
+            }
+        }
+        // for WMTS operations, put the WMTS set, unless it's the GetCapability op
+        for (OperationType wmtsOperation : wmtsOperations) {
+            if (!OperationType.GET_CAPABILITIES.equals(wmtsOperation)) {
+                map.put(wmtsOperation, wmtsSet);
             }
         }
         // for WFS operations, put the WFS set, unless it's the GetCapability op
@@ -319,6 +339,7 @@ public class OgcEnum {
      */
     public enum ServiceType {
         WMS("WMS"),
+        WMTS("WMTS"),
         WFS("WFS"),
         WCS("WCS"),
         WPS("WPS"),

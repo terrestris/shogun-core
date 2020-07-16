@@ -1,7 +1,8 @@
 package de.terrestris.shoguncore.service;
 
-import de.terrestris.shoguncore.dao.LayerDataSourceDao;
+import de.terrestris.shoguncore.dao.LayerDao;
 import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
+import de.terrestris.shoguncore.model.layer.Layer;
 import de.terrestris.shoguncore.model.layer.source.WmtsLayerDataSource;
 import de.terrestris.shoguncore.util.enumeration.HttpEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +54,7 @@ public class GeoServerInterceptorService {
      */
     private static final Logger LOG = getLogger(
         GeoServerInterceptorService.class);
+
     /**
      * An array of whitelisted Headers to forward within the Interceptor.
      */
@@ -66,22 +69,33 @@ public class GeoServerInterceptorService {
         "geowebcache-tile-index",
         "geowebcache-miss-reason"
     };
+
+    /**
+     *
+     */
     private static final Pattern WMTS_PATTERN = Pattern.compile("/[^/]+/wmts.action/\\d+/(.*)");
     private static final String WMS_REFLECT_ENDPOINT = "/reflect";
     private static final String USE_REFLECT_PARAM = "useReflect";
+
     /**
      *
      */
     @Autowired
     OgcMessageDistributor ogcMessageDistributor;
+
     /**
      *
      */
     @Autowired
     InterceptorRuleService<InterceptorRule, ?> interceptorRuleService;
+
+    /**
+     *
+     */
     @Autowired
-    @Qualifier("layerDataSourceDao")
-    private LayerDataSourceDao<WmtsLayerDataSource> wmtsLayerDataSourceDao;
+    @Qualifier("layerService")
+    protected LayerService<Layer, LayerDao<Layer>> layerService;
+
     /**
      * The autowired properties file containing the (application driven)
      * GeoServer namespace - GeoServer BaseURI mapping, e.g.:
@@ -334,7 +348,24 @@ public class GeoServerInterceptorService {
             throw new InterceptorException("No WMTS request path found!");
         }
         String path = matcher.group(1);
-        WmtsLayerDataSource dataSource = wmtsLayerDataSourceDao.findById(id);
+
+        // get all layers allowed for this user in order to filter out not allowed ones
+        List<Layer> layers = layerService.findAll();
+        WmtsLayerDataSource dataSource = null;
+        for (Layer layer : layers) {
+            if (layer.getSource() instanceof WmtsLayerDataSource) {
+                WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
+                if (source.getId().equals(id)) {
+                    dataSource = source;
+                    break;
+                }
+            }
+        }
+
+        if (dataSource == null) {
+            return new Response(HttpStatus.FORBIDDEN, null, new byte[0]);
+        }
+
         String baseUrl = dataSource.getUrl();
         Response response = HttpUtil.get(baseUrl + "/" + path);
 
@@ -345,6 +376,7 @@ public class GeoServerInterceptorService {
     }
 
     /**
+     * Calls the main method with empty optionals hashmap
      * @param request
      * @return
      * @throws InterceptorException
@@ -353,34 +385,51 @@ public class GeoServerInterceptorService {
      * @throws IOException
      */
     public Response interceptGeoServerRequest(HttpServletRequest request)
-        throws InterceptorException, URISyntaxException,
-        HttpException, IOException {
-        return interceptGeoServerRequest(request, Optional.empty());
+            throws InterceptorException, URISyntaxException, HttpException, IOException {
+        return interceptGeoServerRequest(request, new HashMap<String, Optional<String>>());
     }
 
     /**
+     *
      * @param request
-     * @param endpoint
+     * @param optionals
      * @return
      * @throws InterceptorException
      * @throws URISyntaxException
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest(HttpServletRequest request, Optional<String> endpoint)
+    public Response interceptGeoServerRequest(
+        HttpServletRequest request,
+        HashMap<String, Optional<String>> optionals)
         throws InterceptorException, URISyntaxException,
         HttpException, IOException {
 
         // wrap the request, we want to manipulate it
         MutableHttpServletRequest mutableRequest =
             new MutableHttpServletRequest(request);
-        if (endpoint.isPresent()) {
-            mutableRequest.addParameter("CUSTOM_ENDPOINT", endpoint.get());
+        if (optionals.containsKey("endpoint") && optionals.get("endpoint").isPresent()) {
+            mutableRequest.addParameter("CUSTOM_ENDPOINT", optionals.get("endpoint").get());
             mutableRequest.addParameter("CONTEXT_PATH", request.getContextPath());
         }
 
+        // check if we have a RESTful WMTS request
+        boolean isRestfulWmts = false;
+        boolean isRestfulWmtsGetFeatureinfo = false;
+        if (optionals.containsKey("layername") && optionals.get("layername").isPresent() &&
+            optionals.containsKey("style") && optionals.get("style").isPresent() &&
+            optionals.containsKey("tilematrixset") && optionals.get("tilematrixset").isPresent() &&
+            optionals.containsKey("tilematrix") && optionals.get("tilematrix").isPresent() &&
+            optionals.containsKey("tilerow") && optionals.get("tilerow").isPresent() &&
+            optionals.containsKey("tilecol") && optionals.get("tilecol").isPresent()) {
+                isRestfulWmts = true;
+                if (optionals.containsKey("j") && optionals.get("j").isPresent() &&
+                    optionals.containsKey("i") && optionals.get("i").isPresent()) {
+                    isRestfulWmtsGetFeatureinfo = true;
+                }
+        }
         // get the OGC message information (service, request, endPoint)
-        OgcMessage message = getOgcMessage(mutableRequest);
+        OgcMessage message = getOgcMessage(mutableRequest, isRestfulWmts, isRestfulWmtsGetFeatureinfo);
 
         // check whether WMS reflector endpoint should be called
         final boolean useWmsReflector = shouldReflectEndpointBeCalled(mutableRequest, message);
@@ -393,7 +442,7 @@ public class GeoServerInterceptorService {
 
         // intercept the request (if needed)
         mutableRequest = ogcMessageDistributor
-            .distributeToRequestInterceptor(mutableRequest, message);
+            .distributeToRequestInterceptor(mutableRequest, message, optionals);
 
         // send the request
         // TODO: Move to global proxy class
@@ -440,11 +489,14 @@ public class GeoServerInterceptorService {
 
     /**
      * @param mutableRequest
+     * @param isRestfulWmtsGetFeatureinfo
+     * @param isRestfulWmts
      * @return
      * @throws InterceptorException
      * @throws IOException
      */
-    private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest)
+    private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest, boolean isRestfulWmts,
+            boolean isRestfulWmtsGetFeatureinfo)
         throws InterceptorException, IOException {
 
         LOG.trace("Building the OGC message from the given request.");
@@ -457,6 +509,18 @@ public class GeoServerInterceptorService {
             mutableRequest, OgcEnum.Operation.OPERATION.toString());
         String requestEndPoint = MutableHttpServletRequest.getRequestParameterValue(
             mutableRequest, OgcEnum.EndPoint.getAllValues());
+
+        if (isRestfulWmts) {
+            requestService = ServiceType.WMTS.toString();
+            String format = mutableRequest.getParameterIgnoreCase("format");
+            if (isRestfulWmtsGetFeatureinfo) {
+                requestOperation = OperationType.GET_FEATURE_INFO.toString();
+            } else if (format != null && format.toLowerCase(Locale.ROOT).contains("image")) {
+                requestOperation = OperationType.GET_TILE.toString();
+            } else {
+                requestOperation = OperationType.GET_CAPABILITIES.toString();
+            }
+        }
 
         if (StringUtils.isEmpty(requestService) ||
             StringUtils.isEmpty(requestOperation) ||

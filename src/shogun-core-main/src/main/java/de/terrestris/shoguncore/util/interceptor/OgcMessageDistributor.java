@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Optional;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -71,6 +73,13 @@ public class OgcMessageDistributor {
      *
      */
     @Autowired(required = false)
+    @Qualifier("wmtsRequestInterceptor")
+    private WmtsRequestInterceptorInterface wmtsRequestInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
     @Qualifier("wfsRequestInterceptor")
     private WfsRequestInterceptorInterface wfsRequestInterceptor;
 
@@ -99,6 +108,13 @@ public class OgcMessageDistributor {
      *
      */
     @Autowired(required = false)
+    @Qualifier("wmtsResponseInterceptor")
+    private WmtsResponseInterceptorInterface wmtsResponseInterceptor;
+
+    /**
+     *
+     */
+    @Autowired(required = false)
     @Qualifier("wfsResponseInterceptor")
     private WfsResponseInterceptorInterface wfsResponseInterceptor;
 
@@ -117,13 +133,33 @@ public class OgcMessageDistributor {
     private WpsResponseInterceptorInterface wpsResponseInterceptor;
 
     /**
+     *
      * @param request
      * @param message
      * @return
      * @throws InterceptorException
      */
     public MutableHttpServletRequest distributeToRequestInterceptor(
-        MutableHttpServletRequest request, OgcMessage message)
+        MutableHttpServletRequest request,
+        OgcMessage message) throws InterceptorException {
+            return distributeToRequestInterceptor(
+                request,
+                message,
+                new HashMap<String, Optional<String>>()
+            );
+    }
+
+    /**
+     * @param request
+     * @param message
+     * @param optionals
+     * @return
+     * @throws InterceptorException
+     */
+    public MutableHttpServletRequest distributeToRequestInterceptor(
+        MutableHttpServletRequest request,
+        OgcMessage message,
+        HashMap<String, Optional<String>> optionals)
         throws InterceptorException {
 
         if (message.isRequestAllowed()) {
@@ -170,6 +206,28 @@ public class OgcMessageDistributor {
                 throw new InterceptorException(operationErrMsg);
             }
 
+        } else if (message.isWmts()) {
+            // check if the wmtsRequestInterceptor is available
+            if (this.wmtsRequestInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return request;
+            }
+
+            LOG.debug(infoMsg);
+
+            if (message.isWmtsGetCapabilities()) {
+                request = this.wmtsRequestInterceptor.interceptGetCapabilities(request);
+            } else if (message.isWmtsGetTile()) {
+                request = this.wmtsRequestInterceptor.interceptGetTile(
+                    request,
+                    optionals);
+            } else if (message.isWmtsGetFeatureInfo()) {
+                request = this.wmtsRequestInterceptor.interceptGetFeatureInfo(
+                    request,
+                    optionals);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
         } else if (message.isWfs()) {
 
             // check if the wfsRequestInterceptor is available
@@ -302,6 +360,26 @@ public class OgcMessageDistributor {
                 throw new InterceptorException(operationErrMsg);
             }
 
+        } else if (message.isWmts()) {
+
+            // check if the wmtsResponseInterceptor is available
+            if (this.wmtsResponseInterceptor == null) {
+                LOG.debug(implErrMsg);
+                return response;
+            }
+
+            LOG.debug(infoMsg);
+
+            if (message.isWmtsGetCapabilities()) {
+                response = this.wmtsResponseInterceptor.interceptGetCapabilities(mutableRequest, response);
+            } else if (message.isWmtsGetTile()) {
+                response = this.wmtsResponseInterceptor.interceptGetTile(mutableRequest, response);
+            } else if (message.isWmtsGetFeatureInfo()) {
+                response = this.wmtsResponseInterceptor.interceptGetFeatureInfo(mutableRequest, response);
+            } else {
+                throw new InterceptorException(operationErrMsg);
+            }
+
         } else if (message.isWfs()) {
 
             // check if the wfsResponseInterceptor is available
@@ -388,6 +466,14 @@ public class OgcMessageDistributor {
     }
 
     /**
+     * @param wmtsRequestInterceptor the wmtsRequestInterceptor to set
+     */
+    public void setWmtsRequestInterceptor(
+        WmtsRequestInterceptorInterface wmtsRequestInterceptor) {
+        this.wmtsRequestInterceptor = wmtsRequestInterceptor;
+    }
+
+    /**
      * @param wfsRequestInterceptor the wfsRequestInterceptor to set
      */
     public void setWfsRequestInterceptor(
@@ -423,6 +509,14 @@ public class OgcMessageDistributor {
     public void setWmsResponseInterceptor(
         WmsResponseInterceptorInterface wmsResponseInterceptor) {
         this.wmsResponseInterceptor = wmsResponseInterceptor;
+    }
+
+    /**
+     * @param wmtsResponseInterceptor the wmtsResponseInterceptor to set
+     */
+    public void setWmtsResponseInterceptor(
+        WmtsResponseInterceptorInterface wmtsResponseInterceptor) {
+        this.wmtsResponseInterceptor = wmtsResponseInterceptor;
     }
 
     /**

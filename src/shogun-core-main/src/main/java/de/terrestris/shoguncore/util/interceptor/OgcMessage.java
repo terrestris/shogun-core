@@ -18,6 +18,7 @@ public class OgcMessage {
     /**
      * The OGC service type, possible rules are:
      * * WMS
+     * * WMTS
      * * WFS
      * * WCS
      */
@@ -158,6 +159,14 @@ public class OgcMessage {
     /**
      * @return
      */
+    public boolean isWmts() {
+        return this.getService() != null &&
+            this.getService().equals(OgcEnum.ServiceType.WMTS);
+    }
+
+    /**
+     * @return
+     */
     public boolean isWfs() {
         return this.getService() != null &&
             this.getService().equals(OgcEnum.ServiceType.WFS);
@@ -239,6 +248,33 @@ public class OgcMessage {
         return this.isWms() &&
             this.getOperation() != null &&
             this.getOperation().equals(OgcEnum.OperationType.GET_STYLES);
+    }
+
+    /**
+     * @return
+     */
+    public boolean isWmtsGetCapabilities() {
+        return this.isWmts() &&
+            this.getOperation() != null &&
+            this.getOperation().equals(OgcEnum.OperationType.GET_CAPABILITIES);
+    }
+
+    /**
+     * @return
+     */
+    public boolean isWmtsGetTile() {
+        return this.isWmts() &&
+            this.getOperation() != null &&
+            this.getOperation().equals(OgcEnum.OperationType.GET_TILE);
+    }
+
+    /**
+     * @return
+     */
+    public boolean isWmtsGetFeatureInfo() {
+        return this.isWmts() &&
+            this.getOperation() != null &&
+            this.getOperation().equals(OgcEnum.OperationType.GET_FEATURE_INFO);
     }
 
     /**
