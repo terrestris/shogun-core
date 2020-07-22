@@ -366,13 +366,12 @@ public class GeoServerInterceptorService {
             throw new InterceptorException("No WMTS request path found!");
         }
         String path = matcher.group(1);
-
+        WmtsLayerDataSource dataSource = null;
         // get all layers allowed for this user in order to filter out not allowed ones
         User user = userService.getUserBySession();
         if (user == null) {
             // check for anonymous access
             List<Layer> layers = layerDao.findAll();
-            WmtsLayerDataSource dataSource = null;
             for (Layer layer : layers) {
                 if (layer.getSource() instanceof WmtsLayerDataSource) {
                     WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
@@ -392,7 +391,6 @@ public class GeoServerInterceptorService {
             }
         } else {
             List<Layer> layers = layerService.findAll();
-            WmtsLayerDataSource dataSource = null;
             for (Layer layer : layers) {
                 if (layer.getSource() instanceof WmtsLayerDataSource) {
                     WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
