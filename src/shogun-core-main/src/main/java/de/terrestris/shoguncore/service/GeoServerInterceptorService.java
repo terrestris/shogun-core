@@ -1,9 +1,13 @@
 package de.terrestris.shoguncore.service;
 
 import de.terrestris.shoguncore.dao.LayerDao;
+import de.terrestris.shoguncore.dao.UserDao;
+import de.terrestris.shoguncore.model.User;
+import de.terrestris.shoguncore.model.UserGroup;
 import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
 import de.terrestris.shoguncore.model.layer.Layer;
 import de.terrestris.shoguncore.model.layer.source.WmtsLayerDataSource;
+import de.terrestris.shoguncore.model.security.PermissionCollection;
 import de.terrestris.shoguncore.util.enumeration.HttpEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum;
 import de.terrestris.shoguncore.util.enumeration.OgcEnum.OperationType;
@@ -95,6 +99,20 @@ public class GeoServerInterceptorService {
     @Autowired
     @Qualifier("layerService")
     protected LayerService<Layer, LayerDao<Layer>> layerService;
+
+    /**
+     *
+     */
+    @Autowired
+    @Qualifier("layerDao")
+    protected LayerDao<Layer> layerDao;
+
+    /**
+     *
+     */
+    @Autowired
+    @Qualifier("userService")
+    protected UserService<User, UserDao<User>> userService;
 
     /**
      * The autowired properties file containing the (application driven)
@@ -350,14 +368,38 @@ public class GeoServerInterceptorService {
         String path = matcher.group(1);
 
         // get all layers allowed for this user in order to filter out not allowed ones
-        List<Layer> layers = layerService.findAll();
-        WmtsLayerDataSource dataSource = null;
-        for (Layer layer : layers) {
-            if (layer.getSource() instanceof WmtsLayerDataSource) {
-                WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
-                if (source.getId().equals(id)) {
-                    dataSource = source;
-                    break;
+        User user = userService.getUserBySession();
+        if (user == null) {
+            // check for anonymous access
+            List<Layer> layers = layerDao.findAll();
+            WmtsLayerDataSource dataSource = null;
+            for (Layer layer : layers) {
+                if (layer.getSource() instanceof WmtsLayerDataSource) {
+                    WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
+                    if (source.getId().equals(id)) {
+                        Map<UserGroup, PermissionCollection> userGroupPermissions = layer.getGroupPermissions();
+                        if (userGroupPermissions != null) {
+                            for (UserGroup group : userGroupPermissions.keySet()) {
+                                if (group.getName().equalsIgnoreCase("public") &&
+                                    group.getOwner() == null) {
+                                    dataSource = source;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            List<Layer> layers = layerService.findAll();
+            WmtsLayerDataSource dataSource = null;
+            for (Layer layer : layers) {
+                if (layer.getSource() instanceof WmtsLayerDataSource) {
+                    WmtsLayerDataSource source = (WmtsLayerDataSource) layer.getSource();
+                    if (source.getId().equals(id)) {
+                        dataSource = source;
+                        break;
+                    }
                 }
             }
         }
