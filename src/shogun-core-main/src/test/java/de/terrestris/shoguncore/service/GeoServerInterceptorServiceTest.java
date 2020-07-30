@@ -36,7 +36,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -97,7 +96,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         when(ogcMessageDistributor.distributeToResponseInterceptor(
             any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
@@ -126,7 +125,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         when(ogcMessageDistributor.distributeToResponseInterceptor(
             any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
@@ -160,7 +159,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         when(ogcMessageDistributor.distributeToResponseInterceptor(
             any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);
@@ -201,7 +200,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         // for the next stub it would be even better if we could use .then(returnsFirstArg() but this needs java 8
         when(ogcMessageDistributor.distributeToResponseInterceptor(
@@ -245,7 +244,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         // for the next stub it would be even better if we could use .then(returnsFirstArg() but this needs java 8
         when(ogcMessageDistributor.distributeToResponseInterceptor(
@@ -297,7 +296,7 @@ public class GeoServerInterceptorServiceTest {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(httpRequest);
 
         when(ogcMessageDistributor.distributeToRequestInterceptor(
-            any(MutableHttpServletRequest.class), any(OgcMessage.class), any(HashMap.class))).thenReturn(mutableRequest);
+            any(MutableHttpServletRequest.class), any(OgcMessage.class))).thenReturn(mutableRequest);
 
         when(ogcMessageDistributor.distributeToResponseInterceptor(
             any(MutableHttpServletRequest.class), any(Response.class), any(OgcMessage.class))).thenReturn(resp);

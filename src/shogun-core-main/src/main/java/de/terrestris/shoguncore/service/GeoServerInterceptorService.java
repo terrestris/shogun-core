@@ -376,7 +376,6 @@ public class GeoServerInterceptorService {
     }
 
     /**
-     * Calls the main method with empty optionals hashmap
      * @param request
      * @return
      * @throws InterceptorException
@@ -384,65 +383,45 @@ public class GeoServerInterceptorService {
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest(HttpServletRequest request)
-            throws InterceptorException, URISyntaxException, HttpException, IOException {
-        return interceptGeoServerRequest(request, new HashMap<String, Optional<String>>());
+    public Response interceptGeoServerRequest( HttpServletRequest request )
+        throws InterceptorException, URISyntaxException,
+        HttpException, IOException {
+        return interceptGeoServerRequest( request, Optional.empty() );
     }
 
     /**
      *
      * @param request
-     * @param optionals
+     * @param endpoint
      * @return
      * @throws InterceptorException
      * @throws URISyntaxException
      * @throws HttpException
      * @throws IOException
      */
-    public Response interceptGeoServerRequest(
-        HttpServletRequest request,
-        HashMap<String, Optional<String>> optionals)
-        throws InterceptorException, URISyntaxException,
-        HttpException, IOException {
+    public Response interceptGeoServerRequest(HttpServletRequest request, Optional<String> endpoint)
+        throws InterceptorException, URISyntaxException, HttpException, IOException {
 
         // wrap the request, we want to manipulate it
-        MutableHttpServletRequest mutableRequest =
-            new MutableHttpServletRequest(request);
-        if (optionals.containsKey("endpoint") && optionals.get("endpoint").isPresent()) {
-            mutableRequest.addParameter("CUSTOM_ENDPOINT", optionals.get("endpoint").get());
+        MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(request);
+        if (endpoint.isPresent()) {
+            mutableRequest.addParameter("CUSTOM_ENDPOINT", endpoint.get());
             mutableRequest.addParameter("CONTEXT_PATH", request.getContextPath());
         }
 
-        // check if we have a RESTful WMTS request
-        boolean isRestfulWmts = false;
-        boolean isRestfulWmtsGetFeatureinfo = false;
-        if (optionals.containsKey("layername") && optionals.get("layername").isPresent() &&
-            optionals.containsKey("style") && optionals.get("style").isPresent() &&
-            optionals.containsKey("tilematrixset") && optionals.get("tilematrixset").isPresent() &&
-            optionals.containsKey("tilematrix") && optionals.get("tilematrix").isPresent() &&
-            optionals.containsKey("tilerow") && optionals.get("tilerow").isPresent() &&
-            optionals.containsKey("tilecol") && optionals.get("tilecol").isPresent()) {
-                isRestfulWmts = true;
-                if (optionals.containsKey("j") && optionals.get("j").isPresent() &&
-                    optionals.containsKey("i") && optionals.get("i").isPresent()) {
-                    isRestfulWmtsGetFeatureinfo = true;
-                }
-        }
         // get the OGC message information (service, request, endPoint)
-        OgcMessage message = getOgcMessage(mutableRequest, isRestfulWmts, isRestfulWmtsGetFeatureinfo);
+        OgcMessage message = getOgcMessage(mutableRequest);
 
         // check whether WMS reflector endpoint should be called
         final boolean useWmsReflector = shouldReflectEndpointBeCalled(mutableRequest, message);
 
         // get the GeoServer base URI by the provided request
         URI geoServerBaseUri = getGeoServerBaseURI(message, useWmsReflector);
-
         // set the GeoServer base URI to the (wrapped) request
         mutableRequest.setRequestURI(geoServerBaseUri);
 
         // intercept the request (if needed)
-        mutableRequest = ogcMessageDistributor
-            .distributeToRequestInterceptor(mutableRequest, message, optionals);
+        mutableRequest = ogcMessageDistributor.distributeToRequestInterceptor(mutableRequest, message);
 
         // send the request
         // TODO: Move to global proxy class
@@ -489,14 +468,11 @@ public class GeoServerInterceptorService {
 
     /**
      * @param mutableRequest
-     * @param isRestfulWmtsGetFeatureinfo
-     * @param isRestfulWmts
      * @return
      * @throws InterceptorException
      * @throws IOException
      */
-    private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest, boolean isRestfulWmts,
-            boolean isRestfulWmtsGetFeatureinfo)
+    private OgcMessage getOgcMessage(MutableHttpServletRequest mutableRequest)
         throws InterceptorException, IOException {
 
         LOG.trace("Building the OGC message from the given request.");
@@ -510,15 +486,24 @@ public class GeoServerInterceptorService {
         String requestEndPoint = MutableHttpServletRequest.getRequestParameterValue(
             mutableRequest, OgcEnum.EndPoint.getAllValues());
 
-        if (isRestfulWmts) {
-            requestService = ServiceType.WMTS.toString();
-            String format = mutableRequest.getParameterIgnoreCase("format");
-            if (isRestfulWmtsGetFeatureinfo) {
-                requestOperation = OperationType.GET_FEATURE_INFO.toString();
-            } else if (format != null && format.toLowerCase(Locale.ROOT).contains("image")) {
-                requestOperation = OperationType.GET_TILE.toString();
-            } else {
-                requestOperation = OperationType.GET_CAPABILITIES.toString();
+        // always use the custom_endpoint as endpoint and not one of the other options to successfully determine
+        // the base URI
+        if (!StringUtils.isEmpty(requestService) && requestService.equalsIgnoreCase("wmts")) {
+            requestEndPoint = MutableHttpServletRequest.getRequestParameterValue(
+                mutableRequest, OgcEnum.EndPoint.CUSTOM_ENDPOINT.toString());
+        }
+
+        // check for RESTful WMTS request
+        if (StringUtils.isEmpty(requestService) && StringUtils.isEmpty(requestOperation)) {
+            if (WmtsUtil.isRestfulWmtsRequest(mutableRequest)) {
+                requestService = ServiceType.WMTS.toString();
+                if (WmtsUtil.isRestfulWmtsGetFeatureinfo(mutableRequest)) {
+                    requestOperation = OperationType.GET_FEATURE_INFO.toString();
+                } else if (WmtsUtil.isRestfulWmtsGetTile(mutableRequest)) {
+                    requestOperation = OperationType.GET_TILE.toString();
+                } else {
+                    requestOperation = OperationType.GET_CAPABILITIES.toString();
+                }
             }
         }
 

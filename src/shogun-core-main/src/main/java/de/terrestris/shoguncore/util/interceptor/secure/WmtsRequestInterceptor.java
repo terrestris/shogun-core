@@ -2,23 +2,15 @@ package de.terrestris.shoguncore.util.interceptor.secure;
 
 import de.terrestris.shoguncore.dao.LayerDao;
 import de.terrestris.shoguncore.model.layer.Layer;
-import de.terrestris.shoguncore.model.layer.source.WmtsLayerDataSource;
 import de.terrestris.shoguncore.service.LayerService;
-import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WmtsRequestInterceptorInterface;
-
-import org.apache.commons.lang3.StringUtils;
+import de.terrestris.shoguncore.util.interceptor.WmtsUtil;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Interceptor class for WMS requests. Adds basic auth headers based on the GS
@@ -45,92 +37,37 @@ public class WmtsRequestInterceptor extends BaseInterceptor implements WmtsReque
     /**
      *
      */
-    @Value("${geoserver.username:}")
-    private String gsUser;
-
-    /**
-     *
-     */
-    @Value("${geoserver.password:}")
-    private String gsPass;
-
-    /**
-     *
-     */
     @Override
-    public MutableHttpServletRequest interceptGetTile(MutableHttpServletRequest request, HashMap<String, Optional<String>> optionals) {
+    public MutableHttpServletRequest interceptGetTile(MutableHttpServletRequest request) {
         LOG.debug("Intercepting WMTS GetTile request");
-
-        boolean restfulRequest = optionals.containsKey("layername") &&
-            optionals.get("layername").isPresent();
-
-        if (isAllowed(
-            request,
-            restfulRequest ? "" : "layer",
-            restfulRequest ? optionals.get("layername").get() : ""
-            )) {
-            String url;
-            if (restfulRequest) {
-                // RESTful request
-                url = request.getRequestURI().split("/ows")[0] +
-                    "/gwc/service/wmts/rest/" + optionals.get("layername").get() +
-                    "/" + optionals.get("style").get() +
-                    "/" + optionals.get("tilematrixset").get() +
-                    "/" + optionals.get("tilematrix").get() +
-                    "/" + optionals.get("tilerow").get() +
-                    "/" + optionals.get("tilecol").get() +
-                    "?" + request.getQueryString();
-            } else {
-                // KVP request
-                url = request.getRequestURI().split("/ows")[0] +
-                    "/gwc/service/wmts?" + request.getQueryString();
-            }
+        Layer layer = isAllowed(request);
+        if (layer != null) {
+            String url = layer.getSource().getUrl();
+            String layerId = WmtsUtil.getLayerId(request);
+            url += request.getRequestURL().toString().split("/wmts/"  + layerId)[1];
             request.setRequestURI(url);
-            return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
         } else {
             return forbidRequest(request);
         }
-
+        return request;
     }
 
     /**
      *
      */
     @Override
-    public MutableHttpServletRequest interceptGetFeatureInfo(MutableHttpServletRequest request, HashMap<String, Optional<String>> optionals) {
+    public MutableHttpServletRequest interceptGetFeatureInfo(MutableHttpServletRequest request) {
         LOG.debug("Intercepting WMTS GetFeatureInfo request");
-
-        boolean restfulRequest = optionals.containsKey("layername") &&
-            optionals.get("layername").isPresent();
-
-        if (isAllowed(
-            request,
-            restfulRequest ? "" : "layer",
-            restfulRequest ? optionals.get("layername").get() : ""
-            )) {
-            String url;
-            if (restfulRequest) {
-                // RESTful request
-                url = request.getRequestURI().split("/ows")[0] +
-                    "/gwc/service/wmts/rest/" + optionals.get("layername").get() +
-                    "/" + optionals.get("style").get() +
-                    "/" + optionals.get("tilematrixset").get() +
-                    "/" + optionals.get("tilematrix").get() +
-                    "/" + optionals.get("tilerow").get() +
-                    "/" + optionals.get("tilecol").get() +
-                    "/" + optionals.get("j").get() +
-                    "/" + optionals.get("i").get() +
-                    "?" + request.getQueryString();
-            } else {
-                // KVP request
-                url = request.getRequestURI().split("/ows")[0] +
-                    "/gwc/service/wmts?" + request.getQueryString();
-            }
+        Layer layer = isAllowed(request);
+        if (layer != null) {
+            String url = layer.getSource().getUrl();
+            String layerId = WmtsUtil.getLayerId(request);
+            url += request.getRequestURL().toString().split("/wmts/"  + layerId)[1];
             request.setRequestURI(url);
-            return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
         } else {
             return forbidRequest(request);
         }
+        return request;
     }
 
     /**
@@ -139,47 +76,21 @@ public class WmtsRequestInterceptor extends BaseInterceptor implements WmtsReque
     @Override
     public MutableHttpServletRequest interceptGetCapabilities(MutableHttpServletRequest request) {
         LOG.debug("Intercepting WMTS GetCapabilities request");
-        // response will be intercepted
+        // response will be intercepted, we reroute to GeoServers WMTS endpoint
         String url = request.getRequestURI().split("/ows")[0] +
             "/gwc/service/wmts?REQUEST=GetCapabilities";
         request.setRequestURI(url);
-        return new GeoserverAuthHeaderRequest(request, gsUser, gsPass);
+        return request;
     }
 
     /**
      * Check for read permission on layer by getting it through service
      *
      * @param request The request
-     * @param paramName The optional parameter name for the layer parameter
      * @return if the layer is allowed to read for current user
      */
-    private boolean isAllowed(MutableHttpServletRequest request,
-        String paramName, String layerName) {
-        String layer;
-        if (!StringUtils.isEmpty(paramName)) {
-            layer = request.getParameterIgnoreCase(paramName);
-        } else {
-            layer = layerName;
-        }
-        List<Layer> all = layerService.findAll();
-        boolean match = false;
-        for (Layer l : all) {
-            if (l.getSource() instanceof WmtsLayerDataSource) {
-                WmtsLayerDataSource source = (WmtsLayerDataSource)
-                    l.getSource();
-                String sourceLayer = source.getWmtsLayer();
-                if (sourceLayer.contains(":") && !layer.contains(":")) {
-                    sourceLayer = sourceLayer.split(":")[1];
-                } else if (layer.contains(":") && !sourceLayer.contains(":")) {
-                    layer = layer.split(":")[1];
-                }
-                if (sourceLayer.equalsIgnoreCase(layer)) {
-                    match = true;
-                    break;
-                }
-            }
-        }
-        return match;
+    private Layer isAllowed(MutableHttpServletRequest request) {
+        return layerService.findById(Integer.parseInt(WmtsUtil.getLayerId(request)));
     }
 
 }

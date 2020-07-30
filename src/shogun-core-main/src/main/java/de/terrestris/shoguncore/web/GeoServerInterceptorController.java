@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -78,25 +77,11 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
     /**
      * @param request
      */
-    @RequestMapping(value = {
-        "/geoserver.action",
-        "/geoserver.action/{endpoint}",
-        "/geoserver.action/{endpoint}/{layername}/{style}/{tilematrixset}/{tilematrix}/{tilerow}/{tilecol}",
-        "/geoserver.action/{endpoint}/{layername}/{style}/{tilematrixset}/{tilematrix}/{tilerow}/{tilecol}/{j}/{i}"
-    }, method = {
-        RequestMethod.GET, RequestMethod.POST
-    })
+    @RequestMapping(value = {"/geoserver.action", "/geoserver.action/{endpoint}/**"}, method = {
+        RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> interceptGeoServerRequest(
         HttpServletRequest request,
-        @PathVariable(value = "endpoint", required = false) Optional<String> endpoint,
-        @PathVariable(value = "layername", required = false) Optional<String> layername,
-        @PathVariable(value = "style", required = false) Optional<String> style,
-        @PathVariable(value = "tilematrixset", required = false) Optional<String> tilematrixset,
-        @PathVariable(value = "tilematrix", required = false) Optional<String> tilematrix,
-        @PathVariable(value = "tilerow", required = false) Optional<String> tilerow,
-        @PathVariable(value = "tilecol", required = false) Optional<String> tilecol,
-        @PathVariable(value = "j", required = false) Optional<String> j,
-        @PathVariable(value = "i", required = false) Optional<String> i
+        @PathVariable(value = "endpoint", required = false) Optional<String> endpoint
     ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus responseStatus = HttpStatus.OK;
@@ -106,19 +91,7 @@ public class GeoServerInterceptorController<S extends GeoServerInterceptorServic
         try {
             LOG.trace("Trying to intercept a GeoServer resource.");
 
-            HashMap<String, Optional<String>> optionals = new HashMap<String, Optional<String>>();
-            optionals.put("endpoint", endpoint);
-            optionals.put("layername", layername);
-            optionals.put("style", style);
-            optionals.put("tilematrixset", tilematrixset);
-            optionals.put("tilematrix", tilematrix);
-            optionals.put("tilerow", tilerow);
-            optionals.put("tilecol", tilecol);
-            optionals.put("j", j);
-            optionals.put("i", i);
-
-            httpResponse = this.service.interceptGeoServerRequest(
-                request, optionals);
+            httpResponse = this.service.interceptGeoServerRequest(request, endpoint);
 
             responseStatus = httpResponse.getStatusCode();
             responseBody = httpResponse.getBody();
