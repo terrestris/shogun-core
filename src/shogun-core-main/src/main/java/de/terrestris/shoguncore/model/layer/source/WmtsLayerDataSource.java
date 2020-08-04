@@ -30,7 +30,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private WmtsTileGrid tileGrid;
 
-    @ElementCollection(targetClass = String.class)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<String> urls;
 
@@ -39,6 +39,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
     private String projection;
     private String matrixSet;
     private String requestEncoding;
+    private String capabilitiesUrl;
 
     /**
      * Default constructor
@@ -56,7 +57,8 @@ public class WmtsLayerDataSource extends LayerDataSource {
      * @param requestEncoding
      * @param urls
      */
-    public WmtsLayerDataSource(WmtsTileGrid tileGrid, String wmtsLayer, String wmtsStyle, String projection, String matrixSet, String requestEncoding, List<String> urls) {
+    public WmtsLayerDataSource(WmtsTileGrid tileGrid, String wmtsLayer, String wmtsStyle, String projection,
+       String matrixSet, String requestEncoding, List<String> urls, String capabilitiesUrl) {
         this();
         this.tileGrid = tileGrid;
         this.wmtsLayer = wmtsLayer;
@@ -65,6 +67,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
         this.matrixSet = matrixSet;
         this.requestEncoding = requestEncoding;
         this.urls = urls;
+        this.capabilitiesUrl = capabilitiesUrl;
     }
 
     /**
@@ -166,6 +169,22 @@ public class WmtsLayerDataSource extends LayerDataSource {
     }
 
     /**
+     *
+     * @return The capabilitiesUrl
+     */
+    public String getCapabilitiesUrl() {
+        return capabilitiesUrl;
+    }
+
+    /**
+     *
+     * @param capabilitiesUrl The capabilitiesUrl to set
+     */
+    public void setCapabilitiesUrl(String capabilitiesUrl) {
+        this.capabilitiesUrl = capabilitiesUrl;
+    }
+
+    /**
      * @see java.lang.Object#hashCode()
      * <p>
      * According to
@@ -184,6 +203,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
             append(getWmtsStyle()).
             append(getTileGrid()).
             append(getUrls()).
+            append(getCapabilitiesUrl()).
             toHashCode();
     }
 
@@ -210,6 +230,7 @@ public class WmtsLayerDataSource extends LayerDataSource {
             append(getWmtsStyle(), other.getWmtsStyle()).
             append(getTileGrid(), other.getTileGrid()).
             append(getUrls(), other.getUrls()).
+            append(getCapabilitiesUrl(), other.getCapabilitiesUrl()).
             isEquals();
     }
 
