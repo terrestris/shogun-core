@@ -1,6 +1,5 @@
 package de.terrestris.shoguncore.util.interceptor;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
@@ -26,12 +25,10 @@ public class WmtsUtil {
      */
     public static boolean isRestfulWmtsRequest(MutableHttpServletRequest mutableRequest) {
         String url = mutableRequest.getRequestURL().toString();
-        String service = mutableRequest.getParameterIgnoreCase("service");
-        if (!StringUtils.isEmpty(service) && service.equalsIgnoreCase("wmts")) {
-            // looks like KVP
-            return false;
-        }
-        return Pattern.compile(".*/geoserver.action/.*/wmts/\\d+/(.*)").matcher(url).matches();
+        // check for presence of tilematrixset, tilematrix, tilecol and tilerow
+        boolean defaultRestfulRequest = Pattern.compile("[^\\/]*\\/[^\\/]*[^\\/]\\/\\d+\\/\\d+").matcher(url).find();
+        boolean isWmtsUrl = Pattern.compile(".*/geoserver.action/.*/wmts/\\d+/(.*)").matcher(url).matches();
+        return defaultRestfulRequest && isWmtsUrl;
     }
 
     /**
@@ -46,7 +43,7 @@ public class WmtsUtil {
         String url = mutableRequest.getRequestURL().toString();
         // weak test if we have at least 4 digits in the path for tilecol, tilerow, i and j
         return !isRestfulWmtsGetTile(mutableRequest) &&
-            Pattern.compile("\\/\\d+\\/\\d+\\/\\d+\\/\\d+").matcher(url).matches();
+            Pattern.compile("\\/\\d+\\/\\d+\\/\\d+\\/\\d+").matcher(url).find();
     }
 
     /**

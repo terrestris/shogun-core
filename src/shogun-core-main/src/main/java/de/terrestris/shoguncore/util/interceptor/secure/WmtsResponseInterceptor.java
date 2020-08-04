@@ -256,6 +256,9 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
         }
         try {
             Response response = HttpUtil.get(externalCapabilities);
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                return;
+            }
             byte[] body = response.getBody();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -300,7 +303,7 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
         } catch (ParserConfigurationException | SAXException | IOException | HttpException | XPathExpressionException |
             URISyntaxException e) {
             LOG.warn("Something went wrong when intercepting an external get capabilities response: " + e.getMessage());
-            LOG.trace("Stack trace", e);
+            LOG.trace("Full stack trace: ", e);
         }
     }
 
