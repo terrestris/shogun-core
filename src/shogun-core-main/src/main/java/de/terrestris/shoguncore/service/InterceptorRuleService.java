@@ -1,5 +1,7 @@
 package de.terrestris.shoguncore.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.terrestris.shoguncore.dao.InterceptorRuleDao;
 import de.terrestris.shoguncore.model.interceptor.InterceptorRule;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +23,11 @@ import java.util.List;
 @Service("interceptorRuleService")
 public class InterceptorRuleService<E extends InterceptorRule, D extends InterceptorRuleDao<E>>
     extends PermissionAwareCrudService<E, D> {
+
+    /**
+     * The cached rules for faster access
+     */
+    HashMap<String, List<E>> cachedRules = new HashMap();
 
     /**
      * Default constructor, which calls the type-constructor
@@ -43,7 +52,31 @@ public class InterceptorRuleService<E extends InterceptorRule, D extends Interce
      */
     @Transactional(readOnly = true)
     public List<E> findAllRulesForServiceAndEvent(String service, String event) {
-        return this.dao.findAllRulesForServiceAndEvent(service, event);
+        if (this.cachedRules.containsKey(service + "," + event)) {
+            return this.cachedRules.get(service + "," + event);
+        } else {
+            List<E> rules = this.dao.findAllRulesForServiceAndEvent(service, event);
+            this.cachedRules.put(service + "," + event, rules);
+            return rules;
+        }
+    }
+
+    @Override
+    public void saveOrUpdate(E e) {
+        this.cachedRules.clear();
+        super.saveOrUpdate(e);
+    }
+
+    @Override
+    public E updatePartialWithJsonNode(E entity, JsonNode jsonObject, ObjectMapper objectMapper) throws IOException {
+        this.cachedRules.clear();
+        return super.updatePartialWithJsonNode(entity, jsonObject, objectMapper);
+    }
+
+    @Override
+    public void delete(E e) {
+        this.cachedRules.clear();
+        super.delete(e);
     }
 
     /**
