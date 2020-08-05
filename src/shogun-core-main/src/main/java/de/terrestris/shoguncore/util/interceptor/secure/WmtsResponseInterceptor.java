@@ -269,6 +269,12 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
             XPath xpath = xfactory.newXPath();
             String owsVersion = externalDoc.getDocumentElement().getAttribute("xmlns:ows");
             String wmtsVersion = externalDoc.getDocumentElement().getAttribute("xmlns");
+            if (StringUtils.isEmpty(owsVersion)) {
+                owsVersion = "http://www.opengis.net/ows/1.1";
+            }
+            if (StringUtils.isEmpty(wmtsVersion)) {
+                wmtsVersion = "http://www.opengis.net/wmts/1.0";
+            }
             NamespaceContext nscontext = CommonNamespaces.getNamespaceContext().
                 addNamespace("ows", owsVersion).
                 addNamespace("wmts", wmtsVersion);
@@ -283,7 +289,7 @@ public class WmtsResponseInterceptor implements WmtsResponseInterceptorInterface
                 // add the layer entry
                 Element el = (Element) nodeList.item(i);
                 NodeList resourceUrls = (NodeList) el.getElementsByTagName("ResourceURL");
-                for (int j = 0; j < nodeList.getLength(); ++j) {
+                for (int j = 0; j < resourceUrls.getLength(); ++j) {
                     resourceUrls.item(j).getAttributes().getNamedItem("template")
                         .setNodeValue(source.getUrls().get(0));
                 }
