@@ -15,6 +15,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -1538,6 +1539,21 @@ public class HttpUtil {
     /**
      * Performs an HTTP PUT on the given URL.
      *
+     * @param uriString
+     * @param body
+     * @param username
+     * @param password
+     * @return
+     * @throws URISyntaxException
+     * @throws HttpException
+     */
+    public static Response put(String uriString, File body, ContentType contentType, String username, String password) throws URISyntaxException, HttpException {
+        return putFileBody(new HttpPut(uriString), body, contentType, new UsernamePasswordCredentials(username, password), null);
+    }
+
+    /**
+     * Performs an HTTP PUT on the given URL.
+     *
      * @param uri
      * @param body
      * @param contentType
@@ -1738,6 +1754,26 @@ public class HttpUtil {
         return send(new HttpDelete(uri), credentials, requestHeaders);
     }
 
+    /**
+     * @param httpRequest
+     * @param body
+     * @param contentType
+     * @param credentials    Instance implementing {@link Credentials} interface holding a set of credentials
+     * @param requestHeaders Additional HTTP headers added to the request
+     * @return The HTTP response as Response object.
+     * @throws URISyntaxException
+     * @throws HttpException
+     */
+    private static Response putFileBody(HttpPut httpRequest, File body, ContentType contentType, Credentials credentials, Header[] requestHeaders) throws URISyntaxException, HttpException {
+
+        if (contentType != null && body != null && body.exists()) {
+            FileEntity fileEntity = new FileEntity(body, contentType);
+            fileEntity.setChunked(true);
+            httpRequest.setEntity(fileEntity);
+        }
+
+        return send(httpRequest, credentials, requestHeaders);
+    }
     /**
      * @param httpRequest
      * @param body
