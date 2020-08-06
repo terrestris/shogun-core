@@ -2,7 +2,6 @@ package de.terrestris.shoguncore.util.http;
 
 import de.terrestris.shoguncore.util.model.Response;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
