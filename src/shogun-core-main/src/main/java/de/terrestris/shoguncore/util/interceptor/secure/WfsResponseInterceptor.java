@@ -157,16 +157,15 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             addNamespace("wfs", "http://www.opengis.net/wfs"));
         NodeList list = (NodeList) xpath.compile("//wfs:FeatureType/wfs:Name").evaluate(doc.getDocumentElement(), NODESET);
         List<Element> toRemove = new ArrayList<>();
-        for (int i = 0; i < list.getLength(); ++i) {
-            Element name = (Element) list.item(i);
-            String str = name.getTextContent();
-            if (!layerNames.contains(str)) {
-                toRemove.add((Element) name.getParentNode());
-            }
-        }
+        determineFeatureTypeNodesToRemove(layerNames, list, toRemove);
         xpath.setNamespaceContext(CommonNamespaces.getNamespaceContext().
             addNamespace("wfs", "http://www.opengis.net/wfs/2.0"));
         list = (NodeList) xpath.compile("//wfs:FeatureType/wfs:Name").evaluate(doc.getDocumentElement(), NODESET);
+        determineFeatureTypeNodesToRemove(layerNames, list, toRemove);
+        toRemove.forEach(element -> element.getParentNode().removeChild(element));
+    }
+
+    private void determineFeatureTypeNodesToRemove(List<String> layerNames, NodeList list, List<Element> toRemove) {
         for (int i = 0; i < list.getLength(); ++i) {
             Element name = (Element) list.item(i);
             String str = name.getTextContent();
@@ -174,7 +173,6 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
                 toRemove.add((Element) name.getParentNode());
             }
         }
-        toRemove.forEach(element -> element.getParentNode().removeChild(element));
     }
 
     @Override
