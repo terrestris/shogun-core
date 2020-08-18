@@ -87,6 +87,10 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
     @Override
     public Response interceptGetCapabilities(MutableHttpServletRequest request, Response response) {
         LOG.debug("Intercepting WFS GetCapabilities response");
+        String endpoint = request.getParameterIgnoreCase("CUSTOM_ENDPOINT");
+        if (endpoint == null) {
+            return null;
+        }
         String proto = request.getHeader("x-forwarded-proto");
         String requestHost = request.getHeader("x-forwarded-host");
         // fallbacks in case SHOGun is not behind a reverse proxy
@@ -94,9 +98,12 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             proto = request.getScheme();
         }
         if (StringUtils.isEmpty(requestHost)) {
+            requestHost = request.getHeader("x-forwarded-for");
+        }
+        if (StringUtils.isEmpty(requestHost)) {
             requestHost = request.getServerName();
         }
-        String baseUrl = proto + "://" + requestHost + request.getContextPath() + "/geoserver.action";
+        String baseUrl = proto + "://" + requestHost + request.getContextPath() + "/geoserver.action/" + endpoint;
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -134,7 +141,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
     private void removeLayers(Document doc) throws XPathExpressionException {
         // get all layers allowed for this user in order to filter out not allowed ones
         List<Layer> layers = layerService.findAll();
-        List<String> layerNames = new ArrayList<String>();
+        List<String> layerNames = new ArrayList<>();
         for (Layer layer : layers) {
             if (layer.getSource() instanceof ImageWmsLayerDataSource) {
                 ImageWmsLayerDataSource source = (ImageWmsLayerDataSource) layer.getSource();
@@ -150,6 +157,16 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             addNamespace("wfs", "http://www.opengis.net/wfs"));
         NodeList list = (NodeList) xpath.compile("//wfs:FeatureType/wfs:Name").evaluate(doc.getDocumentElement(), NODESET);
         List<Element> toRemove = new ArrayList<>();
+        for (int i = 0; i < list.getLength(); ++i) {
+            Element name = (Element) list.item(i);
+            String str = name.getTextContent();
+            if (!layerNames.contains(str)) {
+                toRemove.add((Element) name.getParentNode());
+            }
+        }
+        xpath.setNamespaceContext(CommonNamespaces.getNamespaceContext().
+            addNamespace("wfs", "http://www.opengis.net/wfs/2.0"));
+        list = (NodeList) xpath.compile("//wfs:FeatureType/wfs:Name").evaluate(doc.getDocumentElement(), NODESET);
         for (int i = 0; i < list.getLength(); ++i) {
             Element name = (Element) list.item(i);
             String str = name.getTextContent();
@@ -185,7 +202,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
     private void removeFeatureTypes(Document doc) throws XPathExpressionException {
         // get all layers allowed for this user in order to filter out not allowed ones
         List<Layer> layers = layerService.findAll();
-        List<String> layerNames = new ArrayList<String>();
+        List<String> layerNames = new ArrayList<>();
         for (Layer layer : layers) {
             if (layer.getSource() instanceof ImageWmsLayerDataSource) {
                 ImageWmsLayerDataSource source = (ImageWmsLayerDataSource) layer.getSource();
@@ -219,7 +236,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             String str = name.getAttribute("name");
             str = str.substring(0, str.lastIndexOf("Type"));
             if (!layerNames.contains(str)) {
-                toRemove.add((Element) name);
+                toRemove.add(name);
             }
         }
         list = (NodeList) xpath.compile("/xsd:schema/xsd:element").evaluate(doc.getDocumentElement(), NODESET);
@@ -227,7 +244,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             Element name = (Element) list.item(i);
             String str = name.getAttribute("name");
             if (!layerNames.contains(str)) {
-                toRemove.add((Element) name);
+                toRemove.add(name);
             }
         }
         toRemove.forEach(element -> element.getParentNode().removeChild(element));
