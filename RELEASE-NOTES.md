@@ -1,5 +1,10 @@
 # Release Notes
 
+## 5.2.3 (2020-08-19)
+
+* Add http put request with file body. See [here](https://github.com/terrestris/shogun-core/pull/393)
+* Fix WFS interceptor. See [here](https://github.com/terrestris/shogun-core/pull/394)
+
 ## 5.2.2 (2020-07-15)
 
 * Fix copying of applications. See [here](https://github.com/terrestris/shogun-core/pull/385)
