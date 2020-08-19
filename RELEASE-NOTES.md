@@ -1,9 +1,25 @@
 # Release Notes
 
-## 5.2.3 (2020-08-19)
+## 5.3.3 (2020-08-19)
 
 * Add http put request with file body. See [here](https://github.com/terrestris/shogun-core/pull/393)
 * Fix WFS interceptor. See [here](https://github.com/terrestris/shogun-core/pull/394)
+
+## 5.3.2 (2020-08-05)
+
+* Fix wrong iterator. See [here](https://github.com/terrestris/shogun-core/pull/392)
+
+## 5.3.1 (2020-08-05)
+
+* Speedup interceptor by using cached rules. See [here](https://github.com/terrestris/shogun-core/pull/391)
+
+## 5.3.0 (2020-08-04)
+
+* Enhancing WMTS support. See [here](https://github.com/terrestris/shogun-core/pull/390)
+
+## 5.2.3 (2020-07-16)
+
+* Interceptor security. See [here](https://github.com/terrestris/shogun-core/pull/386/)
 
 ## 5.2.2 (2020-07-15)
 
