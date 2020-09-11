@@ -1,5 +1,9 @@
 # Release Notes
 
+## 5.3.4 (2020-09-11)
+
+* Unset caching of children in the TreeFolder model. See [here](https://github.com/terrestris/shogun-core/pull/396)
+
 ## 5.3.3 (2020-08-19)
 
 * Add http put request with file body. See [here](https://github.com/terrestris/shogun-core/pull/393)
