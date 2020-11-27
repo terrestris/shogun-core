@@ -16,6 +16,7 @@ import de.terrestris.shoguncore.util.interceptor.GeoserverAuthHeaderRequest;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
 import de.terrestris.shoguncore.util.interceptor.WfsRequestInterceptorInterface;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,6 +134,20 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
     private boolean isAllowed(
         MutableHttpServletRequest request, String paramName, String method) {
         String typeNameParam = request.getParameterIgnoreCase(paramName);
+        if (typeNameParam == null) {
+            // try to get typename from POST body, if any
+            try {
+                String body = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
+                if (!StringUtils.isEmpty(body) && StringUtils.containsIgnoreCase(body, "wfs:transaction")) {
+                    String[] typeName = body.split("(?i)typename=\"");
+                    if (typeName.length > 0) {
+                        typeNameParam = typeName[1].split("\">")[0];
+                    }
+                }
+            } catch (IOException e) {
+                return false;
+            }
+        }
 
         List<Layer> all = layerService.findAll();
         boolean match = false;
@@ -199,7 +216,8 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
         boolean allowedOnUser = false;
         if (hasUser) {
             PermissionCollection pc = up.get(user);
-            allowedOnUser = pc.getPermissions().contains(permission);
+            allowedOnUser = pc.getPermissions().contains(permission) ||
+                pc.getPermissions().contains(Permission.ADMIN);
         }
 
         boolean allowedOnGroup = false;
@@ -208,7 +226,8 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
             for (UserGroup group : groups) {
                 if (gp.containsKey(group) && !allowedOnGroup) {
                     allowedOnGroup = gp.get(group).getPermissions().contains(
-                        permission);
+                        permission) || gp.get(group).getPermissions().contains(
+                        Permission.ADMIN);
                 }
             }
         }
