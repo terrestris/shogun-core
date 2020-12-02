@@ -200,6 +200,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
                             String names = ((TileWmsLayerDataSource) allowedLayer.getSource()).getLayerNames();
                             if (names.equalsIgnoreCase(typeName)) {
                                 match = true;
+                                break;
                             }
                         }
                     }
