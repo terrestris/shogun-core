@@ -191,7 +191,8 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
                 String ns = jsonObject.get("targetPrefix").asText();
                 ArrayNode featureTypes = (ArrayNode) jsonObject.get("featureTypes");
                 List<Layer> allowedLayers = layerService.findAll();
-                for (int i = 0; i < featureTypes.size(); i++) {
+                int size = featureTypes.size();
+                for (int i = 0; i < size; i++) {
                     String typeName = ns + ":" + featureTypes.get(i).get("typeName").asText();
                     boolean match = false;
                     for (Layer allowedLayer : allowedLayers) {
