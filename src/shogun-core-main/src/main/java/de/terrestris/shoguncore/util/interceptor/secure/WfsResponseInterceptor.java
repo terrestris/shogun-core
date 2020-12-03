@@ -1,8 +1,12 @@
 package de.terrestris.shoguncore.util.interceptor.secure;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.terrestris.shoguncore.dao.LayerDao;
 import de.terrestris.shoguncore.model.layer.Layer;
 import de.terrestris.shoguncore.model.layer.source.ImageWmsLayerDataSource;
+import de.terrestris.shoguncore.model.layer.source.TileWmsLayerDataSource;
 import de.terrestris.shoguncore.model.layer.source.WfsLayerDataSource;
 import de.terrestris.shoguncore.service.LayerService;
 import de.terrestris.shoguncore.util.interceptor.MutableHttpServletRequest;
@@ -36,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -180,6 +185,33 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
         LOG.debug("Intercepting WFS DescribeFeatureType response");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
+            if (response.getHeaders().get("content-type").get(0).toLowerCase(Locale.ROOT).contains("json")) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonObject = objectMapper.readTree(response.getBody());
+                String ns = jsonObject.get("targetPrefix").asText();
+                ArrayNode featureTypes = (ArrayNode) jsonObject.get("featureTypes");
+                List<Layer> allowedLayers = layerService.findAll();
+                int size = featureTypes.size();
+                for (int i = 0; i < size; i++) {
+                    String typeName = ns + ":" + featureTypes.get(i).get("typeName").asText();
+                    boolean match = false;
+                    for (Layer allowedLayer : allowedLayers) {
+                        if (allowedLayer.getSource() instanceof TileWmsLayerDataSource) {
+                            String names = ((TileWmsLayerDataSource) allowedLayer.getSource()).getLayerNames();
+                            if (names.equalsIgnoreCase(typeName)) {
+                                match = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!match) {
+                        featureTypes.remove(i);
+                    }
+                }
+                final byte[] bytes = objectMapper.writeValueAsBytes(jsonObject);
+                response.setBody(bytes);
+                return response;
+            }
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             builderFactory.setNamespaceAware(true);
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -189,7 +221,7 @@ public class WfsResponseInterceptor implements WfsResponseInterceptorInterface {
             Transformer transformer = factory.newTransformer();
             transformer.transform(new DOMSource(doc), new StreamResult(bout));
             response.setBody(bout.toByteArray());
-        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException | TransformerException e) {
+        } catch (NullPointerException | ParserConfigurationException | SAXException | IOException | XPathExpressionException | TransformerException e) {
             LOG.warn("Problem when intercepting WFS GetCapabilities: {}", e.getMessage());
             LOG.trace("Stack trace:", e);
             return null;
