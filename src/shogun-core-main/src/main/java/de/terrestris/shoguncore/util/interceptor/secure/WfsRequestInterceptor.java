@@ -27,9 +27,7 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Interceptor class for WFS requests. Adds basic auth headers based on the GS
@@ -133,15 +131,18 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
      */
     private boolean isAllowed(
         MutableHttpServletRequest request, String paramName, String method) {
+        HashSet<String> typeNameParams = new HashSet<String>();
         String typeNameParam = request.getParameterIgnoreCase(paramName);
-        if (typeNameParam == null) {
-            // try to get typename from POST body, if any
+        if (typeNameParam != null) {
+            typeNameParams.add(typeNameParam);
+        } else {
+            // try to get typenames from POST body, if any
             try {
                 String body = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8.name());
-                if (!StringUtils.isEmpty(body) && StringUtils.containsIgnoreCase(body, "wfs:transaction")) {
+                if (!StringUtils.isEmpty(body) && StringUtils.containsIgnoreCase(body, "typename")) {
                     String[] typeName = body.split("(?i)typename=\"");
-                    if (typeName.length > 0) {
-                        typeNameParam = typeName[1].split("\">")[0];
+                    for (int i = 1; i < typeName.length; i++) {
+                        typeNameParams.add(typeName[i].split("\"")[0]);
                     }
                 }
             } catch (IOException e) {
@@ -155,10 +156,8 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
             if (layer.getSource() instanceof WfsLayerDataSource) {
                 WfsLayerDataSource source = (WfsLayerDataSource)
                     layer.getSource();
-                if ((source.getTypeName().equalsIgnoreCase(typeNameParam) ||
-                     source.getTypeNames().equalsIgnoreCase(typeNameParam)) &&
-                    source.getUrl().equalsIgnoreCase(request.getContextPath() +
-                    "/geoserver.action")) {
+                if (typeNameParams.contains(source.getTypeName()) ||
+                    typeNameParams.contains(source.getTypeNames())) {
                     if (method.equals("UPDATE")) {
                         match = checkForPermission(layer, Permission.UPDATE);
                     } else if (method.equals("READ")) {
@@ -170,9 +169,7 @@ public class WfsRequestInterceptor extends BaseInterceptor implements WfsRequest
             } else if (layer.getSource() instanceof ImageWmsLayerDataSource) {
                 ImageWmsLayerDataSource source = (ImageWmsLayerDataSource)
                     layer.getSource();
-                if (source.getLayerNames().equalsIgnoreCase(typeNameParam) &&
-                    source.getUrl().equalsIgnoreCase(request.getContextPath() +
-                    "/geoserver.action")) {
+                if (typeNameParams.contains(source.getLayerNames())) {
                     if (method.equals("UPDATE")) {
                         match = checkForPermission(layer, Permission.UPDATE);
                     } else if (method.equals("READ")) {
