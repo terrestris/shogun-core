@@ -21,9 +21,26 @@
 
 * Enhancing WMTS support. See [here](https://github.com/terrestris/shogun-core/pull/390)
 
+Necessary migrations:
+
+```sql
+alter table wmtslayerdatasources add column capabilitiesurl text;
+```
+
 ## 5.2.3 (2020-07-16)
 
 * Interceptor security. See [here](https://github.com/terrestris/shogun-core/pull/386/)
+
+Necessary migrations:
+
+```sql
+create table wfslayerdatasources (
+    id integer not null primary key,
+    version text,
+    typename text,
+    typenames text
+);
+```
 
 ## 5.2.2 (2020-07-15)
 
