@@ -42,6 +42,12 @@
 
 * Introduces layerappearance clickable property. See [here](https://github.com/terrestris/shogun-core/pull/381)
 
+Necessary migrations:
+
+```sql
+alter table layerappearances add column clickable boolean default true;
+```
+
 ## 5.0.1 (2020-02-11)
 
 * Dependency updates (see [here](https://github.com/terrestris/shogun-core/pull/377) and [here](https://github.com/terrestris/shogun-core/pull/378))
