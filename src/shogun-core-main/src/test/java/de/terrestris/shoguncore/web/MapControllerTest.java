@@ -61,14 +61,9 @@ public class MapControllerTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(SETLAYERS_ENDPOINT)
                 .param("mapModuleId", "")
                 .param("layerIds", ""))
-                .andExpect(status().isOk()).andReturn();
+                .andExpect(status().is4xxClientError()).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), 200);
-
-        String content = result.getResponse().getContentAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        Assert.assertEquals("Returned body matched mocked one.",
-            objectMapper.writeValueAsString(ResultSet.error(MapController.COULD_NOT_SET_ERROR_MSG)), content);
+        assertEquals(result.getResponse().getStatus(), 400);
 
         // should not be called since mapModuleId and layerIds are empty
         Mockito.verify(mapService, Mockito.times(0)).

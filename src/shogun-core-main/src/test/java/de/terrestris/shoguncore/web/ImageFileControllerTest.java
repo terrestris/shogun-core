@@ -1,9 +1,7 @@
 package de.terrestris.shoguncore.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.terrestris.shoguncore.model.ImageFile;
 import de.terrestris.shoguncore.service.ImageFileService;
-import de.terrestris.shoguncore.util.data.ResultSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -50,12 +48,9 @@ public class ImageFileControllerTest {
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(GET_THUMBNAIL_ENDPOINT)
             .param("id", ""))
-            .andExpect(status().isOk()).andReturn();
+            .andExpect(status().is4xxClientError()).andReturn();
 
-        assertEquals(result.getResponse().getStatus(), 200);
-        ObjectMapper objectMapper = new ObjectMapper();
-        assertEquals("Returned body matched mocked one.",
-            objectMapper.writeValueAsString(ResultSet.error("Could not get the image thumbnail: Could not find the image with id null")), result.getResponse().getContentAsString());
+        assertEquals(result.getResponse().getStatus(), 400);
     }
 
     @Test

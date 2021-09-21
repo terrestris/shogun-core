@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.terrestris</groupId>
@@ -119,17 +120,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
+        <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml
+        </webapp-archetype-resource-pom>
 
         <tomcat.version>9.0.30</tomcat.version>
 
         <!-- Core -->
-        <spring.version>5.2.3.RELEASE</spring.version>
-        <spring-security.version>5.2.2.RELEASE</spring-security.version>
+        <spring.version>5.3.10</spring.version>
+        <spring-security.version>5.5.2</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.13.3</log4j.version>
+        <log4j.version>2.14.1</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <jackson.version>2.10.2</jackson.version>
+        <jackson.version>2.13.0-rc2</jackson.version>
         <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.8.1</ehcache.version>
 
@@ -149,7 +151,7 @@
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-dbutils.version>1.7</commons-dbutils.version>
@@ -167,15 +169,14 @@
         <jadira-usertype-jodatime.version>7.0.0.CR1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
-        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
-        <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
-        <maven-scm-plugin.version>1.11.2</maven-scm-plugin.version>
-        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
+        <maven-scm-plugin.version>1.12.0</maven-scm-plugin.version>
+        <spotbugs-maven-plugin.version>4.4.1</spotbugs-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
 
@@ -208,7 +209,7 @@
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
         <!-- Powermock -->
-        <powermock.version>2.0.5</powermock.version>
+        <powermock.version>2.0.9</powermock.version>
 
         <!-- Java Topology Suite -->
         <jts.version>1.16.1</jts.version>
@@ -220,13 +221,11 @@
         <jaxb-sun.version>2.3.0.1</jaxb-sun.version>
         <clean-plugin.version>3.1.0</clean-plugin.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
-        <deploy-plugin.version>3.0.0-M1</deploy-plugin.version>
-        <surefire-plugin.version>3.0.0-M4</surefire-plugin.version>
-        <install-plugin.version>2.5.2</install-plugin.version>
-        <site-plugin.version>3.8.2</site-plugin.version>
-        <resources-plugin.version>3.1.0</resources-plugin.version>
-        <project-info-reports-plugin.version>3.0.0</project-info-reports-plugin.version>
+        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+        <install-plugin.version>3.0.0-M1</install-plugin.version>
+        <site-plugin.version>3.9.1</site-plugin.version>
+        <resources-plugin.version>3.2.0</resources-plugin.version>
+        <project-info-reports-plugin.version>3.1.2</project-info-reports-plugin.version>
 
         <bytebuddy.version>1.10.7</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
@@ -234,9 +233,10 @@
         <deegree.version>3.4.11</deegree.version>
         <interceptor.version>1.2.2</interceptor.version>
 
-        <downloadSources>true</downloadSources>
-        <downloadJavadocs>true</downloadJavadocs>
         <jdk.version>1.8</jdk.version>
+        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 
     <profiles>
@@ -265,7 +265,8 @@
                                 -collapsible -hide
                                 'java.*|org.joda.*|org.apache.log4j.*'
                                 -inferdep -inferrel -inferreltype
-                                'assoc' -collpackages 'java.util.*'</additionalOptions>
+                                'assoc' -collpackages 'java.util.*'
+                            </additionalOptions>
                             <useStandardDocletOptions>true</useStandardDocletOptions>
                         </configuration>
                     </plugin>
@@ -379,18 +380,13 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${javadoc-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${deploy-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -417,20 +413,82 @@
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${project-info-reports-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${coveralls-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <version>${maven-replacer-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>${maven-scm-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.6</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>${coveralls-maven-plugin.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
-                <version>${maven-replacer-plugin.version}</version>
                 <configuration>
                     <file>${webapp-archetype-resource-pom}</file>
                     <regex>true</regex>
@@ -438,10 +496,12 @@
                         <regexFlag>DOTALL</regexFlag>
                     </regexFlags>
                     <replacements>
-                       <replacement>
-                           <token>&lt;shogun.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun.version&gt;</token>
-                           <value>&lt;shogun.version&gt;${newShogunVersion}&lt;/shogun.version&gt;</value>
-                       </replacement>
+                        <replacement>
+                            <token>
+                                &lt;shogun.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun.version&gt;
+                            </token>
+                            <value>&lt;shogun.version&gt;${newShogunVersion}&lt;/shogun.version&gt;</value>
+                        </replacement>
                     </replacements>
                 </configuration>
             </plugin>
@@ -449,7 +509,6 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -478,7 +537,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -491,7 +549,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc-plugin.version}</version>
                 <configuration>
                     <failOnError>false</failOnError>
                 </configuration>
@@ -508,7 +565,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler-plugin.version}</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${jdk.version}</source>
@@ -518,30 +574,17 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>${maven-eclipse-plugin.version}</version>
-                <configuration>
-                    <downloadSources>${downloadSources}</downloadSources>
-                    <downloadJavadocs>${downloadJavadocs}</downloadJavadocs>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
-                <version>${maven-scm-plugin.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
@@ -555,11 +598,13 @@
                         clean
                         verify
                         replacer:replace -DnewShogunVersion=${releaseVersion}
-                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for release ${releaseVersion}"
+                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}"
+                        -Dmessage="[maven-release-plugin] prepare archetype resources for release ${releaseVersion}"
                     </preparationGoals>
                     <completionGoals>
                         replacer:replace -DnewShogunVersion=${developmentVersion}
-                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}" -Dmessage="[maven-release-plugin] prepare archetype resources for next development iteration"
+                        scm:checkin -DpushChanges=false -Dincludes="${webapp-archetype-resource-pom}"
+                        -Dmessage="[maven-release-plugin] prepare archetype resources for next development iteration"
                     </completionGoals>
                 </configuration>
             </plugin>
@@ -568,7 +613,6 @@
     </build>
 
     <dependencies>
-
         <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -792,7 +836,7 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-api-mockito2</artifactId>
                 <version>${powermock.version}</version>
-                  <scope>test</scope>
+                <scope>test</scope>
             </dependency>
 
             <!-- JsonPath -->
