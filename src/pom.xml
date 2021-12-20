@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.terrestris</groupId>
     <artifactId>shogun-core</artifactId>
-    <version>5.3.9</version>
+    <version>5.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SHOGun-Core</name>
     <description>SHOGun-Core is the core framework used in SHOGun</description>
@@ -27,7 +27,7 @@
         <url>https://github.com/terrestris/shogun-core</url>
         <connection>scm:git:git://github.com/terrestris/shogun-core.git</connection>
         <developerConnection>scm:git:git@github.com:terrestris/shogun-core.git</developerConnection>
-        <tag>v5.3.9</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <ciManagement>
