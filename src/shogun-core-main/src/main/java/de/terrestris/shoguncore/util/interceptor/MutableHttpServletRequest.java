@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -131,7 +133,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
                 LOG.trace("The request contains a POST body.");
 
-                Document document = OgcXmlUtil.getDocumentFromString(xml);
+                Document document = OgcXmlUtil.getDocumentFromString(xml, true);
 
                 if (parameter.equalsIgnoreCase(OgcEnum.Service.SERVICE.toString())) {
                     value = OgcXmlUtil.getPathInDocument(
@@ -150,6 +152,12 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
                     if (StringUtils.isEmpty(value)) {
                         value = OgcXmlUtil.getPathInDocument(document,
                             "//@typeName | //@typeNames");
+                    }
+                    if (StringUtils.isEmpty(value)) {
+                        NodeList nl = OgcXmlUtil.getPathInDocumentAsNodeList(document,
+                            "//Insert/*");
+                        Node node = nl.item(0);
+                        value = node.getNamespaceURI();
                     }
                 }
 
