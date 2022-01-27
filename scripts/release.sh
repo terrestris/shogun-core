@@ -12,7 +12,7 @@ fi
 
 # check if the input parameter RELEASE_VERSION is valid
 RELEASE_VERSION="$1"
-if [[ ! $RELEASE_VERSION =~ ^([0-9]+\.[0-9]+\.[0-9])$ ]]; then
+if [[ ! $RELEASE_VERSION =~ ^([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
     echo "Error: RELEASE_VERSION must be in X.Y.Z format, but was $RELEASE_VERSION"
     exit 1
 fi
