@@ -127,7 +127,7 @@
         <spring.version>5.3.10</spring.version>
         <spring-security.version>5.5.2</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.17.1</log4j.version>
+        <log4j.version>2.17.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
         <jackson.version>2.13.0-rc2</jackson.version>
         <opencsv.version>4.6</opencsv.version>
