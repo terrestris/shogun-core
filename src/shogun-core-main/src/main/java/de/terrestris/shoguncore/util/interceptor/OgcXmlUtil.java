@@ -71,16 +71,18 @@ public class OgcXmlUtil {
 
     /**
      * @param xml
+     * @param namespaceAware
      * @return
      * @throws IOException
      */
-    public static Document getDocumentFromString(String xml) throws IOException {
+    public static Document getDocumentFromString(String xml, boolean namespaceAware) throws IOException {
 
         Document document = null;
 
         try {
             InputSource source = new InputSource(new StringReader(xml));
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(namespaceAware);
             DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.parse(source);
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -90,6 +92,15 @@ public class OgcXmlUtil {
 
         return document;
 
+    }
+
+    /**
+     * @param xml
+     * @return
+     * @throws IOException
+     */
+    public static Document getDocumentFromString(String xml) throws IOException {
+        return getDocumentFromString(xml, false);
     }
 
     /**
