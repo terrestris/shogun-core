@@ -29,7 +29,7 @@ SCRIPTDIR=`dirname "$0"`
 pushd $SCRIPTDIR/../src/
 
 mvn release:clean
-mvn release:prepare -X --batch-mode -DreleaseVersion=$RELEASE_VERSION -DdevelopmentVersion=$DEVELOPMENT_VERSION -Darguments="-DskipTests"
-mvn release:perform -X --batch-mode
+mvn release:prepare --batch-mode -DreleaseVersion=$RELEASE_VERSION -DdevelopmentVersion=$DEVELOPMENT_VERSION -Darguments="-DskipTests"
+mvn release:perform --batch-mode
 
 popd
