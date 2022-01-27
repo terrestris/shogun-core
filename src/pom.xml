@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.terrestris</groupId>
     <artifactId>shogun-core</artifactId>
-    <version>5.4.0-SNAPSHOT</version>
+    <version>5.3.10-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SHOGun-Core</name>
     <description>SHOGun-Core is the core framework used in SHOGun</description>
@@ -27,7 +27,7 @@
         <url>https://github.com/terrestris/shogun-core</url>
         <connection>scm:git:git://github.com/terrestris/shogun-core.git</connection>
         <developerConnection>scm:git:git@github.com:terrestris/shogun-core.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v5.4.0</tag>
     </scm>
 
     <ciManagement>
@@ -119,8 +119,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml
-        </webapp-archetype-resource-pom>
+        <webapp-archetype-resource-pom>shogun-core-webapp-archetype/src/main/resources/archetype-resources/pom.xml</webapp-archetype-resource-pom>
 
         <tomcat.version>9.0.30</tomcat.version>
 
@@ -128,7 +127,7 @@
         <spring.version>5.3.10</spring.version>
         <spring-security.version>5.5.2</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.17.1</log4j.version>
+        <log4j.version>2.17.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
         <jackson.version>2.13.0-rc2</jackson.version>
         <opencsv.version>4.6</opencsv.version>
@@ -142,7 +141,7 @@
         <jdom.version>1.1.3</jdom.version>
 
         <!-- Testing -->
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockito.version>2.28.2</mockito.version>
         <jsonpath.version>1.2.0</jsonpath.version>
@@ -154,7 +153,7 @@
 
         <!-- Apache Commons -->
         <commons-dbutils.version>1.7</commons-dbutils.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.6</commons-io.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -203,7 +202,7 @@
         <!-- Zip4j -->
         <zip4j.version>1.3.3</zip4j.version>
 
-        <xerces.version>2.12.0</xerces.version>
+        <xerces.version>2.11.0</xerces.version>
         <!-- Java XML Parser -->
         <jaxp-api.version>1.4.5</jaxp-api.version>
 
@@ -497,7 +496,7 @@
                     <replacements>
                         <replacement>
                             <token>
-                                &lt;shogun.version&gt;([0-9]+\.[0-9]+\.[0-9])(\-SNAPSHOT){0,1}&lt;/shogun.version&gt;
+                                &lt;shogun.version&gt;([0-9]+\.[0-9]+\.[0-9]+)(\-SNAPSHOT){0,1}&lt;/shogun.version&gt;
                             </token>
                             <value>&lt;shogun.version&gt;${newShogunVersion}&lt;/shogun.version&gt;</value>
                         </replacement>
