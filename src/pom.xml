@@ -173,7 +173,7 @@
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
-        <maven-scm-plugin.version>1.12.0</maven-scm-plugin.version>
+        <maven-scm-plugin.version>2.0.0-M1</maven-scm-plugin.version>
         <spotbugs-maven-plugin.version>4.4.1</spotbugs-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <javassist.version>3.26.0-GA</javassist.version>
