@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.terrestris</groupId>
         <artifactId>shogun-core</artifactId>
-        <version>5.3.11</version>
+        <version>5.3.12-SNAPSHOT</version>
     </parent>
 
     <artifactId>shogun-core-main</artifactId>
