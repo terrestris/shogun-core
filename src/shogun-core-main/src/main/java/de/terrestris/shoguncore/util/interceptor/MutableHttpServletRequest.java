@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -133,7 +134,7 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
                 LOG.trace("The request contains a POST body.");
 
-                Document document = OgcXmlUtil.getDocumentFromString(xml, true);
+                Document document = OgcXmlUtil.getDocumentFromString(xml);
 
                 if (parameter.equalsIgnoreCase(OgcEnum.Service.SERVICE.toString())) {
                     value = OgcXmlUtil.getPathInDocument(
@@ -157,7 +158,15 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
                         NodeList nl = OgcXmlUtil.getPathInDocumentAsNodeList(document,
                             "//Insert/*");
                         Node node = nl.item(0);
-                        value = node.getNamespaceURI();
+                        Element e = (Element) node;
+                        String namespaceUri = e.getAttribute("xmlns");
+                        if (!StringUtils.isEmpty(namespaceUri)) {
+                            String[] path = namespaceUri.split("/");
+                            String workspace = path[path.length - 1];
+                            value = workspace + ":" + node.getNodeName();
+                        } else {
+                            LOG.error("No namespaceUri found in Insert.");
+                        }
                     }
                 }
 
