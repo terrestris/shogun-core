@@ -134,7 +134,7 @@
         <ehcache.version>3.8.1</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.4.11.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <hikari.version>3.4.2</hikari.version>
         <h2.version>1.4.200</h2.version>
 
