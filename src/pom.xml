@@ -200,7 +200,7 @@
         <geotools.version>22.2</geotools.version>
 
         <!-- Zip4j -->
-        <zip4j.version>1.3.3</zip4j.version>
+        <zip4j.version>2.9.1</zip4j.version>
 
         <xerces.version>2.12.2</xerces.version>
         <!-- Java XML Parser -->
