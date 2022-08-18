@@ -124,12 +124,12 @@
         <tomcat.version>9.0.30</tomcat.version>
 
         <!-- Core -->
-        <spring.version>5.3.18</spring.version>
+        <spring.version>5.3.22</spring.version>
         <spring-security.version>5.5.7</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
-        <log4j.version>2.17.0</log4j.version>
+        <log4j.version>2.18.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <jackson.version>2.13.0-rc2</jackson.version>
+        <jackson.version>2.13.3</jackson.version>
         <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.8.1</ehcache.version>
 
@@ -149,7 +149,7 @@
 
         <!-- Code Coverage -->
         <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 
         <!-- Apache Commons -->
         <commons-dbutils.version>1.7</commons-dbutils.version>
@@ -167,13 +167,13 @@
         <jadira-usertype-jodatime.version>7.0.0.CR1</jadira-usertype-jodatime.version>
 
         <!-- Maven Plugins -->
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
+        <maven-release-plugin.version>3.0.0-M6</maven-release-plugin.version>
         <maven-replacer-plugin.version>1.5.3</maven-replacer-plugin.version>
-        <maven-scm-plugin.version>1.12.0</maven-scm-plugin.version>
-        <spotbugs-maven-plugin.version>4.4.1</spotbugs-maven-plugin.version>
+        <maven-scm-plugin.version>2.0.0-M2</maven-scm-plugin.version>
+        <spotbugs-maven-plugin.version>4.7.1.1</spotbugs-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <javassist.version>3.26.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
@@ -217,13 +217,13 @@
 
         <jaxb-javax.version>2.3.1</jaxb-javax.version>
         <jaxb-sun.version>2.3.0.1</jaxb-sun.version>
-        <clean-plugin.version>3.1.0</clean-plugin.version>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <install-plugin.version>3.0.0-M1</install-plugin.version>
-        <site-plugin.version>3.9.1</site-plugin.version>
-        <resources-plugin.version>3.2.0</resources-plugin.version>
-        <project-info-reports-plugin.version>3.1.2</project-info-reports-plugin.version>
+        <clean-plugin.version>3.2.0</clean-plugin.version>
+        <compiler-plugin.version>3.10.1</compiler-plugin.version>
+        <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+        <install-plugin.version>3.0.1</install-plugin.version>
+        <site-plugin.version>4.0.0-M3</site-plugin.version>
+        <resources-plugin.version>3.3.0</resources-plugin.version>
+        <project-info-reports-plugin.version>3.4.1</project-info-reports-plugin.version>
 
         <bytebuddy.version>1.10.7</bytebuddy.version>
         <xmlapi.version>1.4.01</xmlapi.version>
@@ -232,8 +232,8 @@
         <interceptor.version>1.2.2</interceptor.version>
 
         <jdk.version>1.8</jdk.version>
-        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
+        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 
@@ -303,10 +303,9 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>${project-info-plugin.version}</version>
+                        <version>${project-info-reports-plugin.version}</version>
                         <configuration>
                             <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                            <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                         </configuration>
                     </plugin>
                 </plugins>
