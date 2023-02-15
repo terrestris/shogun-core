@@ -178,7 +178,7 @@
         <javassist.version>3.26.0-GA</javassist.version>
         <objenesis.version>2.6</objenesis.version>
 
-        <postgresql.version>42.4.1</postgresql.version>
+        <postgresql.version>42.4.3</postgresql.version>
 
         <!-- Other -->
         <imgscalr.version>4.2</imgscalr.version>
