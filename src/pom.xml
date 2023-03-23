@@ -124,7 +124,7 @@
         <tomcat.version>9.0.30</tomcat.version>
 
         <!-- Core -->
-        <spring.version>5.3.20</spring.version>
+        <spring.version>5.3.26</spring.version>
         <spring-security.version>5.5.7</spring-security.version>
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
         <log4j.version>2.17.0</log4j.version>
