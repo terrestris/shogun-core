@@ -10,9 +10,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
@@ -307,17 +306,6 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
             return headerValue;
         }
         return ((HttpServletRequest) getRequest()).getHeader(name);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-        if (cachedInputStream == null) {
-            cacheInputStream();
-        }
-        return new CachedServletInputStream(cachedInputStream);
     }
 
     /**

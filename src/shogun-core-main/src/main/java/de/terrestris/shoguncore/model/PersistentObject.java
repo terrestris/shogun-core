@@ -14,7 +14,7 @@ import org.hibernate.annotations.*;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

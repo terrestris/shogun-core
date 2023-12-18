@@ -35,9 +35,9 @@ import de.terrestris.shoguncore.util.model.Response;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 /**
  * @author danielkoch
