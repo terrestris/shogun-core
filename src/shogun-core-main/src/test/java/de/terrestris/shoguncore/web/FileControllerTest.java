@@ -85,7 +85,7 @@ public class FileControllerTest {
 
         // Perform and test the GET-Request
         mockMvc.perform(
-            MockMvcRequestBuilders.fileUpload("/file/upload.action").file(mockMultipartFile))
+            MockMvcRequestBuilders.multipart("/file/upload.action").file(mockMultipartFile))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.*", hasSize(3)))
@@ -115,7 +115,7 @@ public class FileControllerTest {
 
         // Perform and test the GET-Request
         mockMvc.perform(
-            MockMvcRequestBuilders.fileUpload("/file/upload.action").file(file))
+            MockMvcRequestBuilders.multipart("/file/upload.action").file(file))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.*", hasSize(2)))

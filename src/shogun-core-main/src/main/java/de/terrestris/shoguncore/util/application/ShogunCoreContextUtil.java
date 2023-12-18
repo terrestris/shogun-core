@@ -2,7 +2,7 @@ package de.terrestris.shoguncore.util.application;
 
 import org.apache.http.client.utils.URIBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 

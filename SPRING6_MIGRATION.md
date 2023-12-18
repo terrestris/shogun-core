@@ -1,0 +1,1 @@
+When trying to update to spring 6, use OpenJDK 17 and this command to build: `mvn clean install -DskipTests -Dmaven.javadoc.skip=true -DskipCodeQualityChecks` (be sure that maven uses your java 17)
