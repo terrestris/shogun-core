@@ -3,8 +3,8 @@ package de.terrestris.shoguncore.hibernate;
 import de.terrestris.shoguncore.util.json.ShogunCoreJsonObjectMapper;
 import org.apache.logging.log4j.Logger;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

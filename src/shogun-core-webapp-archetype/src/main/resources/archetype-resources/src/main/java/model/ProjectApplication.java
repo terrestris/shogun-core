@@ -3,8 +3,8 @@
 #set( $symbol_escape = '\' )
 package ${package}.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
 import de.terrestris.shoguncore.model.Application;
 

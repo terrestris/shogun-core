@@ -6,7 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.locationtech.jts.geom.MultiPolygon;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 /**

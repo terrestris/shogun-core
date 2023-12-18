@@ -5,7 +5,7 @@ package de.terrestris.shoguncore.converter;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 /**
  * This converter can be used for the values of the type Map<String, Object>.

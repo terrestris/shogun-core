@@ -129,12 +129,12 @@
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
         <log4j.version>2.17.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <jackson.version>2.13.4.2</jackson.version>
+        <jackson.version>2.16.0</jackson.version>
         <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.8.1</ehcache.version>
 
         <!-- Persistence -->
-        <hibernate.version>5.4.24.Final</hibernate.version>
+        <hibernate.version>5.6.15.Final</hibernate.version>
         <hikari.version>3.4.2</hikari.version>
         <h2.version>1.4.200</h2.version>
 
@@ -906,7 +906,7 @@
             <!-- Hibernate -->
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
+                <artifactId>hibernate-core-jakarta</artifactId>
                 <version>${hibernate.version}</version>
                 <exclusions>
                     <exclusion>
