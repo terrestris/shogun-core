@@ -152,7 +152,7 @@ public class GeoServerInterceptorService {
         // return the endPoint as nameSpace per default
         String geoServerNamespace = endPoint;
 
-        if (endPoint.contains(":")) {
+        if (endPoint != null && endPoint.contains(":")) {
             String[] split = endPoint.split(":");
             geoServerNamespace = split[0];
         }
@@ -510,7 +510,10 @@ public class GeoServerInterceptorService {
         if (StringUtils.isEmpty(requestService) ||
             StringUtils.isEmpty(requestOperation) ||
             StringUtils.isEmpty(requestEndPoint)) {
-            if (!StringUtils.isEmpty(requestEndPoint) &&
+
+            if (StringUtils.isEmpty(requestEndPoint) && StringUtils.equals(requestService, "WPS")) {
+                LOG.trace("This is a WPS request.");
+            } else if (!StringUtils.isEmpty(requestEndPoint) &&
                 !StringUtils.isEmpty(MutableHttpServletRequest.getRequestParameterValue(
                     mutableRequest, USE_REFLECT_PARAM))
             ) {
@@ -522,6 +525,7 @@ public class GeoServerInterceptorService {
                     "parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
                     "validity of the request.");
             }
+
         }
 
         if (StringUtils.isNotEmpty(requestService)) {

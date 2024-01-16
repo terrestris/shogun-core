@@ -129,7 +129,7 @@
         <spring-ldap.version>2.3.2.RELEASE</spring-ldap.version>
         <log4j.version>2.17.0</log4j.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <jackson.version>2.13.4.2</jackson.version>
+        <jackson.version>2.14.3</jackson.version>
         <opencsv.version>4.6</opencsv.version>
         <ehcache.version>3.8.1</ehcache.version>
 
