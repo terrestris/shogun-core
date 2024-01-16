@@ -159,13 +159,15 @@ public class MutableHttpServletRequest extends HttpServletRequestWrapper {
                             "//Insert/*");
                         Node node = nl.item(0);
                         Element e = (Element) node;
-                        String namespaceUri = e.getAttribute("xmlns");
-                        if (!StringUtils.isEmpty(namespaceUri)) {
-                            String[] path = namespaceUri.split("/");
-                            String workspace = path[path.length - 1];
-                            value = workspace + ":" + node.getNodeName();
-                        } else {
-                            LOG.error("No namespaceUri found in Insert.");
+                        if (e != null) {
+                            String namespaceUri = e.getAttribute("xmlns");
+                            if (!StringUtils.isEmpty(namespaceUri)) {
+                                String[] path = namespaceUri.split("/");
+                                String workspace = path[path.length - 1];
+                                value = workspace + ":" + node.getNodeName();
+                            } else {
+                                LOG.error("No namespaceUri found in Insert.");
+                            }
                         }
                     }
                 }
