@@ -510,9 +510,8 @@ public class GeoServerInterceptorService {
         if (StringUtils.isEmpty(requestService) ||
             StringUtils.isEmpty(requestOperation) ||
             StringUtils.isEmpty(requestEndPoint)) {
-
             if (StringUtils.isEmpty(requestEndPoint) && StringUtils.equals(requestService, "WPS")) {
-                LOG.trace("This is a WPS request.");
+                LOG.trace("Will use empty string as endpoint for WPS");
             } else if (!StringUtils.isEmpty(requestEndPoint) &&
                 !StringUtils.isEmpty(MutableHttpServletRequest.getRequestParameterValue(
                     mutableRequest, USE_REFLECT_PARAM))
@@ -525,7 +524,6 @@ public class GeoServerInterceptorService {
                     "parameters (SERVICE, REQUEST, ENDPOINT). Please check the " +
                     "validity of the request.");
             }
-
         }
 
         if (StringUtils.isNotEmpty(requestService)) {
